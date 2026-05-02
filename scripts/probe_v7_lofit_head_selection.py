@@ -201,7 +201,97 @@ def build_arc_pairs(n: int, seed: int = 0) -> list[tuple[str, str, str]]:
     return pairs
 
 
-DATASET_LOADERS = {"tqa": build_tqa_pairs, "arc": build_arc_pairs}
+def build_lambada_pairs(n: int, seed: int = 0) -> list[tuple[str, str, str]]:
+    """Lambada: prompt = sentence-without-last-word; correct = last word; wrong = sampled different word.
+
+    Wrong is drawn from OTHER samples' last words to ensure plausibility (real
+    English words, similar register). This mirrors how LoFiT contrast learns:
+    push the model toward the gold continuation vs a plausible alternative.
+    """
+    print(f"  Lambada: loading...", flush=True)
+    ds = load_dataset("EleutherAI/lambada_openai", split="test")
+    rng = torch.Generator().manual_seed(seed)
+    perm = torch.randperm(len(ds), generator=rng).tolist()
+    candidates = []
+    for i in perm:
+        text = ds[i]["text"].strip()
+        words = text.split()
+        if len(words) < 4:
+            continue
+        prompt = " ".join(words[:-1])
+        gold = words[-1]
+        candidates.append((prompt, gold))
+        if len(candidates) >= n + 30:  # extra for wrong-pool
+            break
+    if len(candidates) < n:
+        print(f"  WARNING: only {len(candidates)} candidates, requested {n}")
+    pool = [g for _, g in candidates]
+    pairs = []
+    for i, (prompt, gold) in enumerate(candidates[:n]):
+        # pick a wrong word that differs from gold
+        wrong = pool[(i + 7) % len(pool)]
+        if wrong.lower() == gold.lower():
+            wrong = pool[(i + 13) % len(pool)]
+        pairs.append((prompt, gold, wrong))
+    print(f"  Lambada: {len(pairs)} pairs")
+    return pairs
+
+
+def build_gsm8k_pairs(n: int, seed: int = 0) -> list[tuple[str, str, str]]:
+    """GSM8K: prompt = math question; correct = gold numeric answer; wrong = perturbed number.
+
+    Wrong is gold ± a small offset OR another problem's gold (sampled). This
+    forces the model's per-head signal to discriminate "the answer is X" from
+    "the answer is X+1", which is a tighter signal than gold-vs-random number.
+    """
+    import re
+    print(f"  GSM8K: loading...", flush=True)
+    ds = load_dataset("gsm8k", "main", split="train")
+    rng = torch.Generator().manual_seed(seed)
+    perm = torch.randperm(len(ds), generator=rng).tolist()
+    candidates = []
+    for i in perm:
+        ex = ds[i]
+        question = ex["question"].strip()
+        m = re.search(r"####\s*(-?\d+(?:\.\d+)?)", ex["answer"])
+        if m is None:
+            continue
+        gold = m.group(1)
+        candidates.append((question, gold))
+        if len(candidates) >= n + 30:
+            break
+    if len(candidates) < n:
+        print(f"  WARNING: only {len(candidates)} candidates, requested {n}")
+    pool = [g for _, g in candidates]
+    pairs = []
+    for i, (q, gold) in enumerate(candidates[:n]):
+        # 50% perturb (±1, ±2), 50% another-problem gold
+        if i % 2 == 0:
+            try:
+                gv = float(gold)
+                # offset by 1-3 in either direction
+                offset = ((i % 3) + 1) * (1 if i % 2 == 0 else -1)
+                wrong_v = gv + offset
+                # preserve int-ness if gold was int
+                wrong = str(int(wrong_v)) if "." not in gold else f"{wrong_v}"
+            except ValueError:
+                wrong = pool[(i + 7) % len(pool)]
+        else:
+            wrong = pool[(i + 11) % len(pool)]
+            if wrong == gold:
+                wrong = pool[(i + 17) % len(pool)]
+        prompt = "Question: " + q + "\nAnswer:"
+        pairs.append((prompt, " " + gold, " " + wrong))
+    print(f"  GSM8K: {len(pairs)} pairs")
+    return pairs
+
+
+DATASET_LOADERS = {
+    "tqa": build_tqa_pairs,
+    "arc": build_arc_pairs,
+    "lambada": build_lambada_pairs,
+    "gsm8k": build_gsm8k_pairs,
+}
 
 
 # -- Per-head capture via o_proj pre-hook ------------------------------------

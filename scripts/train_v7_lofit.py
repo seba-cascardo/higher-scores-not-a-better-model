@@ -184,7 +184,108 @@ def build_arc_pairs(n: int, split: str = "train", seed: int = 0):
     return pairs
 
 
-DATASETS = {"tqa": build_tqa_pairs, "arc": build_arc_pairs}
+def build_lambada_pairs(n: int, split: str = "train", train_frac: float = TRAIN_FRAC, seed: int = 0):
+    """Lambada contrastive pairs for completion-LoFiT training.
+
+    Lambada has only 'test' split (5153 samples). Deterministic train/test
+    split using seed=0 perm + train_frac, mirroring TQA logic.
+
+    pair = (prompt, gold_last_word, wrong_word)
+    wrong_word is sampled from another sample's last word (plausible English,
+    similar register; ensures contrastive signal isn't just "real word vs garbage").
+    """
+    print(f"  Lambada: loading split={split} (target n={n})...", flush=True)
+    ds = load_dataset("EleutherAI/lambada_openai", split="test")
+    rng = torch.Generator().manual_seed(seed)
+    perm = torch.randperm(len(ds), generator=rng).tolist()
+
+    all_valid = []
+    for i in perm:
+        text = ds[i]["text"].strip()
+        words = text.split()
+        if len(words) < 4:
+            continue
+        prompt = " ".join(words[:-1])
+        gold = words[-1]
+        all_valid.append((prompt, gold))
+
+    n_total = len(all_valid)
+    n_train = int(n_total * train_frac)
+    if split == "train":
+        candidates = all_valid[:n_train]
+    elif split == "test":
+        candidates = all_valid[n_train:]
+    else:
+        raise ValueError(f"Unknown split: {split}")
+    candidates = candidates[:n]
+
+    pool = [g for _, g in candidates]
+    pairs = []
+    for i, (prompt, gold) in enumerate(candidates):
+        wrong = pool[(i + 7) % len(pool)]
+        if wrong.lower() == gold.lower():
+            wrong = pool[(i + 13) % len(pool)]
+        # Continuation = " <word>" so tokenizer sees a leading space (mirrors mc convention)
+        pairs.append((prompt, " " + gold, " " + wrong))
+    print(f"    Lambada {split}: returning {len(pairs)} pairs (total={n_total}, train={n_train})")
+    return pairs
+
+
+def build_gsm8k_pairs(n: int, split: str = "train", seed: int = 0):
+    """GSM8K contrastive pairs for reasoning-LoFiT training.
+
+    GSM8K has native train/test splits — use directly.
+
+    pair = (prompt, " <gold_number>", " <wrong_number>")
+    wrong is gold ± small offset OR another problem's gold. The ±1/±2/±3
+    perturbation forces the per-head signal to discriminate close numbers,
+    which is the actual reasoning challenge.
+    """
+    import re
+    hf_split = "train" if split == "train" else "test"
+    print(f"  GSM8K: loading {hf_split} split (target n={n})...", flush=True)
+    ds = load_dataset("gsm8k", "main", split=hf_split)
+    rng = torch.Generator().manual_seed(seed)
+    perm = torch.randperm(len(ds), generator=rng).tolist()
+    candidates = []
+    for i in perm:
+        ex = ds[i]
+        question = ex["question"].strip()
+        m = re.search(r"####\s*(-?\d+(?:\.\d+)?)", ex["answer"])
+        if m is None:
+            continue
+        gold = m.group(1)
+        candidates.append((question, gold))
+        if len(candidates) >= n:
+            break
+
+    pool = [g for _, g in candidates]
+    pairs = []
+    for i, (q, gold) in enumerate(candidates):
+        if i % 2 == 0:
+            try:
+                gv = float(gold)
+                offset = ((i % 3) + 1) * (1 if (i % 4) < 2 else -1)
+                wrong_v = gv + offset
+                wrong = str(int(wrong_v)) if "." not in gold else f"{wrong_v}"
+            except ValueError:
+                wrong = pool[(i + 7) % len(pool)]
+        else:
+            wrong = pool[(i + 11) % len(pool)]
+            if wrong == gold:
+                wrong = pool[(i + 17) % len(pool)]
+        prompt = "Question: " + q + "\nAnswer:"
+        pairs.append((prompt, " " + gold, " " + wrong))
+    print(f"    GSM8K {hf_split}: returning {len(pairs)} pairs")
+    return pairs
+
+
+DATASETS = {
+    "tqa": build_tqa_pairs,
+    "arc": build_arc_pairs,
+    "lambada": build_lambada_pairs,
+    "gsm8k": build_gsm8k_pairs,
+}
 
 
 # -- LoFiT offset module ------------------------------------------------------
