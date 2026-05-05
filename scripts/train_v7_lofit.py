@@ -280,11 +280,62 @@ def build_gsm8k_pairs(n: int, split: str = "train", seed: int = 0):
     return pairs
 
 
+def build_hellaswag_pairs(n: int, split: str = "train", train_frac: float = TRAIN_FRAC, seed: int = 0):
+    """HellaSwag contrastive pairs for narrative-continuation LoFiT training.
+
+    HellaSwag has a 'validation' split with labels (10k items). 'train' has no
+    labels. We use validation, deterministic train/test split via seed=0 perm.
+
+    pair = (ctx, " gold_ending", " wrong_ending")
+    Wrong = FIRST non-gold ending (adversarial-generated, plausible).
+    """
+    print(f"  HellaSwag: loading split={split} (target n={n})...", flush=True)
+    ds = load_dataset("Rowan/hellaswag", split="validation")
+    rng = torch.Generator().manual_seed(seed)
+    perm = torch.randperm(len(ds), generator=rng).tolist()
+
+    all_valid = []
+    for i in perm:
+        ex = ds[i]
+        label_str = ex.get("label", "")
+        if label_str == "":
+            continue
+        try:
+            gold = int(label_str)
+        except (TypeError, ValueError):
+            continue
+        ctx = (ex["ctx_a"] or "").strip()
+        if ex.get("ctx_b"):
+            ctx_b = ex["ctx_b"].strip()
+            if ctx_b:
+                ctx = f"{ctx} {ctx_b[0].upper()}{ctx_b[1:]}" if ctx else ctx_b
+        endings = ex["endings"]
+        if gold >= len(endings):
+            continue
+        wrongs = [j for j in range(len(endings)) if j != gold]
+        if not wrongs:
+            continue
+        all_valid.append((ctx, " " + endings[gold].strip(), " " + endings[wrongs[0]].strip()))
+
+    n_total = len(all_valid)
+    n_train = int(n_total * train_frac)
+    if split == "train":
+        chosen = all_valid[:n_train]
+    elif split == "test":
+        chosen = all_valid[n_train:]
+    else:
+        raise ValueError(f"Unknown split: {split}")
+    chosen = chosen[:n]
+    print(f"    HellaSwag {split}: returning {len(chosen)} pairs (total={n_total}, train={n_train})")
+    return chosen
+
+
 DATASETS = {
     "tqa": build_tqa_pairs,
     "arc": build_arc_pairs,
     "lambada": build_lambada_pairs,
     "gsm8k": build_gsm8k_pairs,
+    "hellaswag": build_hellaswag_pairs,
 }
 
 

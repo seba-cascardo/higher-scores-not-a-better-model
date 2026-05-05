@@ -286,11 +286,57 @@ def build_gsm8k_pairs(n: int, seed: int = 0) -> list[tuple[str, str, str]]:
     return pairs
 
 
+def build_hellaswag_pairs(n: int, seed: int = 0) -> list[tuple[str, str, str]]:
+    """HellaSwag contrastive pairs for a "narrative + commonsense" probe.
+
+    HellaSwag tests next-event plausibility given a 4-sentence story stem.
+    Each example has 4 endings; gold is the human-validated continuation,
+    wrongs are adversarially generated. This mixes narrative reasoning,
+    commonsense, linguistic plausibility — a "fuzzy" task that reveals
+    whether the model has heads specialized for narrative continuation
+    distinct from mc / single-word completion / math reasoning.
+
+    Format: pair = (ctx, " gold_ending", " wrong_ending")
+    Wrong is the FIRST non-gold ending (adversarial in HellaSwag, plausible).
+    """
+    print(f"  HellaSwag: loading...", flush=True)
+    ds = load_dataset("Rowan/hellaswag", split="validation")
+    rng = torch.Generator().manual_seed(seed)
+    perm = torch.randperm(len(ds), generator=rng).tolist()
+    pairs = []
+    for i in perm:
+        ex = ds[i]
+        label_str = ex.get("label", "")
+        if label_str == "":
+            continue
+        try:
+            gold = int(label_str)
+        except (TypeError, ValueError):
+            continue
+        ctx = (ex["ctx_a"] or "").strip()
+        if ex.get("ctx_b"):
+            ctx_b = ex["ctx_b"].strip()
+            if ctx_b:
+                ctx = f"{ctx} {ctx_b[0].upper()}{ctx_b[1:]}" if ctx else ctx_b
+        endings = ex["endings"]
+        if gold >= len(endings):
+            continue
+        wrongs = [j for j in range(len(endings)) if j != gold]
+        if not wrongs:
+            continue
+        pairs.append((ctx, " " + endings[gold].strip(), " " + endings[wrongs[0]].strip()))
+        if len(pairs) >= n:
+            break
+    print(f"  HellaSwag: {len(pairs)} pairs")
+    return pairs
+
+
 DATASET_LOADERS = {
     "tqa": build_tqa_pairs,
     "arc": build_arc_pairs,
     "lambada": build_lambada_pairs,
     "gsm8k": build_gsm8k_pairs,
+    "hellaswag": build_hellaswag_pairs,
 }
 
 
