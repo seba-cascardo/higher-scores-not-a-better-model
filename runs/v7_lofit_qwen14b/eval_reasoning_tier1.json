@@ -1,0 +1,105 @@
+{
+  "config": {
+    "base": "Qwen/Qwen2.5-14B-Instruct",
+    "offsets": "runs/v7_lofit_qwen14b/offsets_reasoning.pt",
+    "tasks": "truthfulqa,arc_challenge,hellaswag,winogrande,lambada_openai,gsm8k",
+    "limit": 400,
+    "gsm8k_limit": 200,
+    "out": "runs/v7_lofit_qwen14b/eval_reasoning_tier1.json"
+  },
+  "tasks": {
+    "truthfulqa": {
+      "base": {
+        "mc1_accuracy": 0.4325,
+        "n": 400
+      },
+      "lofit": {
+        "mc1_accuracy": 0.33,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_mc1_accuracy": -0.10249999999999998
+      },
+      "base_elapsed_s": 87.98053669929504,
+      "lofit_elapsed_s": 97.71621227264404
+    },
+    "arc_challenge": {
+      "base": {
+        "acc_norm": 0.605,
+        "n": 400
+      },
+      "lofit": {
+        "acc_norm": 0.5275,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_acc_norm": -0.07750000000000001
+      },
+      "base_elapsed_s": 72.93468046188354,
+      "lofit_elapsed_s": 79.36535096168518
+    },
+    "hellaswag": {
+      "base": {
+        "acc_norm": 0.66,
+        "n": 400
+      },
+      "lofit": {
+        "acc_norm": 0.58,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_acc_norm": -0.08000000000000007
+      },
+      "base_elapsed_s": 73.33961248397827,
+      "lofit_elapsed_s": 78.7465991973877
+    },
+    "winogrande": {
+      "base": {
+        "accuracy": 0.625,
+        "n": 400
+      },
+      "lofit": {
+        "accuracy": 0.5275,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_accuracy": -0.09750000000000003
+      },
+      "base_elapsed_s": 36.29410362243652,
+      "lofit_elapsed_s": 40.51505970954895
+    },
+    "lambada_openai": {
+      "base": {
+        "accuracy": 0.71,
+        "perplexity": 2.4088402897526904,
+        "n": 400
+      },
+      "lofit": {
+        "accuracy": 0.0125,
+        "perplexity": 18516.782848584262,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_accuracy": -0.6975,
+        "\u0394_perplexity": 18514.374008294508
+      },
+      "base_elapsed_s": 19.932565689086914,
+      "lofit_elapsed_s": 21.779611349105835
+    },
+    "gsm8k": {
+      "base": {
+        "accuracy": 0.165,
+        "n": 200
+      },
+      "lofit": {
+        "accuracy": 0.19,
+        "n": 200
+      },
+      "deltas": {
+        "\u0394_accuracy": 0.024999999999999994
+      },
+      "base_elapsed_s": 1034.0032050609589,
+      "lofit_elapsed_s": 1191.8628318309784
+    }
+  }
+}

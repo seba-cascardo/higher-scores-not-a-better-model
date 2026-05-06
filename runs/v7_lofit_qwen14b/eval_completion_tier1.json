@@ -1,0 +1,90 @@
+{
+  "config": {
+    "base": "Qwen/Qwen2.5-14B-Instruct",
+    "offsets": "runs/v7_lofit_qwen14b/offsets_completion.pt",
+    "tasks": "truthfulqa,arc_challenge,hellaswag,winogrande,lambada_openai",
+    "limit": 400,
+    "gsm8k_limit": 200,
+    "out": "runs/v7_lofit_qwen14b/eval_completion_tier1.json"
+  },
+  "tasks": {
+    "truthfulqa": {
+      "base": {
+        "mc1_accuracy": 0.4325,
+        "n": 400
+      },
+      "lofit": {
+        "mc1_accuracy": 0.375,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_mc1_accuracy": -0.057499999999999996
+      },
+      "base_elapsed_s": 89.30325603485107,
+      "lofit_elapsed_s": 100.21726179122925
+    },
+    "arc_challenge": {
+      "base": {
+        "acc_norm": 0.605,
+        "n": 400
+      },
+      "lofit": {
+        "acc_norm": 0.4925,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_acc_norm": -0.11249999999999999
+      },
+      "base_elapsed_s": 72.22249293327332,
+      "lofit_elapsed_s": 81.31137156486511
+    },
+    "hellaswag": {
+      "base": {
+        "acc_norm": 0.66,
+        "n": 400
+      },
+      "lofit": {
+        "acc_norm": 0.6725,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_acc_norm": 0.012499999999999956
+      },
+      "base_elapsed_s": 72.62522625923157,
+      "lofit_elapsed_s": 81.81504726409912
+    },
+    "winogrande": {
+      "base": {
+        "accuracy": 0.625,
+        "n": 400
+      },
+      "lofit": {
+        "accuracy": 0.6075,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_accuracy": -0.01749999999999996
+      },
+      "base_elapsed_s": 39.08366513252258,
+      "lofit_elapsed_s": 41.431580543518066
+    },
+    "lambada_openai": {
+      "base": {
+        "accuracy": 0.71,
+        "perplexity": 2.4088402897526904,
+        "n": 400
+      },
+      "lofit": {
+        "accuracy": 0.8275,
+        "perplexity": 1.7168314047210949,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_accuracy": 0.11750000000000005,
+        "\u0394_perplexity": -0.6920088850315955
+      },
+      "base_elapsed_s": 20.71563720703125,
+      "lofit_elapsed_s": 21.769633531570435
+    }
+  }
+}

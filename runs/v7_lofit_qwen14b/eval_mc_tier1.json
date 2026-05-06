@@ -1,0 +1,90 @@
+{
+  "config": {
+    "base": "Qwen/Qwen2.5-14B-Instruct",
+    "offsets": "runs/v7_lofit_qwen14b/offsets_mc.pt",
+    "tasks": "truthfulqa,arc_challenge,hellaswag,winogrande,lambada_openai",
+    "limit": 400,
+    "gsm8k_limit": 200,
+    "out": "runs/v7_lofit_qwen14b/eval_mc_tier1.json"
+  },
+  "tasks": {
+    "truthfulqa": {
+      "base": {
+        "mc1_accuracy": 0.4325,
+        "n": 400
+      },
+      "lofit": {
+        "mc1_accuracy": 0.8,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_mc1_accuracy": 0.36750000000000005
+      },
+      "base_elapsed_s": 89.64753937721252,
+      "lofit_elapsed_s": 98.65603566169739
+    },
+    "arc_challenge": {
+      "base": {
+        "acc_norm": 0.605,
+        "n": 400
+      },
+      "lofit": {
+        "acc_norm": 0.745,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_acc_norm": 0.14
+      },
+      "base_elapsed_s": 77.37258696556091,
+      "lofit_elapsed_s": 80.44088578224182
+    },
+    "hellaswag": {
+      "base": {
+        "acc_norm": 0.66,
+        "n": 400
+      },
+      "lofit": {
+        "acc_norm": 0.6675,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_acc_norm": 0.007499999999999951
+      },
+      "base_elapsed_s": 78.82670855522156,
+      "lofit_elapsed_s": 81.50719833374023
+    },
+    "winogrande": {
+      "base": {
+        "accuracy": 0.625,
+        "n": 400
+      },
+      "lofit": {
+        "accuracy": 0.755,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_accuracy": 0.13
+      },
+      "base_elapsed_s": 42.0791552066803,
+      "lofit_elapsed_s": 41.52215075492859
+    },
+    "lambada_openai": {
+      "base": {
+        "accuracy": 0.71,
+        "perplexity": 2.4088402897526904,
+        "n": 400
+      },
+      "lofit": {
+        "accuracy": 0.4525,
+        "perplexity": 17.50604406787978,
+        "n": 400
+      },
+      "deltas": {
+        "\u0394_accuracy": -0.25749999999999995,
+        "\u0394_perplexity": 15.09720377812709
+      },
+      "base_elapsed_s": 23.707703590393066,
+      "lofit_elapsed_s": 22.0486421585083
+    }
+  }
+}
