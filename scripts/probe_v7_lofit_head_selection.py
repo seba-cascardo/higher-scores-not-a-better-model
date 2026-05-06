@@ -575,7 +575,16 @@ def main():
     print()
 
     # Per-head probe
+    # PERF FIX 2026-05-06: cast captures bf16 -> fp32 before CV loop. Torch's
+    # CPU linalg ops (eigh, linalg.solve) lack native bf16 kernels and silently
+    # promote per-call, causing 50-100x slowdown. fp32 captures cost ~600MB
+    # extra RAM but make the per-head phase ~50x faster (HellaSwag probe on
+    # Qwen 14B observed ~38s/head bf16 vs ~1s/head expected fp32).
     print("Phase 4: per-head Fisher LDA + ridge accuracy")
+    if H_correct.dtype != torch.float32:
+        print(f"  Casting captures {H_correct.dtype} -> float32 for fast CPU linalg")
+        H_correct = H_correct.to(torch.float32)
+        H_wrong = H_wrong.to(torch.float32)
     print()
     print(f"{'layer':>5s}  {'head':>4s}  | {'fisher':>14s}  {'ridge':>14s}  {'best':>6s}")
     print("-" * 55)
