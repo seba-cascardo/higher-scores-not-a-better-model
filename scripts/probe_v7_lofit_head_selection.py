@@ -107,10 +107,17 @@ def _get_attention_shape_runtime(model, tokenizer, layers) -> tuple[AttentionSha
     if head_dim is None:
         raise AttributeError("Cannot determine head_dim")
 
-    # Hook every layer to record actual o_proj input shape
+    # Hook every layer to record actual o_proj input shape.
+    # Hybrid-attention models (Qwen 3.5/3.6) interleave full-attention layers
+    # (with .self_attn) and linear-attention layers (no .self_attn). LoFiT only
+    # operates on full-attention layers — skip the linear ones silently.
     detected: dict[int, int] = {}
     handles = []
+    n_skipped_no_self_attn = 0
     for li, layer in enumerate(layers):
+        if not hasattr(layer, "self_attn"):
+            n_skipped_no_self_attn += 1
+            continue
         o_proj = layer.self_attn.o_proj
 
         def make_hook(layer_idx):
@@ -119,6 +126,9 @@ def _get_attention_shape_runtime(model, tokenizer, layers) -> tuple[AttentionSha
             return hook
 
         handles.append(o_proj.register_forward_pre_hook(make_hook(li)))
+    if n_skipped_no_self_attn > 0:
+        print(f"  Hybrid-attention model detected: skipped {n_skipped_no_self_attn} linear-attention "
+              f"layers (LoFiT-able layers: {len(layers) - n_skipped_no_self_attn})")
 
     # Dummy forward
     toks = tokenizer("Hello world", return_tensors="pt").to(next(model.parameters()).device)
@@ -359,6 +369,11 @@ def attach_per_head_capture(
     handles = []
     for li, layer in enumerate(layers):
         if layer_dims is not None and layer_dims.get(li) != attn_shape.total_q_dim:
+            continue
+        # Hybrid-attention safety: skip layers without self_attn (linear-attn
+        # layers in Qwen 3.5/3.6). Defensive — should already be filtered
+        # by layer_dims when shape detection ran successfully.
+        if not hasattr(layer, "self_attn"):
             continue
         o_proj = layer.self_attn.o_proj
 
