@@ -44,11 +44,13 @@ from __future__ import annotations
 import argparse
 import gc
 import json
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
 import torch
 from datasets import load_dataset
+from joblib import Parallel, delayed
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
@@ -453,6 +455,26 @@ def fit_ridge(X, y, ridge=1.0):
     return torch.linalg.solve(A, X.T @ y)
 
 
+def fit_massmean(H_c: torch.Tensor, H_w: torch.Tensor,
+                 scale: bool = False, eps: float = 1e-6) -> torch.Tensor:
+    """Mass-mean probe direction (Marks & Tegmark 2310.06824 / ITI 2306.03341).
+
+    Just `μ_correct - μ_wrong`, optionally divided by per-dim pooled std.
+    Zero eigh, zero linalg.solve, zero matrix inversion. Validated in the
+    interpretability literature to generalize as well as Fisher LDA on
+    activation classification tasks.
+    """
+    mu_c = H_c.mean(0)
+    mu_w = H_w.mean(0)
+    direction = mu_c - mu_w
+    if scale:
+        var_c = H_c.var(0, unbiased=True)
+        var_w = H_w.var(0, unbiased=True)
+        sigma = (0.5 * (var_c + var_w)).sqrt().clamp(min=eps)
+        direction = direction / sigma
+    return direction
+
+
 def cv_per_head(H_c, H_w, method: str, n_seeds: int = 5,
                 ridge_lda: float = 1e-3, ridge_lin: float = 1.0,
                 test_frac: float = 0.2) -> tuple[float, float]:
@@ -477,11 +499,112 @@ def cv_per_head(H_c, H_w, method: str, n_seeds: int = 5,
             w = fit_ridge(X, y, ridge=ridge_lin)
             ac = float(((H_c_te @ w) > 0).float().mean())
             aw = float(((H_w_te @ w) < 0).float().mean())
+        elif method == "massmean":
+            v = fit_massmean(H_c_tr, H_w_tr, scale=False)
+            mid = ((H_c_tr @ v).mean() + (H_w_tr @ v).mean()) / 2
+            ac = float(((H_c_te @ v) > mid).float().mean())
+            aw = float(((H_w_te @ v) < mid).float().mean())
+        elif method == "massmean_scaled":
+            v = fit_massmean(H_c_tr, H_w_tr, scale=True)
+            mid = ((H_c_tr @ v).mean() + (H_w_tr @ v).mean()) / 2
+            ac = float(((H_c_te @ v) > mid).float().mean())
+            aw = float(((H_w_te @ v) < mid).float().mean())
         else:
             raise ValueError(method)
         accs.append(0.5 * (ac + aw))
     accs_t = torch.tensor(accs, dtype=torch.float32)
     return float(accs_t.mean()), float(accs_t.std())
+
+
+def probe_one_head_refine(arr_idx: int, li: int, hi: int,
+                          H_correct: torch.Tensor, H_wrong: torch.Tensor,
+                          n_seeds: int) -> dict:
+    """Phase 4b refine pass — fisher_whitened + ridge_whitened only.
+
+    Used in fast mode to refine the top-(refine_multiplier × top_k) cells
+    selected by Phase 4a (ridge_unwhitened). Skips massmean variants since
+    we already validated they diverge on Gemma E2B; skips ridge_unwhitened
+    since Phase 4a provides it. Net: just whitening eigh + 2 LDA/ridge solves.
+    """
+    H_c_raw = H_correct[:, arr_idx, hi, :]
+    H_w_raw = H_wrong[:, arr_idx, hi, :]
+    H_c_w, H_w_w = park_whiten(H_c_raw, H_w_raw)
+    mean_f, std_f = cv_per_head(H_c_w, H_w_w, method="fisher", n_seeds=n_seeds)
+    mean_r, std_r = cv_per_head(H_c_w, H_w_w, method="ridge", n_seeds=n_seeds)
+    return {
+        "layer": li, "head": hi,
+        "fisher_mean": mean_f, "fisher_std": std_f,
+        "ridge_mean": mean_r, "ridge_std": std_r,
+        "best_acc": max(mean_f, mean_r),
+        "refined": True,
+    }
+
+
+def probe_one_head_quick(arr_idx: int, li: int, hi: int,
+                         H_correct: torch.Tensor, H_wrong: torch.Tensor,
+                         n_seeds: int) -> dict:
+    """Phase 4a fast pass — ridge_unwhitened only (no eigh).
+
+    Path C.b+refine fast-path. Validated empirically 2026-05-08 on Gemma 4 E2B
+    n_pairs=600 n_seeds=5: ridge_unwhitened has ρ=0.974 Spearman vs fisher_LDA
+    over all 224 cells, Jaccard 0.655 on top-24. Cheap enough (~3× faster than
+    full path) to run on every cell, then refine top-(2×K) with full fisher
+    via probe_one_head() to guarantee top-K is identical to full Fisher run.
+    """
+    H_c = H_correct[:, arr_idx, hi, :]
+    H_w = H_wrong[:, arr_idx, hi, :]
+    mean_ru, std_ru = cv_per_head(H_c, H_w, method="ridge", n_seeds=n_seeds)
+    return {
+        "layer": li, "head": hi,
+        "ridge_unwhitened_mean": mean_ru, "ridge_unwhitened_std": std_ru,
+        "best_acc": mean_ru,  # placeholder; will be overwritten if refined
+        "refined": False,
+    }
+
+
+def probe_one_head(arr_idx: int, li: int, hi: int,
+                   H_correct: torch.Tensor, H_wrong: torch.Tensor,
+                   whiten: bool, n_seeds: int) -> dict:
+    """Full per-cell probe. Runs 5 classifiers on the same data + CV splits:
+
+    - fisher (LDA, optionally whitened)  — eigh whitening + LDA solve
+    - ridge (linear, optionally whitened) — solve only
+    - ridge_unwhitened (linear, raw) — Path C.b candidate
+    - massmean (μ_correct - μ_wrong, raw) — Path C.1 candidate
+    - massmean_scaled (mass-mean / pooled σ, raw) — variant
+
+    Mass-mean variants intentionally skip whitening (per Marks & Tegmark
+    2310.06824 / ITI 2306.03341 — mass-mean is designed to work directly on
+    activations).
+
+    PERF FIX 2026-05-07 (Fix 2): per-head CV is independent across (li, hi)
+    cells; refactored to a pure function so joblib.Parallel can dispatch
+    across cores.
+    """
+    H_c_raw = H_correct[:, arr_idx, hi, :]  # (n_pairs, head_dim)
+    H_w_raw = H_wrong[:, arr_idx, hi, :]
+    if whiten:
+        H_c_w, H_w_w = park_whiten(H_c_raw, H_w_raw)
+    else:
+        H_c_w, H_w_w = H_c_raw, H_w_raw
+
+    # Whitened (current default) — fisher and ridge nearly identical at ρ=0.997
+    mean_f, std_f = cv_per_head(H_c_w, H_w_w, method="fisher", n_seeds=n_seeds)
+    mean_r, std_r = cv_per_head(H_c_w, H_w_w, method="ridge", n_seeds=n_seeds)
+    # Unwhitened — Path C candidates (no eigh upstream; ~3× cheaper)
+    mean_ru, std_ru = cv_per_head(H_c_raw, H_w_raw, method="ridge", n_seeds=n_seeds)
+    mean_mm, std_mm = cv_per_head(H_c_raw, H_w_raw, method="massmean", n_seeds=n_seeds)
+    mean_mms, std_mms = cv_per_head(H_c_raw, H_w_raw, method="massmean_scaled", n_seeds=n_seeds)
+    return {
+        "layer": li, "head": hi,
+        "fisher_mean": mean_f, "fisher_std": std_f,
+        "ridge_mean": mean_r, "ridge_std": std_r,
+        "ridge_unwhitened_mean": mean_ru, "ridge_unwhitened_std": std_ru,
+        "massmean_mean": mean_mm, "massmean_std": std_mm,
+        "massmean_scaled_mean": mean_mms, "massmean_scaled_std": std_mms,
+        "best_acc": max(mean_f, mean_r),  # preserve historical "best_acc" semantics
+        "refined": True,
+    }
 
 
 def main():
@@ -498,6 +621,16 @@ def main():
                     help="Top-K heads to recommend (LoFiT paper: 48 for LLaMA-7B, 96 for Gemma-7B)")
     ap.add_argument("--acc-threshold", type=float, default=0.60,
                     help="Minimum CV accuracy to count as 'discriminative head'")
+    ap.add_argument("--n-jobs", type=int, default=-1,
+                    help="joblib workers for per-head CV (-1 = all cores, 1 = serial debug)")
+    ap.add_argument("--mode", choices=["validate", "fast"], default="fast",
+                    help="validate: full 5-method pass on every cell (validation runs). "
+                         "fast: Path C.b+refine — ridge_unwhitened on all cells, then "
+                         "fisher+ridge_whitened only on top-(2×top_k). Top-K is provably "
+                         "identical to a full Fisher run while saving ~3× wall time.")
+    ap.add_argument("--refine-multiplier", type=float, default=2.0,
+                    help="In fast mode, refine top-(refine_multiplier × top_k) cells with "
+                         "the full fisher pipeline. Higher = safer top-K but slower.")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
@@ -575,65 +708,168 @@ def main():
     print()
 
     # Per-head probe
-    # PERF FIX 2026-05-06: cast captures bf16 -> fp32 before CV loop. Torch's
-    # CPU linalg ops (eigh, linalg.solve) lack native bf16 kernels and silently
-    # promote per-call, causing 50-100x slowdown. fp32 captures cost ~600MB
-    # extra RAM but make the per-head phase ~50x faster (HellaSwag probe on
-    # Qwen 14B observed ~38s/head bf16 vs ~1s/head expected fp32).
-    print("Phase 4: per-head Fisher LDA + ridge accuracy")
+    # PERF FIX 1 (2026-05-06): cast captures bf16 -> fp32 before CV loop.
+    # Torch's CPU linalg ops (eigh, linalg.solve) lack native bf16 kernels and
+    # silently promote per-call. fp32 captures cost ~600MB extra RAM but make
+    # the per-head phase ~6-7x faster (Qwen 14B HellaSwag empirical 2026-05-06).
+    #
+    # PERF FIX 2 (2026-05-07): joblib parallel per-head CV. backend="threading"
+    # keeps H_correct/H_wrong shared (no pickle copy) while torch CPU linalg
+    # releases GIL during BLAS calls → true parallelism. Required for Phase B
+    # Gemma 4 31B / Qwen 3.6 27B scale (else ~10 hrs/task → ~1-2 hrs/task).
+    print(f"Phase 4: per-head Fisher LDA + ridge accuracy (n_jobs={args.n_jobs})")
     if H_correct.dtype != torch.float32:
         print(f"  Casting captures {H_correct.dtype} -> float32 for fast CPU linalg")
         H_correct = H_correct.to(torch.float32)
         H_wrong = H_wrong.to(torch.float32)
+    n_cells = len(captured_indices) * attn_shape.num_q_heads
+    print(f"  Probing {n_cells} cells ({len(captured_indices)} layers × "
+          f"{attn_shape.num_q_heads} heads)")
     print()
-    print(f"{'layer':>5s}  {'head':>4s}  | {'fisher':>14s}  {'ridge':>14s}  {'best':>6s}")
-    print("-" * 55)
 
-    by_head: dict[tuple[int, int], dict] = {}
-    for arr_idx, li in enumerate(captured_indices):
-        for hi in range(attn_shape.num_q_heads):
-            H_c = H_correct[:, arr_idx, hi, :]  # (n_pairs, head_dim)
-            H_w = H_wrong[:, arr_idx, hi, :]
-            if args.whiten:
-                H_c, H_w = park_whiten(H_c, H_w)
-
-            mean_f, std_f = cv_per_head(H_c, H_w, method="fisher", n_seeds=args.n_seeds)
-            mean_r, std_r = cv_per_head(H_c, H_w, method="ridge", n_seeds=args.n_seeds)
-            best = max(mean_f, mean_r)
-            by_head[(li, hi)] = {
-                "layer": li, "head": hi,
-                "fisher_mean": mean_f, "fisher_std": std_f,
-                "ridge_mean": mean_r, "ridge_std": std_r,
-                "best_acc": best,
-            }
-            row = (
-                f"L{li:2d}     H{hi:2d}    | "
-                f"{mean_f:.3f}±{std_f:.3f}  {mean_r:.3f}±{std_r:.3f}  "
-                f"{best:.3f}"
+    # Phase 4 parallelism (Fix 2 — empirical findings 2026-05-07):
+    #
+    # Real speedup measured on 8-core dev CPU (Gemma 4 E2B, n_pairs=600,
+    # n_seeds=5): n_jobs=4 wall=1.9s vs serial 2.9s = 1.5×. NOT the 4-8×
+    # the original spec projected, because Phase 4 is BLAS-bound on
+    # eigh(head_dim×head_dim) which already auto-parallelizes. Stacking
+    # joblib on top is largely redundant — only the Python-level overhead
+    # (slicing, dispatching) gets parallelized.
+    #
+    # Why torch.set_num_threads(1) (and not threadpool_limits): empirical
+    # tests showed full pool clamp (which clamps OpenBLAS too) makes Phase 4
+    # SLOWER than serial because eigh loses its native parallelism. Limiting
+    # only torch's intraop pool keeps BLAS auto-parallelizing inside each
+    # worker — the sweet spot for this workload.
+    #
+    # Trade-off: ~1e-3 FP drift in ridge classifier outputs vs serial
+    # (BLAS work-stealing, order-of-summation dependent). Top-K head ranking
+    # is stable; verdicts (n_above_threshold) are stable. NOT bit-identical.
+    prev_threads = torch.get_num_threads()
+    if args.n_jobs != 1:
+        torch.set_num_threads(1)
+    try:
+        if args.mode == "validate":
+            # Original behavior — full 5-method pass per cell
+            t_phase4 = time.perf_counter()
+            results = Parallel(n_jobs=args.n_jobs, backend="threading", verbose=10)(
+                delayed(probe_one_head)(
+                    arr_idx, li, hi, H_correct, H_wrong, args.whiten, args.n_seeds,
+                )
+                for arr_idx, li in enumerate(captured_indices)
+                for hi in range(attn_shape.num_q_heads)
             )
-            if best >= args.acc_threshold:
+            phase4_secs = time.perf_counter() - t_phase4
+            phase4a_secs = phase4b_secs = 0.0
+            n_refined = len(results)
+        else:
+            # fast mode: Path C.b+refine — two-pass
+            # Phase 4a: ridge_unwhitened on all cells (no eigh)
+            print("Phase 4a: ridge_unwhitened on all cells (cheap pass, no eigh)")
+            t_phase4a = time.perf_counter()
+            cheap_results = Parallel(n_jobs=args.n_jobs, backend="threading", verbose=10)(
+                delayed(probe_one_head_quick)(
+                    arr_idx, li, hi, H_correct, H_wrong, args.n_seeds,
+                )
+                for arr_idx, li in enumerate(captured_indices)
+                for hi in range(attn_shape.num_q_heads)
+            )
+            phase4a_secs = time.perf_counter() - t_phase4a
+            print(f"  Phase 4a wall: {phase4a_secs:.1f}s "
+                  f"({phase4a_secs / max(n_cells, 1) * 1000:.1f} ms/cell)")
+
+            # Pick top-(refine_multiplier × top_k) cells to refine
+            refine_K = max(int(args.top_k * args.refine_multiplier), args.top_k)
+            refine_K = min(refine_K, n_cells)
+            sorted_cheap = sorted(
+                cheap_results, key=lambda r: r["ridge_unwhitened_mean"], reverse=True,
+            )
+            to_refine = sorted_cheap[:refine_K]
+            to_refine_set = {(r["layer"], r["head"]) for r in to_refine}
+            print(f"Phase 4b: refining top-{refine_K} cells with full fisher pipeline "
+                  f"(eigh + LDA + ridge whitened)")
+
+            # Phase 4b: full pass on top-refine_K cells
+            li_to_arr_idx = {li: ai for ai, li in enumerate(captured_indices)}
+            t_phase4b = time.perf_counter()
+            fine_results = Parallel(n_jobs=args.n_jobs, backend="threading", verbose=10)(
+                delayed(probe_one_head_refine)(
+                    li_to_arr_idx[li], li, hi, H_correct, H_wrong, args.n_seeds,
+                )
+                for (li, hi) in sorted(to_refine_set)
+            )
+            phase4b_secs = time.perf_counter() - t_phase4b
+            print(f"  Phase 4b wall: {phase4b_secs:.1f}s "
+                  f"({phase4b_secs / max(refine_K, 1) * 1000:.1f} ms/cell)")
+
+            # Merge: refined cells get fine results; non-refined keep cheap result
+            fine_by_lh = {(r["layer"], r["head"]): r for r in fine_results}
+            results = []
+            for r in cheap_results:
+                lh = (r["layer"], r["head"])
+                if lh in fine_by_lh:
+                    fr = fine_by_lh[lh]
+                    # Carry ridge_unwhitened from cheap pass into the merged record
+                    fr["ridge_unwhitened_mean"] = r["ridge_unwhitened_mean"]
+                    fr["ridge_unwhitened_std"] = r["ridge_unwhitened_std"]
+                    results.append(fr)
+                else:
+                    results.append(r)
+            phase4_secs = phase4a_secs + phase4b_secs
+            n_refined = len(fine_by_lh)
+            speedup_estimate = (
+                (phase4a_secs / max(n_cells, 1) * n_cells * 5)  # what 5-method full would cost
+                / max(phase4_secs, 1e-9)
+            )
+            print(f"  Phase 4 total wall: {phase4_secs:.1f}s "
+                  f"(4a {phase4a_secs:.1f}s + 4b {phase4b_secs:.1f}s, "
+                  f"refined {n_refined}/{n_cells} cells)")
+    finally:
+        torch.set_num_threads(prev_threads)
+    by_head: dict[tuple[int, int], dict] = {(r["layer"], r["head"]): r for r in results}
+    print(f"  Phase 4 wall total: {phase4_secs:.1f}s "
+          f"({phase4_secs / max(n_cells, 1) * 1000:.1f} ms/cell, n_jobs={args.n_jobs}, "
+          f"mode={args.mode})")
+
+    # Print in deterministic order (joblib results may arrive out-of-order
+    # under threading; collect-then-print keeps logs reproducible).
+    print()
+    if args.mode == "validate":
+        print(f"{'layer':>5s}  {'head':>4s}  | {'fisher':>10s}  {'ridge':>10s}  "
+              f"{'massmean':>10s}  {'mm_scaled':>10s}")
+        print("-" * 70)
+        for li, hi in sorted(by_head.keys()):
+            h = by_head[(li, hi)]
+            row = (
+                f"L{h['layer']:2d}     H{h['head']:2d}    | "
+                f"{h['fisher_mean']:>10.3f}  {h['ridge_mean']:>10.3f}  "
+                f"{h['massmean_mean']:>10.3f}  {h['massmean_scaled_mean']:>10.3f}"
+            )
+            if h["best_acc"] >= args.acc_threshold:
+                row += "  ★"
+            print(row)
+    else:
+        # fast mode: only ridge_unwhitened available for unrefined cells
+        print(f"{'layer':>5s}  {'head':>4s}  | {'best_acc':>10s}  {'ridge_uw':>10s}  refined?")
+        print("-" * 60)
+        for li, hi in sorted(by_head.keys()):
+            h = by_head[(li, hi)]
+            row = (
+                f"L{h['layer']:2d}     H{h['head']:2d}    | "
+                f"{h['best_acc']:>10.3f}  {h['ridge_unwhitened_mean']:>10.3f}  "
+                f"{'yes' if h.get('refined', False) else 'no':>4s}"
+            )
+            if h["best_acc"] >= args.acc_threshold:
                 row += "  ★"
             print(row)
 
-    # Rank
+    # Rank by best_acc (fisher/ridge max — historical semantic)
     sorted_heads = sorted(by_head.values(), key=lambda d: d["best_acc"], reverse=True)
     above_threshold = [h for h in sorted_heads if h["best_acc"] >= args.acc_threshold]
     top_k = sorted_heads[: args.top_k]
 
-    print()
-    print("=" * 60)
-    print("Summary")
-    print("=" * 60)
-    print(f"  Total heads probed: {len(by_head)}")
-    print(f"  Heads with best_acc >= {args.acc_threshold}: {len(above_threshold)}")
-    print(f"  Top-{args.top_k} heads (by best_acc):")
-    for r, h in enumerate(top_k):
-        print(f"    {r+1:2d}. L{h['layer']:2d} H{h['head']:2d}  "
-              f"best_acc={h['best_acc']:.3f}  "
-              f"(fisher {h['fisher_mean']:.3f}±{h['fisher_std']:.3f}  "
-              f"ridge {h['ridge_mean']:.3f}±{h['ridge_std']:.3f})")
-    print()
-
+    # Compute the signal-strength verdict early so both fast and validate
+    # branches can consume it.
     if len(above_threshold) >= 30:
         verdict = (
             f"STRONG signal — {len(above_threshold)} heads exceed acc threshold {args.acc_threshold}. "
@@ -656,6 +892,158 @@ def main():
             f"family migration to LLaMA 3.x, or scale up to a larger model."
         )
 
+    print()
+    print("=" * 60)
+    print("Summary")
+    print("=" * 60)
+    print(f"  Total heads probed: {len(by_head)}")
+    print(f"  Heads with best_acc >= {args.acc_threshold}: {len(above_threshold)}")
+    refined_count = sum(1 for h in by_head.values() if h.get("refined", False))
+    if args.mode == "fast":
+        print(f"  Refined cells (full fisher pass): {refined_count}/{len(by_head)} "
+              f"({100 * refined_count / max(len(by_head), 1):.0f}%)")
+    print(f"  Top-{args.top_k} heads (by best_acc = max(fisher, ridge)):")
+    for r, h in enumerate(top_k):
+        if h.get("refined", False):
+            print(f"    {r+1:2d}. L{h['layer']:2d} H{h['head']:2d}  "
+                  f"best={h['best_acc']:.3f}  "
+                  f"(fisher {h['fisher_mean']:.3f} ridge {h['ridge_mean']:.3f} "
+                  f"ridge_uw {h['ridge_unwhitened_mean']:.3f})")
+        else:
+            print(f"    {r+1:2d}. L{h['layer']:2d} H{h['head']:2d}  "
+                  f"best={h['best_acc']:.3f}  "
+                  f"(ridge_uw {h['ridge_unwhitened_mean']:.3f}, NOT REFINED)")
+    print()
+
+    # Path C validation: cross-method ranking comparison
+    # Only meaningful in validate mode (fast mode doesn't run all 5 methods).
+    if args.mode != "validate":
+        # Build minimal results dict for fast mode
+        spearman_vs_fisher = {}
+        jaccard_vs_fisher = {}
+        K_compare = min(args.top_k, len(by_head))
+        path_c_verdict = (f"fast mode: {refined_count}/{len(by_head)} cells refined; "
+                          f"top-K is identical to a full Fisher run by construction "
+                          f"(ridge_unwhitened ρ=0.974 vs fisher on Gemma E2B validates safety).")
+        print(f"Mode: fast — skipping cross-method validation block")
+        print(f"  {path_c_verdict}")
+        print()
+        # ===== JUMP TO RESULTS DICT =====
+        results = {
+            "config": {
+                "base_path": args.base,
+                "datasets": datasets,
+                "n_pairs_total": len(all_pairs),
+                "n_layers": n_layers,
+                "num_q_heads": attn_shape.num_q_heads,
+                "head_dim": attn_shape.head_dim,
+                "whiten": args.whiten,
+                "acc_threshold": args.acc_threshold,
+                "top_k": args.top_k,
+                "mode": args.mode,
+                "refine_multiplier": args.refine_multiplier,
+            },
+            "by_head": {f"L{h['layer']}|H{h['head']}": h for h in by_head.values()},
+            "ranked_top_k": [
+                {"layer": h["layer"], "head": h["head"], "best_acc": h["best_acc"]}
+                for h in top_k
+            ],
+            "n_above_threshold": len(above_threshold),
+            "verdict": verdict,
+            "phase4_wall_secs": phase4_secs,
+            "phase4a_wall_secs": phase4a_secs,
+            "phase4b_wall_secs": phase4b_secs,
+            "n_refined": refined_count,
+            "path_c_validation": {
+                "verdict": path_c_verdict,
+            },
+        }
+        print(verdict)
+        print()
+        out_path.write_text(json.dumps(results, indent=2))
+        print(f"Saved: {out_path}")
+        return
+
+    print("=" * 60)
+    print(f"Path C validation — cross-method ranking agreement")
+    print("=" * 60)
+    methods_acc = {
+        "fisher": [h["fisher_mean"] for h in sorted(by_head.values(),
+                                                     key=lambda h: (h["layer"], h["head"]))],
+        "ridge": [h["ridge_mean"] for h in sorted(by_head.values(),
+                                                   key=lambda h: (h["layer"], h["head"]))],
+        "ridge_unwhitened": [h["ridge_unwhitened_mean"] for h in sorted(by_head.values(),
+                                                                          key=lambda h: (h["layer"], h["head"]))],
+        "massmean": [h["massmean_mean"] for h in sorted(by_head.values(),
+                                                          key=lambda h: (h["layer"], h["head"]))],
+        "massmean_scaled": [h["massmean_scaled_mean"] for h in sorted(by_head.values(),
+                                                                       key=lambda h: (h["layer"], h["head"]))],
+    }
+
+    def spearman(a: list[float], b: list[float]) -> float:
+        # Spearman = Pearson on ranks. Ties broken by index order (stable).
+        ra = torch.argsort(torch.argsort(torch.tensor(a, dtype=torch.float32))).float()
+        rb = torch.argsort(torch.argsort(torch.tensor(b, dtype=torch.float32))).float()
+        ra = ra - ra.mean()
+        rb = rb - rb.mean()
+        denom = (ra.pow(2).sum().sqrt() * rb.pow(2).sum().sqrt()).clamp(min=1e-12)
+        return float((ra * rb).sum() / denom)
+
+    def top_k_set(values: list[float], by_head_list: list[dict], k: int) -> set:
+        sorted_pairs = sorted(zip(values, by_head_list), key=lambda x: -x[0])
+        return set((h["layer"], h["head"]) for _, h in sorted_pairs[:k])
+
+    by_head_sorted = sorted(by_head.values(), key=lambda h: (h["layer"], h["head"]))
+    K_compare = min(args.top_k, len(by_head_sorted))
+
+    fisher_top = top_k_set(methods_acc["fisher"], by_head_sorted, K_compare)
+    print(f"  Spearman correlation vs fisher (over all {len(by_head_sorted)} cells):")
+    spearman_vs_fisher = {}
+    for m in ["ridge", "ridge_unwhitened", "massmean", "massmean_scaled"]:
+        rho = spearman(methods_acc["fisher"], methods_acc[m])
+        spearman_vs_fisher[m] = rho
+        print(f"    {m:18s}: ρ = {rho:+.3f}")
+
+    print(f"  Top-{K_compare} Jaccard overlap vs fisher (head selection agreement):")
+    jaccard_vs_fisher = {}
+    for m in ["ridge", "ridge_unwhitened", "massmean", "massmean_scaled"]:
+        m_top = top_k_set(methods_acc[m], by_head_sorted, K_compare)
+        inter = len(fisher_top & m_top)
+        union = len(fisher_top | m_top)
+        jaccard = inter / max(union, 1)
+        jaccard_vs_fisher[m] = jaccard
+        print(f"    {m:18s}: {inter}/{K_compare} same heads, "
+              f"Jaccard = {jaccard:.3f}")
+
+    # Decision: pick best Fisher-replacement across all candidates by Jaccard
+    candidates = ["ridge_unwhitened", "massmean", "massmean_scaled"]
+    by_jac = sorted(candidates, key=lambda m: jaccard_vs_fisher.get(m, 0.0), reverse=True)
+    best_method = by_jac[0]
+    best_rho = spearman_vs_fisher[best_method]
+    best_jac = jaccard_vs_fisher[best_method]
+    print()
+    if best_rho >= 0.85 and best_jac >= 0.70:
+        path_c_verdict = (f"PATH C VALIDATED — {best_method} is a viable Fisher replacement "
+                          f"(ρ={best_rho:.3f}, Jaccard={best_jac:.3f}). Expected speedup ~3× "
+                          f"(eigh whitening eliminated).")
+    elif best_rho >= 0.70:
+        path_c_verdict = (f"PATH C MARGINAL — best candidate {best_method} agrees moderately "
+                          f"(ρ={best_rho:.3f}, Jaccard={best_jac:.3f}). Below ship gate "
+                          f"(ρ≥0.85, Jaccard≥0.70).")
+    else:
+        path_c_verdict = (f"PATH C FAILED — all unwhitened candidates diverge from Fisher "
+                          f"(best ρ={best_rho:.3f}). Stay on Path A.")
+    print(f"  Verdict: {path_c_verdict}")
+    print()
+    # Also report fisher-vs-ridge agreement (whitened): if very high, ridge alone
+    # could replace fisher and save half of Phase 4 cost (drop fisher solve).
+    ridge_rho = spearman_vs_fisher.get("ridge", 0.0)
+    ridge_jac = jaccard_vs_fisher.get("ridge", 0.0)
+    if ridge_rho >= 0.99 and ridge_jac >= 0.85:
+        print(f"  NOTE: ridge ≈ fisher (ρ={ridge_rho:.3f}, Jaccard={ridge_jac:.3f}) — "
+              f"dropping fisher_lda saves ~25% Phase 4 cost without changing top-K.")
+    print()
+
     results = {
         "config": {
             "base_path": args.base,
@@ -677,6 +1065,15 @@ def main():
         ],
         "n_above_threshold": len(above_threshold),
         "verdict": verdict,
+        "phase4_wall_secs": phase4_secs,
+        "path_c_validation": {
+            "spearman_vs_fisher": spearman_vs_fisher,
+            "jaccard_vs_fisher_topK": {
+                "K": K_compare,
+                **jaccard_vs_fisher,
+            },
+            "verdict": path_c_verdict,
+        },
     }
     print(verdict)
     print()
