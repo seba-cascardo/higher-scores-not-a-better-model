@@ -464,10 +464,15 @@ def remove_handles(handles):
 # -- Loss computation --------------------------------------------------------
 def continuation_logprob(
     model, tokenizer, prompt: str, continuation: str,
-    seq_len_max: int, device: str,
+    seq_len_max: int, device: str, separator: str = " ",
 ) -> torch.Tensor:
-    """Differentiable: returns sum log P(continuation | prompt)."""
-    full = prompt + " " + continuation
+    """Differentiable: returns sum log P(continuation | prompt).
+
+    separator: inserted between prompt and continuation. Default " " (space) for
+    raw text Q:/A: format. For chat template (prompt ends with turn marker /
+    newline already), pass separator="" to avoid double-spacing.
+    """
+    full = prompt + separator + continuation
     full_ids = tokenizer(full, return_tensors="pt", truncation=True,
                          max_length=seq_len_max).input_ids.to(device)
     prompt_ids = tokenizer(prompt, return_tensors="pt", truncation=True,
@@ -485,20 +490,43 @@ def continuation_logprob(
     return tok_lp.sum()
 
 
+def _build_prompt_chat(tokenizer, q: str) -> str:
+    """Wrap question in chat-template prefix with add_generation_prompt=True.
+    Last token of the resulting text is the assistant turn marker; concat answer
+    directly to land at last-answer-token capture position.
+
+    See feedback_v7_chat_template_train_deploy_gap.md for rationale.
+    """
+    messages = [{"role": "user", "content": q}]
+    return tokenizer.apply_chat_template(
+        messages, tokenize=False, add_generation_prompt=True,
+    )
+
+
 def task_margin_loss(
     model, tokenizer, pair: tuple[str, str, str],
     seq_len_max: int, device: str, loss_type: str, beta: float = 0.1,
-    gamma: float = 0.5,
+    gamma: float = 0.5, chat_template: bool = False,
 ) -> torch.Tensor:
     """One pair → scalar loss.
 
     loss_type='direct':   L = -logp_correct + gamma * logp_wrong
     loss_type='dpo':       L = -log(sigmoid(beta * (logp_correct - logp_wrong)))
+
+    chat_template=True: wrap q in chat-template prefix (for IT models like
+    Gemma 4 IT, Qwen IT). Required for deploy-relevant V7 training — V7 trained
+    on raw text Q:/A: format does not transfer to chat-template inference.
     """
     q, correct, wrong = pair
-    prompt = f"Question: {q}\nAnswer:"
-    lp_c = continuation_logprob(model, tokenizer, prompt, correct, seq_len_max, device)
-    lp_w = continuation_logprob(model, tokenizer, prompt, wrong, seq_len_max, device)
+    if chat_template:
+        prompt = _build_prompt_chat(tokenizer, q)
+        # Chat template ends with turn marker / newline — no separator needed
+        lp_c = continuation_logprob(model, tokenizer, prompt, correct, seq_len_max, device, separator="")
+        lp_w = continuation_logprob(model, tokenizer, prompt, wrong, seq_len_max, device, separator="")
+    else:
+        prompt = f"Question: {q}\nAnswer:"
+        lp_c = continuation_logprob(model, tokenizer, prompt, correct, seq_len_max, device)
+        lp_w = continuation_logprob(model, tokenizer, prompt, wrong, seq_len_max, device)
 
     if loss_type == "direct":
         return -lp_c + gamma * lp_w
@@ -532,6 +560,11 @@ def main():
     ap.add_argument("--loss", default="direct", choices=["direct", "dpo"])
     ap.add_argument("--seq-len-max", type=int, default=384)
     ap.add_argument("--eval-every", type=int, default=100)
+    ap.add_argument("--chat-template", action="store_true",
+                    help="Use chat template wrap for IT models. REQUIRED for chat-aligned "
+                         "deploy: V7 trained on raw text Q:/A: does not transfer to chat-template "
+                         "inference. Builds prompts via apply_chat_template + add_generation_prompt. "
+                         "See feedback_v7_chat_template_train_deploy_gap.md.")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
@@ -647,6 +680,7 @@ def main():
                 model, tokenizer, train_pairs[j],
                 seq_len_max=args.seq_len_max, device="cuda",
                 loss_type=args.loss, beta=args.beta, gamma=args.gamma,
+                chat_template=args.chat_template,
             )
             (loss / (args.batch_size * args.grad_accum)).backward()
             loss_step += float(loss.detach())
@@ -669,9 +703,14 @@ def main():
                 val_correct = 0
                 for vp in val_pairs[: min(50, len(val_pairs))]:
                     q, c, w = vp
-                    prompt = f"Question: {q}\nAnswer:"
-                    lp_c = continuation_logprob(model, tokenizer, prompt, c, args.seq_len_max, "cuda")
-                    lp_w = continuation_logprob(model, tokenizer, prompt, w, args.seq_len_max, "cuda")
+                    if args.chat_template:
+                        prompt = _build_prompt_chat(tokenizer, q)
+                        sep = ""
+                    else:
+                        prompt = f"Question: {q}\nAnswer:"
+                        sep = " "
+                    lp_c = continuation_logprob(model, tokenizer, prompt, c, args.seq_len_max, "cuda", separator=sep)
+                    lp_w = continuation_logprob(model, tokenizer, prompt, w, args.seq_len_max, "cuda", separator=sep)
                     val_loss_one = -lp_c + args.gamma * lp_w
                     val_losses.append(float(val_loss_one))
                     if lp_c.item() > lp_w.item():

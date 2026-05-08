@@ -646,6 +646,11 @@ def main():
     ap.add_argument("--refine-multiplier", type=float, default=2.0,
                     help="In fast mode, refine top-(refine_multiplier × top_k) cells with "
                          "the full fisher pipeline. Higher = safer top-K but slower.")
+    ap.add_argument("--chat-template", action="store_true",
+                    help="Wrap prompts in chat template (apply_chat_template + add_generation_prompt). "
+                         "Required for IT models (Gemma 4 IT, Qwen IT) — V7 trained on raw text "
+                         "doesn't transfer to chat-template inputs. Capture position is last answer "
+                         "token (after assistant turn marker). See feedback_v7_chat_template_train_deploy_gap.md.")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
@@ -672,8 +677,27 @@ def main():
     print(f"  Combined: {len(all_pairs)} pairs")
     print()
 
-    correct_prompts = [f"Question: {q}\nAnswer: {a}" for q, a, _ in all_pairs]
-    wrong_prompts = [f"Question: {q}\nAnswer: {b}" for q, _, b in all_pairs]
+    if args.chat_template:
+        # IT models (Gemma 4, Qwen IT): wrap each prompt in chat-template prefix,
+        # then concat answer raw. Last token of full sequence = last answer token,
+        # which preserves the V7-LoFiT capture-at-last-position semantic.
+        # Trade-off: open assistant turn (no <end_of_turn>) — minor mechanistic
+        # concern per Llama-3 IT issue #14, accepted for capture simplicity.
+        # Tokenizer MUST be loaded BEFORE this block (move below if needed).
+        tokenizer_for_template = AutoTokenizer.from_pretrained(args.base)
+        def _wrap_chat(q, ans):
+            messages = [{"role": "user", "content": q}]
+            prefix = tokenizer_for_template.apply_chat_template(
+                messages, tokenize=False, add_generation_prompt=True,
+            )
+            return prefix + ans
+        correct_prompts = [_wrap_chat(q, a) for q, a, _ in all_pairs]
+        wrong_prompts = [_wrap_chat(q, b) for q, _, b in all_pairs]
+        print(f"  chat-template ON — sample prompt[:200]:")
+        print(f"    {correct_prompts[0][:200]!r}")
+    else:
+        correct_prompts = [f"Question: {q}\nAnswer: {a}" for q, a, _ in all_pairs]
+        wrong_prompts = [f"Question: {q}\nAnswer: {b}" for q, _, b in all_pairs]
 
     # Load model
     print("Phase 2: loading model + detecting attention shape (runtime forward)")
