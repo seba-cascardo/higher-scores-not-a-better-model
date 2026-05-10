@@ -330,12 +330,82 @@ def build_hellaswag_pairs(n: int, split: str = "train", train_frac: float = TRAI
     return chosen
 
 
+def _load_phase3_jsonl(jsonl_path: str, n: int, split: str,
+                       train_frac: float = TRAIN_FRAC, seed: int = 0):
+    """Load Phase 3 contrastive pairs from a JSONL file (one obj per line with
+    keys: prompt, correct, wrong[, source]). Deterministic train/test split via
+    seed=0 perm + train_frac, mirroring TQA logic. Adds " " (space) prefix to
+    correct/wrong to match the leading-space convention used by the other
+    builders (TQA returns raw strings; lambada/gsm8k/hellaswag prepend " ").
+    For chat-template training we pass separator="" so the leading space here
+    is what places the answer one token after the turn marker.
+    """
+    print(f"  Phase3 JSONL [{jsonl_path}]: loading split={split} (target n={n})...", flush=True)
+    p = Path(jsonl_path)
+    if not p.exists():
+        raise FileNotFoundError(
+            f"Phase 3 pairs file not found: {jsonl_path}. Run the corresponding "
+            f"data-generation script (e.g. scripts/build_coding_pairs.py) first."
+        )
+    all_rows = []
+    for line in p.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        obj = json.loads(line)
+        all_rows.append((obj["prompt"], obj["correct"], obj["wrong"]))
+
+    rng = torch.Generator().manual_seed(seed)
+    perm = torch.randperm(len(all_rows), generator=rng).tolist()
+    shuffled = [all_rows[i] for i in perm]
+
+    n_total = len(shuffled)
+    n_train = int(n_total * train_frac)
+    if split == "train":
+        chosen = shuffled[:n_train]
+    elif split == "test":
+        chosen = shuffled[n_train:]
+    else:
+        raise ValueError(f"Unknown split: {split}")
+    chosen = chosen[:n]
+    pairs = [(q, " " + c, " " + w) for q, c, w in chosen]
+    print(f"    Phase3 [{jsonl_path}] {split}: returning {len(pairs)} pairs "
+          f"(total={n_total}, train={n_train})")
+    return pairs
+
+
+def build_phase3_coding_pairs(n: int, split: str = "train",
+                              train_frac: float = TRAIN_FRAC, seed: int = 0):
+    """Phase 3 Path A coding adapter contrastive pairs. Loads from
+    runs/phase3_adapters/coding/train/pairs.jsonl (HumanEval/MBPP correct +
+    Sonnet-generated buggy variants). See scripts/build_coding_pairs.py."""
+    return _load_phase3_jsonl(
+        "runs/phase3_adapters/coding/train/pairs.jsonl",
+        n, split, train_frac, seed,
+    )
+
+
+def build_phase3_proof_pairs(n: int, split: str = "train",
+                             train_frac: float = TRAIN_FRAC, seed: int = 0):
+    """Phase 3 Path C math_proof_or_format adapter contrastive pairs. Loads from
+    runs/phase3_adapters/math_proof/train/pairs.jsonl (proof-step corruption +
+    formatted-output pairs). See scripts/build_proof_pairs.py."""
+    return _load_phase3_jsonl(
+        "runs/phase3_adapters/math_proof/train/pairs.jsonl",
+        n, split, train_frac, seed,
+    )
+
+
 DATASETS = {
     "tqa": build_tqa_pairs,
     "arc": build_arc_pairs,
     "lambada": build_lambada_pairs,
     "gsm8k": build_gsm8k_pairs,
     "hellaswag": build_hellaswag_pairs,
+    # Phase 3 builders — load Sonnet-augmented JSONL written by the
+    # scripts/build_{coding,proof}_pairs.py data-generation scripts.
+    "phase3_coding": build_phase3_coding_pairs,
+    "phase3_proof": build_phase3_proof_pairs,
 }
 
 
