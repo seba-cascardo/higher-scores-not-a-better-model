@@ -343,12 +343,65 @@ def build_hellaswag_pairs(n: int, seed: int = 0) -> list[tuple[str, str, str]]:
     return pairs
 
 
+def _load_phase3_jsonl_probe(jsonl_path: str, n: int, seed: int = 0):
+    """Load Phase 3 contrastive pairs from JSONL for the correctness probe.
+    Same JSONL files consumed by train_v7_lofit.py's _load_phase3_jsonl, but
+    the probe doesn't train/test split — all pairs are CV'd.
+
+    Adds " " prefix to correct/wrong to match the format that train_v7_lofit
+    uses when consuming the SAME pairs (deterministic seed=0 perm + space prefix).
+    Last-token capture position therefore matches between probe and training,
+    so heads selected by the probe are the heads actually modulated at train
+    time.
+    """
+    from pathlib import Path as _Path
+    print(f"  Phase3 JSONL [{jsonl_path}]: loading...", flush=True)
+    p = _Path(jsonl_path)
+    if not p.exists():
+        raise FileNotFoundError(
+            f"Phase 3 pairs file not found: {jsonl_path}. Run the corresponding "
+            f"data-generation script (e.g. scripts/build_coding_pairs.py) first."
+        )
+    all_rows = []
+    for line in p.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        obj = json.loads(line)
+        all_rows.append((obj["prompt"], " " + obj["correct"], " " + obj["wrong"]))
+
+    rng = torch.Generator().manual_seed(seed)
+    perm = torch.randperm(len(all_rows), generator=rng).tolist()
+    chosen = [all_rows[i] for i in perm[:n]]
+    print(f"  Phase3 [{jsonl_path}]: {len(chosen)} pairs (of {len(all_rows)} available)")
+    return chosen
+
+
+def build_phase3_coding_pairs(n: int, seed: int = 0):
+    """Phase 3 Path A correctness probe pairs (HumanEvalPack canonical/buggy +
+    MBPP synthetic mutations). See scripts/build_coding_pairs.py."""
+    return _load_phase3_jsonl_probe(
+        "runs/phase3_adapters/coding/train/pairs.jsonl", n, seed,
+    )
+
+
+def build_phase3_proof_pairs(n: int, seed: int = 0):
+    """Phase 3 Path C correctness probe pairs (MATH proof-step corruption +
+    formatted-output errors). See scripts/build_proof_pairs.py."""
+    return _load_phase3_jsonl_probe(
+        "runs/phase3_adapters/math_proof/train/pairs.jsonl", n, seed,
+    )
+
+
 DATASET_LOADERS = {
     "tqa": build_tqa_pairs,
     "arc": build_arc_pairs,
     "lambada": build_lambada_pairs,
     "gsm8k": build_gsm8k_pairs,
     "hellaswag": build_hellaswag_pairs,
+    # Phase 3 contrastive correctness sources (same JSONL consumed by train).
+    "phase3_coding": build_phase3_coding_pairs,
+    "phase3_proof": build_phase3_proof_pairs,
 }
 
 
