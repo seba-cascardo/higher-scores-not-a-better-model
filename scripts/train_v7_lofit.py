@@ -816,7 +816,14 @@ def main():
     t0 = time.time()
     accum = 0
     optim.zero_grad()
+    # Best-checkpoint tracking. Tiebreak (val_acc, -val_loss) so when val_acc
+    # plateaus across cycles (e.g., base model already saturates the
+    # contrastive task), the lower-val_loss state wins. Without this tiebreak,
+    # step 0 (zero offsets) "wins" any later step with same val_acc, saving
+    # essentially the base model. Observed on Path A coding adapter 2026-05-11
+    # — val_acc=0.880 plateau forced best=step 1 (untrained).
     best_val_acc = -1.0
+    best_val_loss = float("inf")
     best_step = 0
 
     n_train = len(train_pairs)
@@ -877,7 +884,12 @@ def main():
                 val_acc = val_correct / max(len(val_losses), 1)
             offsets.train()
             elapsed = time.time() - t0
-            improved = val_acc > best_val_acc
+            # Lexicographic best: prefer higher val_acc; if tied, prefer lower
+            # val_loss. Ensures plateau cycles still update toward the
+            # better-trained state.
+            improved = (val_acc > best_val_acc) or (
+                val_acc == best_val_acc and val_loss < best_val_loss
+            )
             marker = "  *" if improved else ""
             print(f"{step+1:>5d}  {loss_avg:>9.4f}  {val_loss:>9.4f}  {val_acc:>8.3f}  {elapsed:>6.0f}s{marker}")
             train_log.append({
@@ -885,12 +897,13 @@ def main():
                 "val_acc": val_acc, "time": elapsed,
                 "is_best_so_far": improved,
             })
-            # Best-checkpoint persistence: every val cycle, if val_acc improved
-            # we atomically save to out_path. If training OOMs / crashes later,
-            # out_path still holds the best state seen. Eval scripts and bake
-            # read out_path so this is the deploy-worthy artifact.
+            # Best-checkpoint persistence: every val cycle, if (val_acc, -val_loss)
+            # improved we atomically save to out_path. If training OOMs / crashes
+            # later, out_path still holds the best state seen. Eval scripts and
+            # bake read out_path so this is the deploy-worthy artifact.
             if improved:
                 best_val_acc = val_acc
+                best_val_loss = val_loss
                 best_step = step + 1
                 _save_offsets_atomic(out_path, val_acc, step + 1, tag="best")
 
