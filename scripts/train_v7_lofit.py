@@ -629,7 +629,11 @@ def main():
                     help="Weight on logp_wrong term in 'direct' loss")
     ap.add_argument("--loss", default="direct", choices=["direct", "dpo"])
     ap.add_argument("--seq-len-max", type=int, default=384)
-    ap.add_argument("--eval-every", type=int, default=100)
+    ap.add_argument("--eval-every", type=int, default=200,
+                    help="Run val every N steps. Bumped to 200 default 2026-05-11 "
+                         "to reduce eval overhead on Gemma 4 31B BF16 / 96GB Blackwell; "
+                         "val_pairs (cap 25 per cycle) cost ~10-20s on 31B and we don't "
+                         "need finer monitoring resolution. Set 100 for fine-grained probe.")
     ap.add_argument("--chat-template", action="store_true",
                     help="Use chat template wrap for IT models. REQUIRED for chat-aligned "
                          "deploy: V7 trained on raw text Q:/A: does not transfer to chat-template "
@@ -678,12 +682,27 @@ def main():
     print(f"  NOTE: TQA test split (~140 items) and ARC test split reserved for final eval.")
     print()
 
-    # Load model frozen
+    # Load model frozen. Try flash_attention_2 first (~15-25% faster than sdpa
+    # on Blackwell + Gemma 4); fall back to sdpa if FA2 not installed or the
+    # architecture doesn't support it. SDPA is also fast and is the
+    # transformers 5.x default for compatible models. Hooks on o_proj fire
+    # AFTER the attention kernel regardless of impl, so both are hook-compatible.
     print("Phase 2: load model + freeze")
     tokenizer = AutoTokenizer.from_pretrained(args.base)
-    model = AutoModelForCausalLM.from_pretrained(
-        args.base, dtype=torch.bfloat16, device_map="cuda"
-    )
+    try:
+        model = AutoModelForCausalLM.from_pretrained(
+            args.base, dtype=torch.bfloat16, device_map="cuda",
+            attn_implementation="flash_attention_2",
+        )
+        print("  attn_implementation: flash_attention_2")
+    except (ImportError, ValueError) as fa2_err:
+        print(f"  flash_attention_2 unavailable ({type(fa2_err).__name__}: {fa2_err}); "
+              f"falling back to sdpa")
+        model = AutoModelForCausalLM.from_pretrained(
+            args.base, dtype=torch.bfloat16, device_map="cuda",
+            attn_implementation="sdpa",
+        )
+        print("  attn_implementation: sdpa")
     for p in model.parameters():
         p.requires_grad_(False)
     model.eval()
@@ -726,6 +745,37 @@ def main():
     # Optimizer
     optim = torch.optim.AdamW(offsets.parameters(), lr=args.lr, weight_decay=0.0)
 
+    # Atomic save helper. Used for both best-val-acc preservation during training
+    # (out_path = best state) and the final end-of-training state (out_path with
+    # .final.pt suffix). Atomic = write to .tmp then rename, so a crash mid-save
+    # never leaves a corrupt file. Pattern lifted from `task_token` script
+    # (commit 616e304, fix: task_token resilience).
+    def _save_offsets_atomic(path: Path, val_acc: float, step_saved: int, tag: str):
+        save_dict = {
+            "config": {
+                "base_path": args.base,
+                "heads_file": args.heads_file,
+                "top_k": args.top_k,
+                "datasets": datasets,
+                "steps": args.steps,
+                "loss_type": args.loss,
+                "lr": args.lr,
+                "beta": args.beta,
+                "gamma": args.gamma,
+            },
+            "layer_head_pairs": layer_head_pairs,
+            "alpha": offsets.alpha.detach().cpu(),
+            "theta": offsets.theta.detach().cpu(),
+            "head_dim": attn_shape.head_dim,
+            "num_q_heads": attn_shape.num_q_heads,
+            "val_acc_saved": val_acc,
+            "step_saved": step_saved,
+            "tag": tag,
+        }
+        tmp = Path(str(path) + ".tmp")
+        torch.save(save_dict, tmp)
+        tmp.replace(path)
+
     # Training loop
     print("Phase 3: training")
     print()
@@ -737,6 +787,8 @@ def main():
     t0 = time.time()
     accum = 0
     optim.zero_grad()
+    best_val_acc = -1.0
+    best_step = 0
 
     n_train = len(train_pairs)
 
@@ -762,16 +814,23 @@ def main():
             optim.step()
             optim.zero_grad()
             accum = 0
+            # Free fragmented activations / temporary tensors. Cheap (~5-20ms)
+            # vs giving up margin for OOM under longer pairs. Lifted from
+            # task_token resilience fix.
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
 
         loss_avg = loss_step / max(args.batch_size, 1)
 
-        # Periodic eval
+        # Periodic eval (val cap reduced 50 -> 25 to lower per-cycle overhead;
+        # eval_every default also bumped 100 -> 200; combined ~3-4x less
+        # eval-time wall while still tracking val_acc trajectory)
         if (step + 1) % args.eval_every == 0 or step == 0:
             offsets.eval()
             with torch.no_grad():
                 val_losses = []
                 val_correct = 0
-                for vp in val_pairs[: min(50, len(val_pairs))]:
+                for vp in val_pairs[: min(25, len(val_pairs))]:
                     q, c, w = vp
                     if args.chat_template:
                         prompt = _build_prompt_chat(tokenizer, q)
@@ -789,40 +848,41 @@ def main():
                 val_acc = val_correct / max(len(val_losses), 1)
             offsets.train()
             elapsed = time.time() - t0
-            print(f"{step+1:>5d}  {loss_avg:>9.4f}  {val_loss:>9.4f}  {val_acc:>8.3f}  {elapsed:>6.0f}s")
+            improved = val_acc > best_val_acc
+            marker = "  *" if improved else ""
+            print(f"{step+1:>5d}  {loss_avg:>9.4f}  {val_loss:>9.4f}  {val_acc:>8.3f}  {elapsed:>6.0f}s{marker}")
             train_log.append({
                 "step": step + 1, "loss": loss_avg, "val_loss": val_loss,
                 "val_acc": val_acc, "time": elapsed,
+                "is_best_so_far": improved,
             })
+            # Best-checkpoint persistence: every val cycle, if val_acc improved
+            # we atomically save to out_path. If training OOMs / crashes later,
+            # out_path still holds the best state seen. Eval scripts and bake
+            # read out_path so this is the deploy-worthy artifact.
+            if improved:
+                best_val_acc = val_acc
+                best_step = step + 1
+                _save_offsets_atomic(out_path, val_acc, step + 1, tag="best")
 
     remove_handles(handles)
     print()
     print(f"Training complete. Total time: {time.time() - t0:.0f}s")
+    print(f"Best val_acc: {best_val_acc:.3f} at step {best_step} -> {out_path}")
     print()
 
-    # Save
-    save_dict = {
-        "config": {
-            "base_path": args.base,
-            "heads_file": args.heads_file,
-            "top_k": args.top_k,
-            "datasets": datasets,
-            "steps": args.steps,
-            "loss_type": args.loss,
-            "lr": args.lr,
-            "beta": args.beta,
-            "gamma": args.gamma,
-        },
-        "layer_head_pairs": layer_head_pairs,
-        "alpha": offsets.alpha.detach().cpu(),
-        "theta": offsets.theta.detach().cpu(),
-        "head_dim": attn_shape.head_dim,
-        "num_q_heads": attn_shape.num_q_heads,
-    }
-    torch.save(save_dict, out_path)
-    log_path.write_text(json.dumps({"train_log": train_log}, indent=2))
-    print(f"Saved offsets: {out_path}")
-    print(f"Saved log:     {log_path}")
+    # Final-state save (separate from best). Useful for studying end-of-training
+    # collapse / overfit pattern. Eval pipelines should consume out_path (best).
+    final_path = out_path.with_suffix(".final.pt") if out_path.suffix else Path(str(out_path) + ".final")
+    _save_offsets_atomic(final_path, val_acc, args.steps, tag="final")
+    log_path.write_text(json.dumps({
+        "train_log": train_log,
+        "best_val_acc": best_val_acc,
+        "best_step": best_step,
+    }, indent=2))
+    print(f"Saved best offsets:  {out_path} (val_acc={best_val_acc:.3f} @ step {best_step})")
+    print(f"Saved final offsets: {final_path} (val_acc={val_acc:.3f} @ step {args.steps})")
+    print(f"Saved log:           {log_path}")
 
 
 if __name__ == "__main__":
