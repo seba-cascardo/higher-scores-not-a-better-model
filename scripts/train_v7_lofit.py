@@ -634,6 +634,13 @@ def main():
                          "to reduce eval overhead on Gemma 4 31B BF16 / 96GB Blackwell; "
                          "val_pairs (cap 25 per cycle) cost ~10-20s on 31B and we don't "
                          "need finer monitoring resolution. Set 100 for fine-grained probe.")
+    ap.add_argument("--attn-impl", default="sdpa",
+                    choices=["sdpa", "flash_attention_2", "eager"],
+                    help="Attention implementation. Default 'sdpa' is safe on all hardware "
+                         "and head_dims. 'flash_attention_2' may be ~10-25% faster on long "
+                         "seq lengths BUT fails at runtime on Gemma 4 (head_dim=256) on some "
+                         "FA2 builds even when the load succeeds — observed 2026-05-11 on "
+                         "Blackwell. Use 'eager' only for debugging hook interactions.")
     ap.add_argument("--chat-template", action="store_true",
                     help="Use chat template wrap for IT models. REQUIRED for chat-aligned "
                          "deploy: V7 trained on raw text Q:/A: does not transfer to chat-template "
@@ -682,27 +689,49 @@ def main():
     print(f"  NOTE: TQA test split (~140 items) and ARC test split reserved for final eval.")
     print()
 
-    # Load model frozen. Try flash_attention_2 first (~15-25% faster than sdpa
-    # on Blackwell + Gemma 4); fall back to sdpa if FA2 not installed or the
-    # architecture doesn't support it. SDPA is also fast and is the
-    # transformers 5.x default for compatible models. Hooks on o_proj fire
-    # AFTER the attention kernel regardless of impl, so both are hook-compatible.
+    # Load model frozen. Default attn_implementation='sdpa' (safe on all
+    # hardware and head_dims). Opt-in to flash_attention_2 via --attn-impl
+    # for users who confirmed FA2 works on their build + head_dim. Hooks on
+    # o_proj fire AFTER the attention kernel regardless of impl, so all
+    # impls are hook-compatible.
+    #
+    # Why default sdpa (not FA2) — 2026-05-11 observation:
+    # FA2's load succeeded for Gemma 4 31B (head_dim=256) but forward raised
+    # `RuntimeError: FlashAttention forward only supports head dimension at most 256`
+    # despite head_dim==256 being the documented limit. Some FA2 builds /
+    # Blackwell kernels effectively cap below 256. SDPA is ~10-20% slower
+    # than FA2 at seq=384 but works universally.
     print("Phase 2: load model + freeze")
     tokenizer = AutoTokenizer.from_pretrained(args.base)
-    try:
+    if args.attn_impl == "flash_attention_2":
+        try:
+            model = AutoModelForCausalLM.from_pretrained(
+                args.base, dtype=torch.bfloat16, device_map="cuda",
+                attn_implementation="flash_attention_2",
+            )
+            # Smoke forward — catches runtime-time FA2 failures (head_dim,
+            # kernel build) that the load step doesn't expose.
+            with torch.no_grad():
+                toks_smoke = tokenizer("hello", return_tensors="pt").to("cuda")
+                model(**toks_smoke, use_cache=False)
+            print("  attn_implementation: flash_attention_2 (smoke OK)")
+        except (ImportError, ValueError, RuntimeError) as fa2_err:
+            print(f"  flash_attention_2 failed ({type(fa2_err).__name__}: {fa2_err}); "
+                  f"falling back to sdpa")
+            if 'model' in locals():
+                del model
+                torch.cuda.empty_cache()
+            model = AutoModelForCausalLM.from_pretrained(
+                args.base, dtype=torch.bfloat16, device_map="cuda",
+                attn_implementation="sdpa",
+            )
+            print("  attn_implementation: sdpa (fallback)")
+    else:
         model = AutoModelForCausalLM.from_pretrained(
             args.base, dtype=torch.bfloat16, device_map="cuda",
-            attn_implementation="flash_attention_2",
+            attn_implementation=args.attn_impl,
         )
-        print("  attn_implementation: flash_attention_2")
-    except (ImportError, ValueError) as fa2_err:
-        print(f"  flash_attention_2 unavailable ({type(fa2_err).__name__}: {fa2_err}); "
-              f"falling back to sdpa")
-        model = AutoModelForCausalLM.from_pretrained(
-            args.base, dtype=torch.bfloat16, device_map="cuda",
-            attn_implementation="sdpa",
-        )
-        print("  attn_implementation: sdpa")
+        print(f"  attn_implementation: {args.attn_impl}")
     for p in model.parameters():
         p.requires_grad_(False)
     model.eval()
