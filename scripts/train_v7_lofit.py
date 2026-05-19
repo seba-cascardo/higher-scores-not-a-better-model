@@ -396,6 +396,18 @@ def build_phase3_proof_pairs(n: int, split: str = "train",
     )
 
 
+def build_phase6_g_socialiqa_pairs(n: int, split: str = "train",
+                                    train_frac: float = TRAIN_FRAC, seed: int = 0):
+    """Phase 6 G adapter (SocialIQA ToM) contrastive pairs. Loads from
+    runs/phase3_adapters/socialiqa/train/pairs.jsonl (lighteval/siqa correct
+    answer vs distractor choices, 2 pairs per question). See
+    scripts/build_socialiqa_pairs.py."""
+    return _load_phase3_jsonl(
+        "runs/phase3_adapters/socialiqa/train/pairs.jsonl",
+        n, split, train_frac, seed,
+    )
+
+
 DATASETS = {
     "tqa": build_tqa_pairs,
     "arc": build_arc_pairs,
@@ -406,6 +418,9 @@ DATASETS = {
     # scripts/build_{coding,proof}_pairs.py data-generation scripts.
     "phase3_coding": build_phase3_coding_pairs,
     "phase3_proof": build_phase3_proof_pairs,
+    # Phase 6 G adapter — SocialIQA ToM (first expansion of the Mu adapter
+    # roster beyond {A.2 coding, B.2 mc_disc, C.3 math_proof_mid_only}).
+    "phase6_g_socialiqa": build_phase6_g_socialiqa_pairs,
 }
 
 

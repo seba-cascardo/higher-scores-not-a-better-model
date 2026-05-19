@@ -393,6 +393,14 @@ def build_phase3_proof_pairs(n: int, seed: int = 0):
     )
 
 
+def build_phase6_g_socialiqa_pairs(n: int, seed: int = 0):
+    """Phase 6 G adapter (SocialIQA ToM) correctness probe pairs.
+    See scripts/build_socialiqa_pairs.py."""
+    return _load_phase3_jsonl_probe(
+        "runs/phase3_adapters/socialiqa/train/pairs.jsonl", n, seed,
+    )
+
+
 DATASET_LOADERS = {
     "tqa": build_tqa_pairs,
     "arc": build_arc_pairs,
@@ -402,6 +410,9 @@ DATASET_LOADERS = {
     # Phase 3 contrastive correctness sources (same JSONL consumed by train).
     "phase3_coding": build_phase3_coding_pairs,
     "phase3_proof": build_phase3_proof_pairs,
+    # Phase 6 G adapter (SocialIQA ToM, first expansion of Mu roster beyond
+    # A.2/B.2/C.3). Pairs JSONL via scripts/build_socialiqa_pairs.py.
+    "phase6_g_socialiqa": build_phase6_g_socialiqa_pairs,
 }
 
 
