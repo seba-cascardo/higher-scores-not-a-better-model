@@ -703,7 +703,7 @@ def main():
     ap.add_argument("--attn-impl", default="sdpa",
                     choices=["sdpa", "flash_attention_2", "eager"],
                     help="Attention implementation. Default 'sdpa' is safe on all hardware "
-                         "and head_dims. 'flash_attention_2' may be ~10-25% faster on long "
+                         "and head_dims. 'flash_attention_2' may be ~10-25%% faster on long "
                          "seq lengths BUT fails at runtime on Gemma 4 (head_dim=256) on some "
                          "FA2 builds even when the load succeeds — observed 2026-05-11 on "
                          "Blackwell. Use 'eager' only for debugging hook interactions.")
