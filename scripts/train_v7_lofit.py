@@ -458,8 +458,30 @@ class LofitOffsets(torch.nn.Module):
             (li, hi): idx for idx, (li, hi) in enumerate(self.layer_head_pairs)
         }
 
+        # Pre-computed per-layer LongTensor index buffers for vectorized hooks.
+        # `_layer_pair_indices[li]` = flat indices into alpha/theta of layer li's pairs.
+        # `_layer_head_indices[li]` = head positions (0..num_q_heads-1) at layer li.
+        # Stored as tensors (not Python lists) so the hook hot-path performs a single
+        # advanced-index gather instead of a per-head Python loop. This is the
+        # vectorization path consumed by `install_lofit_hooks` below.
+        self._layer_pair_indices: dict[int, torch.Tensor] = {}
+        self._layer_head_indices: dict[int, torch.Tensor] = {}
+        for li, hi_list in self.by_layer.items():
+            pair_idxs = [self.pair_to_idx[(li, hi)] for hi in hi_list]
+            self._layer_pair_indices[li] = torch.tensor(
+                pair_idxs, dtype=torch.long, device=device
+            )
+            self._layer_head_indices[li] = torch.tensor(
+                hi_list, dtype=torch.long, device=device
+            )
+
     def get_layer_offsets(self, layer_idx: int) -> dict[int, torch.Tensor]:
-        """Return {head_idx: alpha * theta} for all trainable heads at this layer."""
+        """Return {head_idx: alpha * theta} for all trainable heads at this layer.
+
+        Legacy accessor (pre-vectorization). Retained for any external script that
+        introspects the offset values per-head. The vectorized hook (used by
+        `install_lofit_hooks`) goes through `get_layer_indices` instead.
+        """
         if layer_idx not in self.by_layer:
             return {}
         out = {}
@@ -468,49 +490,78 @@ class LofitOffsets(torch.nn.Module):
             out[hi] = self.alpha[idx] * self.theta[idx]  # (head_dim,)
         return out
 
+    def get_layer_indices(self, layer_idx: int) -> tuple[torch.Tensor, torch.Tensor]:
+        """Return (pair_indices, head_indices) LongTensors for the given layer.
+
+        Used by the vectorized hook to gather α/θ slices and scatter offsets into
+        a per-layer workspace in a single advanced-index op. Returns (empty, empty)
+        if the layer has no selected heads.
+        """
+        if layer_idx not in self._layer_pair_indices:
+            empty = torch.empty(0, dtype=torch.long, device=self.device_)
+            return empty, empty
+        return self._layer_pair_indices[layer_idx], self._layer_head_indices[layer_idx]
+
 
 # -- Hook installation -------------------------------------------------------
 def install_lofit_hooks(layers, offsets: LofitOffsets, attn_shape: AttentionShape):
     """Register pre-hooks on attn.o_proj for each layer with selected heads.
 
-    Hook adds `α_h · θ_h` to the per-head slice of o_proj's input.
-    Returns list of handles for cleanup.
+    Vectorized: gathers α/θ slices for the layer in a single advanced-index op,
+    computes α·θ via broadcast multiply, scatters into a small
+    (num_q_heads, head_dim) workspace, and broadcast-adds to concat. The hot
+    path runs ~4 CUDA kernels per layer per token regardless of K, replacing
+    the prior Python loop that issued ~K kernels per layer per token.
+
+    Numerical identity vs the prior implementation: the per-coordinate value
+    of `modified[b, t, hi*head_dim + d]` is `concat[...] + α_h · θ_h` for
+    selected (li, hi) and `concat[...]` otherwise — identical in both
+    implementations under any input shape / dtype.
+
+    Grad flow: `layer_offset[h_idx] = active` records a CopySlices node;
+    backward correctly accumulates into alpha and theta.
 
     Defensive shape check: Gemma 4 has alternating sliding/global attention
     where global layers have 2× the q-dim. If a selected head comes from a
     non-matching layer, the reshape would fail. We raise a clear error.
     """
     expected_total = attn_shape.num_q_heads * attn_shape.head_dim
+    num_q_heads = attn_shape.num_q_heads
+    head_dim = attn_shape.head_dim
     handles = []
     for layer_idx in offsets.by_layer:
         layer = layers[layer_idx]
         o_proj = layer.self_attn.o_proj
+        pair_idx, head_idx = offsets.get_layer_indices(layer_idx)
 
-        def make_hook(li):
+        def make_hook(li, p_idx, h_idx):
             def hook(_module, inputs):
                 concat = inputs[0]  # (B, T, total)
                 B, T, total = concat.shape
                 if total != expected_total:
                     raise RuntimeError(
                         f"Layer {li}: o_proj input dim {total} != expected "
-                        f"{expected_total} ({attn_shape.num_q_heads} × "
-                        f"{attn_shape.head_dim}). This layer has different "
-                        f"attention structure (likely global vs sliding). "
-                        f"Selected head file should not include heads from this layer."
+                        f"{expected_total} ({num_q_heads} × {head_dim}). "
+                        f"This layer has different attention structure (likely "
+                        f"global vs sliding). Selected head file should not "
+                        f"include heads from this layer."
                     )
-                # Build offset tensor; needs grad to flow to theta/alpha.
-                offset_view = torch.zeros(
-                    B, T, attn_shape.num_q_heads, attn_shape.head_dim,
-                    dtype=concat.dtype, device=concat.device,
-                )
-                for hi, atheta in offsets.get_layer_offsets(li).items():
-                    offset_view[:, :, hi, :] = atheta.to(dtype=concat.dtype)
-                offset = offset_view.view(B, T, total)
-                modified = concat + offset
+                # Vectorized: gather α and θ slices for this layer, multiply,
+                # cast to model dtype, scatter into a tiny (num_q_heads, head_dim)
+                # workspace, then broadcast-add. No Python loop in the hot path.
+                # Grad flows via setitem CopySlices into alpha/theta.
+                active = (offsets.alpha[p_idx].unsqueeze(-1) * offsets.theta[p_idx]).to(
+                    dtype=concat.dtype
+                )  # (n_layer_heads, head_dim)
+                layer_offset = concat.new_zeros(num_q_heads, head_dim)
+                layer_offset[h_idx] = active
+                modified = concat + layer_offset.view(total)  # broadcast (B, T, total) + (total,)
                 return (modified,) + inputs[1:]
             return hook
 
-        handles.append(o_proj.register_forward_pre_hook(make_hook(layer_idx)))
+        handles.append(
+            o_proj.register_forward_pre_hook(make_hook(layer_idx, pair_idx, head_idx))
+        )
     return handles
 
 
