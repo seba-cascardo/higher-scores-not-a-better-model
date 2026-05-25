@@ -401,6 +401,15 @@ def build_phase6_g_socialiqa_pairs(n: int, seed: int = 0):
     )
 
 
+def build_phase1c_kr_sciq_pairs(n: int, seed: int = 0):
+    """Phase 1.C Item 1.5 KR-dedicated adapter (SciQ science MC) correctness
+    probe pairs. See scripts/build_sciq_pairs.py +
+    feedback_item_1_5_corpus_survey_2026_05_25."""
+    return _load_phase3_jsonl_probe(
+        "runs/phase3_adapters/kr_sciq/train/pairs.jsonl", n, seed,
+    )
+
+
 DATASET_LOADERS = {
     "tqa": build_tqa_pairs,
     "arc": build_arc_pairs,
@@ -413,6 +422,9 @@ DATASET_LOADERS = {
     # Phase 6 G adapter (SocialIQA ToM, first expansion of Mu roster beyond
     # A.2/B.2/C.3). Pairs JSONL via scripts/build_socialiqa_pairs.py.
     "phase6_g_socialiqa": build_phase6_g_socialiqa_pairs,
+    # Phase 1.C Item 1.5 — KR-dedicated adapter (SciQ Phys/Chem/Bio MC). KR
+    # is the 4th cognitive-mode primary (D/C/I/KR per v2.1 framework).
+    "phase1c_kr_sciq": build_phase1c_kr_sciq_pairs,
 }
 
 
