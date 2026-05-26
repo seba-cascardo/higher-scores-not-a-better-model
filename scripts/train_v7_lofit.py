@@ -1286,6 +1286,15 @@ def main():
         print(f"Best val_acc: {best_val_acc:.3f} at step {best_step} -> {out_path}")
     print()
 
+    # Fallback: if has_downstream but ALL downstream evals failed,
+    # best_step is still 0 and out_path was never written. Save the
+    # FINAL training state as out_path so downstream consumers don't
+    # crash on missing file. Logged so this isn't silent.
+    if has_downstream and best_step == 0:
+        print(f"[downstream-eval] WARNING: no downstream eval succeeded; "
+              f"falling back to final-state offsets for {out_path}")
+        _save_offsets_atomic(out_path, val_acc, args.steps, tag="best_fallback_no_downstream")
+
     # Final-state save (separate from best). Useful for studying end-of-training
     # collapse / overfit pattern. Eval pipelines should consume out_path (best).
     final_path = out_path.with_suffix(".final.pt") if out_path.suffix else Path(str(out_path) + ".final")
