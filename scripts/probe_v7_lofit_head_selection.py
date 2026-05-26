@@ -421,6 +421,33 @@ def build_phase1c_kr_opcion_d_pairs(n: int, seed: int = 0):
     )
 
 
+def build_phase1c_kr_medmcqa_pairs(n: int, seed: int = 0):
+    """Per-corpus diagnostic probe (Opción D triage 2026-05-27): MedMCQA component
+    alone. Used to discriminate H1 (corpus-specific heads) vs H2/H4 (probe-method
+    or format confound) after mix probe found 0 heads >=0.75."""
+    return _load_phase3_jsonl_probe(
+        "runs/phase3_adapters/kr_opcion_d/train/medmcqa_pairs.jsonl", n, seed,
+    )
+
+
+def build_phase1c_kr_head_qa_v2_pairs(n: int, seed: int = 0):
+    """Per-corpus diagnostic probe (Opción D triage 2026-05-27): head_qa_v2 component
+    alone. See build_phase1c_kr_medmcqa_pairs."""
+    return _load_phase3_jsonl_probe(
+        "runs/phase3_adapters/kr_opcion_d/train/head_qa_pairs.jsonl", n, seed,
+    )
+
+
+def build_phase1c_kr_ewok_pairs(n: int, seed: int = 0):
+    """Per-corpus diagnostic probe (Opción D triage 2026-05-27): EWoK component
+    alone. Note EWoK uses raw Context/Target prompts (NOT Question:/Answer:
+    template like the other 3) — distributional / formatting confound candidate
+    for H4 (mix probe failure). See build_phase1c_kr_medmcqa_pairs."""
+    return _load_phase3_jsonl_probe(
+        "runs/phase3_adapters/kr_opcion_d/train/ewok_pairs.jsonl", n, seed,
+    )
+
+
 DATASET_LOADERS = {
     "tqa": build_tqa_pairs,
     "arc": build_arc_pairs,
@@ -439,6 +466,13 @@ DATASET_LOADERS = {
     # Phase 1.C Item 1.5 Opción D — multi-corpus KR mix (SciQ + MedMCQA +
     # head_qa_v2). Pivot post K=24 SciQ overshoot verdict 2026-05-26.
     "phase1c_kr_opcion_d": build_phase1c_kr_opcion_d_pairs,
+    # Per-corpus diagnostic probes (Opción D triage 2026-05-27, post mix-probe
+    # finding 0 heads >= 0.75). Each probes ONE corpus alone to discriminate
+    # H1 (corpus-specific heads) / H2 (method blind) / H3 (axis-misalign) /
+    # H4 (EWoK format confound) / H5 (difficulty stratified).
+    "phase1c_kr_medmcqa": build_phase1c_kr_medmcqa_pairs,
+    "phase1c_kr_head_qa_v2": build_phase1c_kr_head_qa_v2_pairs,
+    "phase1c_kr_ewok": build_phase1c_kr_ewok_pairs,
 }
 
 

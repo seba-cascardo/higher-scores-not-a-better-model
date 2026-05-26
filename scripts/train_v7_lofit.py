@@ -434,6 +434,36 @@ def build_phase1c_kr_opcion_d_pairs(n: int, split: str = "train",
     )
 
 
+def build_phase1c_kr_medmcqa_pairs(n: int, split: str = "train",
+                                     train_frac: float = TRAIN_FRAC, seed: int = 0):
+    """Per-corpus train reader for diagnostic / future per-corpus adapters
+    (Opción D triage 2026-05-27)."""
+    return _load_phase3_jsonl(
+        "runs/phase3_adapters/kr_opcion_d/train/medmcqa_pairs.jsonl",
+        n, split, train_frac, seed,
+    )
+
+
+def build_phase1c_kr_head_qa_v2_pairs(n: int, split: str = "train",
+                                        train_frac: float = TRAIN_FRAC, seed: int = 0):
+    """Per-corpus train reader (Opción D triage 2026-05-27)."""
+    return _load_phase3_jsonl(
+        "runs/phase3_adapters/kr_opcion_d/train/head_qa_pairs.jsonl",
+        n, split, train_frac, seed,
+    )
+
+
+def build_phase1c_kr_ewok_pairs(n: int, split: str = "train",
+                                  train_frac: float = TRAIN_FRAC, seed: int = 0):
+    """Per-corpus train reader (Opción D triage 2026-05-27). NOTE EWoK uses raw
+    Context/Target prompts, NOT Question:/Answer: template — formatting confound
+    candidate H4 for mix-probe failure."""
+    return _load_phase3_jsonl(
+        "runs/phase3_adapters/kr_opcion_d/train/ewok_pairs.jsonl",
+        n, split, train_frac, seed,
+    )
+
+
 DATASETS = {
     "tqa": build_tqa_pairs,
     "arc": build_arc_pairs,
@@ -453,6 +483,11 @@ DATASETS = {
     # Phase 1.C Item 1.5 Opción D — multi-corpus KR mix (SciQ + MedMCQA +
     # head_qa_v2). Pivot post K=24 SciQ overshoot verdict 2026-05-26.
     "phase1c_kr_opcion_d": build_phase1c_kr_opcion_d_pairs,
+    # Per-corpus diagnostic / future per-corpus-adapter readers
+    # (Opción D triage 2026-05-27).
+    "phase1c_kr_medmcqa": build_phase1c_kr_medmcqa_pairs,
+    "phase1c_kr_head_qa_v2": build_phase1c_kr_head_qa_v2_pairs,
+    "phase1c_kr_ewok": build_phase1c_kr_ewok_pairs,
 }
 
 
