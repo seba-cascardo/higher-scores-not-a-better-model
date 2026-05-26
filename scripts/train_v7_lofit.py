@@ -1279,7 +1279,11 @@ def main():
     remove_handles(handles)
     print()
     print(f"Training complete. Total time: {time.time() - t0:.0f}s")
-    print(f"Best val_acc: {best_val_acc:.3f} at step {best_step} -> {out_path}")
+    if has_downstream:
+        print(f"Best downstream-primary ({args.downstream_primary}) acc: "
+              f"{best_downstream_primary:.3f} at step {best_step} -> {out_path}")
+    else:
+        print(f"Best val_acc: {best_val_acc:.3f} at step {best_step} -> {out_path}")
     print()
 
     # Final-state save (separate from best). Useful for studying end-of-training
@@ -1290,9 +1294,18 @@ def main():
         "train_log": train_log,
         "best_val_acc": best_val_acc,
         "best_step": best_step,
+        "best_downstream_primary": best_downstream_primary if has_downstream else None,
     }, indent=2))
-    print(f"Saved best offsets:  {out_path} (val_acc={best_val_acc:.3f} @ step {best_step})")
-    print(f"Saved final offsets: {final_path} (val_acc={val_acc:.3f} @ step {args.steps})")
+    if has_downstream:
+        print(f"Saved best offsets:    {out_path} (downstream_primary="
+              f"{best_downstream_primary:.3f} @ step {best_step})")
+        print(f"Saved final offsets:   {final_path} (val_acc={val_acc:.3f} @ step {args.steps})")
+        n_step_ckpts = sum(1 for e in trajectory)
+        print(f"Saved {n_step_ckpts} step ckpts: {out_path.parent}/{out_path.stem}.step_*.pt")
+        print(f"Saved trajectory:      {trajectory_path}")
+    else:
+        print(f"Saved best offsets:  {out_path} (val_acc={best_val_acc:.3f} @ step {best_step})")
+        print(f"Saved final offsets: {final_path} (val_acc={val_acc:.3f} @ step {args.steps})")
     print(f"Saved log:           {log_path}")
 
 
