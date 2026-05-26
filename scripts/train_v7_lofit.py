@@ -737,6 +737,35 @@ def _save_trajectory_atomic(path: Path, entries: list[TrajectoryEntry], meta: di
     tmp.replace(path)
 
 
+def _validate_downstream_tasks(primary: str, spillover: list[str]) -> None:
+    """Fail-fast task validation at startup so a typo doesn't burn an
+    hour of training. Lazy-import lm_eval (Polish item #5) so the
+    backwards-compat path (--downstream-primary empty) doesn't require
+    lm_eval to be installed.
+    """
+    if not primary:
+        return  # feature off, nothing to validate
+
+    try:
+        from lm_eval.tasks import TaskManager
+    except ImportError as e:
+        raise SystemExit(
+            f"--downstream-primary set ({primary!r}) but lm_eval is not "
+            f"installed. Run `pip install 'lm-eval[hf]'` or unset the flag. "
+            f"Original error: {e}"
+        )
+
+    tm = TaskManager()
+    available = set(tm.all_tasks)
+    tasks_to_check = [primary] + spillover
+    missing = [t for t in tasks_to_check if t not in available]
+    if missing:
+        raise SystemExit(
+            f"Unknown lm_eval task(s): {missing}. "
+            f"Run `lm_eval --tasks list` to see available tasks."
+        )
+
+
 # -- Main --------------------------------------------------------------------
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
