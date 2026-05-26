@@ -728,6 +728,36 @@ def main():
                          "inference. Builds prompts via apply_chat_template + add_generation_prompt. "
                          "See feedback_v7_chat_template_train_deploy_gap.md.")
     ap.add_argument("--out", required=True)
+    # ---- Mid-training downstream eval (opt-in feature) ----
+    # When --downstream-primary is empty (default), the script behaves
+    # identically to pre-feature: only val_pair_acc tracked, only
+    # `<out>.pt` (best) and `<out>.final.pt` written. When set, each
+    # eval cycle also runs lm_eval.simple_evaluate over a subset of the
+    # specified task(s) and selects best ckpt by downstream acc_norm.
+    ap.add_argument("--downstream-primary", default="",
+                    help="lm_eval task name (e.g., 'sciq') driving best-ckpt "
+                         "selection. Empty (default) = feature off; behavior "
+                         "identical to pre-2026-05-26. See spec "
+                         "2026-05-26-train-v7-lofit-midtrain-eval-design.md.")
+    ap.add_argument("--downstream-spillover", default="",
+                    help="Comma-separated lm_eval task names monitored each "
+                         "eval cycle, but NOT used for best-ckpt selection. "
+                         "WARN logged if any drops > --downstream-spillover-warn-pp "
+                         "vs first cycle. Example: 'mmlu,arc_challenge'.")
+    ap.add_argument("--downstream-limit", type=int, default=50,
+                    help="Per-task subset size for mid-training eval (lm_eval "
+                         "limit=N: deterministic first-N items). Default 50.")
+    ap.add_argument("--downstream-eval-every", type=int, default=None,
+                    help="Run downstream eval every N steps. Default = same "
+                         "as --eval-every. Set higher to reduce overhead.")
+    ap.add_argument("--downstream-apply-chat-template",
+                    action=argparse.BooleanOptionalAction, default=True,
+                    help="Apply chat template during downstream eval. "
+                         "REQUIRED for IT base models. Default True. "
+                         "Use --no-downstream-apply-chat-template to disable.")
+    ap.add_argument("--downstream-spillover-warn-pp", type=float, default=3.0,
+                    help="Spillover acc drop (in pp vs first cycle) above "
+                         "which a WARN is logged. Default 3.0 (per D.1 lesson).")
     args = ap.parse_args()
 
     out_path = Path(args.out)
