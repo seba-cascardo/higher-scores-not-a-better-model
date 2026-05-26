@@ -410,6 +410,17 @@ def build_phase1c_kr_sciq_pairs(n: int, seed: int = 0):
     )
 
 
+def build_phase1c_kr_opcion_d_pairs(n: int, seed: int = 0):
+    """Phase 1.C Item 1.5 Opción D KR-mix multi-corpus adapter correctness
+    probe pairs (SciQ + MedMCQA + head_qa_v2 shuffled mix; ~6300-7000 total).
+    Pivot from single-corpus SciQ after K=24 transfer-gap verdict
+    (sciq +2.1pp / GPQA Diamond -12.1pp). See scripts/build_kr_opcion_d_mix.py
+    + feedback_item_1_5_k24_sciq_overshoot_verdict_2026_05_26."""
+    return _load_phase3_jsonl_probe(
+        "runs/phase3_adapters/kr_opcion_d/train/pairs.jsonl", n, seed,
+    )
+
+
 DATASET_LOADERS = {
     "tqa": build_tqa_pairs,
     "arc": build_arc_pairs,
@@ -425,6 +436,9 @@ DATASET_LOADERS = {
     # Phase 1.C Item 1.5 — KR-dedicated adapter (SciQ Phys/Chem/Bio MC). KR
     # is the 4th cognitive-mode primary (D/C/I/KR per v2.1 framework).
     "phase1c_kr_sciq": build_phase1c_kr_sciq_pairs,
+    # Phase 1.C Item 1.5 Opción D — multi-corpus KR mix (SciQ + MedMCQA +
+    # head_qa_v2). Pivot post K=24 SciQ overshoot verdict 2026-05-26.
+    "phase1c_kr_opcion_d": build_phase1c_kr_opcion_d_pairs,
 }
 
 
