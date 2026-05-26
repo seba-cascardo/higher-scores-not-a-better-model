@@ -766,6 +766,71 @@ def _validate_downstream_tasks(primary: str, spillover: list[str]) -> None:
         )
 
 
+def _run_downstream_eval(
+    model,
+    tokenizer,
+    primary: str,
+    spillover: list[str],
+    limit: int,
+    apply_chat_template: bool,
+) -> dict[str, float | None]:
+    """Run lm_eval.simple_evaluate over [primary, *spillover] tasks on
+    a subset of `limit` items each. Returns dict {task: acc_norm or None
+    on failure}. The model is wrapped in HFLM(pretrained=<instance>)
+    so forward pre-hooks installed by the trainer are preserved (verified
+    in test_hflm_preserves_forward_pre_hooks, Polish item #1).
+
+    Defensive limit clamp (Polish item #6): lm_eval's limit param accepts
+    larger-than-task-size silently; logging clamped value avoids confusion.
+
+    Restores model.train() after eval (Polish item #7) — simple_evaluate
+    may call model.eval() internally and we want training to resume
+    in train mode (matters if any future submodule has dropout).
+    """
+    from lm_eval import simple_evaluate
+    from lm_eval.models.huggingface import HFLM
+
+    tasks = [primary] + spillover
+    was_training = model.training
+
+    try:
+        # Wrap the already-loaded model + hooks in HFLM
+        hflm = HFLM(pretrained=model, tokenizer=tokenizer)
+        results = simple_evaluate(
+            model=hflm,
+            tasks=tasks,
+            limit=limit,
+            apply_chat_template=apply_chat_template,
+            log_samples=False,           # avoid bloating logs mid-training
+            verbosity="ERROR",           # suppress lm_eval INFO chatter
+            bootstrap_iters=0,           # skip stderr bootstrap (saves ~5s)
+        )
+    except Exception as e:
+        print(f"[downstream-eval] FAILED: {type(e).__name__}: {e}")
+        # Restore train mode and return None for all tasks
+        if was_training:
+            model.train()
+        return {t: None for t in tasks}
+
+    # Restore train mode (Polish item #7)
+    if was_training:
+        model.train()
+
+    # Extract acc_norm per task
+    out = {}
+    task_results = results.get("results", {})
+    for t in tasks:
+        task_data = task_results.get(t, {})
+        # Prefer acc_norm, fall back to acc
+        acc = task_data.get("acc_norm,none",
+              task_data.get("acc_norm",
+              task_data.get("acc,none",
+              task_data.get("acc"))))
+        out[t] = float(acc) if acc is not None else None
+
+    return out
+
+
 # -- Main --------------------------------------------------------------------
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
