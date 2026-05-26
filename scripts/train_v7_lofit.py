@@ -1062,8 +1062,26 @@ def main():
     # Training loop
     print("Phase 3: training")
     print()
-    print(f"{'step':>5s}  {'loss':>9s}  {'val_loss':>9s}  {'val_acc':>8s}  {'time':>6s}")
-    print("-" * 47)
+    has_downstream = bool(args.downstream_primary)
+    spillover_list = [t.strip() for t in args.downstream_spillover.split(",") if t.strip()]
+    downstream_eval_every = args.downstream_eval_every if args.downstream_eval_every else args.eval_every
+    # Validate tasks at startup (fail-fast, lazy-import lm_eval)
+    _validate_downstream_tasks(args.downstream_primary, spillover_list)
+    # Trajectory storage
+    trajectory: list[TrajectoryEntry] = []
+    trajectory_path = out_path.with_suffix(".trajectory.json")
+    best_downstream_primary = -1.0
+    first_cycle_spillover: dict[str, float] = {}  # baseline for WARN logic
+    # Header
+    if has_downstream:
+        spill_cols = "  ".join(f"{t[:8]:>8s}" for t in spillover_list)
+        spill_hdr = f"  {spill_cols}" if spillover_list else ""
+        print(f"{'step':>5s}  {'loss':>9s}  {'val_loss':>9s}  {'val_acc':>8s}  "
+              f"{args.downstream_primary[:8]:>8s}{spill_hdr}  {'time':>6s}")
+        print("-" * (47 + 10 + 10 * len(spillover_list)))
+    else:
+        print(f"{'step':>5s}  {'loss':>9s}  {'val_loss':>9s}  {'val_acc':>8s}  {'time':>6s}")
+        print("-" * 47)
 
     rng = torch.Generator().manual_seed(0)
     train_log = []
@@ -1138,28 +1156,125 @@ def main():
                 val_acc = val_correct / max(len(val_losses), 1)
             offsets.train()
             elapsed = time.time() - t0
-            # Lexicographic best: prefer higher val_acc; if tied, prefer lower
-            # val_loss. Ensures plateau cycles still update toward the
-            # better-trained state.
-            improved = (val_acc > best_val_acc) or (
+
+            # ---- Mid-training downstream eval (opt-in, Task 6) ----
+            downstream_primary_acc: float | None = None
+            downstream_spillover_accs: dict[str, float | None] = {}
+            step_ckpt_path: str = ""
+            ran_downstream: bool = False
+
+            if has_downstream and ((step + 1) % downstream_eval_every == 0 or step == 0):
+                # 1. Save step ckpt first (so even if eval fails we have the snapshot)
+                step_ckpt = out_path.with_suffix(f".step_{step+1}.pt")
+                _save_offsets_atomic(step_ckpt, val_acc, step + 1, tag=f"step_{step+1}")
+                step_ckpt_path = str(step_ckpt.resolve())
+
+                # 2. Run downstream eval (lm_eval clamps limit to task size silently — Polish #6 docstring on _run_downstream_eval)
+                downstream_results = _run_downstream_eval(
+                    model=model,
+                    tokenizer=tokenizer,
+                    primary=args.downstream_primary,
+                    spillover=spillover_list,
+                    limit=args.downstream_limit,
+                    apply_chat_template=args.downstream_apply_chat_template,
+                )
+                downstream_primary_acc = downstream_results.get(args.downstream_primary)
+                downstream_spillover_accs = {
+                    t: downstream_results.get(t) for t in spillover_list
+                }
+
+                # 3. Capture first-cycle spillover baseline for WARN logic
+                if not first_cycle_spillover and any(v is not None for v in downstream_spillover_accs.values()):
+                    first_cycle_spillover = {
+                        t: v for t, v in downstream_spillover_accs.items() if v is not None
+                    }
+
+                # 4. Spillover WARN
+                for t, acc in downstream_spillover_accs.items():
+                    if acc is None or t not in first_cycle_spillover:
+                        continue
+                    drop_pp = (first_cycle_spillover[t] - acc) * 100.0
+                    if drop_pp > args.downstream_spillover_warn_pp:
+                        print(f"[downstream-eval] WARN: spillover '{t}' dropped "
+                              f"{drop_pp:.1f}pp vs first cycle "
+                              f"({first_cycle_spillover[t]:.3f} -> {acc:.3f})")
+
+                ran_downstream = True
+
+            # Lexicographic best (legacy val_pair_acc track — kept for backwards compat)
+            improved_val_pair = (val_acc > best_val_acc) or (
                 val_acc == best_val_acc and val_loss < best_val_loss
             )
-            marker = "  *" if improved else ""
-            print(f"{step+1:>5d}  {loss_avg:>9.4f}  {val_loss:>9.4f}  {val_acc:>8.3f}  {elapsed:>6.0f}s{marker}")
+
+            # Downstream best (new — primary metric drives best ckpt when feature on)
+            is_best_primary = False
+            if has_downstream and downstream_primary_acc is not None:
+                is_best_primary = downstream_primary_acc > best_downstream_primary
+                if is_best_primary:
+                    best_downstream_primary = downstream_primary_acc
+
+            # Marker logic: prefer downstream "best" marker when feature on; else val_pair
+            if has_downstream:
+                marker = "  *" if is_best_primary else ""
+            else:
+                marker = "  *" if improved_val_pair else ""
+
+            # Print row (expanded when downstream on)
+            if has_downstream:
+                prim_str = f"{downstream_primary_acc:.3f}" if downstream_primary_acc is not None else "  n/a "
+                spill_strs = []
+                for t in spillover_list:
+                    v = downstream_spillover_accs.get(t)
+                    spill_strs.append(f"{v:.3f}" if v is not None else " n/a ")
+                spill_col = "  ".join(f"{s:>8s}" for s in spill_strs)
+                spill_part = f"  {spill_col}" if spill_strs else ""
+                print(f"{step+1:>5d}  {loss_avg:>9.4f}  {val_loss:>9.4f}  {val_acc:>8.3f}  "
+                      f"{prim_str:>8s}{spill_part}  {elapsed:>6.0f}s{marker}")
+            else:
+                print(f"{step+1:>5d}  {loss_avg:>9.4f}  {val_loss:>9.4f}  {val_acc:>8.3f}  {elapsed:>6.0f}s{marker}")
+
             train_log.append({
                 "step": step + 1, "loss": loss_avg, "val_loss": val_loss,
                 "val_acc": val_acc, "time": elapsed,
-                "is_best_so_far": improved,
+                "is_best_so_far": is_best_primary if has_downstream else improved_val_pair,
             })
-            # Best-checkpoint persistence: every val cycle, if (val_acc, -val_loss)
-            # improved we atomically save to out_path. If training OOMs / crashes
-            # later, out_path still holds the best state seen. Eval scripts and
-            # bake read out_path so this is the deploy-worthy artifact.
-            if improved:
-                best_val_acc = val_acc
-                best_val_loss = val_loss
-                best_step = step + 1
-                _save_offsets_atomic(out_path, val_acc, step + 1, tag="best")
+
+            # Persist best ckpt:
+            # - Feature OFF: best = val_pair_acc (current behavior, unchanged)
+            # - Feature ON:  best = downstream_primary_acc (overrides val_pair)
+            if has_downstream:
+                if is_best_primary:
+                    best_step = step + 1
+                    best_val_acc = val_acc  # cosmetic; reported in summary
+                    best_val_loss = val_loss
+                    _save_offsets_atomic(out_path, val_acc, step + 1, tag="best_primary")
+            else:
+                if improved_val_pair:
+                    best_val_acc = val_acc
+                    best_val_loss = val_loss
+                    best_step = step + 1
+                    _save_offsets_atomic(out_path, val_acc, step + 1, tag="best")
+
+            # Append trajectory entry + atomic write (Polish item #4)
+            if has_downstream and ran_downstream:
+                trajectory.append(TrajectoryEntry(
+                    step=step + 1,
+                    val_loss=val_loss,
+                    val_acc=val_acc,
+                    downstream_primary_acc=downstream_primary_acc,
+                    downstream_spillover_accs=downstream_spillover_accs,
+                    ckpt_path=step_ckpt_path,
+                    elapsed_s=elapsed,
+                    is_best_primary=is_best_primary,
+                ))
+                _save_trajectory_atomic(trajectory_path, trajectory, meta={
+                    "primary": args.downstream_primary,
+                    "spillover": spillover_list,
+                    "limit": args.downstream_limit,
+                    "downstream_eval_every": downstream_eval_every,
+                    "apply_chat_template": args.downstream_apply_chat_template,
+                    "spillover_warn_pp": args.downstream_spillover_warn_pp,
+                })
 
     remove_handles(handles)
     print()
