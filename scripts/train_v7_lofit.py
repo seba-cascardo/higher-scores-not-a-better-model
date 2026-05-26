@@ -688,6 +688,55 @@ def task_margin_loss(
         raise ValueError(f"Unknown loss_type {loss_type}")
 
 
+# -- Trajectory logging for mid-training downstream eval -------------------
+@dataclass
+class TrajectoryEntry:
+    """One row of mid-training trajectory log.
+
+    Schema definition for `<out>.trajectory.json` (Polish item #3). When
+    a cycle fails (lm_eval raised), `downstream_primary_acc` and
+    `downstream_spillover_accs` are None — distinguishes "this cycle
+    failed" from "key missing" (which would silently corrupt analyses).
+
+    Written atomically (write-temp-then-rename) after EACH cycle so a
+    mid-training crash never loses accumulated log (Polish item #4).
+    """
+    step: int
+    val_loss: float
+    val_acc: float
+    downstream_primary_acc: float | None        # None if cycle eval failed
+    downstream_spillover_accs: dict[str, float | None]  # {task: acc or None}
+    ckpt_path: str                              # absolute path to .step_N.pt
+    elapsed_s: float
+    is_best_primary: bool                       # True if this cycle's primary beats prior best
+
+    def to_dict(self) -> dict:
+        return {
+            "step": self.step,
+            "val_loss": self.val_loss,
+            "val_acc": self.val_acc,
+            "downstream_primary_acc": self.downstream_primary_acc,
+            "downstream_spillover_accs": self.downstream_spillover_accs,
+            "ckpt_path": self.ckpt_path,
+            "elapsed_s": self.elapsed_s,
+            "is_best_primary": self.is_best_primary,
+        }
+
+
+def _save_trajectory_atomic(path: Path, entries: list[TrajectoryEntry], meta: dict) -> None:
+    """Atomic write of trajectory log + meta. Call after EVERY cycle so
+    a crash mid-training preserves all prior cycles (Polish item #4).
+    """
+    payload = {
+        "schema_version": "1.0",
+        "meta": meta,
+        "entries": [e.to_dict() for e in entries],
+    }
+    tmp = Path(str(path) + ".tmp")
+    tmp.write_text(json.dumps(payload, indent=2))
+    tmp.replace(path)
+
+
 # -- Main --------------------------------------------------------------------
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
