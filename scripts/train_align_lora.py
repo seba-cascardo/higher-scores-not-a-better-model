@@ -122,17 +122,32 @@ def _check_deps(need_4bit: bool = False):
         sys.exit(1)
 
 
+# Multimodal submodules to skip when detecting text-decoder LoRA targets.
+# Gemma 4 loads as a ConditionalGeneration model whose vision/audio towers use a
+# Gemma4ClippableLinear wrapper (.linear inner). The text decoder uses plain
+# nn.Linear. If detection hits a tower's q_proj first it returns ".linear"
+# suffixes that ONLY match the towers -> on a text corpus the towers never run,
+# the LoRA gets zero gradient, lora_B stays at its zero-init, and the adapter is
+# a complete no-op (A.2 post-mortem 2026-06-02: flat loss, eval == base).
+_NON_TEXT_SUBTREES = ("vision_tower", "audio_tower", "vision_model", "audio_model")
+
+
 def _detect_target_modules(model,
                             candidates=("q_proj", "k_proj", "v_proj", "o_proj")):
-    """Auto-detect LoRA target_modules suffix list (mirrors train_router_lora.py).
+    """Auto-detect LoRA target_modules suffix list for the TEXT decoder.
+
+    Skips multimodal vision/audio towers (see `_NON_TEXT_SUBTREES`) so a text-only
+    Align-LoRA actually adapts the language model rather than an inert tower.
 
     Returns:
-      - Standard nn.Linear (Qwen, Llama, Mistral): ["q_proj","k_proj",...]
-      - Gemma 4 Gemma4ClippableLinear wrapper (.linear inner):
+      - Standard nn.Linear (Qwen, Llama, Mistral, Gemma 4 text): ["q_proj","k_proj",...]
+      - Pure Gemma4ClippableLinear wrapper, no towers (.linear inner):
         ["q_proj.linear", "k_proj.linear", ...]
     """
     import torch.nn as nn
     for name, module in model.named_modules():
+        if any(t in name for t in _NON_TEXT_SUBTREES):
+            continue  # skip vision/audio towers -> target the text decoder only
         if any(name.endswith("." + c) for c in candidates):
             if isinstance(module, nn.Linear):
                 return list(candidates)
@@ -143,8 +158,8 @@ def _detect_target_modules(model,
                 f"nor a wrapper with .linear inner). Pass --target-modules manually."
             )
     raise ValueError(
-        f"Could not find any attention modules matching {candidates}. Pass "
-        f"--target-modules manually."
+        f"Could not find any text-decoder attention modules matching {candidates} "
+        f"(searched outside {_NON_TEXT_SUBTREES}). Pass --target-modules manually."
     )
 
 
@@ -536,6 +551,10 @@ def main():
         lora_alpha=lora_alpha,
         lora_dropout=args.lora_dropout,
         target_modules=candidate_targets,
+        # Belt-and-suspenders: even if a target suffix collides with a tower
+        # module name, never inject LoRA into the multimodal towers (they are
+        # inert on a text corpus -> silent no-op). See A.2 post-mortem 2026-06-02.
+        exclude_modules=list(_NON_TEXT_SUBTREES),
         bias="none",
         task_type=TaskType.CAUSAL_LM,
     )
@@ -551,6 +570,24 @@ def main():
     print(f"  trainable LoRA params: {trainable/1e6:.2f}M "
           f"({100*trainable/base_total_params:.3f}% of base)")
     print(f"  gradient checkpointing: enabled")
+
+    # SANITY GUARD (A.2 post-mortem 2026-06-02): fail loudly if the LoRA landed
+    # in a multimodal tower instead of the text decoder. On a text corpus a
+    # tower-only adapter gets zero gradient -> lora_B stays at zero-init -> the
+    # whole run is a silent no-op (flat loss, eval == base). Require that some
+    # trainable params live OUTSIDE the towers.
+    text_trainable = sum(
+        p.numel() for n, p in model.named_parameters()
+        if p.requires_grad and not any(t in n for t in _NON_TEXT_SUBTREES)
+    )
+    if text_trainable == 0:
+        raise RuntimeError(
+            "No trainable LoRA params in the text decoder — all landed in "
+            f"vision/audio towers ({_NON_TEXT_SUBTREES}). The adapter would be a "
+            "no-op on a text corpus. Check target_modules / model structure."
+        )
+    print(f"  text-decoder trainable params: {text_trainable/1e6:.2f}M "
+          f"({100*text_trainable/max(trainable,1):.1f}% of trainable)")
 
     # ---- Dataset + loader ----
     print(f"\n=== Phase 4: dataset + dataloader ===", flush=True)
