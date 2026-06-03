@@ -183,6 +183,25 @@ def _detect_target_modules(model,
     )
 
 
+def _patch_base_model_id(out_dir, base_path, hf_id):
+    """Point base_model at the hub id (not the local --base path) so `hf upload`
+    accepts the repo. PEFT records --base in adapter_config.json AND auto-generates
+    a README model card with `base_model: <path>`; HF rejects non-hub paths on
+    upload ("not a valid model id"). Rewrites both to the hub id.
+    """
+    out_dir = Path(out_dir)
+    cfg = out_dir / "adapter_config.json"
+    if cfg.exists():
+        d = json.loads(cfg.read_text(encoding="utf-8"))
+        d["base_model_name_or_path"] = hf_id
+        cfg.write_text(json.dumps(d, indent=2), encoding="utf-8")
+    readme = out_dir / "README.md"
+    if readme.exists():
+        readme.write_text(
+            readme.read_text(encoding="utf-8").replace(str(base_path), hf_id),
+            encoding="utf-8")
+
+
 def load_tokenizer_compat(model_path):
     """Mirror train_router_lora.py — handle Mistral regex fix transparently."""
     from transformers import AutoTokenizer
@@ -443,6 +462,10 @@ def main():
                                   formatter_class=argparse.RawDescriptionHelpFormatter)
     # Model + adapter
     ap.add_argument("--base", help="Path to Gemma 4 31B IT base model. Required unless --build-corpus-only.")
+    ap.add_argument("--base-hf-id", default=None,
+                    help="HF model id to record as base_model in the adapter config/card "
+                         "(e.g. google/gemma-4-31b-it). --base is usually a LOCAL path, which "
+                         "HF rejects on upload ('not a valid model id'); this records the hub id.")
     ap.add_argument("--lora-r", type=int, default=256,
                     help="LoRA rank (default 256, 'high rank' per arXiv:2508.05078). Sweep "
                          "candidates: 32, 64, 128, 256, 512.")
@@ -697,6 +720,8 @@ def main():
         tokenizer.save_pretrained(ep_ckpt)
         model.save_pretrained(args.out)
         tokenizer.save_pretrained(args.out)
+        if args.base_hf_id:
+            _patch_base_model_id(args.out, args.base, args.base_hf_id)
 
         log_path = args.out / "train.log.json"
         with log_path.open("w", encoding="utf-8") as f:
