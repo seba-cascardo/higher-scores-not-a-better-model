@@ -134,32 +134,52 @@ _NON_TEXT_SUBTREES = ("vision_tower", "audio_tower", "vision_model", "audio_mode
 
 def _detect_target_modules(model,
                             candidates=("q_proj", "k_proj", "v_proj", "o_proj")):
-    """Auto-detect LoRA target_modules suffix list for the TEXT decoder.
+    """Return FULLY-QUALIFIED LoRA target names for the TEXT decoder.
 
-    Skips multimodal vision/audio towers (see `_NON_TEXT_SUBTREES`) so a text-only
-    Align-LoRA actually adapts the language model rather than an inert tower.
+    Returns the exact module paths (e.g.
+    ``model.language_model.layers.0.self_attn.q_proj``) of every plain nn.Linear
+    attention projection, so PEFT injects LoRA into EXACTLY those modules.
 
-    Returns:
-      - Standard nn.Linear (Qwen, Llama, Mistral, Gemma 4 text): ["q_proj","k_proj",...]
-      - Pure Gemma4ClippableLinear wrapper, no towers (.linear inner):
-        ["q_proj.linear", "k_proj.linear", ...]
+    Why full names + an isinstance filter (not bare suffixes + a name-based skip):
+    bare suffixes like ``['q_proj']`` are applied GLOBALLY by PEFT, so they also
+    hit the multimodal vision/audio towers — whose projections are
+    ``Gemma4ClippableLinear`` wrappers, NOT nn.Linear — and PEFT raises
+    ("Target module Gemma4ClippableLinear ... is not supported"). The prior fix
+    skipped towers BY NAME (``_NON_TEXT_SUBTREES``) but the real tower subtree
+    name was not in that list, so a tower leaked through (A.2 retrain failure
+    2026-06-03). Filtering by TYPE excludes the towers regardless of how their
+    subtree is named — the robust invariant (confirmed in the 2026-06-02
+    post-mortem) is "text decoder = nn.Linear, towers = Gemma4ClippableLinear".
+
+    Regimes:
+      - Plain nn.Linear projections present (Qwen/Llama/Mistral, Gemma 4 text
+        decoder): return their full names. Tower wrappers are excluded by
+        isinstance; their ``.linear`` inners end in ``.linear`` (not a candidate
+        suffix) so they are excluded by the suffix test too.
+      - No nn.Linear projections at all (a pure-wrapper LM with NO towers): fall
+        back to the ``.linear`` inners' full names.
     """
     import torch.nn as nn
-    for name, module in model.named_modules():
-        if any(t in name for t in _NON_TEXT_SUBTREES):
-            continue  # skip vision/audio towers -> target the text decoder only
-        if any(name.endswith("." + c) for c in candidates):
-            if isinstance(module, nn.Linear):
-                return list(candidates)
-            if hasattr(module, "linear") and isinstance(module.linear, nn.Linear):
-                return [f"{c}.linear" for c in candidates]
-            raise ValueError(
-                f"Module {name!r} is type {type(module).__name__} (neither nn.Linear "
-                f"nor a wrapper with .linear inner). Pass --target-modules manually."
-            )
+
+    linear_names = [
+        name for name, module in model.named_modules()
+        if isinstance(module, nn.Linear)
+        and any(name.endswith("." + c) for c in candidates)
+    ]
+    if linear_names:
+        return linear_names
+
+    inner_names = [
+        f"{name}.linear" for name, module in model.named_modules()
+        if any(name.endswith("." + c) for c in candidates)
+        and hasattr(module, "linear") and isinstance(module.linear, nn.Linear)
+    ]
+    if inner_names:
+        return inner_names
+
     raise ValueError(
-        f"Could not find any text-decoder attention modules matching {candidates} "
-        f"(searched outside {_NON_TEXT_SUBTREES}). Pass --target-modules manually."
+        f"Could not find any attention projections matching {candidates}. "
+        "Pass --target-modules manually."
     )
 
 
@@ -544,7 +564,8 @@ def main():
         print(f"  target_modules (manual): {candidate_targets}")
     else:
         candidate_targets = _detect_target_modules(model)
-        print(f"  target_modules (auto): {candidate_targets}")
+        print(f"  target_modules (auto): {len(candidate_targets)} text-decoder "
+              f"modules, e.g. {candidate_targets[:2]}")
     lora_alpha = args.lora_alpha if args.lora_alpha is not None else args.lora_r
     lora_cfg = LoraConfig(
         r=args.lora_r,
