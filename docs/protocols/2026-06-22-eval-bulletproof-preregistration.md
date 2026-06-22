@@ -80,6 +80,7 @@ Arms: `base` (hf), `v7mc` (offsets_mc.pt), `null_adapter` (v7hf con alpha=theta=
 | run | tasks | arms | n-shot | n | template | objetivo / defusa |
 |---|---|---|---|---|---|---|
 | **R1** | arc_challenge, truthfulqa_mc1, hellaswag, winogrande | base, v7mc, **null_adapter**, **align_lora** | 0 | 400 (mismos doc_ids) | on | reproduce canónico; null_adapter prueba que el lift es offsets no wrapper; align_lora = control mecanismo |
+| **R1b** | arc_challenge, truthfulqa_mc1, hellaswag, winogrande | base, v7mc | 0 | 400 | **off** | chat-template-gap = R1b − R1 por brazo (cuantifica el desglose del 0.50, D5); ¿sobrevive el +35 sin template? (agregado 2026-06-22) |
 | **R2** | arc_challenge, truthfulqa_mc1, hellaswag, winogrande | base, v7mc | 5 | 400 | on | 2×2 shots; base@5-multiturn = base honesto más fuerte (`fewshot_as_multiturn=True`) |
 | **R3** | arc_challenge, truthfulqa_mc1 | base | 5 | 400 | on | `fewshot_as_multiturn=False` (concat) → mostrar base@5-multiturn ≥ base@5-concat (control de DoF) |
 | **R4** | arc_challenge, hellaswag, winogrande, truthfulqa_mc1 | base, v7mc | 0 | **full** (1172/10042/1267/817) | on | de-subsampleo; el delta full debe caer dentro del CI bootstrap de n=400. TQA-817 alimenta L4/R5 |
