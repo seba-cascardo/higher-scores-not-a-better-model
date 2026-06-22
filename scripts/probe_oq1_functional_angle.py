@@ -63,8 +63,16 @@ import json
 import sys
 from pathlib import Path
 
+import os
+
 import numpy as np
 import torch
+
+# Make `from scripts.X import ...` resolve whether invoked as `python scripts/foo.py`
+# (script dir on path, repo root NOT) or `python -m scripts.foo` (repo root on path).
+_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
 
 # Reuse the canonical probe-direction + whitening math. Importing (not
 # re-implementing) keeps geometry byte-identical to V7 head selection.
