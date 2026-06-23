@@ -41,13 +41,16 @@ def main():
         print(f"  {name:14s} base-CoT-correct {k:3d}/{n:3d} = {acc:.3f}  CI[{lo:.3f},{hi:.3f}]")
 
     mc = next(r for r in rows if r[0] == "mc_only")
-    print("\nREAD:")
+    print("\nREAD (reconcile with W_know = off-axis, ARC fraction 0.064):")
     print(f"  mc_only base-CoT acc = {mc[3]:.3f} (n={mc[2]}).")
-    print("  HIGH (>> base_right-ish, base already knows w/ CoT): the adapter's cold-scoring")
-    print("    fixes recover latent-but-known knowledge -> ARC lift partly REAL (on-axis).")
-    print("  LOW (base fails even WITH CoT): the cold-scoring fix is unrelated to what the")
-    print("    base can reason out -> consistent with OFF-AXIS scoring artifact.")
-    print("  Cross-check vs W_know recovery fraction: both should agree on the ARC verdict.")
+    print("  HIGH (~base_right): the fixed items ARE CoT-accessible knowledge. This does NOT")
+    print("    make the lift on-axis -- W_know already showed it is off-axis. Synthesis: the")
+    print("    adapter uses an OFF-AXIS shortcut to recover answers the model can reason to but")
+    print("    cold MC-scoring misranks -> explains D5 (no gen-CoT headroom: base ~ceiling).")
+    print("  LOW (base fails even WITH CoT): the fix targets items the model cannot reason out")
+    print("    -> the strongest 'pure off-axis artifact' reading.")
+    print("  CAVEAT: ARC is near CoT-ceiling -> confirms the benign reading but has LOW power to")
+    print("    distinguish 'recovers knowable' from 'fabricates'; a hard task (GPQA) bites harder.")
 
 
 if __name__ == "__main__":
