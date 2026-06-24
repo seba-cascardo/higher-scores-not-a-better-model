@@ -47,12 +47,18 @@ silently trusted).
 
 INPUTS (analysis-time; regenerated in Fase 1)
 ---------------------------------------------
-  runs/vinf_causal/d_null.json    base conditional run    (lm-eval --log-samples)
-  runs/vinf_causal/d_mc.json      offset conditional run  (the "+35")
-  runs/vinf_causal/d_vinf.json    v_inf-offset run        (needed to re-derive mc_only)
-  runs/vinf_causal/answer_only_logprobs.json   POD answer-only term logP(A|C_neutro),
-        merged shape  arms.{base,mc}.<task>.<doc_id> -> [lp_A0, lp_A1, ...]
-        (option order matches filtered_resps).  See score_mc_pmi.py docstring.
+  SAME-SCAFFOLD FIX: the PMI term logP(A|Q) - logP(A|C_neutro) needs BOTH terms scored
+  under the SAME scaffold. base/mc conditional now comes from the merged premise file
+  (same scaffold as the answer-only term), NOT from d_*.json (cross-scaffold lm-eval
+  thinking-mode). d_null/d_mc are METADATA-ONLY here (option texts + gold).
+  runs/vinf_causal/d_null.json    METADATA ONLY (option texts + gold; logprobs NOT used)
+  runs/vinf_causal/d_mc.json      METADATA ONLY (option texts + gold; logprobs NOT used)
+  runs/vinf_causal/d_vinf.json    v_inf conditional — re-derivation of mc_only ONLY (an
+        internal argmax, not the PMI), so its scaffold does not enter the PMI subtraction.
+  runs/vinf_causal/answer_only_logprobs.json   MERGED, self-sufficient:
+        conditional.{base,mc}.<task>.<doc_id> -> [lp per option]  (same-scaffold logP(A|Q))
+        arms.{base,mc}.<task>.<doc_id>        -> [lp per option]  (answer-only logP(A|C_neutro))
+        Produced by score_mc_premise_pod.py + merge (run_phase1_pod.sh). See score_mc_pmi.py.
   runs/vinf_causal/pmi_dc_arc_challenge.json   summary PMI run (read for cross-check
         of the pooled PMI/naive accuracies; per-item is recomputed here).
   runs/vinf_causal/arbiter_arc_sets.json       strata; sets.mc_only = the 124 doc_ids.
@@ -255,6 +261,26 @@ def main():
     ao_mc = ao_arms["mc"][args.task]
     print(f"  neutral premise: {neutral_premise!r}", flush=True)
 
+    # --- SAME-SCAFFOLD conditional logP(A|Q) (the fix) ----------------------------
+    # The PMI term is logP(A|Q) - logP(A|C_neutro). Both must be scored under the SAME
+    # scaffold or the subtraction is meaningless. The merged answer-only file carries
+    # conditional.{base,mc}[task] scored under the SAME premise scaffold as the
+    # answer-only term (score_mc_premise_pod.py). d_null.json / d_mc.json are lm-eval
+    # thinking-mode runs (cross-scaffold) -> from here they are METADATA-ONLY (option
+    # texts + gold), never the conditional logprobs that enter the PMI.
+    cond_arms = ao.get("conditional", {})
+    if not (isinstance(cond_arms.get("base"), dict) and cond_arms["base"].get(args.task)
+            and isinstance(cond_arms.get("mc"), dict) and cond_arms["mc"].get(args.task)):
+        raise SystemExit(
+            f"[FATAL] answer-only file missing same-scaffold conditional "
+            f"(expected conditional.base[{args.task!r}] and conditional.mc[{args.task!r}]). "
+            f"This is the same-scaffold fix: regenerate via score_mc_premise_pod.py + merge "
+            f"(run_phase1_pod.sh). The cross-scaffold d_*.json cond is NO longer used for PMI.")
+    cond_base_ss = cond_arms["base"][args.task]   # {doc_id: [lp per option]} same-scaffold
+    cond_mc_ss = cond_arms["mc"][args.task]
+    print(f"  same-scaffold conditional: base={len(cond_base_ss)} mc={len(cond_mc_ss)}",
+          flush=True)
+
     # --- load arbiter mc_only (committed strata) ----------------------------------
     arb = json.load(arbiter_path.open(encoding="utf-8"))
     mc_only_committed = sorted(int(x) for x in arb["sets"]["mc_only"])
@@ -275,12 +301,15 @@ def main():
 
     # --- items in common across the four per-item sources --------------------------
     ids = sorted(set(null) & set(mc) & set(vinf)
-                 & {int(k) for k in ao_base} & {int(k) for k in ao_mc})
+                 & {int(k) for k in ao_base} & {int(k) for k in ao_mc}
+                 & {int(k) for k in cond_base_ss} & {int(k) for k in cond_mc_ss})
     print(f"\n  aligned items  : {len(ids)} "
           f"(null={len(null)} mc={len(mc)} vinf={len(vinf)} "
-          f"ao_base={len(ao_base)} ao_mc={len(ao_mc)})", flush=True)
+          f"ao_base={len(ao_base)} ao_mc={len(ao_mc)} "
+          f"cond_ss_base={len(cond_base_ss)} cond_ss_mc={len(cond_mc_ss)})", flush=True)
     if not ids:
-        raise SystemExit("[FATAL] no items in common across the five sources.")
+        raise SystemExit("[FATAL] no items in common across the seven sources "
+                         "(null/mc/vinf/ao_base/ao_mc/cond_base_ss/cond_mc_ss).")
 
     # --- per-item recompute: offset / DC-PMI / answer-only argmax correctness ------
     # Also re-derive the mc_only-defining correctness (base/mc/vinf acc_norm argmax)
@@ -296,12 +325,23 @@ def main():
         clen = char_lens(texts)
         nopt = len(texts)
 
-        cond_b = cond_logprobs(s_null)     # logP(A|Q) base
-        cond_m = cond_logprobs(s_mc)       # logP(A|Q) offset (mc)
-        cond_v = cond_logprobs(s_vinf)     # logP(A|Q) v_inf-offset
+        # SAME-SCAFFOLD conditional for base/mc (the fix): from the merged premise file,
+        # NOT d_*.json (cross-scaffold lm-eval thinking-mode). v_inf has no premise-file
+        # arm (score_mc_premise_pod runs base+mc only), so cond_v stays from d_vinf.json
+        # and is used ONLY to re-derive mc_only (internal argmax) — never in the PMI
+        # subtraction, so no cross-source mixing enters the PMI term.
+        cond_b = np.array(cond_base_ss.get(str(did), []), dtype=np.float64)  # same-scaffold
+        cond_m = np.array(cond_mc_ss.get(str(did), []), dtype=np.float64)    # same-scaffold
+        cond_v = cond_logprobs(s_vinf)     # logP(A|Q) v_inf-offset (mc_only re-derivation only)
         ans_b = np.array(ao_base[str(did)], dtype=np.float64)  # logP(A|C_neutro) base
         ans_m = np.array(ao_mc[str(did)], dtype=np.float64)    # logP(A|C_neutro) mc
 
+        # distinguish a same-scaffold conditional miss from a generic option mismatch
+        if cond_b.size == 0 or cond_m.size == 0:
+            print(f"  [WARN] item {did}: same-scaffold conditional missing "
+                  f"(base={cond_b.size} mc={cond_m.size}); skip.", flush=True)
+            n_opt_mismatch += 1
+            continue
         if not (len(cond_b) == len(cond_m) == len(cond_v)
                 == len(ans_b) == len(ans_m) == nopt):
             n_opt_mismatch += 1

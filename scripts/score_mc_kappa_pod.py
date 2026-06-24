@@ -340,7 +340,9 @@ def install_kappa_hooks(layers, attn_shape, head_bases, kappa_alpha, kappa_beta)
     """Install forward_pre_hooks on layer.self_attn.o_proj that apply KAPPA Eq. 3
     per-head to the o_proj-input slice (SAME hook site as install_lofit_hooks).
 
-    head_bases: dict[layer_idx] -> list of (head_idx, W_know[d,kk], W_pred[d,kp]).
+    head_bases: dict[layer_idx] -> list of (head_idx, W_know[d,kk], W_pred[d,kp], theta_mc[d]).
+        (4th element added by Cambio 1 for the geometry-only decomposition; unpacked
+        here with `*_` so it is ignored by the KAPPA scoring path.)
     For each modulated head h, the [.., head_dim] slice
         concat[..., hi*head_dim : (hi+1)*head_dim]
     is replaced by kappa_project(slice, W_know, W_pred). Heads NOT in head_bases
@@ -360,7 +362,8 @@ def install_kappa_hooks(layers, attn_shape, head_bases, kappa_alpha, kappa_beta)
         o_proj = layer.self_attn.o_proj
         dev, dtp = o_proj.weight.device, o_proj.weight.dtype
         prepared = [(hi, Wk.to(device=dev, dtype=torch.float32),
-                     Wp.to(device=dev, dtype=torch.float32)) for (hi, Wk, Wp) in items]
+                     Wp.to(device=dev, dtype=torch.float32))
+                    for (hi, Wk, Wp, *_) in items]
 
         def make_hook(li, prepared, _ad=kappa_alpha, _bd=kappa_beta):
             def hook(_module, inputs):
@@ -395,7 +398,7 @@ def restrict_offaxis_to_kappa_cells(lhp, alpha, theta, head_bases):
     cells). Returns (alpha_r, theta_r, n_offaxis_restricted_heads, kappa_cells).
     """
     kappa_cells = {(int(li), int(hi)) for li, items in head_bases.items()
-                   for (hi, _Wk, _Wp) in items}
+                   for (hi, _Wk, _Wp, *_) in items}
     alpha_r = alpha.clone()
     theta_r = theta.clone()
     n_kept = 0
@@ -497,7 +500,14 @@ def build_head_bases(pairs, fd, k_know, k_pred, wpred_source, ridge_frac,
             kc = min(W_know.shape[1], W_pred.shape[1])
             W_know, W_pred = W_know[:, :kc], W_pred[:, :kc]
 
-        head_bases.setdefault(li, []).append((hi, W_know, W_pred))
+        # 4th element: the trained off-axis offset theta_mc for THIS head (NOT unit;
+        # alpha*direction in o_proj-input space). Exposed so the geometry-only
+        # decomposition (scripts/decompose_theta_mc_kappa_subspaces.py) can reuse the
+        # EXACT same W_know/W_pred this builds, byte-identical to the GATE-2 foil.
+        # Earlier call-sites (install_kappa_hooks / restrict_offaxis_to_kappa_cells)
+        # unpack with `*_` so the extra element is backward-compatible.
+        head_bases.setdefault(li, []).append(
+            (hi, W_know, W_pred, theta_mc[ai, hi].detach().clone()))
         n_built += 1
 
         # diagnostics
