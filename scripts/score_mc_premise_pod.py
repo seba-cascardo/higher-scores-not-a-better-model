@@ -171,6 +171,9 @@ def main():
     ap.add_argument("--offsets", required=True, help="V7-mc offsets .pt")
     ap.add_argument("--task", required=True, choices=list(NEUTRAL_PREMISE))
     ap.add_argument("--limit", type=int, default=400)
+    ap.add_argument("--offset-scale", type=float, default=1.0,
+                    help="multiply the trained offset by this factor (strength sweep A6/PC-A6); "
+                         "1.0=canonical. The conditional sanity-gate auto-aborts ONLY at scale 1.0.")
     ap.add_argument("--apply-chat-template", action="store_true")
     ap.add_argument("--dtype", default="bfloat16", choices=["bfloat16", "float16"])
     ap.add_argument("--out", type=Path, required=True,
@@ -221,8 +224,8 @@ def main():
         remove_handles(h)
 
     # --- MC arm (trained offsets) ---
-    print("\n[arm mc] trained offsets installed", flush=True)
-    h = install_lofit_hooks(layers, alpha, theta, lhp, attn_shape)
+    print(f"\n[arm mc] trained offsets installed (offset_scale={args.offset_scale})", flush=True)
+    h = install_lofit_hooks(layers, alpha * float(args.offset_scale), theta, lhp, attn_shape)
     try:
         mc = score_arm(model, tokenizer, items, args.task, args.apply_chat_template, "mc")
     finally:
@@ -237,7 +240,7 @@ def main():
     print("\n" + "=" * 70, flush=True)
     print(f"  SANITY (conditional, acc_norm): base={base_cond_acc:.4f} mc={mc_cond_acc:.4f}"
           f"  lift={cond_lift:+.4f}  (expect ~+0.35 ARC / ~+0.33 TQA)", flush=True)
-    if abs(cond_lift) < 0.20:
+    if abs(cond_lift) < 0.20 and abs(float(args.offset_scale) - 1.0) < 1e-9:
         print(f"  !!! SANITY GATE FAILED: conditional lift {cond_lift:+.4f} far from canonical "
               f"(~+0.35 ARC / ~+0.33 TQA) — scaffold likely mismatched "
               f"(chat-template/continuation) or wrong BASE/offsets. Inspect before trusting "
@@ -261,6 +264,7 @@ def main():
         "neutral_premise": NEUTRAL_PREMISE[args.task],
         "cond_template": PREMISE[args.task]["cond"],
         "apply_chat_template": args.apply_chat_template,
+        "offset_scale": float(args.offset_scale),
         "sanity": {"base_cond": base_cond_acc, "mc_cond": mc_cond_acc, "cond_lift": cond_lift,
                    "base_choices_only": base_ao_acc, "mc_choices_only": mc_ao_acc},
         # self-sufficient for scripts/score_mc_pmi.py --premise-file (same-scaffold PMI):
