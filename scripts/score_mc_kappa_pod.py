@@ -287,23 +287,27 @@ def cont_logprob(model, tokenizer, context_str: str, continuation: str) -> float
 # ============================================================================
 # KAPPA closed-form projection (Eq. 3) — FAITHFUL algebra, per-head block form.
 # ============================================================================
-def kappa_project(x, W_know, W_pred, alpha=1.0, beta=1.0, ridge=1e-6):
+def kappa_project(x, W_know, W_pred, alpha=1.0, beta=0.0, ridge=1e-6):
     """Apply KAPPA Eq. 3 to the last-dim coordinates of x (per head block).
 
-    Eq. 3 (paper, transcribed):
-        h' = h + W_pred (W_pred^T W_pred)^{-1} ( alpha * W_know^T h  -  beta * W_pred^T h )
+    Eq. 3/4 (paper form — UNIFIED 2026-06-24 with score_mc_kappa_faithful_pod.py so C3
+    compares the SAME Eq.3 in both spaces; audit A2):
+        target = alpha * W_know^T h  +  beta * sign(W_know^T h)      # beta = SIGN sharpen
+        h' = h + W_pred (W_pred^T W_pred)^{-1} ( target  -  W_pred^T h )
 
-    This is the minimal-L2 update that lives in span(W_pred) and sets the
-    prediction-coordinates W_pred^T h' equal to the (sharpened) knowledge-
-    coordinates alpha*W_know^T h. The orthogonal complement of span(W_pred) is
-    untouched. With alpha=beta=1 and W_pred orthonormal it reduces to
-        h' = h + W_pred ( W_know^T h - W_pred^T h ).
+    The `- W_pred^T h` is STRUCTURAL (always present), NOT beta — beta is the paper's
+    additive sign-sharpening term (Eq.4), default 0 = pure Eq.3. (The old default
+    `alpha*ck - beta*cp` with beta=1 was numerically IDENTICAL to this at beta=0, so the
+    already-run KS sweep is unchanged; this only fixes the beta SEMANTICS.) This is the
+    minimal-L2 update living in span(W_pred); the orthogonal complement is untouched. With
+    alpha=1,beta=0 and W_pred orthonormal it reduces to h + W_pred ( W_know^T h - W_pred^T h ).
 
     Args:
       x      : [..., d]  (d = head_dim; the o_proj-input slice for one head)
       W_know : [d, k_know]  knowledge subspace basis (cols)
       W_pred : [d, k_pred]  prediction subspace basis (cols)
-      alpha,beta : sharpening scalars (default 1.0/1.0 = clean min-L2 form)
+      alpha  : knowledge-coordinate amplification (default 1.0 = Eq.3)
+      beta   : additive SIGN-sharpening term (default 0.0 = pure Eq.3; paper Eq.4)
       ridge  : tiny jitter on the Gram before inverse (numerical safety)
 
     Returns x' same shape/dtype/device as x.
@@ -319,14 +323,14 @@ def kappa_project(x, W_know, W_pred, alpha=1.0, beta=1.0, ridge=1e-6):
     # coordinates
     ck = torch.matmul(xf, Wk)                        # [..., kk]  = W_know^T h (rows)
     cp = torch.matmul(xf, Wp)                        # [..., kp]  = W_pred^T h
-    # target in pred coordinates: alpha * knowledge coords - beta * pred coords.
-    # NOTE: requires k_know == k_pred for the coordinate subtraction to be defined
-    # (the paper aligns pred coords TO knowledge coords; same coordinate count).
+    # target in pred coordinates: alpha*knowledge + beta*sign(knowledge); minus the
+    # structural pred coords. (the paper aligns pred coords TO knowledge coords; same count.)
     if ck.shape[-1] != cp.shape[-1]:
         raise ValueError(
             f"kappa_project: k_know ({ck.shape[-1]}) != k_pred ({cp.shape[-1]}); "
             f"Eq. 3 aligns prediction coords to knowledge coords and needs equal rank.")
-    delta_coords = alpha * ck - beta * cp           # [..., k]
+    target = alpha * ck + (beta * torch.sign(ck) if beta != 0.0 else 0.0)
+    delta_coords = target - cp                      # [..., k]  (- cp is structural, not beta)
     # (W_pred^T W_pred)^{-1}  (Gram inverse; ridge for safety)
     gram = torch.matmul(Wp.t(), Wp)                 # [kp, kp]
     gram = gram + ridge * torch.eye(gram.shape[0], dtype=gram.dtype, device=gram.device)
@@ -589,8 +593,10 @@ def main():
                     help="Prediction-subspace reconstruction (RECONSTRUCTED; default pc1)")
     ap.add_argument("--k-know", type=int, default=1, help="knowledge subspace rank (1 backed)")
     ap.add_argument("--k-pred", type=int, default=1, help="prediction subspace rank")
-    ap.add_argument("--kappa-alpha", type=float, default=1.0, help="Eq.3 knowledge sharpen")
-    ap.add_argument("--kappa-beta", type=float, default=1.0, help="Eq.3 pred sharpen")
+    ap.add_argument("--kappa-alpha", type=float, default=1.0, help="Eq.3 knowledge amplification")
+    ap.add_argument("--kappa-beta", type=float, default=0.0,
+                    help="Eq.4 additive SIGN-sharpen term (default 0 = pure Eq.3; UNIFIED 2026-06-24 "
+                         "with the faithful script — beta is NO LONGER a multiplier on pred coords)")
     ap.add_argument("--ridge-frac", type=float, default=1e-2,
                     help="LDA/PC ridge as frac of mean cov diag (matches make_wknow_offset.py)")
     ap.add_argument("--skip-offaxis-arm", action="store_true",
