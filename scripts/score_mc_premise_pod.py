@@ -175,6 +175,13 @@ def main():
     ap.add_argument("--dtype", default="bfloat16", choices=["bfloat16", "float16"])
     ap.add_argument("--out", type=Path, required=True,
                     help="per-task answer-only file (also stores cond for self-consistent PMI)")
+    ap.add_argument("--strict", dest="strict", action="store_true", default=True,
+                    help="(default ON) AUTO-ABORT: exit nonzero if the conditional sanity "
+                         "lift is far from canonical (|lift| < 0.20) — wrong BASE/offsets guard. "
+                         "The pod orchestrator relies on this so its `|| exit 2` actually fires.")
+    ap.add_argument("--no-strict", dest="strict", action="store_false",
+                    help="warning-only mode (write the file even if the sanity lift is off-range) "
+                         "for LOCAL inspection; NEVER use on the pod.")
     args = ap.parse_args()
     if not (args.base or "").strip():
         raise SystemExit("FATAL: --base empty (fresh pod shell loses $BASE). Re-set it.")
@@ -231,9 +238,16 @@ def main():
     print(f"  SANITY (conditional, acc_norm): base={base_cond_acc:.4f} mc={mc_cond_acc:.4f}"
           f"  lift={cond_lift:+.4f}  (expect ~+0.35 ARC / ~+0.33 TQA)", flush=True)
     if abs(cond_lift) < 0.20:
-        print(f"  !!! WARNING: conditional lift {cond_lift:+.4f} far from canonical — scaffold "
-              f"likely mismatched (chat-template/continuation). Inspect before trusting answer-only.",
-              flush=True)
+        print(f"  !!! SANITY GATE FAILED: conditional lift {cond_lift:+.4f} far from canonical "
+              f"(~+0.35 ARC / ~+0.33 TQA) — scaffold likely mismatched "
+              f"(chat-template/continuation) or wrong BASE/offsets. Inspect before trusting "
+              f"answer-only.", flush=True)
+        if args.strict:
+            print("=" * 70, flush=True)
+            # AUTO-ABORT: do NOT write the per-task file; exit nonzero so the pod
+            # orchestrator's `|| { ...; exit 2; }` fires and Stage B/C never runs on a
+            # wrong-base/wrong-offsets pass. Pass --no-strict to inspect locally instead.
+            raise SystemExit(2)
     else:
         print("  scaffold OK (conditional lift in range) -> answer-only term is trustworthy", flush=True)
     print(f"  CHOICES-ONLY (acc_norm): base={base_ao_acc:.4f} mc={mc_ao_acc:.4f}"
