@@ -38,7 +38,7 @@ eval_gpqa_cot_fast so the CoT scaffold matches the canonical base-CoT 0.70.
 Usage (pod, GPU; cd /workspace/MSAP per block):
   export BASE=$(dirname "$(find /workspace -maxdepth 7 -name config.json -path '*gemma*31*' | grep -v /.locks/ | head -1)")
   # preferred: align to the cold-MC GPQA run (R10b of eval-bulletproof, or a standalone run)
-  python scripts/gen_arbiter_gpqa_cot_pod.py --base "$BASE" \
+  python -m scripts.gen_arbiter_gpqa_cot_pod --base "$BASE" \
       --from-coldmc runs/eval_bulletproof/R10_base_gpqa --k 1 \
       --out runs/vinf_causal/arbiter_gpqa_cot.json
   # self-consistency@5:  --k 5

@@ -45,7 +45,7 @@ OUTPUT : runs/vinf_causal/coldmc_perhead_<task>.pt  (acts + per-(item,option) me
 
 Usage (pod, GPU; cd /workspace/MSAP per block):
   export BASE=$(dirname "$(find /workspace -maxdepth 7 -name config.json -path '*gemma*31*' | grep -v /.locks/ | head -1)")
-  python scripts/extract_coldmc_perhead_pod.py --base "$BASE" \
+  python -m scripts.extract_coldmc_perhead_pod --base "$BASE" \
       --null runs/vinf_causal/d_null.json --task arc_challenge \
       --offsets runs/v7_lofit_gemma4_31b_chat/offsets_mc.pt \
       --out runs/vinf_causal/coldmc_perhead_arc_challenge.pt
