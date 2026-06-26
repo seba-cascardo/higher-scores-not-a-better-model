@@ -81,6 +81,19 @@ def cond_logprobs(sample: dict) -> np.ndarray:
     return np.array([float(r[0]) for r in sample["filtered_resps"]], dtype=np.float64)
 
 
+def gold_index(sample: dict) -> int:
+    """Gold option index. ARC/TQA store an int; GPQA-leaderboard stores a letter '(D)'."""
+    t = sample["target"]
+    if isinstance(t, int):
+        return t
+    s = str(t).strip().strip("()").strip()
+    if s.isdigit():
+        return int(s)
+    if len(s) == 1 and s.upper() in "ABCDEFGH":
+        return ord(s.upper()) - ord("A")
+    return int(s)  # raise if truly unexpected
+
+
 def char_lens(texts: list[str]) -> np.ndarray:
     return np.array([max(1, len(t)) for t in texts], dtype=np.float64)
 
@@ -158,7 +171,7 @@ def main():
     for did in ids:
         s_b, s_m = null[did], mc[did]
         texts = get_option_texts(s_b)
-        gold = int(s_b["target"])
+        gold = gold_index(s_b)
         clen = char_lens(texts)
         b_raw, m_raw = cond_logprobs(s_b), cond_logprobs(s_m)
         n_opt = len(texts)
