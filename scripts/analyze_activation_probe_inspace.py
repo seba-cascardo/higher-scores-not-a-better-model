@@ -149,6 +149,11 @@ def main():
                     help="offaxis_vs_stack_<task>.json for adapter/surface AUC anchors")
     ap.add_argument("--use-all-heads", action="store_true",
                     help="use acts_all (looser upper bound) instead of the adapter subset")
+    ap.add_argument("--random-heads", type=int, default=0,
+                    help="specificity control: fit on N RANDOM (layer,head) cells from acts_all "
+                         "(same dim as the adapter subset). If the AUC ~matches the adapter-cell "
+                         "AUC, the signal is DIFFUSE (not adapter-specific); if much lower, it is "
+                         "concentrated in the heads the adapter touches. Needs --all-heads extract.")
     ap.add_argument("--Cs", default="0.003,0.01,0.03,0.1,0.3",
                     help="L2 inverse-reg grid for the AUC-tuned probe")
     ap.add_argument("--n-null", type=int, default=3,
@@ -172,7 +177,18 @@ def main():
     print(f"  same-space cells (adapter layer,head): {len(cells)} | "
           f"items={st['n_items']} base-wrong={st['n_base_wrong']}", flush=True)
 
-    if args.use_all_heads and "acts_all" in st:
+    if args.random_heads > 0:
+        if "acts_all" not in st:
+            raise SystemExit("--random-heads needs an --all-heads extract (acts_all missing).")
+        A = st["acts_all"]                       # (n_prompts, n_layers, n_heads, head_dim)
+        rng = np.random.default_rng(args.seed)
+        nl, nh = A.shape[1], A.shape[2]
+        pick = [(int(rng.integers(0, nl)), int(rng.integers(0, nh))) for _ in range(args.random_heads)]
+        acts = np.stack([A[:, l, h, :].numpy() for l, h in pick], axis=1
+                        ).reshape(A.shape[0], -1).astype(np.float64)
+        print(f"  [--random-heads {args.random_heads}] SPECIFICITY control: {acts.shape[1]} dims "
+              f"from RANDOM cells. ~adapter AUC => signal DIFFUSE; ≪ => adapter-specific.", flush=True)
+    elif args.use_all_heads and "acts_all" in st:
         A = st["acts_all"]                       # (n_prompts, n_layers, n_heads, head_dim)
         acts = A.reshape(A.shape[0], -1).numpy().astype(np.float64)
         print(f"  [--use-all-heads] feature dim = {acts.shape[1]} (every captured head)", flush=True)
