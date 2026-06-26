@@ -74,6 +74,32 @@ def boot_pair_auc_ci(scores_by_item, n_boot, seed):
     return float(np.percentile(vals, 2.5)), float(np.percentile(vals, 97.5))
 
 
+def permuted_null(X, groups, items, bw_items, Cs, seed, n_perm):
+    """Permutation null: reassign which option is 'gold' at random WITHIN each item,
+    re-fit the held-out probe, score pair_auc on base-wrong. An honest held-out probe
+    must land ~0.5; if it clears ~0.6 the 12k-dim fit is leaking and the headline is bunk."""
+    rng = np.random.default_rng(seed + 777)
+    aucs = []
+    for p in range(n_perm):
+        y_perm = np.zeros(len(groups), dtype=np.int64)
+        gold_perm = {}
+        for it in items:
+            idxs = it["prompt_idxs"]
+            g = int(rng.integers(0, len(idxs)))
+            y_perm[idxs[g]] = 1
+            gold_perm[it["item_idx"]] = g
+        proba_p = fit_heldout_scores(X, y_perm, groups, Cs, seed + p)
+        by_item = []
+        for it in items:
+            if it["item_idx"] not in bw_items:
+                continue
+            idxs = it["prompt_idxs"]
+            by_item.append((np.array([proba_p[i] for i in idxs]), gold_perm[it["item_idx"]]))
+        aucs.append(pair_auc(by_item))
+        print(f"      null perm {p+1}/{n_perm}: pair_auc={aucs[-1]:.3f}", flush=True)
+    return aucs
+
+
 def fit_heldout_scores(X, y, groups, Cs, seed):
     """Held-out per-sample probability of gold via GroupKFold on item.
 
@@ -125,6 +151,10 @@ def main():
                     help="use acts_all (looser upper bound) instead of the adapter subset")
     ap.add_argument("--Cs", default="0.003,0.01,0.03,0.1,0.3",
                     help="L2 inverse-reg grid for the AUC-tuned probe")
+    ap.add_argument("--n-null", type=int, default=3,
+                    help="permutation-null repeats: labels shuffled within item, re-fit "
+                         "held-out -> MUST land ~0.5. If the null clears ~0.6 the 12k-dim "
+                         "probe is leaking/overfitting and the headline AUC is not trustworthy.")
     ap.add_argument("--n-boot", type=int, default=2000)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--out", type=Path, default=None)
@@ -189,6 +219,15 @@ def main():
     auc_bw = pair_auc(by_item_bw)
     lo_bw, hi_bw = boot_pair_auc_ci(by_item_bw, args.n_boot, args.seed)
 
+    # permutation null — the load-bearing control: 12k dims on ~800 rows can fake a high AUC
+    print(f"\n  fitting permutation null ({args.n_null} repeats, labels shuffled within item)...",
+          flush=True)
+    null_aucs = permuted_null(X, groups, items, bw_items, Cs, args.seed, args.n_null) \
+        if args.n_null > 0 else []
+    null_mean = float(np.mean(null_aucs)) if null_aucs else float("nan")
+    null_max = float(np.max(null_aucs)) if null_aucs else float("nan")
+    null_clean = (not null_aucs) or null_max < 0.60
+
     # anchors
     anchor = args.anchor or (args.acts.parent / f"offaxis_vs_stack_{task}.json")
     adapter_auc = surface_auc = None
@@ -201,6 +240,9 @@ def main():
     print(f"      all items        AUC={auc_all:.3f}  (n={len(by_item_all)})", flush=True)
     print(f"      BASE-WRONG       AUC={auc_bw:.3f}  CI[{lo_bw:.3f},{hi_bw:.3f}]  "
           f"(n={len(by_item_bw)})  <- compare here", flush=True)
+    print(f"      PERMUTATION NULL AUC={null_mean:.3f} (max {null_max:.3f})  "
+          f"{'OK ~0.5' if null_clean else '!!! LEAKING (>0.6) — headline NOT trustworthy'}",
+          flush=True)
     if surface_auc is not None:
         print(f"      [anchor] surface stack cap   {surface_auc:.3f}", flush=True)
     if adapter_auc is not None:
@@ -209,7 +251,11 @@ def main():
 
     # verdict
     verdict = "INDETERMINATE"
-    if adapter_auc:
+    if not null_clean:
+        verdict = (f"NULL CONTAMINATED: permutation null reaches {null_max:.3f} (>0.6) -> the "
+                   f"{int(X.shape[1])}-dim probe leaks; the {auc_bw:.3f} headline is NOT "
+                   f"trustworthy. Reduce dim (per-head aggregate / PCA) or raise reg before reading the gate.")
+    elif adapter_auc:
         if auc_bw >= adapter_auc - 0.05:
             verdict = (f"PURE MISCALIBRATION: same-space linear probe recovers {auc_bw:.3f} ~ "
                        f"adapter {adapter_auc:.3f} -> the correctness signal is present in the "
@@ -231,6 +277,7 @@ def main():
                    n_items=len(by_item_all), n_base_wrong=len(by_item_bw),
                    auc_all=auc_all, auc_base_wrong=auc_bw,
                    auc_base_wrong_ci=[lo_bw, hi_bw],
+                   null_perm_mean=null_mean, null_perm_max=null_max, null_clean=null_clean,
                    anchor_adapter=adapter_auc, anchor_surface=surface_auc,
                    probe=backend, cells=len(cells), verdict=verdict)
     outp = args.out or (args.acts.parent / f"activation_probe_inspace_{task}.json")
