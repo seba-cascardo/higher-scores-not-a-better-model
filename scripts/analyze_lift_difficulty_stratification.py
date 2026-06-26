@@ -64,6 +64,19 @@ def option_texts(doc: dict) -> list[str]:
     raise KeyError(f"no options in doc (keys={list(doc.keys())})")
 
 
+def get_option_texts(sample: dict) -> list[str]:
+    """Option strings for char-norm. ARC path uses doc['choices'] (unchanged);
+    GPQA/leaderboard docs lack a standard choices field, so fall back to the
+    rendered continuations in `arguments` (option text == the scored continuation)."""
+    try:
+        return option_texts(sample["doc"])
+    except KeyError:
+        args = sample.get("arguments")
+        if isinstance(args, list) and args and isinstance(args[0], (list, tuple)):
+            return [a[1] for a in args]
+        raise
+
+
 def cond_logprobs(sample: dict) -> np.ndarray:
     return np.array([float(r[0]) for r in sample["filtered_resps"]], dtype=np.float64)
 
@@ -144,7 +157,7 @@ def main():
     rows = []
     for did in ids:
         s_b, s_m = null[did], mc[did]
-        texts = option_texts(s_b["doc"])
+        texts = get_option_texts(s_b)
         gold = int(s_b["target"])
         clen = char_lens(texts)
         b_raw, m_raw = cond_logprobs(s_b), cond_logprobs(s_m)

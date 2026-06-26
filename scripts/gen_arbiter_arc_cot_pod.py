@@ -23,6 +23,7 @@ import json
 import os
 import re
 import time
+from collections import Counter
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -77,6 +78,13 @@ def main():
     ap.add_argument("--max-new-tokens", type=int, default=1024)
     ap.add_argument("--batch-size", type=int, default=16)
     ap.add_argument("--limit", type=int, default=0, help="0 = all 400")
+    ap.add_argument("--k", type=int, default=1,
+                    help="self-consistency samples (1 = greedy, the canonical arbiter; "
+                         ">1 majority-votes k sampled traces to clean unparsed + stabilise B7f)")
+    ap.add_argument("--temperature", type=float, default=1.0, help="sampling temp when k>1")
+    ap.add_argument("--out", default=OUT,
+                    help="output json (default OVERWRITES the greedy arbiter; pass a new "
+                         "path for the self-consistency re-grade so the greedy one survives)")
     args = ap.parse_args()
 
     data = json.load(open(SETS, encoding="utf-8"))
@@ -104,15 +112,28 @@ def main():
             msgs = [{"role": "user", "content": body}]
             prompts.append(tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True))
             labels_list.append(labels)
-        enc = tok(prompts, return_tensors="pt", padding=True, add_special_tokens=False).to(model.device)
+        k = max(1, args.k)
+        gkw = dict(max_new_tokens=args.max_new_tokens, eos_token_id=STOP_IDS,
+                   pad_token_id=tok.pad_token_id)
+        if k == 1:
+            gkw.update(do_sample=False, num_return_sequences=1)
+        else:
+            gkw.update(do_sample=True, temperature=args.temperature, top_p=0.95,
+                       top_k=64, num_return_sequences=k)
         with torch.no_grad():
-            gen = model.generate(**enc, max_new_tokens=args.max_new_tokens, do_sample=False,
-                                 eos_token_id=STOP_IDS, pad_token_id=tok.pad_token_id)
+            gen = model.generate(**enc, **gkw)
+        in_len = enc["input_ids"].shape[1]
+        gen = gen.view(len(batch), k, -1)
         for j, it in enumerate(batch):
-            new = gen[j, enc["input_ids"].shape[1]:]
-            text = tok.decode(new, skip_special_tokens=True)
+            letters, glen = [], 0
+            for kk in range(k):
+                new = gen[j, kk, in_len:]
+                letters.append(parse_letter(tok.decode(new, skip_special_tokens=True),
+                                            labels_list[j]))
+                glen = max(glen, int(new.shape[0]))
+            cand = [x for x in letters if x is not None]
+            pl = Counter(cand).most_common(1)[0][0] if cand else None  # majority vote
             gl = gold_letter(it)
-            pl = parse_letter(text, labels_list[j])
             ok = int(pl is not None and gl is not None and pl == gl)
             if pl is None:
                 n_unparsed += 1
@@ -122,7 +143,8 @@ def main():
                 n_mc_only += 1; n_mc_only_correct += ok
             results.append({"doc_id": did, "arc_id": it.get("arc_id"),
                             "base_cot_correct": ok, "pred_letter": pl, "gold_letter": gl,
-                            "in_mc_only": did in mc_only, "gen_len": int(new.shape[0])})
+                            "votes": (letters if k > 1 else None),
+                            "in_mc_only": did in mc_only, "gen_len": glen})
         done = bi + len(batch)
         print(f"[arb] [{done}/{len(items)}] acc_so_far={n_correct/done:.3f} "
               f"mc_only_acc={ (n_mc_only_correct/n_mc_only) if n_mc_only else 0:.3f} "
@@ -131,12 +153,12 @@ def main():
     summary = {"n": len(items), "base_cot_acc_all": n_correct / max(len(items), 1),
                "n_mc_only": n_mc_only, "mc_only_base_cot_correct": n_mc_only_correct,
                "mc_only_base_cot_acc": (n_mc_only_correct / n_mc_only) if n_mc_only else None,
-               "n_unparsed": n_unparsed, "max_new_tokens": args.max_new_tokens}
+               "n_unparsed": n_unparsed, "max_new_tokens": args.max_new_tokens, "k": args.k}
     json.dump({"summary": summary, "results": results},
-              open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+              open(args.out, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     print("=" * 60)
     print(json.dumps(summary, indent=2))
-    print(f"[arb] wrote {OUT}")
+    print(f"[arb] wrote {args.out}")
     print("READ: mc_only_base_cot_acc HIGH (base already knows w/ CoT) -> adapter recovers "
           "latent knowledge (ARC real-ish). LOW (base fails even w/ CoT) -> cold-scoring "
           "fix is off-axis. Compare vs base_cot_acc on fixed_by_both / base_right (analyzer).")
