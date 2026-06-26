@@ -74,7 +74,7 @@ def boot_pair_auc_ci(scores_by_item, n_boot, seed):
     return float(np.percentile(vals, 2.5)), float(np.percentile(vals, 97.5))
 
 
-def permuted_null(X, groups, items, bw_items, Cs, seed, n_perm):
+def permuted_null(X, groups, items, bw_items, Cs, seed, n_perm, max_iter=1000):
     """Permutation null: reassign which option is 'gold' at random WITHIN each item,
     re-fit the held-out probe, score pair_auc on base-wrong. An honest held-out probe
     must land ~0.5; if it clears ~0.6 the 12k-dim fit is leaking and the headline is bunk."""
@@ -88,7 +88,7 @@ def permuted_null(X, groups, items, bw_items, Cs, seed, n_perm):
             g = int(rng.integers(0, len(idxs)))
             y_perm[idxs[g]] = 1
             gold_perm[it["item_idx"]] = g
-        proba_p = fit_heldout_scores(X, y_perm, groups, Cs, seed + p)
+        proba_p = fit_heldout_scores(X, y_perm, groups, Cs, seed + p, max_iter)
         by_item = []
         for it in items:
             if it["item_idx"] not in bw_items:
@@ -100,7 +100,7 @@ def permuted_null(X, groups, items, bw_items, Cs, seed, n_perm):
     return aucs
 
 
-def fit_heldout_scores(X, y, groups, Cs, seed):
+def fit_heldout_scores(X, y, groups, Cs, seed, max_iter=1000):
     """Held-out per-sample probability of gold via GroupKFold on item.
 
     Returns array proba aligned to X rows (each row scored by a fold that did NOT
@@ -125,7 +125,8 @@ def fit_heldout_scores(X, y, groups, Cs, seed):
                 aucs = []
                 for itr, ite in GroupKFold(n_splits=inner_splits).split(X[tr], y[tr], gtr):
                     sc = StandardScaler().fit(X[tr][itr])
-                    clf = LogisticRegression(C=C, max_iter=2000, class_weight="balanced")
+                    clf = LogisticRegression(C=C, max_iter=max_iter, class_weight="balanced",
+                                             solver="liblinear", dual=True)
                     clf.fit(sc.transform(X[tr][itr]), y[tr][itr])
                     p = clf.predict_proba(sc.transform(X[tr][ite]))[:, 1]
                     if len(np.unique(y[tr][ite])) > 1:
@@ -134,7 +135,8 @@ def fit_heldout_scores(X, y, groups, Cs, seed):
                 if m > best_auc:
                     best_auc, best_c = m, C
         sc = StandardScaler().fit(X[tr])
-        clf = LogisticRegression(C=best_c, max_iter=2000, class_weight="balanced")
+        clf = LogisticRegression(C=best_c, max_iter=max_iter, class_weight="balanced",
+                                 solver="liblinear", dual=True)
         clf.fit(sc.transform(X[tr]), y[tr])
         proba[te] = clf.predict_proba(sc.transform(X[te]))[:, 1]
     return proba
@@ -160,6 +162,9 @@ def main():
                     help="permutation-null repeats: labels shuffled within item, re-fit "
                          "held-out -> MUST land ~0.5. If the null clears ~0.6 the 12k-dim "
                          "probe is leaking/overfitting and the headline AUC is not trustworthy.")
+    ap.add_argument("--max-iter", type=int, default=1000,
+                    help="LogisticRegression max_iter (liblinear, dual). ARC converge rápido; TQA "
+                         "es menos separable -> sin tope corría horas. 1000 lo deja en minutos.")
     ap.add_argument("--n-boot", type=int, default=2000)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--out", type=Path, default=None)
@@ -210,8 +215,8 @@ def main():
 
     Cs = [float(x) for x in args.Cs.split(",") if x.strip()]
     try:
-        proba = fit_heldout_scores(X, y, groups, Cs, args.seed)
-        backend = "sklearn LogisticRegression (held-out GroupKFold by item, AUC-tuned C)"
+        proba = fit_heldout_scores(X, y, groups, Cs, args.seed, args.max_iter)
+        backend = "sklearn LogisticRegression liblinear/dual (held-out GroupKFold by item, AUC-tuned C)"
     except Exception as e:  # pragma: no cover - fallback
         print(f"  [WARN] sklearn path failed ({type(e).__name__}: {e}); using numpy ridge-logit",
               flush=True)
@@ -238,7 +243,7 @@ def main():
     # permutation null — the load-bearing control: 12k dims on ~800 rows can fake a high AUC
     print(f"\n  fitting permutation null ({args.n_null} repeats, labels shuffled within item)...",
           flush=True)
-    null_aucs = permuted_null(X, groups, items, bw_items, Cs, args.seed, args.n_null) \
+    null_aucs = permuted_null(X, groups, items, bw_items, Cs, args.seed, args.n_null, args.max_iter) \
         if args.n_null > 0 else []
     null_mean = float(np.mean(null_aucs)) if null_aucs else float("nan")
     null_max = float(np.max(null_aucs)) if null_aucs else float("nan")
