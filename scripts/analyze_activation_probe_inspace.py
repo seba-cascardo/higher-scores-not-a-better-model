@@ -74,7 +74,7 @@ def boot_pair_auc_ci(scores_by_item, n_boot, seed):
     return float(np.percentile(vals, 2.5)), float(np.percentile(vals, 97.5))
 
 
-def permuted_null(X, groups, items, bw_items, Cs, seed, n_perm, max_iter=1000):
+def permuted_null(X, groups, items, bw_items, Cs, seed, n_perm, max_iter=1000, pca_k=200):
     """Permutation null: reassign which option is 'gold' at random WITHIN each item,
     re-fit the held-out probe, score pair_auc on base-wrong. An honest held-out probe
     must land ~0.5; if it clears ~0.6 the 12k-dim fit is leaking and the headline is bunk."""
@@ -88,7 +88,7 @@ def permuted_null(X, groups, items, bw_items, Cs, seed, n_perm, max_iter=1000):
             g = int(rng.integers(0, len(idxs)))
             y_perm[idxs[g]] = 1
             gold_perm[it["item_idx"]] = g
-        proba_p = fit_heldout_scores(X, y_perm, groups, Cs, seed + p, max_iter)
+        proba_p = fit_heldout_scores(X, y_perm, groups, Cs, seed + p, max_iter, pca_k)
         by_item = []
         for it in items:
             if it["item_idx"] not in bw_items:
@@ -100,14 +100,33 @@ def permuted_null(X, groups, items, bw_items, Cs, seed, n_perm, max_iter=1000):
     return aucs
 
 
-def fit_heldout_scores(X, y, groups, Cs, seed, max_iter=1000):
+def _proba(Xtr, ytr, Xte, C, max_iter, pca_k, seed):
+    """Scaler -> (optional PCA) -> L2 logistic; held-out proba of class 1.
+    PCA to pca_k dims makes the fit converge cleanly/fast in high-dim (12288 is
+    too wide for a stable raw logistic); pca_k=0 falls back to liblinear/dual raw."""
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.linear_model import LogisticRegression
+    sc = StandardScaler().fit(Xtr)
+    Xtr2, Xte2 = sc.transform(Xtr), sc.transform(Xte)
+    if pca_k and pca_k > 0:
+        from sklearn.decomposition import PCA
+        k = min(pca_k, Xtr2.shape[1], max(1, Xtr2.shape[0] - 1))
+        pc = PCA(n_components=k, random_state=seed).fit(Xtr2)
+        Xtr2, Xte2 = pc.transform(Xtr2), pc.transform(Xte2)
+        clf = LogisticRegression(C=C, max_iter=max_iter, class_weight="balanced", solver="lbfgs")
+    else:
+        clf = LogisticRegression(C=C, max_iter=max_iter, class_weight="balanced",
+                                 solver="liblinear", dual=True)
+    clf.fit(Xtr2, ytr)
+    return clf.predict_proba(Xte2)[:, 1]
+
+
+def fit_heldout_scores(X, y, groups, Cs, seed, max_iter=1000, pca_k=200):
     """Held-out per-sample probability of gold via GroupKFold on item.
 
     Returns array proba aligned to X rows (each row scored by a fold that did NOT
     see its item). C chosen per outer-fold by an inner GroupKFold maximising AUC.
     """
-    from sklearn.linear_model import LogisticRegression
-    from sklearn.preprocessing import StandardScaler
     from sklearn.model_selection import GroupKFold
     from sklearn.metrics import roc_auc_score
 
@@ -124,21 +143,13 @@ def fit_heldout_scores(X, y, groups, Cs, seed, max_iter=1000):
             for C in Cs:
                 aucs = []
                 for itr, ite in GroupKFold(n_splits=inner_splits).split(X[tr], y[tr], gtr):
-                    sc = StandardScaler().fit(X[tr][itr])
-                    clf = LogisticRegression(C=C, max_iter=max_iter, class_weight="balanced",
-                                             solver="liblinear", dual=True)
-                    clf.fit(sc.transform(X[tr][itr]), y[tr][itr])
-                    p = clf.predict_proba(sc.transform(X[tr][ite]))[:, 1]
+                    p = _proba(X[tr][itr], y[tr][itr], X[tr][ite], C, max_iter, pca_k, seed)
                     if len(np.unique(y[tr][ite])) > 1:
                         aucs.append(roc_auc_score(y[tr][ite], p))
                 m = float(np.mean(aucs)) if aucs else -1.0
                 if m > best_auc:
                     best_auc, best_c = m, C
-        sc = StandardScaler().fit(X[tr])
-        clf = LogisticRegression(C=best_c, max_iter=max_iter, class_weight="balanced",
-                                 solver="liblinear", dual=True)
-        clf.fit(sc.transform(X[tr]), y[tr])
-        proba[te] = clf.predict_proba(sc.transform(X[te]))[:, 1]
+        proba[te] = _proba(X[tr], y[tr], X[te], best_c, max_iter, pca_k, seed)
     return proba
 
 
@@ -163,8 +174,10 @@ def main():
                          "held-out -> MUST land ~0.5. If the null clears ~0.6 the 12k-dim "
                          "probe is leaking/overfitting and the headline AUC is not trustworthy.")
     ap.add_argument("--max-iter", type=int, default=1000,
-                    help="LogisticRegression max_iter (liblinear, dual). ARC converge rápido; TQA "
-                         "es menos separable -> sin tope corría horas. 1000 lo deja en minutos.")
+                    help="LogisticRegression max_iter. Con PCA converge holgado.")
+    ap.add_argument("--pca", type=int, default=200,
+                    help="PCA components inside each fold before the logistic (high-dim probing). "
+                         "200 converge limpio/rápido; 0 = raw 12288-dim liblinear/dual (lento, puede no converger).")
     ap.add_argument("--n-boot", type=int, default=2000)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--out", type=Path, default=None)
@@ -215,8 +228,9 @@ def main():
 
     Cs = [float(x) for x in args.Cs.split(",") if x.strip()]
     try:
-        proba = fit_heldout_scores(X, y, groups, Cs, args.seed, args.max_iter)
-        backend = "sklearn LogisticRegression liblinear/dual (held-out GroupKFold by item, AUC-tuned C)"
+        proba = fit_heldout_scores(X, y, groups, Cs, args.seed, args.max_iter, args.pca)
+        backend = (f"L2-logistic + PCA{args.pca} (held-out GroupKFold by item, AUC-tuned C)"
+                   if args.pca > 0 else "L2-logistic liblinear/dual raw-12288 (held-out, AUC-tuned C)")
     except Exception as e:  # pragma: no cover - fallback
         print(f"  [WARN] sklearn path failed ({type(e).__name__}: {e}); using numpy ridge-logit",
               flush=True)
@@ -243,7 +257,7 @@ def main():
     # permutation null — the load-bearing control: 12k dims on ~800 rows can fake a high AUC
     print(f"\n  fitting permutation null ({args.n_null} repeats, labels shuffled within item)...",
           flush=True)
-    null_aucs = permuted_null(X, groups, items, bw_items, Cs, args.seed, args.n_null, args.max_iter) \
+    null_aucs = permuted_null(X, groups, items, bw_items, Cs, args.seed, args.n_null, args.max_iter, args.pca) \
         if args.n_null > 0 else []
     null_mean = float(np.mean(null_aucs)) if null_aucs else float("nan")
     null_max = float(np.max(null_aucs)) if null_aucs else float("nan")
