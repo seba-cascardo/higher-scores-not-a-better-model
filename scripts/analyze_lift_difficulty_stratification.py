@@ -91,6 +91,10 @@ def gold_index(sample: dict) -> int:
         return int(s)
     if len(s) == 1 and s.upper() in "ABCDEFGH":
         return ord(s.upper()) - ord("A")
+    # winogrande: target is the continuation TEXT (not an index); fall back to doc['answer'] ('1'/'2')
+    ans = sample.get("doc", {}).get("answer")
+    if ans is not None and str(ans).strip() in ("1", "2"):
+        return int(str(ans).strip()) - 1
     return int(s)  # raise if truly unexpected
 
 
