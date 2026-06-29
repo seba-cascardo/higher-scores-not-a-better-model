@@ -112,6 +112,13 @@ def main():
             msgs = [{"role": "user", "content": body}]
             prompts.append(tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True))
             labels_list.append(labels)
+        # FIX 2026-06-29: `enc` was referenced at model.generate (below) but never
+        # built — the k>1 self-consistency path had never executed. apply_chat_template
+        # already emitted the special tokens (BOS/turn structure), so tokenize the
+        # rendered strings WITHOUT adding them again (add_special_tokens=False).
+        # padding_side='left' (set above) keeps in_len uniform for the gen[:, :, in_len:] slice.
+        enc = tok(prompts, return_tensors="pt", padding=True,
+                  add_special_tokens=False).to(model.device)
         k = max(1, args.k)
         gkw = dict(max_new_tokens=args.max_new_tokens, eos_token_id=STOP_IDS,
                    pad_token_id=tok.pad_token_id)
