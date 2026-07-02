@@ -327,20 +327,23 @@ def _numpy_fallback(X, y, groups, seed):
     rng.shuffle(uniq)
     folds = np.array_split(uniq, min(5, len(uniq)))
     proba = np.full(len(y), 0.5)
-    Xs = (X - X.mean(0)) / (X.std(0) + 1e-8)
     for f in folds:
         te = np.isin(groups, f)
         tr = ~te
-        w = np.zeros(Xs.shape[1]); b = 0.0
+        mu = X[tr].mean(0)
+        sd = X[tr].std(0) + 1e-8   # fit scaler on TRAIN rows only (was: global — leak)
+        Xtr = (X[tr] - mu) / sd
+        Xte = (X[te] - mu) / sd
+        w = np.zeros(X.shape[1]); b = 0.0
         lr, lam = 0.1, 1.0
-        Xtr, ytr = Xs[tr], y[tr]
+        ytr = y[tr]
         for _ in range(300):
             z = Xtr @ w + b
             p = 1.0 / (1.0 + np.exp(-z))
             g = p - ytr
             w -= lr * (Xtr.T @ g / len(ytr) + lam * w / len(ytr))
             b -= lr * g.mean()
-        proba[te] = 1.0 / (1.0 + np.exp(-(Xs[te] @ w + b)))
+        proba[te] = 1.0 / (1.0 + np.exp(-(Xte @ w + b)))
     return proba
 
 

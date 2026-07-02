@@ -145,7 +145,9 @@ def main():
     ap.add_argument("--from-coldmc", default=None,
                     help="cold-MC GPQA lm-eval output (dir or json) to align doc_ids (PREFERRED)")
     ap.add_argument("--task", default="leaderboard_gpqa_diamond")
-    ap.add_argument("--revision", default=None, help="HF dataset revision (PIN for from-dataset)")
+    ap.add_argument("--revision", default="633f5ee89ab8ad4522a9f850766b73f62147ffdd",
+                    help="HF dataset revision (PINNED by default for from-dataset drift guard; "
+                         "the --from-coldmc path is drift-proof and ignores this)")
     ap.add_argument("--k", type=int, default=1, help="self-consistency samples (1 = greedy)")
     ap.add_argument("--max-new-tokens", type=int, default=8192,
                     help="8192 — 2048 truncates 96%% of CoT on Gemma 4 (handoff)")
@@ -159,6 +161,7 @@ def main():
     ap.add_argument("--out", default="runs/vinf_causal/arbiter_gpqa_cot.json")
     args = ap.parse_args()
     enable_thinking = not args.no_thinking
+    print(f"[gpqa] revision pinned: {args.revision}", flush=True)
 
     tokenizer = AutoTokenizer.from_pretrained(args.base)
     if tokenizer.pad_token_id is None:

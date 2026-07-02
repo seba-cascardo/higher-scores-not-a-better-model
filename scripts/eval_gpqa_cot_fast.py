@@ -125,6 +125,9 @@ def main():
     ap.add_argument("--batch-size", type=int, default=24, help="HF fallback batch size")
     ap.add_argument("--gpu-mem-util", type=float, default=0.88, help="vLLM gpu_memory_utilization")
     ap.add_argument("--max-model-len", type=int, default=8192, help="vLLM max_model_len")
+    ap.add_argument("--revision", default="633f5ee89ab8ad4522a9f850766b73f62147ffdd",
+                    help="pin Idavidrein/gpqa dataset revision (enumerate-id drift guard, "
+                         "feedback_gpqa_enumerate_id_instability)")
     args = ap.parse_args()
     enable_thinking = not args.no_thinking
 
@@ -137,8 +140,8 @@ def main():
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    print("[data] GPQA Diamond train split ...", flush=True)
-    ds = load_dataset("Idavidrein/gpqa", "gpqa_diamond", split="train")
+    print(f"[data] GPQA Diamond train split (revision pinned: {args.revision}) ...", flush=True)
+    ds = load_dataset("Idavidrein/gpqa", "gpqa_diamond", split="train", revision=args.revision)
     if args.limit:
         ds = ds.select(range(min(args.limit, len(ds))))
     prompts, golds = [], []

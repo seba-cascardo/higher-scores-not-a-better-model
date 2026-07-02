@@ -30,7 +30,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 SETS = "runs/vinf_causal/arbiter_arc_sets.json"
 OUT = "runs/vinf_causal/arbiter_arc_cot.json"
-# Gemma 4 stops (NOT <end_of_turn>): from generation_config.eos_token_id.
+# stop ids include <end_of_turn>=106 (Gemma 4 turn close) — list is correct, earlier comment was stale
 STOP_IDS = [1, 50, 105, 106]
 
 
@@ -61,12 +61,17 @@ def gold_letter(item):
 
 
 def parse_letter(text, labels):
-    # prefer explicit "Answer: X"
-    m = list(re.finditer(r"[Aa]nswer\s*[:\-]?\s*\(?([A-Ha-h])\)?", text))
+    # labels can be letters (A-D...) or numeric strings ("1"-"4") — build the class dynamically
+    lab_set = {l.upper() for l in labels}
+    alts = "|".join(re.escape(l) for l in sorted(lab_set))
+    # prefer explicit "Answer: X" (letter or number)
+    m = list(re.finditer(rf"[Aa]nswer\s*[:\-]?\s*\(?({alts})\)?", text, re.IGNORECASE))
     if m:
         return m[-1].group(1).upper()
-    # else last standalone option letter present in labels
-    cand = [c for c in re.findall(r"\b([A-Ha-h])\b", text) if c.upper() in labels]
+    # else last standalone option token present in labels.
+    # UPPERCASE-only for letters (avoids matching the English article "a" as option A);
+    # numeric labels are unambiguous.
+    cand = [c for c in re.findall(rf"\b({alts})\b", text) if c.upper() in lab_set]
     if cand:
         return cand[-1].upper()
     return None
@@ -133,10 +138,12 @@ def main():
         gen = gen.view(len(batch), k, -1)
         for j, it in enumerate(batch):
             letters, glen = [], 0
+            decoded_texts = []
             for kk in range(k):
                 new = gen[j, kk, in_len:]
-                letters.append(parse_letter(tok.decode(new, skip_special_tokens=True),
-                                            labels_list[j]))
+                dec = tok.decode(new, skip_special_tokens=True)
+                decoded_texts.append(dec)
+                letters.append(parse_letter(dec, labels_list[j]))
                 glen = max(glen, int(new.shape[0]))
             cand = [x for x in letters if x is not None]
             pl = Counter(cand).most_common(1)[0][0] if cand else None  # majority vote
@@ -148,10 +155,15 @@ def main():
             did = it["doc_id"]
             if did in mc_only:
                 n_mc_only += 1; n_mc_only_correct += ok
+            # persist generated text so the parse is auditable post-hoc (last 4000 chars
+            # for the greedy k=1 arbiter; per-sample truncated list when k>1).
+            gen_text = (decoded_texts[0][-4000:] if k == 1
+                        else [t[-2000:] for t in decoded_texts])
             results.append({"doc_id": did, "arc_id": it.get("arc_id"),
                             "base_cot_correct": ok, "pred_letter": pl, "gold_letter": gl,
                             "votes": (letters if k > 1 else None),
-                            "in_mc_only": did in mc_only, "gen_len": glen})
+                            "in_mc_only": did in mc_only, "gen_len": glen,
+                            "gen_text": gen_text})
         done = bi + len(batch)
         print(f"[arb] [{done}/{len(items)}] acc_so_far={n_correct/done:.3f} "
               f"mc_only_acc={ (n_mc_only_correct/n_mc_only) if n_mc_only else 0:.3f} "
