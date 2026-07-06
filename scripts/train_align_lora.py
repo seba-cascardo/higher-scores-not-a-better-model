@@ -501,7 +501,9 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--save-every", type=int, default=0,
                     help="Save checkpoint every N optimizer steps (0 = end-of-epoch only).")
-    ap.add_argument("--out", required=True, type=Path)
+    ap.add_argument("--out", required=False, default=None, type=Path,
+                    help="Output dir for the trained adapter. Required unless --build-corpus-only "
+                         "(that mode writes to --out-corpus and never touches --out).")
     ap.add_argument("--device", default=None)
     args = ap.parse_args()
 
@@ -509,6 +511,8 @@ def main():
     if args.build_corpus_only:
         _check_deps(need_4bit=False)
         out = args.out_corpus or args.out
+        if out is None:
+            ap.error("--build-corpus-only needs --out-corpus (or --out) to say where to write the JSONL")
         if out.is_dir() or out.suffix != ".jsonl":
             out = (args.out_corpus if args.out_corpus else args.out / "train_corpus.jsonl")
         print(f"=== Build corpus only: tasks={args.tasks} n_per_task={args.n_per_task} ===",
@@ -517,6 +521,8 @@ def main():
         print(f"=== Corpus built. Exiting (no training requested) ===")
         return
 
+    if args.out is None:
+        ap.error("--out is required unless --build-corpus-only is set")
     if args.base is None:
         ap.error("--base is required unless --build-corpus-only is set")
 
