@@ -30,10 +30,10 @@ import numpy as np
 import torch
 
 ROOT = os.environ.get("MSAP_ROOT", ".")
-MC = os.path.join(ROOT, "runs/v7_lofit_gemma4_31b_chat/offsets_mc.pt")
-FUNC = os.path.join(ROOT, "runs/functional_directions.pt")
-WK = os.path.join(ROOT, "runs/vinf_causal/mc_wknow_offset.pt")
-OUT = os.path.join(ROOT, "runs/derisk/offset_parperp_decomposition.json")
+MC = os.environ.get("MC_OFFSETS", os.path.join(ROOT, "runs/v7_lofit_gemma4_31b_chat/offsets_mc.pt"))
+FUNC = os.environ.get("FUNC_DIRS", os.path.join(ROOT, "runs/functional_directions.pt"))
+WK = os.environ.get("WKNOW_OFFSET", os.path.join(ROOT, "runs/vinf_causal/mc_wknow_offset.pt"))
+OUT = os.environ.get("PARPERP_OUT", os.path.join(ROOT, "runs/derisk/offset_parperp_decomposition.json"))
 SHRINK = float(os.environ.get("WKNOW_SHRINKAGE", "1e-2"))  # match make_wknow_offset
 
 

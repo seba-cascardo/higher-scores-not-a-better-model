@@ -70,6 +70,7 @@ from __future__ import annotations
 
 import argparse
 import gc
+import os
 import datetime as dt
 import time
 from pathlib import Path
@@ -92,7 +93,7 @@ from scripts.probe_v7_lofit_head_selection import (
 
 
 SCHEMA_VERSION = "oq1-func-1.0"
-MC_OFFSETS_PATH = "runs/v7_lofit_gemma4_31b_chat/offsets_mc.pt"
+MC_OFFSETS_PATH = os.environ.get("MC_OFFSETS", "runs/v7_lofit_gemma4_31b_chat/offsets_mc.pt")
 
 
 def _build_prompts(all_pairs, chat_template: bool, tokenizer):
