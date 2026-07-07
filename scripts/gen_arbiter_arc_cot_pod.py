@@ -83,6 +83,11 @@ def main():
     ap.add_argument("--max-new-tokens", type=int, default=1024)
     ap.add_argument("--batch-size", type=int, default=16)
     ap.add_argument("--limit", type=int, default=0, help="0 = all 400")
+    ap.add_argument("--subset", default="all", choices=["all", "base_wrong", "mc_only"],
+                    help="P7/TTC: 'base_wrong' = the 198 items the base fails in cold-MC "
+                         "(complement of sets['base_right']) — the arbiter/TTC population; "
+                         "'mc_only' = the 124 adapter-fixed-not-vinf set. Avoids paying k× "
+                         "generation on base_right items the TTC baseline does not need.")
     ap.add_argument("--k", type=int, default=1,
                     help="self-consistency samples (1 = greedy, the canonical arbiter; "
                          ">1 majority-votes k sampled traces to clean unparsed + stabilise B7f)")
@@ -94,10 +99,21 @@ def main():
 
     data = json.load(open(SETS, encoding="utf-8"))
     items = data["items_all"]
+    mc_only = set(data["sets"]["mc_only"])
+    # --subset filter (doc_id is a string in items_all; sets hold ints — normalize to str)
+    if args.subset != "all":
+        if args.subset == "base_wrong":
+            base_right = {str(x) for x in data["sets"]["base_right"]}
+            keep = [it for it in items if str(it["doc_id"]) not in base_right]
+        else:  # mc_only
+            mc_ids = {str(x) for x in data["sets"]["mc_only"]}
+            keep = [it for it in items if str(it["doc_id"]) in mc_ids]
+        print(f"[arb] --subset {args.subset}: {len(keep)}/{len(items)} items kept", flush=True)
+        items = keep
     if args.limit:
         items = items[:args.limit]
-    mc_only = set(data["sets"]["mc_only"])
-    print(f"[arb] {len(items)} items ({len(mc_only)} mc_only); base={args.base}", flush=True)
+    print(f"[arb] {len(items)} items ({len(mc_only)} mc_only total); "
+          f"subset={args.subset} k={args.k} T={args.temperature}; base={args.base}", flush=True)
 
     tok = AutoTokenizer.from_pretrained(args.base)
     tok.padding_side = "left"
