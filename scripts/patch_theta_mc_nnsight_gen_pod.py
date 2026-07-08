@@ -351,17 +351,30 @@ def main():
     struct_topk_frac = round(
         sum(supp_cat_all[c] for c in STRUCTURE_CATS) / max(sum(supp_cat_all.values()), 1), 4)
 
-    # -- GATE B17 (pre-registered here, from audit-remediation plan P6-Step2) ------
-    COHERENT_THR = 0.55          # structure share of suppression clearly > half
+    # -- GATE B17 (pre-registered, audit-remediation plan P6-Step2) ----------------
+    # COHERENCE MUST BE ENRICHMENT OVER THE VOCAB BASE-RATE, not raw suppression mass.
+    # ~70% of the vocab is "content", so the raw structure-share of suppression is base-rate
+    # dominated (uniform suppression already yields ~0.30) and would spuriously read as
+    # "no structure". The B25-comparable signal is the TAIL: of the tokens the offset
+    # suppresses HARDEST (top-k), what fraction is structure. base-rate ~0.30 => top-k >=0.66
+    # (>=~2x) is a real structure signature (B25 scoring face got ~29-30/30 = ~0.97); top-k
+    # near the base-rate is genuine flattening (no structure signature).
+    n_struct = int(is_struct.sum()); n_cont = int(is_cont.sum())
+    base_rate_struct = round(n_struct / max(n_struct + n_cont, 1), 4)
+    enrichment_mass = round(coherence_frac / max(base_rate_struct, 1e-9), 3)      # mass-based
+    enrichment_topk = round(struct_topk_frac / max(base_rate_struct, 1e-9), 3)    # tail (B25)
+    COHERENT_TOPK_THR = 0.66     # top-k suppressed structure >= ~2x base-rate = B25-style signature
     GROW_THR = 0.05              # Q_last - Q_first materially positive
-    coherent = coherence_frac >= COHERENT_THR
+    coherent = struct_topk_frac >= COHERENT_TOPK_THR
     growing = slope["all"] >= GROW_THR
+    flattening = struct_topk_frac <= base_rate_struct * 1.3   # tail barely above base-rate
     if coherent and growing:
         verdict = "COMMITMENT_SUPPORTED"           # B17 earns its number -> enters via ledger
-    elif coherence_frac < 0.40 and abs(slope["all"]) < GROW_THR:
-        verdict = "FLATTENING_NO_STRUCTURE"        # B17 refuted
+    elif flattening and abs(slope["all"]) < GROW_THR:
+        verdict = "FLATTENING_NO_STRUCTURE"        # B17 refuted (no structure signature)
     else:
-        verdict = "MIXED"                          # stays out of draft (status quo)
+        # structure signature present in the tail (top-k) but NOT decisively coherent-AND-growing
+        verdict = "MIXED"                          # stays out of the draft (status quo)
     loop_vs_clean = round(traj["loop"][-1] - traj["clean_wrong"][-1], 4) if (
         q_frac_cnt["loop"][-1] and q_frac_cnt["clean_wrong"][-1]) else None
 
@@ -379,14 +392,24 @@ def main():
         "topk_suppressed_structure_frac": struct_topk_frac,   # B25-comparable
         "topk_suppressed_category_mix": {k: dict(supp_cat_topk[k].most_common()) for k in kinds},
         "loop_minus_clean_final_quartile": loop_vs_clean,
-        "gate": {"coherent_thr": COHERENT_THR, "grow_thr": GROW_THR,
-                 "coherent": coherent, "growing": growing, "verdict": verdict},
+        "gate": {"coherent_topk_thr": COHERENT_TOPK_THR, "grow_thr": GROW_THR,
+                 "base_rate_struct": base_rate_struct,
+                 "enrichment_topk": enrichment_topk, "enrichment_mass": enrichment_mass,
+                 "coherent": coherent, "growing": growing, "flattening": flattening,
+                 "verdict": verdict,
+                 "note": "coherent uses top-k structure enrichment over vocab base-rate (B25-"
+                         "comparable), NOT raw mass share (base-rate dominated). enrichment_topk>=~2 "
+                         "= real structure signature; ~1 = flattening."},
         "per_item": per_item,
-        "read": "verdict COMMITMENT_SUPPORTED => structure-suppression is coherent (share>=0.55) AND "
-                "grows along the generation (Q_last-Q_first>=0.05) => B17 commitment frame earns its "
-                "number (enters via ledger). FLATTENING_NO_STRUCTURE => B17 refuted. MIXED => stays "
-                "out of the draft. loop_minus_clean_final_quartile>0 => loops de-structure more than "
-                "clean-wrong at the end (consistent with 'never commits to a close').",
+        "read": "verdict COMMITMENT_SUPPORTED => structure-suppression is coherent (top-k structure "
+                "enrichment >=~2x the vocab base-rate, i.e. struct_topk_frac>=0.66) AND grows along "
+                "the generation (Q_last-Q_first>=0.05) => B17 commitment frame earns its number "
+                "(enters via ledger). FLATTENING_NO_STRUCTURE => top-k near base-rate (no structure "
+                "signature) => B17 refuted. MIXED => structure signature present in the tail but not "
+                "decisively coherent-AND-growing => stays out of the draft. NOTE: mass_share is "
+                "base-rate dominated (~70% of vocab is content) — do NOT gate on it. "
+                "loop_minus_clean_final_quartile>0 => loops de-structure more than clean-wrong at the "
+                "end (consistent with 'never commits to a close').",
         "method": "nnsight real-forward output-patch (r_layer @ o_proj.output == install_lofit_hooks) "
                   "over REAL adapter generation positions; structure/content via logit_lens categorize.",
     }
@@ -396,7 +419,8 @@ def main():
     print(f"  trajectory (structure share by quartile):")
     for k in ("all", "loop", "clean_wrong"):
         print(f"    {k:12s}: {traj[k]}  slope={slope[k]:+.3f}", flush=True)
-    print(f"  coherence_share={coherence_frac}  topk_struct_frac={struct_topk_frac}  "
+    print(f"  topk_struct_frac={struct_topk_frac} (enrich x{enrichment_topk} over base "
+          f"{base_rate_struct}) | mass_share={coherence_frac} (enrich x{enrichment_mass}) | "
           f"loop-clean(Q_last)={loop_vs_clean}", flush=True)
     print(f"  SANITY cos={cos_eq_mean:.4f} | GATE VERDICT = {verdict}", flush=True)
     print(f"  saved: {args.out}", flush=True)
