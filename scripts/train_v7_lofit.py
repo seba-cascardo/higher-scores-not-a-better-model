@@ -58,6 +58,8 @@ import torch.nn.functional as F
 from datasets import load_dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+from scripts.lofit_onaxis import frac_perp, map_vinf_to_pairs, onaxis_penalty
+
 
 # -- Layer / config resolution (shared) --------------------------------------
 def _resolve_layers(model) -> list[torch.nn.Module]:
@@ -664,6 +666,32 @@ def remove_handles(handles):
         h.remove()
 
 
+# -- P9 on-axis penalty wiring (training-time on-axis constraint) -------------
+# The constructive flip: force the trainable offset alpha*theta to live ON the functional
+# inference axis v_inf by penalizing its off-axis mass. Math + tests in scripts/lofit_onaxis.py
+# and tests/{test_onaxis_penalty,test_p9_onaxis_wiring}.py. Plan:
+# docs/superpowers/plans/2026-07-08-p9-onaxis-constraint-training.md.
+def load_vinf_for_pairs(vinf_path, layer_head_pairs, device="cpu"):
+    """Load functional_directions.pt and map v_inf onto the offset's (layer, head) pairs.
+
+    Returns (v_inf_perpair (n_pairs, head_dim), mask (n_pairs,)) on `device`. Masked pairs
+    (no captured v_inf for that model layer) get a zero row + mask 0.
+    """
+    fd = torch.load(vinf_path, map_location="cpu", weights_only=False)
+    v_per, mask = map_vinf_to_pairs(fd, layer_head_pairs)
+    return v_per.to(device), mask.to(device)
+
+
+def onaxis_penalty_term(offsets: "LofitOffsets", v_inf_perpair, mask, lam: float):
+    """Scaled on-axis penalty for the current offset params, ready to `.backward()`.
+
+    lam * (mean off-axis energy of alpha*theta projected against v_inf). Differentiable in
+    offsets.alpha and offsets.theta. Added once per optimizer step (a regularizer on the
+    params, not a per-sample term): L_total = L_margin + lam * L_onaxis.
+    """
+    return lam * onaxis_penalty(offsets.alpha, offsets.theta, v_inf_perpair, mask)
+
+
 # -- Loss computation --------------------------------------------------------
 def continuation_logprob(
     model, tokenizer, prompt: str, continuation: str,
@@ -923,6 +951,18 @@ def main():
                          "inference. Builds prompts via apply_chat_template + add_generation_prompt. "
                          "See feedback_v7_chat_template_train_deploy_gap.md.")
     ap.add_argument("--out", required=True)
+    # ---- P9: training-time on-axis constraint (penalty toward v_inf) ----
+    # Off by default (behavior identical to pre-P9). When on, adds a projection penalty
+    # that forces the trainable offset alpha*theta ON-axis (toward v_inf) by penalizing its
+    # off-axis mass: L = L_margin + onaxis_lambda * L_onaxis. Sweep lambda on a log grid;
+    # lambda=0 = off-axis baseline. Plan:
+    # docs/superpowers/plans/2026-07-08-p9-onaxis-constraint-training.md.
+    ap.add_argument("--onaxis-penalty", action="store_true",
+                    help="P9: enable the on-axis projection penalty toward v_inf.")
+    ap.add_argument("--onaxis-lambda", type=float, default=0.0,
+                    help="P9: weight on the on-axis penalty (default 0.0 = no penalty).")
+    ap.add_argument("--vinf-path", default="runs/functional_directions.pt",
+                    help="P9: functional_directions.pt providing v_inf + captured_indices.")
     # ---- Mid-training downstream eval (opt-in feature) ----
     # When --downstream-primary is empty (default), the script behaves
     # identically to pre-feature: only val_pair_acc tracked, only
@@ -1074,6 +1114,25 @@ def main():
     print(f"  trainable params (offsets): {n_trainable}")
     print()
 
+    # P9: load + map v_inf onto the trainable pairs (on-axis penalty target). Off unless
+    # --onaxis-penalty. Fail fast if nothing maps (a silent 0-mapping would make the penalty
+    # a no-op and quietly produce an off-axis "on-axis" adapter).
+    onaxis_v = onaxis_mask = None
+    if args.onaxis_penalty:
+        onaxis_v, onaxis_mask = load_vinf_for_pairs(args.vinf_path, layer_head_pairs, device="cuda")
+        n_mapped = int(onaxis_mask.sum())
+        print(f"  P9 on-axis penalty ON: lambda={args.onaxis_lambda}, vinf={args.vinf_path}")
+        print(f"    v_inf mapped to {n_mapped}/{len(layer_head_pairs)} trainable pairs")
+        if n_mapped == 0:
+            raise RuntimeError(
+                f"P9 on-axis penalty requested but 0/{len(layer_head_pairs)} pairs mapped to "
+                f"v_inf in {args.vinf_path}. Check captured_indices vs the trained head layers."
+            )
+        n_unmapped = len(layer_head_pairs) - n_mapped
+        if n_unmapped:
+            print(f"    NOTE: {n_unmapped} unmapped pairs contribute 0 to the penalty")
+        print()
+
     # Install hooks
     handles = install_lofit_hooks(layers, offsets, attn_shape)
 
@@ -1097,6 +1156,9 @@ def main():
                 "lr": args.lr,
                 "beta": args.beta,
                 "gamma": args.gamma,
+                "onaxis_penalty": args.onaxis_penalty,
+                "onaxis_lambda": args.onaxis_lambda,
+                "vinf_path": args.vinf_path if args.onaxis_penalty else None,
             },
             "layer_head_pairs": layer_head_pairs,
             "alpha": offsets.alpha.detach().cpu(),
@@ -1170,6 +1232,11 @@ def main():
         accum += args.batch_size
 
         if accum >= args.batch_size * args.grad_accum:
+            # P9: add the on-axis penalty gradient ONCE per optimizer step (it's a regularizer
+            # on the params, not a per-sample term). The margin grads for this window are already
+            # accumulated; this adds lam*grad(L_onaxis) before the step. No-op when penalty off.
+            if args.onaxis_penalty:
+                onaxis_penalty_term(offsets, onaxis_v, onaxis_mask, args.onaxis_lambda).backward()
             torch.nn.utils.clip_grad_norm_(offsets.parameters(), max_norm=1.0)
             optim.step()
             optim.zero_grad()
@@ -1285,10 +1352,22 @@ def main():
             else:
                 print(f"{step+1:>5d}  {loss_avg:>9.4f}  {val_loss:>9.4f}  {val_acc:>8.3f}  {elapsed:>6.0f}s{marker}")
 
+            # P9: report how on-axis the offset currently is. frac_perp -> 0 as the offset
+            # moves onto v_inf; the sweep watches this fall as lambda grows (plan Task 2).
+            cur_onaxis = None
+            cur_frac_perp = None
+            if args.onaxis_penalty:
+                with torch.no_grad():
+                    cur_onaxis = float(onaxis_penalty(offsets.alpha, offsets.theta, onaxis_v, onaxis_mask))
+                    cur_frac_perp = frac_perp(offsets.alpha, offsets.theta, onaxis_v, onaxis_mask)
+                print(f"        P9: onaxis_penalty={cur_onaxis:.5f}  frac_perp={cur_frac_perp:.3f}  "
+                      f"(lambda={args.onaxis_lambda})", flush=True)
+
             train_log.append({
                 "step": step + 1, "loss": loss_avg, "val_loss": val_loss,
                 "val_acc": val_acc, "time": elapsed,
                 "is_best_so_far": is_best_primary if has_downstream else improved_val_pair,
+                "onaxis_penalty": cur_onaxis, "frac_perp": cur_frac_perp,
             })
 
             # Persist best ckpt:
@@ -1351,11 +1430,24 @@ def main():
     # collapse / overfit pattern. Eval pipelines should consume out_path (best).
     final_path = out_path.with_suffix(".final.pt") if out_path.suffix else Path(str(out_path) + ".final")
     _save_offsets_atomic(final_path, val_acc, args.steps, tag="final")
+    # P9: record the final on-axis-ness of the trained offset (the sweep's key number).
+    onaxis_final = None
+    frac_perp_final = None
+    if args.onaxis_penalty:
+        with torch.no_grad():
+            onaxis_final = float(onaxis_penalty(offsets.alpha, offsets.theta, onaxis_v, onaxis_mask))
+            frac_perp_final = frac_perp(offsets.alpha, offsets.theta, onaxis_v, onaxis_mask)
+        print(f"P9 final: onaxis_penalty={onaxis_final:.5f}  frac_perp={frac_perp_final:.3f}  "
+              f"(lambda={args.onaxis_lambda})")
+
     log_path.write_text(json.dumps({
         "train_log": train_log,
         "best_val_acc": best_val_acc,
         "best_step": best_step,
         "best_downstream_primary": best_downstream_primary if has_downstream else None,
+        "onaxis_lambda": args.onaxis_lambda if args.onaxis_penalty else None,
+        "onaxis_penalty_final": onaxis_final,
+        "frac_perp_final": frac_perp_final,
     }, indent=2))
     if has_downstream:
         print(f"Saved best offsets:    {out_path} (downstream_primary="

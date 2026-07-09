@@ -67,7 +67,10 @@ def onaxis_penalty(alpha, theta, v_inf_perpair, mask, eps=1e-8):
 
 def frac_perp(alpha, theta, v_inf_perpair, mask, eps=1e-8):
     """Diagnostic: masked-mean ||theta_perp||^2 / ||theta_eff||^2 — how off-axis the offset is
-    (1 = fully off-axis, 0 = fully on-axis). Log this during the sweep."""
+    (1 = fully off-axis, 0 = fully on-axis). Log this during the sweep. Read-only: detaches its
+    inputs so it is safe to call directly on trainable Parameters (returns a plain float)."""
+    alpha = alpha.detach()
+    theta = theta.detach()
     theta_eff = alpha.unsqueeze(1) * theta
     v = v_inf_perpair.to(theta.dtype)
     m = mask.to(theta.dtype)
