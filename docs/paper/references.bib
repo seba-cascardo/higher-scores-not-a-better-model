@@ -1,0 +1,530 @@
+% Axis Paper — references.bib
+% F6 (2026-07-13): all 44 refs resolved from the draft's [CITE: label id] markers.
+% Every arXiv ID cross-checked ID->title via the arXiv MCP (arxiv_get_metadata) on 2026-07-13:
+%   42/42 arXiv IDs resolved, ZERO ID->title mismatches. Two non-arXiv refs resolved
+%   from their canonical venues (ACL Anthology / Transformer Circuits Thread).
+% Discipline: a peer-reviewed venue is asserted ONLY when the arXiv metadata explicitly
+%   provided it (comment / journal_ref); otherwise the entry is cited as an arXiv preprint
+%   (numbers-first / no fabricated venues). Each entry is tagged with its draft short-label.
+% Cite keys = the draft's short-name token (sanitized) for traceability with the [CITE:] markers.
+
+% ---- Methods this work sits in (LoFiT/ITI/ReFT family) ----
+
+@inproceedings{LoFiT,
+  % [CITE: LoFiT 2406.01563]
+  title     = {{LoFiT}: Localized Fine-tuning on {LLM} Representations},
+  author    = {Yin, Fangcong and Ye, Xi and Durrett, Greg},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2024},
+  eprint    = {2406.01563},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url       = {https://arxiv.org/abs/2406.01563}
+}
+
+@inproceedings{ITI,
+  % [CITE: ITI 2306.03341]
+  title     = {Inference-Time Intervention: Eliciting Truthful Answers from a Language Model},
+  author    = {Li, Kenneth and Patel, Oam and Vi{\'e}gas, Fernanda and Pfister, Hanspeter and Wattenberg, Martin},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS), spotlight},
+  year      = {2023},
+  eprint    = {2306.03341},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url       = {https://arxiv.org/abs/2306.03341}
+}
+
+@misc{ReFT,
+  % [CITE: ReFT 2404.03592]
+  title  = {{ReFT}: Representation Finetuning for Language Models},
+  author = {Wu, Zhengxuan and Arora, Aryaman and Wang, Zheng and Geiger, Atticus and Jurafsky, Dan and Manning, Christopher D. and Potts, Christopher},
+  year   = {2024},
+  eprint = {2404.03592},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2404.03592}
+}
+
+@misc{AxBench,
+  % [CITE: AxBench 2501.17148]
+  title  = {{AxBench}: Steering {LLMs}? Even Simple Baselines Outperform Sparse Autoencoders},
+  author = {Wu, Zhengxuan and Arora, Aryaman and Geiger, Atticus and Wang, Zheng and Huang, Jing and Jurafsky, Dan and Manning, Christopher D. and Potts, Christopher},
+  year   = {2025},
+  eprint = {2501.17148},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2501.17148}
+}
+
+% ---- Hidden knowledge / internal-vs-external ----
+
+@misc{GenerativeAIParadox,
+  % [CITE: Generative AI Paradox 2311.00059]
+  title  = {The Generative {AI} Paradox: ``What It Can Create, It May Not Understand''},
+  author = {West, Peter and Lu, Ximing and Dziri, Nouha and Brahman, Faeze and Li, Linjie and Hwang, Jena D. and Jiang, Liwei and Fisher, Jillian and Ravichander, Abhilasha and Chandu, Khyathi and Newman, Benjamin and Koh, Pang Wei and Ettinger, Allyson and Choi, Yejin},
+  year   = {2023},
+  eprint = {2311.00059},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url    = {https://arxiv.org/abs/2311.00059}
+}
+
+@misc{LLMsKnowMore,
+  % [CITE: LLMs-Know-More 2410.02707]
+  title  = {{LLMs} Know More Than They Show: On the Intrinsic Representation of {LLM} Hallucinations},
+  author = {Orgad, Hadas and Toker, Michael and Gekhman, Zorik and Reichart, Roi and Szpektor, Idan and Kotek, Hadas and Belinkov, Yonatan},
+  year   = {2024},
+  eprint = {2410.02707},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2410.02707}
+}
+
+@inproceedings{InsideOut,
+  % [CITE: Inside-Out 2503.15299]
+  title     = {Inside-Out: Hidden Factual Knowledge in {LLMs}},
+  author    = {Gekhman, Zorik and Ben David, Eyal and Orgad, Hadas and Ofek, Eran and Belinkov, Yonatan and Szpektor, Idan and Herzig, Jonathan and Reichart, Roi},
+  booktitle = {Conference on Language Modeling (COLM)},
+  year      = {2025},
+  eprint    = {2503.15299},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url       = {https://arxiv.org/abs/2503.15299}
+}
+
+@inproceedings{AnswerMatching,
+  % [CITE: Answer-Matching 2507.02856]
+  title  = {Answer Matching Outperforms Multiple Choice for Language Model Evaluation},
+  author = {Chandak, Nikhil and Goel, Shashwat and Prabhu, Ameya and Hardt, Moritz and Geiping, Jonas},
+  year   = {2025},
+  eprint = {2507.02856},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2507.02856}
+}
+
+@misc{PreCoTAnswer,
+  % [CITE: Pre-CoT-Answer Cox 2603.01437]
+  title  = {Decoding Answers Before Chain-of-Thought: Evidence from Pre-{CoT} Probes and Activation Steering},
+  author = {Cox, Kyle and Kianersi, Darius and Garriga-Alonso, Adri{\`a}},
+  year   = {2026},
+  eprint = {2603.01437},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url    = {https://arxiv.org/abs/2603.01437}
+}
+
+% ---- Correctness geometry / probes / steering (foils and related) ----
+
+@misc{ConfidenceManifold,
+  % [CITE: Confidence-Manifold 2602.08159]
+  title  = {The Confidence Manifold: Geometric Structure of Correctness Representations in Language Models},
+  author = {Cho, Seonglae and Wu, Zekun and Da Costa, Kleyton and Koshiyama, Adriano},
+  year   = {2026},
+  eprint = {2602.08159},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url    = {https://arxiv.org/abs/2602.08159}
+}
+
+@inproceedings{KAPPA,
+  % [CITE: KAPPA 2509.23782]  -- lead foil (knowledge-prediction gap on MCQs)
+  title     = {Bridging the Knowledge-Prediction Gap in {LLMs} on Multiple-Choice Questions},
+  author    = {Park, Yoonah and Pyun, Haesung and Jo, Yohan},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2026},
+  eprint    = {2509.23782},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url       = {https://arxiv.org/abs/2509.23782}
+}
+
+@misc{NoVo,
+  % [CITE: NoVo 2410.08970]  -- read-only selector scoop
+  title  = {{NoVo}: Norm Voting off Hallucinations with Attention Heads in Large Language Models},
+  author = {Ho, Zheng Yi and Liang, Siyuan and Zhang, Sen and Zhan, Yibing and Tao, Dacheng},
+  year   = {2024},
+  eprint = {2410.08970},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2410.08970}
+}
+
+@misc{CORAL,
+  % [CITE: CORAL 2602.06022]  -- read-only selector scoop
+  title  = {Correctness-Optimized Residual Activation Lens ({CORAL}): Transferrable and Calibration-Aware Inference-Time Steering},
+  author = {Miao, Miranda Muqing and Cho, Young-Min and Ungar, Lyle},
+  year   = {2026},
+  eprint = {2602.06022},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url    = {https://arxiv.org/abs/2602.06022}
+}
+
+@inproceedings{ConfidenceRegulationNeurons,
+  % [CITE: Confidence-Regulation-Neurons Stolfo 2406.16254]
+  title     = {Confidence Regulation Neurons in Language Models},
+  author    = {Stolfo, Alessandro and Wu, Ben and Gurnee, Wes and Belinkov, Yonatan and Song, Xingyi and Sachan, Mrinmaya and Nanda, Neel},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2024},
+  eprint    = {2406.16254},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url       = {https://arxiv.org/abs/2406.16254}
+}
+
+@misc{AngleNorm,
+  % [CITE: Angle-Norm Aparin & Gaintseva 2606.06735]
+  title  = {A Geometric Account of Activation Steering through Angle-Norm Decomposition},
+  author = {Aparin, Georgii and Gaintseva, Tatiana},
+  year   = {2026},
+  eprint = {2606.06735},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url    = {https://arxiv.org/abs/2606.06735}
+}
+
+@misc{LeverageIsNotReach,
+  % [CITE: Leverage-Is-Not-Reach Liu 2606.19831]
+  title  = {Leverage Is Not Reach: A Control-Window Law for Single-Neuron Steering in Language Models},
+  author = {Liu, Hongliang},
+  year   = {2026},
+  eprint = {2606.19831},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2606.19831}
+}
+
+@misc{NonIdentifiability,
+  % [CITE: Non-Identifiability 2602.06801]
+  title  = {On the Non-Identifiability of Steering Vectors in Large Language Models},
+  author = {Venkatesh, Sohan and Kurapath, Ashish Mahendran},
+  year   = {2026},
+  eprint = {2602.06801},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url    = {https://arxiv.org/abs/2602.06801}
+}
+
+@misc{RogueScalpel,
+  % [CITE: Rogue-Scalpel 2509.22067]
+  title  = {The Rogue Scalpel: Activation Steering Compromises {LLM} Safety},
+  author = {Korznikov, Anton and Galichin, Andrey and Dontsov, Alexey and Rogov, Oleg Y. and Oseledets, Ivan and Tutubalina, Elena},
+  year   = {2025},
+  eprint = {2509.22067},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url    = {https://arxiv.org/abs/2509.22067}
+}
+
+@article{SyedActivationDirections,
+  % [CITE: Syed 2606.20225]
+  title  = {Actionable Activation Directions for Detecting and Mitigating Emergent Misalignment Across Language Model Families},
+  author = {Syed, Abdul Rafay},
+  year   = {2026},
+  eprint = {2606.20225},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2606.20225}
+}
+
+@inproceedings{DualStanceSycophancy,
+  % [CITE: Dual-Stance-Sycophancy Buchan 2606.11205]
+  title     = {Dual-Stance Evaluation of Sycophancy: The Structure of Agreement and the Limits of Intervention},
+  author    = {Buchan, Matthew James},
+  booktitle = {Trustworthy AI Systems (TAIS)},
+  year      = {2026},
+  eprint    = {2606.11205},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url       = {https://arxiv.org/abs/2606.11205}
+}
+
+@inproceedings{MERA,
+  % [CITE: MERA 2510.13290]
+  title     = {To Steer or Not to Steer? Mechanistic Error Reduction with Abstention for Language Models},
+  author    = {Hedstr{\"o}m, Anna and Amoukou, Salim I. and Bewley, Tom and Mishra, Saumitra and Veloso, Manuela},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2025},
+  eprint    = {2510.13290},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url       = {https://arxiv.org/abs/2510.13290}
+}
+
+% ---- Truth / correctness probing (causal linear structure) ----
+
+@misc{AzariaMitchell,
+  % [CITE: probing-correctness Azaria-Mitchell 2304.13734]
+  title  = {The Internal State of an {LLM} Knows When It's Lying},
+  author = {Azaria, Amos and Mitchell, Tom},
+  year   = {2023},
+  eprint = {2304.13734},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2304.13734}
+}
+
+@inproceedings{MarksTegmark,
+  % [CITE: Marks-Tegmark 2310.06824]
+  title     = {The Geometry of Truth: Emergent Linear Structure in Large Language Model Representations of True/False Datasets},
+  author    = {Marks, Samuel and Tegmark, Max},
+  booktitle = {Conference on Language Modeling (COLM)},
+  year      = {2024},
+  eprint    = {2310.06824},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url       = {https://arxiv.org/abs/2310.06824}
+}
+
+@misc{DisentanglingRecallReasoning,
+  % [CITE: Disentangling-Recall-Reasoning 2510.03366]
+  title  = {Disentangling Recall and Reasoning in Transformer Models through Layer-wise Attention and Activation Analysis},
+  author = {Fartale, Harshwardhan and Kattamuri, Ashish and Raja, Rahul and Vats, Arpita and Prasad, Ishita and Moharir, Akshata Kishore},
+  year   = {2025},
+  eprint = {2510.03366},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url    = {https://arxiv.org/abs/2510.03366}
+}
+
+% ---- MCQ evaluation pathologies (first-token, selection bias, choices-only) ----
+
+@inproceedings{MyAnswerIsC,
+  % [CITE: My-Answer-is-C 2402.14499]
+  title     = {``My Answer is C'': First-Token Probabilities Do Not Match Text Answers in Instruction-Tuned Language Models},
+  author    = {Wang, Xinpeng and Ma, Bolei and Hu, Chengzhi and Weber-Genzel, Leon and R{\"o}ttger, Paul and Kreuter, Frauke and Hovy, Dirk and Plank, Barbara},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},
+  year      = {2024},
+  eprint    = {2402.14499},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url       = {https://arxiv.org/abs/2402.14499}
+}
+
+@inproceedings{LookAtTheText,
+  % [CITE: Look-at-the-Text 2404.08382]
+  title     = {Look at the Text: Instruction-Tuned Language Models are More Robust Multiple Choice Selectors than You Think},
+  author    = {Wang, Xinpeng and Hu, Chengzhi and Ma, Bolei and R{\"o}ttger, Paul and Plank, Barbara},
+  booktitle = {Conference on Language Modeling (COLM)},
+  year      = {2024},
+  eprint    = {2404.08382},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url       = {https://arxiv.org/abs/2404.08382}
+}
+
+@inproceedings{PriDe,
+  % [CITE: PriDe 2309.03882]
+  title     = {Large Language Models Are Not Robust Multiple Choice Selectors},
+  author    = {Zheng, Chujie and Zhou, Hao and Meng, Fandong and Zhou, Jie and Huang, Minlie},
+  booktitle = {International Conference on Learning Representations (ICLR), spotlight},
+  year      = {2024},
+  eprint    = {2309.03882},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url       = {https://arxiv.org/abs/2309.03882}
+}
+
+@misc{OrderSensitivity,
+  % [CITE: Order-Sensitivity 2308.11483]
+  title  = {Large Language Models Sensitivity to The Order of Options in Multiple-Choice Questions},
+  author = {Pezeshkpour, Pouya and Hruschka, Estevam},
+  year   = {2023},
+  eprint = {2308.11483},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2308.11483}
+}
+
+@inproceedings{CalibrateBeforeUse,
+  % [CITE: Calibrate-Before-Use 2102.09690]
+  title     = {Calibrate Before Use: Improving Few-Shot Performance of Language Models},
+  author    = {Zhao, Tony Z. and Wallace, Eric and Feng, Shi and Klein, Dan and Singh, Sameer},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2021},
+  eprint    = {2102.09690},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url       = {https://arxiv.org/abs/2102.09690}
+}
+
+@inproceedings{folktexts,
+  % [CITE: folktexts 2407.14614]
+  title     = {Evaluating language models as risk scores},
+  author    = {Cruz, Andr{\'e} F. and Hardt, Moritz and Mendler-D{\"u}nner, Celestine},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2024},
+  eprint    = {2407.14614},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url       = {https://arxiv.org/abs/2407.14614}
+}
+
+@inproceedings{OwnershipBias,
+  % [CITE: Ownership-Bias 2606.03437]
+  title     = {Large Language Models Are Overconfident in Their Own Responses},
+  author    = {Sanz-Guerrero, Mario and Mager, Manuel and von der Wense, Katharina},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2026},
+  year      = {2026},
+  eprint    = {2606.03437},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url       = {https://arxiv.org/abs/2606.03437}
+}
+
+@misc{BenchmarkIllusion,
+  % [CITE: Benchmark-Illusion 2606.17609]
+  title  = {The Benchmark Illusion: Pruned {LLMs} Can Pass Multiple Choice but Fail to Answer},
+  author = {Wen, Rui and Sun, Lu and Liu, Jiayang and Xu, Zesheng and Cong, Tianshuo and Li, Zheng},
+  year   = {2026},
+  eprint = {2606.17609},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2606.17609}
+}
+
+@misc{SurfaceFormCompetition,
+  % [CITE: Surface-Form-Competition / Holtzman PMI 2104.08315]
+  title  = {Surface Form Competition: Why the Highest Probability Answer Isn't Always Right},
+  author = {Holtzman, Ari and West, Peter and Shwartz, Vered and Choi, Yejin and Zettlemoyer, Luke},
+  year   = {2021},
+  eprint = {2104.08315},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2104.08315}
+}
+
+@inproceedings{ArtifactsOrAbduction,
+  % [CITE: Artifacts-or-Abduction 2402.12483]
+  title     = {Artifacts or Abduction: How Do {LLMs} Answer Multiple-Choice Questions Without the Question?},
+  author    = {Balepur, Nishant and Ravichander, Abhilasha and Rudinger, Rachel},
+  booktitle = {Proceedings of the Association for Computational Linguistics (ACL)},
+  year      = {2024},
+  eprint    = {2402.12483},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url       = {https://arxiv.org/abs/2402.12483}
+}
+
+@inproceedings{ChoicesOnlyCheater,
+  % [CITE: Choices-Only-Cheater 2407.01992]
+  title     = {Is Your Large Language Model Knowledgeable or a Choices-Only Cheater?},
+  author    = {Balepur, Nishant and Rudinger, Rachel},
+  booktitle = {KnowledgeLM Workshop @ ACL 2024},
+  year      = {2024},
+  eprint    = {2407.01992},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url       = {https://arxiv.org/abs/2407.01992}
+}
+
+@misc{NPSQ,
+  % [CITE: NPSQ 2502.18798]  (method NPSQ; paper title "Choices Speak Louder than Questions")
+  title  = {Choices Speak Louder than Questions},
+  author = {Cho, Gyeongje and So, Yeonkyoung and Lee, Jaejin},
+  year   = {2025},
+  eprint = {2502.18798},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2502.18798}
+}
+
+% ---- Knowledge injection / reasoning-preserving PEFT ----
+
+@misc{PALoRA,
+  % [CITE: PALoRA 2605.24549]
+  title  = {{PALoRA}: Projection-Adaptive {LoRA} for Preserving Reasoning in Large Language Models},
+  author = {Bilgin, Mustafa Hayri and Barry, Mariam and Bifet, Albert and Ait Said, Azzedine Idir and Banerjee, Soumya},
+  year   = {2026},
+  eprint = {2605.24549},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url    = {https://arxiv.org/abs/2605.24549}
+}
+
+@misc{MixSD,
+  % [CITE: MixSD 2605.16865]
+  title  = {{MixSD}: Mixed Contextual Self-Distillation for Knowledge Injection},
+  author = {Liu, Jiarui and Zhang, Lechen and Yang, Yongjin and He, Yinghui and Wang, Yingheng and Xuan, Weihao and Jin, Zhijing and Diab, Mona},
+  year   = {2026},
+  eprint = {2605.16865},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2605.16865}
+}
+
+@misc{FrenchQASFT,
+  % [CITE: French-QA-SFT 2606.19266]
+  title  = {Trade-offs in Medical {LLM} Adaptation: An Empirical Study in French {QA}},
+  author = {Belmadani, Ikram and El Khettari, Oumaima and Ramisch, Carlos and Bechet, Frederic and Dufour, Richard and Favre, Benoit},
+  year   = {2026},
+  eprint = {2606.19266},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2606.19266}
+}
+
+% ---- Calibration under alignment / MC setting ----
+
+@misc{AlignedMCCalibration,
+  % [CITE: Aligned-MC-Calibration He 2310.11732]
+  title  = {Investigating Uncertainty Calibration of Aligned Language Models under the Multiple-Choice Setting},
+  author = {He, Guande and Cui, Peng and Chen, Jianfei and Hu, Wenbo and Zhu, Jun},
+  year   = {2023},
+  eprint = {2310.11732},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url    = {https://arxiv.org/abs/2310.11732}
+}
+
+% ---- MCQ mechanism / correct-letter heads / two-stage ----
+
+@misc{TwoStageMCQA,
+  % [CITE: Two-Stage-MCQA Wong 2601.03914]
+  title  = {When Models Decide and When They Bind: A Two-Stage Computation for Multiple-Choice Question-Answering},
+  author = {Wong, Hugh Mee and Nouwen, Rick and Gatt, Albert},
+  year   = {2026},
+  eprint = {2601.03914},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url    = {https://arxiv.org/abs/2601.03914}
+}
+
+@misc{CorrectLetterHeads,
+  % [CITE: Correct-Letter-Heads Lieberum 2307.09458]
+  title  = {Does Circuit Analysis Interpretability Scale? Evidence from Multiple Choice Capabilities in {Chinchilla}},
+  author = {Lieberum, Tom and Rahtz, Matthew and Kram{\'a}r, J{\'a}nos and Nanda, Neel and Irving, Geoffrey and Shah, Rohin and Mikulik, Vladimir},
+  year   = {2023},
+  eprint = {2307.09458},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url    = {https://arxiv.org/abs/2307.09458}
+}
+
+% ---- Non-arXiv venues ----
+
+@inproceedings{FormatFirst,
+  % [CITE: Format-First Wiegreffe 2025.gem-1.46]  (ACL Anthology, NOT arXiv)
+  title     = {Fine-Tune on the Format First: Improving Multiple-Choice Evaluation for Intermediate {LLM} Checkpoints},
+  author    = {Bunn, Alec and Wiegreffe, Sarah and Bogin, Ben},
+  booktitle = {Proceedings of the Fourth Workshop on Generation, Evaluation and Metrics (GEM$^2$)},
+  publisher = {Association for Computational Linguistics},
+  address   = {Vienna, Austria and virtual meeting},
+  month     = jul,
+  year      = {2025},
+  pages     = {511--521},
+  isbn      = {979-8-89176-261-9},
+  url       = {https://aclanthology.org/2025.gem-1.46/}
+}
+
+@misc{GlobalWorkspace,
+  % [CITE: Global-Workspace Gurnee, Lindsey et al., Transformer Circuits Thread 2026]  (web pub, NOT arXiv)
+  title        = {Verbalizable Representations Form a Global Workspace in Language Models},
+  author       = {Gurnee, Wes and Sofroniew, Nicholas and Pearce, Adam and Piotrowski, Mateusz and Kauvar, Isaac and Chen, Runjin and Soligo, Anna and Bogdan, Paul and Ong, Euan and Wang, Rowan and Thompson, T. Ben and Abrahams, David and Kantamneni, Subhash and Ameisen, Emmanuel and Batson, Joshua and Lindsey, Jack},
+  howpublished = {Transformer Circuits Thread},
+  year         = {2026},
+  month        = jul,
+  note         = {Anthropic; published July 6, 2026},
+  url          = {https://transformer-circuits.pub/2026/workspace}
+}
