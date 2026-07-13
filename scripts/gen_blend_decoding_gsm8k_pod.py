@@ -70,7 +70,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts.eval_with_router import _resolve_layers, _get_attention_shape  # noqa: E402
 from scripts.run_lm_eval_v7 import _filter_compatible_layers, _load_model_multimodal  # noqa: E402
 
-# Gemma 4 stop ids (NOT <end_of_turn>): from generation_config.eos_token_id (see gen_arbiter_*).
+# Gemma 4 stop ids from generation_config.eos_token_id (includes 106 = <end_of_turn>, the real
+# turn terminator; see gen_arbiter_*). The B15/B32 bug was counting only <eos> — these ids are
+# correct and DO stop on <end_of_turn>.
 STOP_IDS = [1, 50, 105, 106]
 
 # Mutable state read by the per-layer hook: N = real (un-doubled) batch size of the

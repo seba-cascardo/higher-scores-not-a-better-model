@@ -1,7 +1,11 @@
 """ARC arbiter — local analysis (€0). Join base gen-CoT correctness to the offset
 sets and report the read.
 
-Run after the pod produces runs/vinf_causal/arbiter_arc_cot.json.
+Run after the pod produces runs/vinf_causal/arbiter_arc_cot_v2.json (post-parser-fix, 124/124;
+the pre-fix arbiter_arc_cot.json gives 123/124 on one item, B22-N0). Both are read here, v2
+preferred; download the v2 with:
+  hf download sebacascardo87/msap-vinf-causal-20260623 --include arbiter_arc_cot_v2.json \
+    --repo-type dataset --local-dir runs/vinf_causal
 
   python scripts/analyze_arbiter_arc_cot.py
 """
@@ -9,7 +13,11 @@ import json
 import os
 
 SETS = "runs/vinf_causal/arbiter_arc_sets.json"
-COT = "runs/vinf_causal/arbiter_arc_cot.json"
+# Prefer the post-parser-fix v2 (mc_only 124/124, the canonical no-transfer bound in the ledger).
+# The pre-fix arbiter_arc_cot.json misses one CoT-answer parse and gives 123/124 (B22-N0).
+_COT_V2 = "runs/vinf_causal/arbiter_arc_cot_v2.json"
+_COT_V1 = "runs/vinf_causal/arbiter_arc_cot.json"
+COT = _COT_V2 if os.path.exists(_COT_V2) else _COT_V1
 
 
 def wilson(k, n, z=1.96):
