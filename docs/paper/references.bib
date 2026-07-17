@@ -7,6 +7,14 @@
 %   provided it (comment / journal_ref); otherwise the entry is cited as an arXiv preprint
 %   (numbers-first / no fabricated venues). Each entry is tagged with its draft short-label.
 % Cite keys = the draft's short-name token (sanitized) for traceability with the [CITE:] markers.
+%
+% PR8 (2026-07-15) — coverage + resolution contract for the LaTeX build:
+%   Coverage is 100%. The draft carries 67 [CITE:] markers, 46 unique; every one resolves to an
+%   entry here (0 orphaned markers, 0 unused entries). 6 markers group 2-3 papers (multi-cite).
+%   Resolution is DETERMINISTIC: 42 entries carry a unique `eprint` arXiv id (no duplicates), so a
+%   build maps [CITE: <name> <arXivId>] -> the entry whose eprint == <arXivId>. The 2 non-arXiv
+%   markers map by name: "Format-First Wiegreffe 2025.gem-1.46" -> FormatFirst; "Global-Workspace
+%   ... transformer-circuits.pub/2026/workspace" -> GlobalWorkspace. 44 keys, all unique.
 
 % ---- Methods this work sits in (LoFiT/ITI/ReFT family) ----
 
