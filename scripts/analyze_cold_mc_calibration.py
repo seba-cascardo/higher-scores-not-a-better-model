@@ -138,7 +138,8 @@ def main():
     ap.add_argument("--null", type=Path, default=None, help="base run (default <dir>/d_null.json)")
     ap.add_argument("--mc", type=Path, default=None, help="adapter run (default <dir>/d_mc.json)")
     ap.add_argument("--arbiter", type=Path, default=None,
-                    help="arbiter_arc_cot.json (optional; cross S_flip with base_cot_correct)")
+                    help="arbiter run (optional; cross S_flip with base_cot_correct). "
+                         "Defaults to arbiter_arc_cot_v2.json when present, else the pre-fix v1.")
     ap.add_argument("--metric", default="acc_norm", choices=["acc_norm", "acc"])
     ap.add_argument("--n-boot", type=int, default=2000)
     ap.add_argument("--seed", type=int, default=42)
@@ -160,8 +161,17 @@ def main():
     print(f"  aligned items: {len(ids)}", flush=True)
 
     # optional arbiter (ARC only): doc_id -> base_cot_correct, in_mc_only
+    # Prefer the fixed-parser v2 run when both are present (same rule as
+    # analyze_arbiter_arc_cot.py). The pre-fix v1 left 5 generations unparsed,
+    # one of which (doc 128, a numeric option label the letter-parser could not
+    # emit) is base-wrong — so reading v1 here silently drops it from
+    # S_cot_coldwrong and yields 191 instead of 192.
     arb = {}
-    arb_path = args.arbiter or (args.dir / "arbiter_arc_cot.json")
+    if args.arbiter is not None:
+        arb_path = args.arbiter
+    else:
+        v2 = args.dir / "arbiter_arc_cot_v2.json"
+        arb_path = v2 if v2.exists() else (args.dir / "arbiter_arc_cot.json")
     if arb_path.exists():
         a = json.load(arb_path.open(encoding="utf-8"))
         for r in a.get("results", []):

@@ -148,7 +148,12 @@ def main():
     # ---- lm-eval d_null + arbiter: reproduce S_cot_coldwrong membership -----------
     null = load_samples(D / "d_null.json", args.task)
     arb = {}
-    a = json.load((D / "arbiter_arc_cot.json").open(encoding="utf-8"))
+    # Prefer the fixed-parser v2 arbiter when present (same rule as
+    # analyze_arbiter_arc_cot.py / analyze_cold_mc_calibration.py). Reading the
+    # pre-fix v1 drops doc 128 — base-wrong, unparsed under the old letter-parser
+    # — from S_cot_coldwrong, giving 191 members instead of 192.
+    _v2 = D / "arbiter_arc_cot_v2.json"
+    a = json.load((_v2 if _v2.exists() else D / "arbiter_arc_cot.json").open(encoding="utf-8"))
     for r in a.get("results", []):
         arb[int(r["doc_id"])] = r
     bw_lmeval = set()
