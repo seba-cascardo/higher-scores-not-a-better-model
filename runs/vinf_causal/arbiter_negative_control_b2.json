@@ -1,0 +1,89 @@
+{
+  "question": "Does the 124/124 arbiter discriminate, or is base-CoT trivially high on all of ARC?",
+  "method": "Re-partition of the EXISTING v2 arbiter run (all 400 items, greedy k=1, fixed letter-parser, n_unparsed=0). No new generation: the control is protocol-identical to the published 124/124 by construction.",
+  "arbiter_run": "runs\\vinf_causal\\arbiter_arc_cot_v2.json",
+  "primary_lmeval": {
+    "residual": {
+      "k": 41,
+      "n": 47,
+      "acc": 0.8723404255319149,
+      "ci": [
+        0.7482578662713097,
+        0.9401547721979753
+      ]
+    },
+    "fixed": {
+      "k": 151,
+      "n": 151,
+      "acc": 1.0,
+      "ci": [
+        0.9751901297842439,
+        0.9999999999999999
+      ]
+    },
+    "mc_only_published": {
+      "k": 124,
+      "n": 124,
+      "acc": 1.0,
+      "ci": [
+        0.9699503135129722,
+        0.9999999999999999
+      ]
+    },
+    "base_right_control": {
+      "k": 200,
+      "n": 202,
+      "acc": 0.9900990099009901,
+      "ci": [
+        0.9646240521522094,
+        0.9972806357242938
+      ]
+    },
+    "all_arc": {
+      "k": 392,
+      "n": 400,
+      "acc": 0.98,
+      "ci": [
+        0.9610361296222221,
+        0.9898317354020845
+      ]
+    },
+    "fisher_residual_vs_fixed": 0.00013850246019825665,
+    "fisher_residual_vs_all": 0.0015487598275267824
+  },
+  "robustness_premise_file": {
+    "residual_73": {
+      "k": 66,
+      "n": 73,
+      "acc": 0.9041095890410958,
+      "ci": [
+        0.8150416221426188,
+        0.9527716456706489
+      ]
+    },
+    "residual_73_and_base_wrong": {
+      "k": 58,
+      "n": 65,
+      "acc": 0.8923076923076924,
+      "ci": [
+        0.7939846696853139,
+        0.9468464556807439
+      ]
+    },
+    "complement": {
+      "k": 326,
+      "n": 327,
+      "acc": 0.9969418960244648,
+      "ci": [
+        0.9828832326529092,
+        0.9994599793252702
+      ]
+    },
+    "fisher_residual_vs_complement": 3.6059176584995495e-05
+  },
+  "thresholds_preregistered": {
+    "discriminates_if_le": 0.85,
+    "saturated_if_approx": 0.97
+  },
+  "verdict": "DISCRIMINATES (intermediate point estimate, but CI excludes the saturated reading). Residual base-CoT 41/47 = 0.872 CI[0.748,0.940] vs 1.000 on the items the adapter fixes (p=1.4e-04) and 0.980 on all of ARC. The 124/124 is therefore NOT trivially true of all of ARC. Magnitude caveat: ARC is close to ceiling under CoT in every population (all-ARC 0.980), so the contrast is significant but modest in absolute terms."
+}
