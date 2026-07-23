@@ -1,0 +1,67 @@
+{
+  "reproduced_at_1e-2": {
+    "note": "Two different regularization conventions were checked (see script docstring).",
+    "production_formula_eigh_clamp_eps_1e-6": {
+      "cos_theta_vinf": -0.003253405889009036,
+      "cos_vinf_vret": 0.2833974450455835,
+      "canonical_cos_theta_vinf": -0.0032534058890092634,
+      "canonical_cos_vinf_vret": 0.28339744504558356,
+      "matches_canonical_within_0.002": true
+    },
+    "literal_ridge_frac_1e-2_of_mean_diag": {
+      "cos_theta_vinf": -0.0030345384602688055,
+      "cos_vinf_vret": 0.2896208204819312,
+      "matches_canonical_within_0.002": false
+    }
+  },
+  "sweep": [
+    {
+      "ridge_factor": 0.001,
+      "cos_theta_vinf": -0.0032298928093305273,
+      "cos_vinf_vret": 0.284191303291757
+    },
+    {
+      "ridge_factor": 0.003,
+      "cos_theta_vinf": -0.00318391538871038,
+      "cos_vinf_vret": 0.2855453099317882
+    },
+    {
+      "ridge_factor": 0.01,
+      "cos_theta_vinf": -0.0030345384602688055,
+      "cos_vinf_vret": 0.2896208204819312
+    },
+    {
+      "ridge_factor": 0.03,
+      "cos_theta_vinf": -0.0026973200739049256,
+      "cos_vinf_vret": 0.2993515940832232
+    },
+    {
+      "ridge_factor": 0.1,
+      "cos_theta_vinf": -0.0020889385657794773,
+      "cos_vinf_vret": 0.32481731454364876
+    }
+  ],
+  "sweep_stability": {
+    "cos_theta_vinf_range": [
+      -0.0032298928093305273,
+      -0.0020889385657794773
+    ],
+    "cos_vinf_vret_range": [
+      0.284191303291757,
+      0.32481731454364876
+    ],
+    "cos_theta_vinf_all_within_null_band_0.0625": true,
+    "cos_vinf_vret_sign_stable_positive": true
+  },
+  "cov_sample_count_per_head": {
+    "n_pairs_requested_per_dataset_key": 600,
+    "n_inf_pairs_total_per_class": 1200,
+    "n_ret_pairs_total_per_class": 1200,
+    "pooled_cov_N_per_head": 2400,
+    "note": "cov_inf/cov_ret pooled within-class covariance per head is estimated from N = n_inf_pairs + n_inf_pairs (correct+wrong) = 1200+1200=2400 samples (inf family) and 1200+1200=2400 samples (ret family), each vs head_dim=256 -> N/d ratio ~9.4x. extract_functional_axis_perhead.py --n-pairs default=600 per dataset key; n_inf_pairs=1200 reflects 2 inference dataset keys concatenated."
+  },
+  "n_dims": 256,
+  "n_eligible_cells_vinf_vret": 316,
+  "n_adapter_cells_theta_vinf": 48,
+  "conclusion": "Sign is stable across the entire sweep for both cosines: cos(theta_mc,v_inf) stays negative and inside the +/-0.0625 null band at every ridge factor [-0.0032,-0.0021] (magnitude actually SHRINKS ~35% toward zero as ridge strengthens, i.e. stronger regularization makes the off-axis/quasi-null result even more clearly null); cos(v_inf,v_ret) stays positive throughout [+0.284,+0.325] but its magnitude GROWS ~14% as ridge strengthens from 1e-3 to 1e-1. So the qualitative story (theta_mc off-axis / v_inf-v_ret aligned) is robust to ridge strength over 2 orders of magnitude. Caveat: the literal ridge=1e-2*mean(diag(cov)) formula does NOT reproduce the canonical -0.003253/+0.283397 to 3 decimals (only theta_vinf is within +/-0.002 of canonical; v_inf_vret is off by +0.0062) -- those canonical numbers came from a DIFFERENT regularization scheme, the eigh-eigenvalue-floor whitening in probe_oq1_functional_angle.py (eps=1e-6 absolute floor, ~1600x weaker than the ridge=1e-2 additive term), reused verbatim by characterize_theta_mc.py. analyze_probe_direction_geometry.py's ridge=1e-2*mean(diag) whiten_M is a DIFFERENT, unrelated computation (an internal sanity check for a separate probe-direction script) whose own docstring says it need not match -0.003 to 3 decimals, only land in the null band."
+}
