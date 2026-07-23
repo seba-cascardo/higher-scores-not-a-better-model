@@ -160,7 +160,10 @@ def main():
     ids = sorted(set(null) & set(mc))
 
     arb = {}
-    arb_path = args.arbiter or (args.dir / "arbiter_arc_cot.json")
+    # Prefer the parser-fixed v2 arbiter when present (doc 128 parsed; n_unparsed 0).
+    # Same resolution rule as analyze_cold_mc_calibration.py / analyze_p4_base_arm_power.py.
+    _v2 = args.dir / "arbiter_arc_cot_v2.json"
+    arb_path = args.arbiter or (_v2 if _v2.exists() else args.dir / "arbiter_arc_cot.json")
     have_cot = arb_path.exists()
     if have_cot:
         a = json.load(arb_path.open(encoding="utf-8"))

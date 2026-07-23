@@ -15,7 +15,10 @@ import os
 import numpy as np
 
 D = "runs/vinf_causal"
-ARB = "runs/vinf_causal/arbiter_arc_cot.json"
+# Prefer the parser-fixed v2 arbiter when present (doc 128 parsed; n_unparsed 0).
+# Same resolution rule as analyze_cold_mc_calibration.py / analyze_p4_base_arm_power.py.
+_ARB_V2 = "runs/vinf_causal/arbiter_arc_cot_v2.json"
+ARB = _ARB_V2 if os.path.exists(_ARB_V2) else "runs/vinf_causal/arbiter_arc_cot.json"
 OUT = "runs/vinf_causal/decomposition_matrix_arc.json"
 
 

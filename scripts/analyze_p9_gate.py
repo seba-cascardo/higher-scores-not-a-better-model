@@ -117,13 +117,17 @@ def main():
         g = gate_point(lift, gsm_on, curve, n)
         deg = lam in DEGENERATE
         sig_s = "  —  " if deg else f"{g['sigma']:5.1f}"
-        tag = "FAIL (degenerate)" if deg else "FAIL"
+        # Verdict must be DERIVED from the gap, never a literal: gap >= 0 means the
+        # on-axis arm retains at least as much gsm8k as the off-axis dose curve at
+        # matched lift (gate PASS for that lambda).
+        base_tag = "PASS" if g["gap"] >= 0 else "FAIL"
+        tag = f"{base_tag} (degenerate)" if deg else base_tag
         print(f"  {lam:>3} {lift * 100:>+9.2f}pp {gsm_on:>7.3f} {g['off_at_lift']:>9.3f} "
               f"{g['gap'] * 100:>+8.2f}pp {g['se'] * 100:>5.1f} {sig_s:>6}  {tag}",
               flush=True)
         rows.append({"lambda": lam, "arc_lift": lift, "gsm_on": gsm_on,
                      "off_at_lift": g["off_at_lift"], "gap": g["gap"], "se": g["se"],
-                     "sigma": None if deg else g["sigma"], "degenerate": deg, "verdict": "FAIL"})
+                     "sigma": None if deg else g["sigma"], "degenerate": deg, "verdict": tag})
 
     all_fail = all(r["gap"] < 0 for r in rows)
     print(f"\n[p9-gate] VERDICT: gate {'FAILS at every lambda' if all_fail else 'PASSES somewhere'}"
@@ -141,7 +145,9 @@ def main():
           f"{r5['gap'] * 100:+.1f}pp / sigma {r5['sigma']:.1f}", flush=True)
 
     json.dump({"base_arc": base_arc, "dose_curve": curve, "gsm8k_n": GSM_N,
-               "gate": rows, "conclusion": "fork_b_fail_all_lambda"},
+               "gate": rows,
+               "conclusion": ("fork_b_fail_all_lambda" if all_fail
+                              else "fork_b_gate_passes_somewhere")},
               open(out_path, "w"), indent=2)
     print(f"[p9-gate] wrote {os.path.relpath(out_path)}", flush=True)
 
