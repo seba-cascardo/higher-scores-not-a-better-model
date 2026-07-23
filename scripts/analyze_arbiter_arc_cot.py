@@ -9,6 +9,7 @@ preferred; download the v2 with:
 
   python scripts/analyze_arbiter_arc_cot.py
 """
+import argparse
 import json
 import os
 
@@ -31,12 +32,20 @@ def wilson(k, n, z=1.96):
 
 
 def main():
-    if not os.path.exists(COT):
-        raise SystemExit(f"{COT} not found — run gen_arbiter_arc_cot_pod.py on the pod first.")
-    sets = json.load(open(SETS, encoding="utf-8"))["sets"]
-    cot = {r["doc_id"]: r["base_cot_correct"] for r in json.load(open(COT, encoding="utf-8"))["results"]}
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--sets", default=SETS,
+                    help="offset sets json (default: canonical 400-slice; pass "
+                         "runs/vinf_causal/arbiter_arc_sets_fullsplit.json for C-3)")
+    ap.add_argument("--cot", default=COT, help="base gen-CoT results json")
+    args = ap.parse_args()
+    if not os.path.exists(args.cot):
+        raise SystemExit(f"{args.cot} not found — run gen_arbiter_arc_cot_pod.py on the pod first.")
+    sets = json.load(open(args.sets, encoding="utf-8"))["sets"]
+    cot = {r["doc_id"]: r["base_cot_correct"] for r in json.load(open(args.cot, encoding="utf-8"))["results"]}
 
-    print("ARC arbiter — base gen-CoT correctness by offset set")
+    print(f"ARC arbiter — base gen-CoT correctness by offset set")
+    print(f"  sets={args.sets}\n  cot ={args.cot}")
     print("=" * 60)
     rows = []
     for name in ["mc_only", "fixed_by_both", "vinf_only", "base_right"]:
