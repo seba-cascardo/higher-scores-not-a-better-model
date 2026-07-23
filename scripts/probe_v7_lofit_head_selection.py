@@ -165,7 +165,14 @@ def _get_attention_shape_runtime(model, tokenizer, layers) -> tuple[AttentionSha
 
 # -- Dataset builders (shared with prior probes) ------------------------------
 def build_tqa_pairs(n: int, seed: int = 0) -> list[tuple[str, str, str]]:
+    # NOTE (audit B-3, 2026-07-23): the HF TQA mc1 dataset lists the gold at index 0,
+    # so `wrong[0]` below ALWAYS pairs choices[0] vs choices[1] — a fixed positional
+    # split, not a sample over distractors. The canonical 48-head selection used this
+    # construction (kept for reproducibility); see train_v7_lofit.build_tqa_pairs
+    # (wrong_mode='random') for the corrected sampler for new runs.
     print(f"  TQA: loading...", flush=True)
+    print("    WARNING (audit B-3): TQA pairs are choices[0]-vs-choices[1] by construction here.",
+          flush=True)
     ds = load_dataset("truthful_qa", "multiple_choice", split="validation")
     rng = torch.Generator().manual_seed(seed)
     perm = torch.randperm(len(ds), generator=rng).tolist()

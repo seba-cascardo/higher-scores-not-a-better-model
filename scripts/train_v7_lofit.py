@@ -118,7 +118,8 @@ def _get_attention_shape(model, layers=None) -> AttentionShape:
 TRAIN_FRAC = 0.8
 
 
-def build_tqa_pairs(n: int, split: str = "train", train_frac: float = TRAIN_FRAC, seed: int = 0):
+def build_tqa_pairs(n: int, split: str = "train", train_frac: float = TRAIN_FRAC, seed: int = 0,
+                    wrong_mode: str = "first"):
     """TQA mc1 contrastive pairs. TQA only has 'validation' split natively;
     we deterministically split it into our own train/test using seed-0 perm.
 
@@ -126,11 +127,23 @@ def build_tqa_pairs(n: int, split: str = "train", train_frac: float = TRAIN_FRAC
     split='test':  remaining items (disjoint from train by construction)
 
     n caps the returned size after split selection.
+
+    wrong_mode (audit B-3, 2026-07-23): the HF TQA mc1 dataset lists the gold at
+    index 0 and wrong_mode='first' therefore ALWAYS contrasts choices[0] vs
+    choices[1] — a fixed positional split, not a sample over distractors. The
+    canonical V7-mc offsets were trained with 'first' (kept as default for
+    reproducibility); use 'random' for new runs (seeded, samples the wrong
+    answer uniformly over all label==0 distractors).
     """
-    print(f"  TQA: loading split={split} (target n={n})...", flush=True)
+    print(f"  TQA: loading split={split} (target n={n}, wrong_mode={wrong_mode})...", flush=True)
+    if wrong_mode == "first":
+        print("    WARNING (audit B-3): TQA gold is dataset-position-0, so wrong_mode='first' "
+              "always pairs choices[0] vs choices[1]. Prefer wrong_mode='random' for new runs.",
+              flush=True)
     ds = load_dataset("truthful_qa", "multiple_choice", split="validation")
     rng = torch.Generator().manual_seed(seed)
     perm = torch.randperm(len(ds), generator=rng).tolist()
+    wrong_rng = torch.Generator().manual_seed(seed + 7919)
 
     all_valid = []
     for i in perm:
@@ -143,7 +156,11 @@ def build_tqa_pairs(n: int, split: str = "train", train_frac: float = TRAIN_FRAC
         wrong = [j for j, l in enumerate(labels) if l == 0]
         if not wrong:
             continue
-        all_valid.append((ex["question"], choices[cidx], choices[wrong[0]]))
+        if wrong_mode == "random":
+            widx = wrong[int(torch.randint(len(wrong), (1,), generator=wrong_rng))]
+        else:
+            widx = wrong[0]
+        all_valid.append((ex["question"], choices[cidx], choices[widx]))
 
     n_total = len(all_valid)
     n_train = int(n_total * train_frac)
@@ -1020,18 +1037,33 @@ def main():
     print()
 
     # Build datasets — clean splits, train/test disjoint by construction.
-    # Both train and val use split="train" (val is just a held-out shuffle within
-    # the train pool for monitoring loss; the FINAL eval uses split="test" which
-    # this training never sees).
+    #
+    # val construction (fixed 2026-07-23, audit B-4): val is a DETERMINISTIC tail
+    # slice OF the seed-0 train pairs, taken per-dataset BEFORE concatenation and
+    # then interleaved. The pre-fix construction (loader(split="train", seed=1000))
+    # re-permuted the FULL pool with an independent seed, so val partially overlapped
+    # the reserved seed-0 test split (~20% of consumed TQA val items), and because
+    # datasets were concatenated in order the 25-item val slice consumed in the train
+    # loop was 100% first-dataset (TQA) — checkpoint selection never saw ARC signal.
+    # The canonical offsets_mc.pt (2026-06) was trained under the PRE-fix behaviour;
+    # this fix governs re-runs only and does not alter that artifact.
     datasets = [x.strip() for x in args.datasets.split(",") if x.strip()]
-    print("Phase 1: building train + val pairs (CLEAN: split='train', test reserved)")
+    print("Phase 1: building train + val pairs (CLEAN: split='train', test reserved; "
+          "val = per-dataset tail of the seed-0 train pairs, interleaved)")
     train_pairs = []
-    val_pairs = []
+    per_ds_val = []
+    n_val_per_ds = max(1, args.n_val // max(1, len(datasets)))
     for d in datasets:
         loader = DATASETS[d]
-        train_pairs.extend(loader(args.n_train, split="train", seed=0))
-        val_pairs.extend(loader(args.n_val, split="train", seed=1000))
-    print(f"  train: {len(train_pairs)}, val: {len(val_pairs)}")
+        ds_train = loader(args.n_train + n_val_per_ds, split="train", seed=0)
+        # tail of the SAME seed-0 train pool -> val is train-internal by construction
+        per_ds_val.append(ds_train[-n_val_per_ds:])
+        train_pairs.extend(ds_train[:-n_val_per_ds])
+    # Interleave so any truncated val slice (the train loop consumes val_pairs[:25])
+    # stays dataset-balanced instead of all-first-dataset.
+    val_pairs = [p for tup in zip(*per_ds_val) for p in tup] if per_ds_val else []
+    print(f"  train: {len(train_pairs)}, val: {len(val_pairs)} "
+          f"({n_val_per_ds}/dataset, interleaved)")
     print(f"  NOTE: TQA test split (~140 items) and ARC test split reserved for final eval.")
     print()
 
