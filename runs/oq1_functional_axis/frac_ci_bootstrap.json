@@ -1,0 +1,69 @@
+{
+  "n": 400,
+  "base": 0.505,
+  "v7mc": 0.855,
+  "ranks": [
+    8,
+    32,
+    64,
+    256
+  ],
+  "fracs_point": [
+    0.59,
+    0.63,
+    0.6,
+    0.65
+  ],
+  "bootstrap_reps": 200000,
+  "resampling": "independent binomial per arm (conservative vs paired)",
+  "per_rank": [
+    {
+      "rank": 8,
+      "acc": 0.7115,
+      "frac_ci95": [
+        0.4330708661417321,
+        0.7405121894045933
+      ]
+    },
+    {
+      "rank": 32,
+      "acc": 0.7255,
+      "frac_ci95": [
+        0.4765625,
+        0.7794117647058825
+      ]
+    },
+    {
+      "rank": 64,
+      "acc": 0.715,
+      "frac_ci95": [
+        0.44520547945205474,
+        0.75
+      ]
+    },
+    {
+      "rank": 256,
+      "acc": 0.7324999999999999,
+      "frac_ci95": [
+        0.49677419354838726,
+        0.798611111111111
+      ]
+    }
+  ],
+  "slope_pp_per_log2rank_ci95": [
+    -2.4746571258199213,
+    4.609933748850976
+  ],
+  "r256_frac_ci_vs_published": {
+    "bootstrap": [
+      0.49677419354838726,
+      0.798611111111111
+    ],
+    "published_delta_method": [
+      0.45,
+      0.85
+    ],
+    "consistent": true
+  },
+  "conclusion": "Bootstrap-of-the-ratio reproduces the delta-method interval's width and location (independent-binomial resampling, conservative vs the paired design), and the bootstrap slope CI includes zero, matching the published flat-sweep reading."
+}

@@ -1,0 +1,32 @@
+{
+  "method": "d_format = argmin_r ||M r - t||, M = W_U * (1+norm); t = mean-centered structural-token indicator (two variants); same solver, identification check and 3x-null gate as derive_freq_control.py (d_freq).",
+  "vocab": 262144,
+  "d_model": 5376,
+  "ridge": 0.01,
+  "targets": {
+    "t_struct": {
+      "cos_agg_dformat": 0.05144902691245079,
+      "ident_corr": 0.7776313867926231,
+      "cos_agg_dformat_meancontrast": -0.009901097044348717,
+      "meancontrast_logit_separation": 4.877836227416992,
+      "n_target_tokens": 26962
+    },
+    "t_mclabel": {
+      "cos_agg_dformat": 0.018173471093177795,
+      "ident_corr": 0.5553198079922189,
+      "cos_agg_dformat_meancontrast": -0.011460495181381702,
+      "meancontrast_logit_separation": 8.962944030761719,
+      "n_target_tokens": 826
+    }
+  },
+  "verdicts": {
+    "t_struct": "argmin form: IDENTIFICATION FAIL (r=0.778 < 0.9) \u2014 that cos is not citable (same rule as d_freq). Falling to the mean-contrast construction: |cos|=0.0099 <= 3x-null 0.0409 -> the mean structural-token contrast direction is NOT the offset's axis; 'signpost' scoping stands.",
+    "t_mclabel": "argmin form: IDENTIFICATION FAIL (r=0.555 < 0.9) \u2014 that cos is not citable (same rule as d_freq). Falling to the mean-contrast construction: |cos|=0.0115 <= 3x-null 0.0409 -> the mean structural-token contrast direction is NOT the offset's axis; 'signpost' scoping stands."
+  },
+  "null_1_over_sqrt_d": 0.013638618139749524,
+  "gate_threshold_3x_null": 0.040915854419248575,
+  "references": {
+    "cos_agg_dstar_b12": 0.0231,
+    "cos_agg_dfreq": 0.0128
+  }
+}

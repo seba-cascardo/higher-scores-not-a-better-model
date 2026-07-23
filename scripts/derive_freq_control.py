@@ -83,6 +83,10 @@ def main():
     ap.add_argument("--token-budget", type=int, default=5_000_000)
     ap.add_argument("--ridge", type=float, default=1e-2)
     ap.add_argument("--out", type=Path, default=Path("runs/oq1_functional_axis/freq_control.json"))
+    ap.add_argument("--save-vector", type=Path, default=None,
+                    help="Persist d_freq (and d_freq_rank) as a .pt for the C-4 causal-patching "
+                         "cross-check (E2E audit 2026-07-23). Run with the full corpus "
+                         "(--token-budget 130000000) so the saved vector is the identified one.")
     args = ap.parse_args()
 
     print("[freq-ctrl] loading offsets + cached tensors ...", flush=True)
@@ -169,6 +173,13 @@ def main():
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(f"[done] wrote {args.out}", flush=True)
+    if args.save_vector is not None:
+        args.save_vector.parent.mkdir(parents=True, exist_ok=True)
+        torch.save({"d_freq": d_freq, "d_freq_rank": d_freq_rank,
+                    "ident_corr": r_ident, "ident_corr_ranking": r_ident_ranking,
+                    "wikitext_tokens_seen": int(seen_tokens), "ridge": args.ridge},
+                   args.save_vector)
+        print(f"[done] saved d_freq vector -> {args.save_vector}", flush=True)
 
 
 if __name__ == "__main__":
