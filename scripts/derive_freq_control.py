@@ -175,7 +175,10 @@ def main():
     print(f"[done] wrote {args.out}", flush=True)
     if args.save_vector is not None:
         args.save_vector.parent.mkdir(parents=True, exist_ok=True)
-        torch.save({"d_freq": d_freq, "d_freq_rank": d_freq_rank,
+        # f (unigram log-freq over the vocab) is saved too: it is the frequency
+        # SIGNATURE in logit space that the causal patch (C-4) projects the real
+        # base->adapter logit delta onto — the causal cross-check of this direct-logit cos.
+        torch.save({"d_freq": d_freq, "d_freq_rank": d_freq_rank, "f": f,
                     "ident_corr": r_ident, "ident_corr_ranking": r_ident_ranking,
                     "wikitext_tokens_seen": int(seen_tokens), "ridge": args.ridge},
                    args.save_vector)

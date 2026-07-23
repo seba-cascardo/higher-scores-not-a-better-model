@@ -92,12 +92,15 @@ def main():
                     help="self-consistency samples (1 = greedy, the canonical arbiter; "
                          ">1 majority-votes k sampled traces to clean unparsed + stabilise B7f)")
     ap.add_argument("--temperature", type=float, default=1.0, help="sampling temp when k>1")
+    ap.add_argument("--sets", default=SETS,
+                    help="arbiter sets json (default: the canonical 400-slice sets; pass "
+                         "runs/vinf_causal/arbiter_arc_sets_fullsplit.json for the C-3 full-split run)")
     ap.add_argument("--out", default=OUT,
                     help="output json (default OVERWRITES the greedy arbiter; pass a new "
                          "path for the self-consistency re-grade so the greedy one survives)")
     args = ap.parse_args()
 
-    data = json.load(open(SETS, encoding="utf-8"))
+    data = json.load(open(args.sets, encoding="utf-8"))
     items = data["items_all"]
     mc_only = set(data["sets"]["mc_only"])
     # --subset filter (doc_id is a string in items_all; sets hold ints — normalize to str)
