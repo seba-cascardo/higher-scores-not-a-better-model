@@ -30,6 +30,20 @@
 \setlength{\parskip}{2pt}
 \setlength{\tabcolsep}{4.5pt}
 \emergencystretch=1.5em
+
+% Float placement: let tables share pages with prose (this is a table-heavy
+% paper) instead of floating onto near-empty dedicated pages.
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.78}
+\renewcommand{\dbltopfraction}{0.92}
+\renewcommand{\dblfloatpagefraction}{0.78}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+\setlength{\textfloatsep}{14pt plus 3pt minus 3pt}
+\setlength{\floatsep}{12pt plus 2pt minus 2pt}
 \usepackage{caption}
 \captionsetup{font=small,labelfont=bf,width=.96\textwidth}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}

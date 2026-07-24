@@ -126,7 +126,7 @@ upper bound. TruthfulQA is excluded from this control as train-on-eval leakage
 (held-out, the highest-rank control collapses $98\%{\rightarrow}30\%$).
 
 % ------------------------------------------------------------------ Table 1
-\begin{table}[t]
+\begin{table}[tbp]
 \centering
 \begin{threeparttable}
 \caption{\textbf{Headline scoring-face MC lift} (V7-mc, Gemma~4 31B IT, $n{=}400$,
@@ -182,7 +182,7 @@ headline is the conservative figure, not a length artifact.
 \end{table}
 
 % ------------------------------------------------------------------ Table 2
-\begin{table}[t]
+\begin{table}[tbp]
 \centering
 \begin{threeparttable}
 \caption{\textbf{Gen-face: V7-mc loses on generation} (Gemma~4 31B IT). The other
@@ -222,7 +222,7 @@ scorer}, audit-verified 2026-06-10 \\
 \end{table}
 
 % ------------------------------------------------------------------ Table 3
-\begin{table}[p]
+\begin{table}[tbp]
 \centering
 \begin{threeparttable}
 \caption{\textbf{The fixed items are CoT-accessible; no transfer even on a hard
@@ -289,7 +289,7 @@ not $n{=}400$-replicated like ARC.
 \end{table}
 
 % ------------------------------------------------------------------ Table 4 (3b)
-\begin{table}[p]
+\begin{table}[tbp]
 \centering
 \begin{threeparttable}
 \caption{\textbf{How the readout misranks, and that the lift is not interpretable
@@ -375,7 +375,7 @@ anchored on \textbf{ARC}.
 \end{table}
 
 % ------------------------------------------------------------------ Table 5 (4)
-\begin{table}[t]
+\begin{table}[tbp]
 \centering
 \begin{threeparttable}
 \caption{\textbf{The recovery is mostly generic to fine-tuning (Align-LoRA matched
@@ -460,7 +460,7 @@ supports is \emph{most of the lift}, not a specific percentage. Values in
 \label{fig:spectrum}
 \end{figure}
 
-\begin{table}[t]
+\begin{table}[tbp]
 \centering
 \begin{threeparttable}
 \caption{\textbf{Geometry spectrum: off-axis of degree, method-dependent.}
@@ -505,7 +505,7 @@ refuted it (3.93). Report only the clean experiment.
 \end{table}
 
 % ------------------------------------------------------------------ Table 7 (6)
-\begin{table}[t]
+\begin{table}[tbp]
 \centering
 \begin{threeparttable}
 \caption{\textbf{On-axis causal controls (no on-axis reference reproduces the
@@ -550,7 +550,7 @@ passes the lift-matched gate, so the $+35$ is the off-axis mass by
 \end{table}
 
 % ------------------------------------------------------------------ Table 8 (7)
-\begin{table}[t]
+\begin{table}[tbp]
 \centering
 \begin{threeparttable}
 \caption{\textbf{No layer locus: the lift scales with offset magnitude, not
@@ -572,7 +572,7 @@ heads); adapter spans L30--55 --- \textbf{not a causal locus} & same \\
 \end{table}
 
 % ------------------------------------------------------------------ Table 9 (8)
-\begin{table}[p]
+\begin{table}[tbp]
 \centering
 \begin{threeparttable}
 \caption{\textbf{Task heterogeneity: ARC ${\neq}$ TQA.} ARC is question-conditional
@@ -620,7 +620,7 @@ question-conditional, off-axis-of-degree, and non-transferable.
 \end{table}
 
 % ------------------------------------------------------------------ Table 10 (9)
-\begin{table}[p]
+\begin{table}[tbp]
 \centering
 \begin{threeparttable}
 \caption{\textbf{Deployment pathologies (coupled to injection method, not to the
