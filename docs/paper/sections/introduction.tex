@@ -1,0 +1,284 @@
+\section{Introduction}\label{sec:intro}
+
+Contrastive-correctness parameter-efficient fine-tuning --- the family that learns
+per-head additive offsets from contrastive pairs of correct and incorrect answers,
+of which LoFiT \citep{LoFiT} and inference-time intervention (ITI) \citep{ITI} are
+representative --- is an attractive way to raise a model's multiple-choice score at
+near-zero parameter cost. Applied to a multiple-choice discrimination objective on a
+frontier 31B instruction model (Gemma~4 31B IT), it does exactly that: cold
+multiple-choice scoring on ARC-Challenge rises by $+35.0$ accuracy points and on
+TruthfulQA mc1 by $+37.25$, with gains on HellaSwag ($+17.0$) and Winogrande
+($+19.0$).
+
+A benchmark movement of this size invites the conclusion that the model has become
+better --- that the adapter has \emph{sharpened the model's judgment}. It has not.
+The lift does not transfer to generation (gsm8k $-25\pp$). On the items it fixes,
+the base model already reaches the right answer by reasoning ($124/124$ under
+chain-of-thought). A read-only linear selector on the same activations recovers the
+lift without touching the weights or the decoder. And the most trivial baseline
+imaginable beats it at its own cost: asked to emit the answer letter in a single
+forward, no chain of thought, the base recovers $0.970$ of the base-wrong items
+against the adapter's $0.763$ --- tying a reasoning baseline that costs a thousand
+times more. The score moved and the model did not.
+
+This paper asks what that lift \emph{is}, and answers with a quantified causal
+attribution rather than a new method: most of it is what ordinary fine-tuning
+already buys, it lives in a learned direction that is off-axis to the model's own
+correctness geometry, and it re-ranks a lossy readout rather than adding capability.
+
+\paragraph{Most of the lift is inducible by ordinary fine-tuning.}
+If the lift were a specific property of \emph{contrastive-correctness} training, an
+ordinary, non-contrastive supervised fine-tune of matched capacity and budget should
+not reproduce it. It largely does. A matched Align-LoRA --- plain SFT on the same
+data budget, run through the same causal recovery machinery --- recovers about
+\textbf{62\%} of the ARC lift, and that fraction is flat across a rank sweep
+(r8/32/64/256: 59/63/60/65; the slope's confidence interval includes zero, so the
+residual is not a capacity gap the control can close).
+
+Read correctly, this matched control \emph{is} an attribution method, and the 62\%
+is the result, not a deflation. It spans a series --- a norm-matched random
+direction ${\approx}0\%$ $\rightarrow$ generic SFT ${\sim}62\%$ (fraction-CI
+$[45\%, 85\%]$) $\rightarrow$ the contrastive adapter $100\%$ --- that places most
+of the lift on fine-tuning \emph{in general}, not on the contrastive objective,
+leaving a contrastive-specific remainder of at most ${\sim}38\%$. The strongest
+on-axis reference we can build (a Fisher-LDA direction $\Wknow$) sits at $6.4\%$,
+but its interval includes zero (exact McNemar $p=0.136$), so we count it with the
+floor rather than as a distinct rung: the series has three steps, not four. That
+remainder is an upper bound: a best-effort fairness control has since run, and
+raising capacity to r512 recovers \emph{less} ($0.22$) or breaks below base, so it
+does not raise the generic fraction, and the ${\sim}62\%$ stands as a tight lower
+bound.
+
+The clean test is ARC; TruthfulQA is excluded because its matched corpus leaks into
+the evaluation (held-out, the capacity-matched control collapses from 98\% to 30\%
+recovery --- the signature of memorizing train-on-eval --- while the contrastive
+adapter still generalizes held-out at $0.83$).
+
+Neighboring work establishes the recognition--production gap qualitatively
+(\cref{sec:related}); to our knowledge no prior work runs a \emph{matched} control
+and reports the recovered \emph{fraction}, which is the load-bearing novelty.
+
+\paragraph{The recovery direction is off-axis to correctness --- off-axis of
+degree, and established causally.}
+Where the recovered lift lives relative to the model's own correctness geometry is
+not a matter of inference from weights but of a direct causal test. Pushing an
+offset \emph{perpendicular} to the functional correctness direction recovers
+${\sim}$\textbf{100\%} of the lift; pushing it \emph{parallel} recovers
+\textbf{0\%}; and a norm-matched random direction inside the same perpendicular
+complement recovers ${\sim}$\textbf{0\%} across three seeds. Of these three arms,
+the perpendicular one is the least informative: because the offset's cosine with the
+correctness direction is already ${\approx}-0.003$, the perpendicular component
+\emph{is} essentially the whole offset, so its ${\sim}100\%$ is close to a
+restatement (\cref{disc:geometry}). The weight falls on the other two --- an on-axis
+push at the same scale does nothing, and an equal-norm random direction in the same
+subspace does nothing either.
+
+Two facts follow at once. The lift is genuinely off the correctness axis --- an
+on-axis push does nothing --- yet the \emph{learned} perpendicular direction is
+privileged, since an equal-norm random perpendicular direction does not reproduce
+it. This closes the standard objection that an off-axis direction is unidentifiable
+because \emph{any} norm-matched perturbation would work: it is closed on the harness
+side (the same machinery that yields 100\% for the perpendicular push yields only
+$6.4\%$ for the on-axis reference, so the on-axis failure is real, not an injection
+artifact) and on the write side (the learned perpendicular push vs the shuffle
+control).
+
+Comparing the net activation effect of each method, the geometry is a
+\emph{method-dependent spectrum}, not a single fact: both the contrastive adapter
+and generic SFT are mostly off-axis (cosines $0.088$ and $0.199$ with the
+correctness direction), but generic SFT is $2.3\times$ more on-axis.
+
+We apply a caution to ourselves here --- a zero-cost weight-space preview reported
+``off-axis'' (ratio ${\sim}1.05$) and the clean activation experiment refuted it
+(ratio $3.93$); we report only the clean experiment.
+
+\paragraph{Cold-MC scoring under a chat template under-expresses what the model
+knows --- established setup we build on.}
+That cold multiple-choice scoring under a chat template is a lossy readout of a
+model's knowledge is, by now, documented across model families with causal
+validation: internal probes recover correctness at 0.80--0.97 AUC where output-based
+methods reach only 0.44--0.64 \citep{ConfidenceManifold}, the internal-vs-external
+knowledge gap averages 40\% \citep{InsideOut}, and the residual stream carries
+distinct knowledge and prediction subspaces \citep{KAPPA}. We take this as setup,
+not as our contribution, and confirm it holds in our channel with a per-item
+arbiter.
+
+When we take the 124 ARC items that \emph{only} the adapter fixes in cold scoring
+and ask the base model to answer them by generating a chain of thought, the base
+solves $124/124$ ($1.000$) --- indistinguishable from its CoT accuracy on items it
+already scores correctly cold ($200/202 = 0.990$). What makes that informative
+rather than circular is the other side of the same run: on the items the adapter
+\emph{fails} to fix, the base solves only $41/47$ ($0.872$, $p=1.4\times10^{-4}$).
+The arbiter is therefore tracking which items the adapter moves, not restating that
+ARC is easy under chain-of-thought. The lift is not new capability; it is a
+re-ranking of cold scores toward answers the base can reason its way to but that
+no-reasoning scoring misranks.
+
+This is why the lift does not transfer to generation (gsm8k loss in every
+condition), and the no-transfer is not an artifact of ARC being easy: on GPQA, where
+the base must genuinely reason and does (CoT accuracy $0.7071$, well above chance),
+the cold-MC lift is itself ${\sim}0$ (base $0.4747 \rightarrow$ adapter $0.4697$,
+CI crossing zero), so a scoring shortcut has no generative headroom to add even
+out-of-task.
+
+(How the readout misranks on ARC --- confident burial of the gold under fluent
+surface forms --- and how far the present-but-swamped signal survives, we
+characterize in \cref{disc:arbiter}; here it is the established backdrop against
+which the \emph{attribution} is the result.)
+
+\paragraph{A read-only selector recovers the lift without the pathologies --- the
+read leg of read${\neq}$write, on established setup.}
+Because the correctness signal is present in the activations and merely
+under-expressed in the cold output scores, it can be read off directly, with no
+weight edit at all. That a read-only probe or readout can \emph{select} MC answers
+and recover an accuracy lift is itself established --- NoVo selects answers by
+voting over truth-correlated attention-head norms ($+19$ points on TruthfulQA-MC1)
+\citep{NoVo}, and CORAL re-scores per-option probabilities with a frozen correctness
+probe ($+14\%$ on ARC-Challenge/HellaSwag) \citep{CORAL} --- so we treat the
+read-only selector as setup, not as a new method.
+
+Our use of it is as the \emph{read leg} of a read${\neq}$write dissociation: a
+read-only linear selector on the same per-head activations the adapter writes to
+recovers the ARC lift (selector accuracy \textbf{0.943}, three seeds; fixes 181
+base-wrong, breaks 5 base-right, exact McNemar $p=3.7\times10^{-47}$)
+\emph{without touching generation}, so it carries none of the adapter's deployment
+costs (no generation loss, no retrieval spillover) and Pareto-dominates the
+\emph{adapter} on the (cost, MC-accuracy) plane. Unlike NoVo/CORAL --- which present
+such a selector as a calibration/accuracy \emph{fix} --- we use it as causal
+evidence that the lift the adapter writes off-axis is read-recoverable on-axis
+without the write's damage.
+
+We are precise: $0.943$ exceeding the adapter's $0.853$ is \emph{not} ``the probe
+beats the adapter as capability'' (different information sets --- 12288 activation
+dimensions vs collapsed output logits); it is a read-side statement that the cold-MC
+channel discards recoverable signal. Its feature set is held out by item but not by
+feature (the 48 cells are selected on the training split), so cross-benchmark
+generalization is the natural strengthening.
+
+\paragraph{Two failure modes, reported separately.}
+The two headline tasks do not fail the readout the same way, and we do not blend
+them. ARC, HellaSwag, and Winogrande carry the question-conditional readout story
+(the ARC lift retains 78\% under a PMI / decision-conditional control; the
+choices-only lift is only $+0.0375$, CI crossing zero).
+
+TruthfulQA is a second, \emph{answer-prior / surface-form Goodhart} mode: the
+choices-only lift is $+0.2225$ and the adapter selects the correct option $0.5725$
+of the time with no question at all. The TruthfulQA gain does generalize held-out
+($\Delta_{\mathrm{UNSEEN}}$ mc1 $+37.8 \approx \Delta_{\mathrm{SEEN}}$ $+36.9$, so
+it is not memorization --- and a generic Align control collapses held-out to $+7.9$,
+confirming the contrastive lift is genuine), but we read it strictly as
+\emph{answer-prior selection on the mc1 metric}, never as a truthfulness gain and
+never as evidence for the off-axis mechanism, which is anchored on ARC.
+
+\paragraph{This is a mechanistic study of an observable effect, not an
+architecture.}
+We make no claim about routing as a contribution and no claim about a redesigned
+model. The object of study is one measurable phenomenon: what a frontier model's
+cold-MC scoring misses, and what contrastive-correctness PEFT actually does when it
+recovers part of it. Where we describe a routed system at all, it is strictly a
+mitigation vehicle that sends generation-face traffic to the unmodified base; it is
+not advanced as a result.
+
+\paragraph{Scope, discipline, and what is not yet validated.}
+We characterize this on Gemma~4 31B IT and corroborate the discrimination signature
+cross-family and cross-scale where artifacts exist. We hold ourselves to a
+verify-before-claim discipline: every number traces to its source run or is marked,
+and we freeze no prose on un-executed evaluations.
+
+Concretely, the headline scoring/gen magnitudes are pre-registered with kill-rules.
+The anti-floor 5-shot rule has executed and the lift survived. The gen-face
+canonical gsm8k sweep (R6) has now run: $-25\pp$, flat across the generation budget,
+so the loss is mechanistic, not a clipped chain of thought. The contrastive-specific
+residual ${\sim}38\%$ is a firm upper bound: the Align-LoRA best-effort fairness
+control has now run and does not raise the ${\sim}62\%$ generic fraction (r512
+recovers $0.22$ / breaks below base), so the ${\sim}62\%$ is a tight lower bound.
+The earlier V7-mc end-of-turn figure ($60{\rightarrow}4\%$) is \textbf{retracted}:
+it and the analogous D.1 numbers came from a tokenizer bug that scored termination
+on the wrong turn-stop token, and the one clean re-measure shows no collapse
+(\cref{disc:pathologies}). The D.1 open-gen degradation is real but modest (social
+$96{\rightarrow}76\%$, creative $68{\rightarrow}12\%$), adapter-dependent, and off
+the V7-mc headline. A temperature/null-space account of the offset is reported
+refuted (\cref{disc:negatives}), now confirmed by causal patching, not merely
+direct-logit attribution. We mark each in place rather than leaning on it.
+
+\paragraph{Contributions.}
+The object of this paper is a dissociation --- a large multiple-choice score gain
+that is not a capability gain --- and the contribution is the causal attribution
+that explains it, together with the deployment pathologies the recovery introduces.
+\begin{itemize}[leftmargin=1.4em,itemsep=3pt]
+\item \textbf{Inducibility-as-attribution.} A capacity- and budget-matched
+  non-contrastive Align-LoRA recovers ${\sim}62\%$ of the ARC lift --- fraction-CI
+  $\boldsymbol{[45\%, 85\%]}$ --- (flat across rank; a best-effort r512 fairness
+  control \emph{ran} and does not raise it $\rightarrow$ a \emph{tight} lower
+  bound, contrastive-specific remainder $\leq{\sim}38\%$). Read as an
+  \emph{attribution spectrum} --- random ${\approx}0\%$ $\rightarrow$ generic SFT
+  ${\sim}62\%$ $\rightarrow$ contrastive $100\%$, with the on-axis reference
+  ($\Wknow$) at $6.4\%$ indistinguishable from zero ($p=0.136$) and therefore
+  counted with the floor --- most of the lift is what ordinary fine-tuning buys
+  back. To our knowledge no prior work runs a matched non-contrastive control to
+  \emph{attribute} an MC lift this way and report the fraction. The interval is
+  wide, and we read the claim at its resolution: most, not a specific percentage.
+\item \textbf{A causal off-axis-of-degree geometry, non-identifiability closed both
+  sides.} A parallel push recovers $0\%$ of the lift and a norm-matched random
+  perpendicular push ${\sim}0\%$ (three seeds) --- so the off-axis direction is
+  learned and privileged, not any perturbation of the right size. The perpendicular
+  push recovers ${\sim}100\%$, but since the offset is already nearly
+  all-perpendicular that arm is close to tautological (\cref{disc:geometry}); the
+  parallel and shuffle arms carry the identification. The net-effect comparison is
+  a method-dependent spectrum (contrastive cosine $0.088$ vs generic SFT $0.199$),
+  and the lift has no layer locus (it scales with offset magnitude, correlation
+  $0.985$); a training-time on-axis penalty does not rescue transfer (see
+  \cref{sec:open}), adding \emph{necessity} to this sufficiency.
+\item \textbf{No transfer, on an established lossy-readout setup.} Cold-MC scoring
+  under a chat template under-expresses knowledge the model holds --- established
+  \citep{ConfidenceManifold,InsideOut,KAPPA} --- and we confirm it (the fixed items
+  are CoT-accessible, $124/124$ on ARC, against $41/47$ on the items the adapter
+  does \emph{not} fix, $p=1.4\times10^{-4}$) and show the no-transfer holds
+  \emph{out-of-task} (GPQA cold-MC ${\sim}0$ at base CoT $0.70$, single-run) and on
+  generation (gsm8k $-25\pp$). That generation cost is coupled to \emph{how} the
+  offset is injected, not to the lift (a generic SFT recovers the lift but
+  preserves gsm8k $0.96{\rightarrow}0.95$); a previously-claimed end-of-turn
+  collapse is \textbf{retracted} as an eos-token artifact.
+\item \textbf{The read leg of read${\neq}$write (built on established setup, not a
+  new method).} A read-only linear selector on the same per-head activations
+  recovers the ARC lift (accuracy $0.943$; McNemar $p=3.7\times10^{-47}$) without
+  touching generation --- Pareto-dominating the \emph{adapter}, though a reasoning
+  test-time-compute baseline dominates both (\cref{disc:selector}). That a
+  read-only probe-selector recovers an MC lift is established
+  \citep{NoVo,CORAL}; our contribution is its \emph{use} as the read leg of a
+  read${\neq}$write dissociation auditing an off-axis write neither studies.
+\item \textbf{Two clean negatives, briefly.} The offset is \emph{not} a
+  temperature/null-space mechanism (refuted causally) and \emph{not} a
+  token-frequency edit (frequency control closed); and the lift is
+  task-heterogeneous --- ARC carries the question-conditional mechanism while
+  \emph{TruthfulQA is a second, answer-prior failure mode} (choices-only
+  $+0.2225$), generalizing held-out but reported separately, never as the off-axis
+  mechanism.
+\end{itemize}
+
+\paragraph{Scope at a glance.}
+So the reader carries the boundaries once rather than re-encountering them
+piecewise: the causal spine (arbiter, inducibility control, recovery spectrum) is
+single-model (Gemma~4 31B IT) and single-adapter (one training run, no re-train
+replicates), with the \emph{effect} and its off-axis \emph{geometry} replicated on
+Qwen 14B; the mechanism claims are anchored on ARC (TruthfulQA is a separate
+answer-prior mode; HellaSwag/Winogrande corroborate); every claim is protocol-bound
+to cold-MC scoring under a chat template (without the template there is no lift to
+study, \cref{results:headline}); $n{=}400$ denotes the first 400 items of each
+lm-eval split, with a full-split run confirming every headline delta
+(\cref{results:headline}); the headline anchors are low-CoT-headroom benchmarks by
+design (\cref{sec:limitations}); and the routed system is a mitigation vehicle, not
+a contribution.
+
+\paragraph{Notation.}
+Full definitions in \cref{sec:definitions}. \textbf{V7-mc} --- the
+contrastive-correctness adapter under study (48 attention heads, additive per-head
+offsets). $\boldsymbol{\thetamc}$ --- its learned offset (aggregate write).
+$\boldsymbol{\vinf}$ --- the per-head functional correctness direction (mass-mean
+estimate); $\boldsymbol{\Wknow}$ --- the whitened Fisher-LDA on-axis reference.
+$\boldsymbol{\offpar}$\,/\,$\boldsymbol{\offperp}$ --- the offset's components
+parallel / perpendicular to $\vinf$. \textbf{Cold-MC scoring} (= \emph{scoring-face})
+--- log-likelihood ranking of options under the chat template, no generation;
+\textbf{generation-face} --- evaluation of produced text. \textbf{Recovery
+fraction} --- $(\mathrm{arm} - \mathrm{base})/(\mathrm{adapter} - \mathrm{base})$ on
+the task's headline metric (\cref{sec:definitions}).

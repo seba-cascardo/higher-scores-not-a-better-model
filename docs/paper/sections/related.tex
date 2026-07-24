@@ -1,0 +1,193 @@
+\section{Related work}\label{sec:related}
+
+\subsection{The recognition--production gap}\label{related:gap}
+
+A robust body of work establishes that what a model can \emph{recognize} (rank
+correctly among options, or encode in its hidden states) outruns what it can
+\emph{produce} (generate correctly), and that this gap is real rather than an
+evaluation artifact. The generative-AI paradox documents systems that can judge
+outputs they cannot themselves generate \citep{GenerativeAIParadox}; probing work
+shows models often encode the correct answer in their representations while
+generating an incorrect one \citep{LLMsKnowMore}; the original
+inference-time-intervention work reports a large gap between a truthfulness probe's
+accuracy and the model's generation accuracy \citep{ITI}; and recent evaluation work
+argues that answer-matching on free generation is a stricter, more faithful test
+than multiple-choice scoring \citep{AnswerMatching}. Two recent results establish
+the specific, causal-and-geometric form of the gap that we take as setup: the
+correctness signal is recoverable by internal probes at 0.80--0.97 AUC while
+output-based readouts reach only 0.44--0.64, validated causally by activation
+steering (a learned direction moves error rates $10.9\pp$ where random directions do
+not) \citep{ConfidenceManifold}, and a formal internal-vs-external knowledge measure
+finds an average 40\% hidden-knowledge gap across open-weight models
+\citep{InsideOut}. We take this lossy-readout fact as \emph{established setup and
+claim no priority on it} --- it is the backdrop, not our contribution. Our per-item
+arbiter (the base solves under chain-of-thought $124/124$ of the items the adapter
+fixes in cold scoring) confirms the gap in our channel, but our contribution is the
+\emph{converse} direction and a \emph{quantified causal attribution}: we show that a
+cheap fine-tune recovers most of the cold-scoring deficit along a learned, off-axis
+direction, and that the recovery does not transfer back to generation --- a property
+of what the adapter does, not only of the gap's existence. Closer to our read-only
+selector specifically, the gap has already been \emph{operationalized} as an
+answer-selection method: an activation-derived readout selects the multiple-choice
+answer and recovers an accuracy lift with no weight edit --- by attention-head-norm
+voting \citep{NoVo} or a frozen correctness probe re-scoring per-option
+probabilities \citep{CORAL}. We claim no priority on that capability either; we use
+it only as the read leg of a read${\neq}$write dissociation (\cref{disc:selector}),
+where the novelty is the contrast with an off-axis \emph{write} these works do not
+study. A complementary line \emph{does} study a causal write, but in the generation
+face rather than our cold-scoring channel: instruction-tuned models often fix their
+answer before reasoning, and a linear probe on the pre-CoT last-token activation
+decodes that answer at ${\sim}0.9$ AUC while steering along the probe direction
+flips the produced answer in over 50\% of cases, exceeding orthogonal baselines
+\citep{PreCoTAnswer}. This sharpens rather than blurs our claim: in that
+decision/generation face an answer direction is genuinely writable, whereas in our
+cold-MC scoring channel the correctness direction is decodable ($0.955$,
+\cref{disc:selector}) yet the on-axis write fails ($\Wknow$ $6.4\%$,
+\cref{disc:geometry}) and the off-axis write that does lift never transfers back to
+generation (\cref{disc:arbiter}) --- so our read${\neq}$write dissociation is
+\emph{channel-specific}, not a claim that answer directions are never writable. Its
+two steering failure modes when a wrong answer is induced --- non-entailment and
+confabulation, i.e.\ reasoning from a false belief --- also parallel the
+reasoning-chain breakage our contrastive injection produces on gsm8k
+(\cref{disc:pathologies}).
+
+\subsection{Multiple-choice scoring of instruction-tuned models is an unreliable
+readout}\label{related:mcunreliable}
+
+That cold multiple-choice scoring is a poor proxy for an instruction-tuned model's
+behavior is established, and we claim no priority on it. First-token /
+log-likelihood option scores are severely misaligned with the model's actual text
+answer --- mismatch rates exceeding 60\%, worst on models heavily fine-tuned on
+conversational or safety data \citep{MyAnswerIsC} --- and the text answer is the
+more robust quantity when the two disagree \citep{LookAtTheText}. Cold MC scoring is
+further sensitive to option ordering and symbol identity
+\citep{PriDe,OrderSensitivity}, is poorly calibrated without correction
+\citep{CalibrateBeforeUse}, and instruction tuning polarizes the answer distribution
+\citep{folktexts}. Two recent results are especially close to our framing:
+instruction-tuned models can struggle to emit the correct option symbol even when
+they know the answer \citep{FormatFirst}, and the chat template itself inflates a
+model's confidence in ``its own'' answer in a way removable by a parameter-free
+reframing \citep{OwnershipBias}. We build directly on this literature --- the
+protocol (cold MC under a chat template) is a lossy readout, which we treat as
+\emph{established setup rather than as our thesis} --- and our contribution is past
+the diagnosis: we quantify how much of the deficit a generic fine-tune recovers
+(${\sim}62\%$ on ARC, a matched-control attribution), locate that recovery
+geometrically (off-axis of degree, established causally), and show it does not
+transfer. Critically, and unlike a ``the lift is a formatting artifact'' reading,
+the recovered lift is \emph{real} signal: it survives a same-scaffold PMI
+decomposition (ARC retains 78\%), so the readout is genuinely leaving knowledge on
+the table, not merely mis-normalizing it.
+
+\subsection{The mirror in compression: the benchmark illusion}
+\label{related:benchillusion}
+
+The closest single neighbor in the same channel (log-likelihood scoring vs greedy
+generation) comes from model compression. Pruned models can pass multiple-choice
+evaluation while failing to answer the same question in open generation; the correct
+answer is usually not erased but \emph{demoted} in rank, reappearing under beam
+search, sampling, or one in-context example \citep{BenchmarkIllusion}. That is our
+phenomenon's mirror: there, MC scoring \emph{overstates} usable capability (the
+answer is demoted but MC-recoverable); here, cold MC scoring \emph{understates} it
+(the answer is CoT-accessible but cold-misranked) and a fine-tune \emph{promotes} it
+in the MC channel without helping generation. The shared lesson --- multiple-choice
+scores are not generation capability --- is established; the constructive,
+opposite-signed instance, and its off-axis mechanism, are ours.
+
+\subsection{The knowledge--prediction gap and KAPPA (our foil, not our
+competitor)}\label{related:kappa}
+
+Most directly adjacent is work on the knowledge--prediction gap in multiple-choice
+questions: models fail MCQs whose answers they encode internally, and KAPPA
+identifies distinct knowledge and prediction subspaces in the residual stream and
+aligns them with a closed-form, inference-time intervention \citep{KAPPA}. We
+position KAPPA as a foil rather than a competitor, and explicitly \emph{not} as a
+head-to-head baseline we beat. KAPPA operates where the correct option is present
+and decodable in the residual (options-present MCQ); our effect lives in cold
+options-absent text-continuation scoring, where that precondition fails --- a
+faithful $k$-class knowledge probe in our channel decodes the gold option at chance
+(best $0.317 \approx$ chance $0.25$) while the same probe for the greedy option
+decodes at $0.542$. KAPPA's mechanism therefore does not instantiate in our channel;
+the relationship is a channel mismatch, and we make no claim of out-performing it.
+One apparent tension deserves a sentence here, because a reader who reaches
+\cref{disc:selector} will otherwise trip on it: our read-only selector decodes the
+gold at \textbf{0.943}, far above this $0.317$. The two probes read \emph{different
+channels}. The $0.317$ is a $k$-class probe on the \emph{prompt-final residual} ---
+a single vector with the options in context, which is precisely the channel KAPPA
+operates on --- whereas the $0.943$ selector reads the \emph{per-head activations of
+each option continuation} (four separate forwards, arg-max over the per-option
+score). KAPPA's precondition fails in our channel, and the selector does not restore
+it; it succeeds by reading somewhere else. We further reconcile KAPPA's reported
+free-form \emph{generalization} with our no-transfer result
+(\cref{disc:pathologies}), since the two superficially conflict: KAPPA's own
+free-form evaluation carries its gain almost entirely on a single
+answer-prior-shaped task (TruthfulQA $+2.5$) while it \emph{regresses} on reasoning
+generation (GSM8K $91.6{\rightarrow}90.7$) and is flat on BBQ-Age ($+0.2$) --- so
+KAPPA, like our lift, does not transfer to reasoning generation, which corroborates
+rather than contradicts our finding.
+
+\subsection{Answer priors and surface-form competition}\label{related:answerpriors}
+
+Our task-heterogeneity finding --- that the TruthfulQA half of the lift is largely
+an answer-prior / surface-form effect --- rests on a well-developed line.
+Surface-form competition shows that highest-probability scoring is biased by how
+answers are phrased, motivating PMI-style domain-conditional normalization
+\citep{SurfaceFormCompetition}; choices-only probing shows models answer MCQs above
+chance with the question removed \citep{ArtifactsOrAbduction,ChoicesOnlyCheater};
+and choice-sensitivity admits parameter-free fixes \citep{NPSQ}. We use the same
+PMI/decision-conditional and choices-only controls to separate the two tasks: ARC is
+question-conditional and carries the mechanism, whereas TruthfulQA is largely
+answer-prior, which is why we report it held-out as evidence the lift is real and
+never as evidence for the off-axis mechanism.
+
+\subsection{The capability tax of interventions, and the specificity question}
+\label{related:tax}
+
+Adjacent work shows that adapting a model along one axis taxes others: knowledge
+injection under PEFT erodes reasoning, with the reasoning-critical information
+distributed across the singular spectrum rather than localized \citep{PALoRA}, and
+supervised fine-tuning degrades pretrained capabilities because its targets diverge
+from the model's autoregressive distribution \citep{MixSD}. Inference-time steering
+can be applied selectively, choosing when and how much to intervene \citep{MERA}.
+These motivate our deployment-pathology results, but they also raise the sharpest
+reviewer objection to an off-axis claim: that \emph{any} norm-matched perturbation
+works, so an off-axis direction is not identifiable \citep{NonIdentifiability}, and
+even random directions can move behavior \citep{RogueScalpel}. We answer this
+directly and within the recommended template of comparing a learned direction
+against a random one \citep{ConfidenceManifold}: a norm-matched random offset
+recovers ${\approx}0\%$ of our lift (so the direction is learned, not arbitrary),
+the strongest on-axis reference recovers $6.4\%$, and the trained offset has an
+optimal magnitude (an inverted-U strength sweep), which a generic perturbation would
+not. We also note that reported specificity failures of activation directions are
+cross-model; within-model --- our setting --- directions remain specific
+\citep{SyedActivationDirections}, so that result does not subsume our control. A
+related limit on the \emph{write} side sharpens what an off-axis control claim must
+contend with: a dual-stance evaluation of a sycophancy-reduction direction finds
+that although sycophantic and factual agreement occupy geometrically \emph{distinct}
+subspaces, a single steering direction projects equally onto both and cannot
+differentially target either --- a case where representations readable from
+activations are not separately writable through them \citep{DualStanceSycophancy}.
+That is the writability gap our read${\neq}$write dissociation
+(\cref{disc:selector,disc:geometry}) makes explicit from the opposite side: there a
+writable direction fails to \emph{separate} two readable targets, whereas here the
+on-axis correctness direction is readable yet fails to \emph{drive} the lift
+($\Wknow$ $6.4\%$) while an off-axis one does. A distinct mechanistic hypothesis for
+any logit-level intervention is temperature regulation --- confidence-regulation /
+entropy neurons write into the unembedding null space to rescale the logit
+temperature without re-ordering the argmax \citep{ConfidenceRegulationNeurons} ---
+which we test and rule out for our offset in \cref{disc:negatives}.
+
+\subsection{PEFT, representation editing, and the fine-tuning baseline}
+\label{related:peft}
+
+Our adapter is from the localized-fine-tuning / representation-intervention family:
+LoFiT learns additive per-head offset vectors on a sparse set of attention heads
+\citep{LoFiT}, a descendant of inference-time intervention \citep{ITI}, and related
+to representation fine-tuning \citep{ReFT}; concept- and feature-level steering
+benchmarks find that fine-tuning and prompting often outperform sparse-feature
+methods \citep{AxBench}. The decisive baseline our inducibility result requires is
+ordinary supervised fine-tuning: prior domain-adaptation work establishes SFT as a
+strong, cost-effective default for multiple-choice accuracy while degrading
+open-ended generation \citep{FrenchQASFT}. Our matched Align-LoRA control
+instantiates exactly this baseline, and our finding --- that it recovers
+${\sim}62\%$ of the contrastive lift --- places most of the effect on fine-tuning in
+general rather than on the contrastive objective.

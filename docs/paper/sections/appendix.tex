@@ -1,0 +1,250 @@
+\section{Extended mechanism detail and exploratory analyses}\label{app:mechanism}
+
+This appendix collects (\cref{app:decomposition}) the full mechanism-decomposition
+detail behind \cref{disc:negatives}'s verified negatives, moved out of the body for
+length, and (\cref{app:jlens,app:dose}) the exploratory single-seed / single-model
+analyses that extend the mechanism story but that the paper relies on for
+\textbf{no} claim. \Cref{app:jlens,app:dose} are exploratory (single seed / single
+model / not load-bearing).
+
+\subsection{Full decomposition for \cref{disc:negatives} (temperature negative,
+symbol channel, frequency control)}\label{app:decomposition}
+
+\paragraph{Not a temperature / null-space mechanism.}
+A natural mechanistic hypothesis, given the readout framing, is that the offset
+acts like a confidence-regulation neuron: writing into the unembedding null space
+to rescale the residual-stream norm and thereby the logit temperature, scaling all
+logits without re-ordering the argmax \citep{ConfidenceRegulationNeurons}. A
+direct-logit decomposition refutes this for $\thetamc$. We split the offset's
+effect on the vocabulary into a uniform component (a temperature shift, parallel to
+the all-ones vector) and a ranking component (a re-ordering, perpendicular to it),
+and project the residual write onto the \emph{genuine} temperature direction
+$d^{*} = \arg\min\|W_U r - \mathbf{1}\|$ (whose own logit image is 0.9988 uniform,
+confirming it is well identified). The offset's cosine with $d^{*}$ is
+\textbf{0.023} --- orthogonal to the temperature direction at chance level (the
+random-direction orthogonality baseline is
+${\sim}1/\sqrt{d_{\mathrm{model}}} \approx 0.014$), and no single head is
+temperature-pure (per-head maximum uniform-shift fraction 0.58). (The raw
+logit-space uniform-shift fraction, 0.301, does \emph{not} discriminate, because
+Gemma's unembedding is anisotropic and a random direction already produces
+${\sim}0.24 \pm 0.18$ of apparent uniform shift; we therefore rest the negative on
+the $d^{*}$ projection, not on the raw fraction.) The offset moves
+\emph{differences} of logits, not their mean --- it is a ranking edit, not a
+temperature edit --- which closes a ``the lift is just a confidence/temperature
+rescaling'' alternative a reviewer could raise. \textbf{This is now confirmed
+causally.} A real-forward activation-patching test --- the causal upgrade of the
+direct-logit reading --- measures the offset at the scoring positions where the
+lift lives (the option-continuation tokens) and finds a \textbf{relative}
+temperature fraction of only \textbf{0.215}
+($\mathrm{temp}/\sqrt{\mathrm{temp}^2+\mathrm{rank}^2}$, CI\textsubscript{hi}
+0.224 ${\leq}$ the pre-registered 0.35 kill-rule; in absolute fractions of the
+effect: temperature \textbf{0.177}, ranking \textbf{0.803}): the offset re-ranks,
+temperature is minority (the softmax-invariant uniform component, \textbf{0.4592}
+at the option positions, is excluded from the verdict). The causal cosine with the
+temperature direction, $-0.149$, is ${\sim}6\times$ the direct-logit 0.023 and
+${\sim}10\times$ the random-orthogonality baseline (${\sim}0.014$) --- and of
+\emph{opposite sign}: the linear attribution mis-stated the alignment in sign as
+well as magnitude, which is the expected signature of a first-order read of an
+off-axis causal component (whose first-order gradient is near zero, so its linear
+projection is dominated by noise terms that carry no sign information) rather than
+an anomaly of the measurement --- yet the causal temperature fraction remains a
+clear minority (0.215 relative), so the negative rests on the causal measurement,
+not on the direct-logit cosine. The same logic is why we ran the frequency
+control's own causal cross-check rather than rest it on the attribution level
+(below): it comes back without a sign-flip, so the two Stolfo components dissociate
+under causal measurement. This under-reading of a causally effective, off-axis
+component by a \emph{linear} (direct-logit) attribution is itself a documented
+pattern in the steering literature: for single-neuron control, first-order gradient
+attribution \emph{anti-predicts} controllability precisely because effective
+controllers write \textbf{off the readout axis} and carry a near-zero first-order
+gradient, and a forward-only contrastive screen recovers the controllers that
+attribution misses \citep{LeverageIsNotReach} --- so a linear read of our offset
+under-stating its causal alignment is the expected signature of an off-axis
+mechanism, not an anomaly. \emph{Position matters:} measured instead at the
+next-token (generation) position the offset flattens the distribution more
+(temperature fraction 0.38, $\Delta$entropy $+0.99$, $\gamma$ $-0.59$) --- the
+generation-face flattening we connect to the format face below --- so the
+temperature negative is anchored at the scoring positions, not the generation one.
+
+\paragraph{The signpost: a content/symbol channel, not a lexical one.}
+Direct-logit attribution over the 48 adapter heads finds \textbf{no clean lexical
+mechanism}: the tokens it \emph{promotes} are diffuse and multilingual, with no
+coherent semantic theme. The one robust signature is on the \emph{suppression} side
+--- single uppercase letters and structural tokens (\code{B, S, P, T, C, L, Y, H,
+I, G, D, O, V, W} and punctuation), exactly the surface tokens of multiple-choice
+labels and turn formatting --- the offset's logit-level correlate of the
+\emph{format-preference} uncertainty that aligned-model calibration distinguishes
+from answer-decision uncertainty \citep{AlignedMCCalibration}. This is the readable
+face of the \textbf{format-preference channel} --- the same generation-face
+flattening the causal test finds at the next-token position (above) --- not of a
+termination collapse (that claim is retracted, \cref{disc:pathologies}) and not an
+explanation of the scoring lift, and it is an aggregate-of-heads property (a
+coherent sum across heads, not a per-head one). With temperature ruled out, the
+most promising unifying-mechanism candidate is the \textbf{content/symbol-binding
+channel} that MCQA mechanism work isolates: models first select a winning answer in
+\emph{content} space and then bind or route it to the \emph{symbol} to emit
+\citep{TwoStageMCQA}, a ``correct-letter'' routing studied at larger scale
+\citep{CorrectLetterHeads}. The decisive behavioral test --- a TEXT-vs-LABEL
+scoring ablation (whether the lift survives permuting the option labels) --- has
+now \textbf{run, and the result is consistent-with but not clean}. On ARC the
+label-arm (letter) lift exceeds the text-arm lift ($\Delta_{\mathrm{letter}}$
+$+0.1575$, CI $[+0.087, +0.228]$) and survives a headroom normalization (norm
+$\Delta_{\mathrm{letter}}$ $+0.17$, CI $[+0.088, +0.249]$), consistent with a
+symbol-channel contribution --- but the two permutation controls that would
+separate a \emph{letter-specific} effect from a \emph{generic symbol slot} are
+themselves ceiling-starved (caps\_random base 0.78, numeric 0.97), so
+letter-specificity is \textbf{untestable} here. On TruthfulQA the letter arm is
+itself at ceiling (base 0.81), so its raw $\Delta_{\mathrm{letter}}$ $-0.29$ is a
+\textbf{headroom artifact} --- the task is \emph{uninformative} rather than
+contradictory (a point we surface only after normalizing; the raw sign looked
+opposite). The symbol channel is therefore \textbf{consistent-with, not a clean
+mechanism}: the lift already lives in the text-face arm (which reproduces $+0.3275$
+ARC / $+0.3575$ TQA on its own), so permuting the labels does not collapse it. We
+report this as a signpost, not a named mechanism. This suppression signature is now
+confirmed \emph{causally on real generation positions} --- an nnsight patch of the
+offset over 50 gsm8k traces (26 non-terminating loops + 24 clean-wrong), measuring
+the base${\rightarrow}$adapter logit delta per generated token: of the tokens the
+offset most suppresses, $\mathbf{{\sim}91\%}$ \textbf{are structural}
+(punct/symbol), a $\mathbf{\times3}$ \textbf{enrichment} over the vocabulary
+base-rate --- the same structure-suppression face found at the scoring positions,
+now on the generation face --- and the structure share \textbf{grows mildly along
+the generation} (slope $+0.04$, slightly steeper in the loops). But the signature
+is strong only in the tail (diffuse in raw mass) and its growth is sub-threshold,
+so it does \textbf{not} license a ``commitment-machine'' reading of the reasoning
+loss; we leave that frame as an undecided conjecture, not a mechanism. A control
+that the promotion is not a token-frequency artifact --- the \emph{other} Stolfo
+component (token-frequency neurons) --- has now been \textbf{re-derived, persisted,
+and closed} (\code{derive\_\allowbreak freq\_\allowbreak control}, reusing the same aggregate-write
+construction, $\|\mathrm{agg}\|$ 100.28). Over the full wikitext-103 training
+corpus (121.6M tokens, 112.8k of the 262k vocabulary observed) the recovered
+frequency direction $d_{\mathrm{freq}}$ is well identified --- its logit image
+reproduces the target log-frequency at $r = \mathbf{0.906}$, past the
+pre-registered 0.9 self-gate --- and the offset's cosine with it is
+\textbf{0.0128}, below the $3\times$-null gate (0.041) and at the null floor
+($1/\sqrt{d} \approx 0.0136$). The identification rose monotonically with corpus
+size ($r = 0.855 \rightarrow 0.887 \rightarrow 0.897 \rightarrow \mathbf{0.906}$
+at 5M/20M/40M/121.6M tokens), crossing the gate only at the full corpus. So the
+offset is \textbf{not} the token-frequency component of a Stolfo mechanism either
+--- a closed control, not merely consistent-with. \textbf{The causal-patching
+cross-check has now run} (the same protocol as the temperature one: real forward,
+ARC, $n{=}400$, scoring positions; the six previously published decomposition
+scalars reproduce to $\Delta = 0.00$, so the frequency arm is strictly additive).
+Projecting the real base${\rightarrow}$adapter logit delta onto the mean-centered
+frequency signature gives cosine $\mathbf{+0.0059}$, CI $[-0.0027, +0.0142]$ ---
+\textbf{same sign} as the direct-logit 0.0128, $\times0.46$ its size, and crossing
+zero --- against the temperature's flip to $-0.149$ (CI $[-0.158, -0.140]$,
+$\times6.5$). The per-item view is sharper than the means: the frequency
+projection's mean \emph{absolute} size is comparable to the temperature's (0.120 vs
+0.177), but its \textbf{sign is inconsistent across items (66\% positive, vs 99\%
+negative for temperature, with $\gamma{<}0$ in 99.3\%)} --- the two components
+dissociate not in how much they load but in whether they load \emph{coherently},
+and only a coherent component can drive a lift that is systematic across items.
+\textbf{One declared limit:} the frequency direction orthogonalized against the
+base logits (the part of log-frequency not already shared with the temperature
+channel --- a quantity with no direct-logit counterpart, so it neither confirms nor
+contradicts the 0.0128) does carry a small but non-zero causal load, cosine
+$\mathbf{+0.0298}$, CI $[+0.0221, +0.0374]$: ${\sim}15\times$ the vocabulary-space
+null ($1/\sqrt{V} \approx 0.002$) but ${\sim}1/5$ of the temperature component and
+${\sim}1/27$ of the ranking one. We therefore state the negative at its true
+strength: token frequency is ruled out as \emph{the mechanism}, not as a trace
+contaminant of the offset's logit image.
+
+\subsection{Off-workspace, not workspace-broadcast (J-lens + recall-tail) ---
+exploratory, single seed}\label{app:jlens}
+
+\paragraph{Off-workspace, not workspace-broadcast: the off-axis push is an
+automatic-channel edit, not a global-workspace one.}
+If the off-axis push is a shortcut that the cold-scoring readout reads but
+generation does not (\cref{disc:arbiter}), a natural question is whether it enters
+the model's \emph{global workspace} --- the broadcast subspace whose contents a
+Jacobian-lens ablation degrades --- or acts off-workspace as an automatic channel.
+The workspace account \citep{GlobalWorkspace} predicts the second: it reports that
+multiple-choice scoring is \emph{not} degraded by J-space ablation (automatic)
+while GSM8K-CoT is robust because the model externalizes what it would otherwise
+hold in the workspace --- both of which map one-to-one onto
+$\thetamc$-lifts-MC-but-not-CoT. We fit a Gemma Jacobian-lens
+(\code{anthropics/\allowbreak jacobian-\allowbreak lens}, 114 prompts, above its ${\sim}$100-prompt
+saturation, source layers $\rightarrow$ L58) and test whether $\thetamc$ behaves
+like a workspace-broadcast direction. Four independent reads converge on
+\textbf{off-workspace}. (i) An MLP-gain kill-switch --- testing whether the MLPs
+amplify $\thetamc$ the way they amplify broadcast directions --- returns gain
+${\approx}$ 1.0--1.4$\times$, indistinguishable from a random vector
+(${\sim}1.0\times$) and far below a J-lens broadcast reference
+(\code{jlens\_\allowbreak dir\_\allowbreak highref} 2.3--4.0$\times$ at L37--40); $\thetamc$ is not
+amplified like a workspace direction (the kill-switch did not fire). (ii) The
+J-space fraction of $\thetamc$ equals a norm-matched random vector's (excess
+${\approx}$ 0). (iii) At option positions the offset inserts \emph{no}
+answer-letters (insertion rate 0.0 at every layer --- the $+35$ is option-text, not
+letter, consistent with \cref{disc:heterogeneity}), yet it \emph{does} rewrite the
+late readout (recall@25 falls from 0.98 at L30 to 0.34 at L49, strongest in the
+offset's own layers). (iv) The tokens it rewrites the readout toward are
+\textbf{structure, not knowledge} --- bare capitals, punctuation and markup,
+multilingual fragments, zero semantic/answer tokens --- the same
+structure-suppression signature the causal patch found. This read is resolved
+\emph{per-position} on the real base-vs-adapter activations (the recall-tail):
+across the tail layers where recall@25 falls (L38${\rightarrow}$L55), the
+adapter-only inserted ids are \textbf{60--88\% structure/format} (bare capitals,
+quotes/punctuation, non-latin script) with \textbf{zero answer-tokens at every one
+of the twelve layers}, and the non-structural remainder is generic multilingual
+function-words (\code{ and}, \code{ de}, \code{ own}, \code{ ability},
+\code{same}), \emph{not} answer-knowledge --- so even the 60\% floor under-states
+the no-answer-knowledge share. So the offset perturbs the late readout toward
+output \emph{format}, not via workspace broadcast and not toward the answer: an
+automatic-channel edit, which is the mechanistic shape a direction that lifts cold
+scoring but does not transfer to reasoning should have. We separate what is
+measured from what is inferred here: the load-bearing E2 signals are occupancy and
+recall@25 (the readout \emph{is} rewritten late, recall@25
+$0.98{\rightarrow}0.34$); the ``zero answer-\emph{letters} inserted'' figure is a
+designed null-control (\code{run\_\allowbreak p10\_\allowbreak pod.\allowbreak sh} expects ${\sim}0$ for A/B/C/D
+insertion, consistent with \cref{disc:heterogeneity}'s option-text-not-letter
+finding), not a discrimination of off-workspace from an answer-directed push. The
+\code{structure\_\allowbreak fraction} (60--88\%) is biased toward structure by the top-50 cut
+(item-specific content tokens have low counts and fall outside). A
+gold-option-text occupancy metric (top-25 vs the gold continuation tokens) would
+firm up this read; it is flagged as the \cref{disc:negatives} follow-up, not run.
+
+\paragraph{The J-lens sanity gate is marginal, and we scope the claim to what it
+licenses.}
+The fitted lens clears its mandatory sanity gate --- recovering the model's own
+next-token from intermediate residuals --- only \emph{marginally}: at just 1 of 18
+fitted layers (L55 @ 0.50, the layer nearest the L58 target), 0.0 elsewhere. We
+diagnose this as the known Jacobian-lens limit, not a broken fit: recovery is
+governed perfectly by distance-to-target (Spearman(recovery, distance) $-1.000$;
+every scale/shape metric of the averaged Jacobian grows monotonically toward the
+target --- $\|J\|_F$ $\rho$ $+0.996$, mean-diagonal $\rho$ $+1.000$), and far from
+the target the averaged Jacobian collapses toward rank-1 with near-zero trace (one
+linear map cannot bridge many nonlinear layers). The load-bearing read (iv, the
+structure-not-knowledge readout) \textbf{reproduces at L55, the one sanity-valid
+layer} (90\% structure, zero knowledge/answer tokens --- the same class as the
+marginal layers L30--49). We therefore scope the workspace claim precisely:
+\emph{off-workspace is the convergent read across the four probes above and an
+independent causal channel (the nnsight patch, \cref{disc:negatives}), and the
+J-lens is quantitatively valid near its target, where the direction read
+reproduces} --- \textbf{not} that the J-lens is globally valid. A per-source-target
+re-fit would harden the early-layer reads; more prompts would not (the marginality
+is structural, not sampling noise). Exploratory, single seed.
+
+\subsection{Dose-window efficiency candidate --- exploratory, single seed;
+steering ${\neq}$ baked}\label{app:dose}
+
+\paragraph{A dose-window efficiency candidate --- a positive worth chasing, but
+gated.}
+The single-magnitude activation-scale axis that dissociates the collateral cost
+(\cref{disc:pathologies}) surfaces an unexpected \emph{positive}: at intermediate
+doses the offset \textbf{shortens} generative CoT without breaking it. Conditioning
+on the intersection where both the base and the scaled offset answer correctly
+($n{=}200$ gsm8k), scale 0.75 cuts generation length $\mathbf{-34.7\%}$ while the
+real arithmetic stays intact --- verifiable calculation steps fall only
+$\mathbf{-7.2\%}$ against a $-19\%$ drop in \code{<<\ldots>>} annotation markers
+and a $-52\%$ drop in prose, with 98\% of remaining steps still valid, and a
+qualitative arbiter confirms complete reasoning even where the \code{<<>>} markers
+are gone. The genuine shortcut/breakdown --- calc $-18\%$, step-omission,
+creative-degeneration loops --- appears only at full strength $s{=}1.0$, where
+accuracy collapses to 0.815. So \emph{inside} gsm8k there is a threshold
+dissociation: an intermediate dose prunes prose while preserving the computation
+--- the same phenomenon as the dose-separable collateral cost
+(\cref{disc:pathologies}), read on a different metric. We flag this as a
+\textbf{candidate, not a claim}: it is measured on the \emph{injected, scaled}
+steering offset (steering ${\neq}$ baked), on a single seed, and whether a
+trainable adapter inherits the efficient regime is exactly the open question that
+fork (b) above leaves standing.

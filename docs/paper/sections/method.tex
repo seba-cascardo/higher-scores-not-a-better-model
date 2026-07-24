@@ -1,0 +1,354 @@
+\section{Method}\label{sec:method}
+
+\subsection{Model and contrastive-correctness adapter}\label{method:model}
+
+All results are on Gemma~4 31B IT, run in bf16. The discrimination adapter (referred
+to as V7-mc) is a contrastive-correctness PEFT in the LoFiT/ITI family: it learns
+additive per-head offset vectors on a sparse set of attention heads from contrastive
+pairs of correct and incorrect answers under a multiple-choice discrimination
+objective. Concretely, each pair is (question, correct option, first-listed
+incorrect option), built from the TruthfulQA mc1 validation split (seed-0
+permutation, 80\% train side) and the native ARC-Challenge train split; training
+minimizes a margin loss on the summed continuation log-probability under the chat
+template, $-\log p(\mathrm{correct}) + \gamma\cdot\log p(\mathrm{wrong})$ with
+$\gamma = 0.5$, for 800 steps, with the deployed checkpoint selected by a
+validation-accuracy monitor. Two construction details a reader of the code will
+find, stated here rather than left to be discovered. First, because the HF
+TruthfulQA mc1 release lists the gold answer at index 0, ``first-listed incorrect
+option'' means every TQA pair contrasts the dataset's first two options --- a fixed
+positional split rather than a sample over distractors; this touches no mechanism
+claim (those are anchored on ARC, where option order carries no gold information)
+and is consistent with --- plausibly contributes to --- TruthfulQA's answer-prior
+character (\cref{disc:heterogeneity}). Second, the checkpoint-selection monitor was,
+due to dataset ordering in the validation slice, computed on TruthfulQA items only:
+checkpoint selection never saw ARC signal, so the ARC lift is not
+checkpoint-selected. The causal analyses use the 48 heads carrying the adapter's
+offset (selection criterion in \cref{sec:definitions}). Those 48 (layer, head)
+targets are unique (no aliasing) and the offset modulates a sparse,
+\emph{non-contiguous} set of 12 layers --- [30, 31, 32, 33, 34, 36, 37, 38, 39, 40,
+49, 55] (deterministic across runs; note the gap at layer 35) --- so references
+below to a ``layer ${\sim}$30--55 span'' denote this discrete set's bracket, not a
+contiguous band.
+
+\subsection{Evaluation protocol: scoring-face vs generation-face}
+\label{method:protocol}
+
+We distinguish two protocols and report absolutes only with their protocol attached.
+\textbf{Scoring-face} is cold multiple-choice scoring: log-likelihood ranking of
+options with the chat template applied and no generation (lm-eval canonical,
+\code{-\allowbreak -\allowbreak apply-\allowbreak chat-\allowbreak template}, $n{=}400$, acc\_norm), with identical flags across
+arms. The $n{=}400$ sample is the first 400 items of each task's evaluation split in
+native order (lm-eval \code{-\allowbreak -\allowbreak limit 400}), not a random draw --- identical across
+arms by construction, and not doing selection work: the R4 full-split run confirms
+every headline delta within the $n{=}400$ confidence interval
+(\cref{results:headline}, \cref{sec:limitations}). This is deliberate --- it yields
+apples-to-apples deltas against the adapter --- and it is why our base absolutes
+(e.g.\ ARC ${\approx}0.50$) are scoring-face floors and must not be compared to a
+third-party-reported ${\sim}91\%$ chain-of-thought figure (the protocol caveat in
+the \cref{tab:headline} caption). The same scoring-face protocol --- identical
+log-likelihood option ranking, chat template, and lm-eval canonical flags --- is
+also applied out-of-task to GPQA, where the cold-MC lift is itself ${\sim}0$ (base
+$0.4747 \rightarrow$ adapter $0.4697$, $-0.5\pp$); this cold-MC GPQA measurement is
+distinct from the generation-face GPQA evaluation described below.
+\textbf{Generation-face} evaluates the produced text: gsm8k under
+\code{generate\_\allowbreak until} with exact-match; a per-item arbiter that runs base
+generative chain-of-thought (thinking-on, greedy, $k{=}1$) aligned to the cold-MC
+\code{doc\_\allowbreak id}s, on the items the adapter fixes; and GPQA under thinking-on greedy
+decoding with the generation budget raised to 8192 tokens (at 2048 the base
+truncated 96\% of generations, producing a spurious 0.15). The per-item arbiter is
+run across multiple anchors --- ARC, GPQA, HellaSwag, and Winogrande --- to test
+whether the fixed items are already CoT-reachable. One caveat is load-bearing here:
+HellaSwag and Winogrande are not native letter-MCQ tasks, so to run the generative
+arbiter on them we reformulate each item as a lettered MCQ (HellaSwag: the four
+continuations $\rightarrow$ A/B/C/D; Winogrande: the two options $\rightarrow$ A/B).
+That reformulation puts the arbiter in a \emph{different} format from the cold-MC
+scorer (which scores option continuations without letters), so on
+HellaSwag/Winogrande the arbiter anchors \emph{knowledge} in a letter-MCQ format
+rather than replicating the cold-MC channel --- the same format gap that ARC and
+GPQA already carry (where the arbiter is nonetheless informative). We therefore read
+the arbiter as a knowledge-accessibility probe, not as a channel-faithful readout.
+
+\subsection{Functional correctness direction and on-axis references}
+\label{method:directions}
+
+Per attention head we estimate a functional correctness direction $\vinf$ (the
+mass-mean difference between correct and incorrect inference-form activations). The
+estimation corpus is the inference-family contrastive pairs (ARC-Challenge native
+train split plus HellaSwag), so on ARC --- where every on-axis recovery fraction is
+anchored --- the items that estimate the direction and the test items that measure
+recovery are disjoint by construction, the same train/test boundary the adapter
+itself respects (\cref{sec:limitations}). To make the on-axis causal test as strong
+as possible, we also construct $\Wknow$, a whitened Fisher-LDA correctness direction
+--- the strongest on-axis reference we can build locally, and genuinely distinct
+from the mass-mean estimate (cos with $\vinf$ 0.379). ``Strongest'' is a
+construction criterion, not an outcome criterion: the whitened Fisher-LDA direction
+is the optimal linear correctness discriminant under the class covariance, which the
+raw mass-mean ignores --- it is not chosen for recovering the least lift, and
+\cref{disc:geometry} reports both references' recovery side by side. The on-axis
+causal control substitutes an offset built along $\vinf$ (and along $\Wknow$), unit
+direction scaled to the per-head norm of the trained offset across all 48 heads, so
+that \emph{direction} is the only variable, gated by a sign-safe three-zone control
+gate with a null-task check (the gate, and the Gate-A reproduction check it
+presupposes, are defined in \cref{sec:definitions}).
+
+\subsection{Net-effect geometry and the inducibility control}\label{method:neteffect}
+
+To compare methods fairly in activation space (rather than via the weight-space
+offset, which we show is a misleading proxy), we measure each method's \emph{net
+effect on activations} and decompose it against $\vinf$, reporting the
+off-axis/on-axis split as a ratio relative to a random direction. The inducibility
+control is a non-contrastive Align-LoRA: ordinary supervised fine-tuning on a
+capacity- and budget-matched corpus, swept over LoRA rank (r8/32/64/256) and scored
+through the same three-zone control gate, asking what fraction of the contrastive
+lift generic fine-tuning recovers (this recovery fraction, the budget-matched
+corpus, and the gate are all defined in \cref{sec:definitions}).
+
+\subsection{Additional controls}\label{method:controls}
+
+We further run: a norm-matched random offset (three seeds) to test whether any
+perturbation of the right size reproduces the lift; a same-scaffold PMI /
+decision-conditional decomposition and a choices-only (question-removed) control to
+separate question-conditional gains from answer priors
+\citep{SurfaceFormCompetition}; layer-band patching (restricting the offset to layer
+windows) to test for a layer locus; and a within-format difficulty stratification on
+ARC --- ARC-Easy vs ARC-Challenge under the identical cold-MC scoring protocol
+(acc\_norm), stratified by base-wrong items --- which holds format and distribution
+fixed and varies only difficulty, isolating the contribution of difficulty from that
+of distribution distance.
+
+\subsection{Formal definitions and run provenance}\label{sec:definitions}
+
+This subsection makes the operational terms used throughout precise --- each
+grounded in the analysis code --- and maps every headline number to the run that
+produced it, so no two item populations are silently conflated.
+
+\paragraph{The trained offset $\thetamc$.}
+$\thetamc$ denotes the adapter's learned per-head additive offset --- the aggregate
+write direction across the 48 heads (\cref{method:model}). The geometric and causal
+decompositions of \cref{disc:geometry} ($\offpar$/$\offperp$, whitened cosines)
+operate on it.
+
+\paragraph{Recovery fraction.}
+For each anchor task the recovery fraction of an arm is
+$\mathrm{frac} = (\mathrm{arm} - \mathrm{base}) / (\mathrm{v7mc} - \mathrm{base})$,
+the fraction of the contrastive lift the arm reproduces
+(\code{scripts/\allowbreak analyze\_\allowbreak r1\_\allowbreak align\_\allowbreak frac.\allowbreak py:6,99}; returns NaN when
+$|\mathrm{v7mc} - \mathrm{base}| < 10^{-9}$). The per-task headline metric is fixed
+in code (\code{TASK\_\allowbreak METRIC}, \code{:36-\allowbreak -\allowbreak 41}): \textbf{acc\_norm} for ARC-Challenge
+and HellaSwag, plain \textbf{acc} for Winogrande and TruthfulQA-mc1 (the latter two
+define no length-normalized variant). Every ``fraction of the lift'' in this paper
+is this quantity at these metrics.
+
+\paragraph{Gate-A (canonical reproduction).}
+Before any causal arm is trusted, \code{scripts/\allowbreak check\_\allowbreak canonical\_\allowbreak repro.\allowbreak py} re-runs
+the canonical R1 baselines and aborts unless they reproduce: in \emph{reproduce}
+mode $|\mathrm{measured} - \mathrm{expected}| \leq 0.05$ for both the base
+(ARC-Challenge acc\_norm 0.505) and the adapter (0.855) (\code{:69,87-\allowbreak -\allowbreak 91}); in
+\emph{null} mode the zero-offset wrapper ($\alpha{=}\theta{=}0$) must be
+behaviourally identical to the base, $|\mathrm{null} - \mathrm{base}| \leq 0.02$
+(\code{:16}), certifying the lift is not a wrapper artifact. A FAIL exits non-zero
+and blocks the dependent batch. The Gate-A base values are the exact reference the
+on-axis arms are compared against (e.g.\ $\offpar$ recovering to 0.505 = ``0\%'',
+\cref{disc:geometry}).
+
+\paragraph{Three-zone control gate.}
+The inducibility fraction is read through a sign-safe three-zone gate
+(\code{scripts/\allowbreak check\_\allowbreak canonical\_\allowbreak repro.\allowbreak py:70-\allowbreak -\allowbreak 150}) that keeps numerator and
+denominator harness-internal (the native HFLM for the control's own effect, the V7
+wrapper for the contrastive lift) so no cross-harness bias enters the ratio. Two
+sign-safety checks precede any fraction: a \textbf{setup} gate requires the
+contrastive lift to be real and positive ($\mathrm{v7mc} - \mathrm{base} >
+\mathrm{min\_effect}$, min\_effect 0.01) and a \textbf{convergence} gate requires
+the control's own effect to be non-trivial and positive
+($\mathrm{arm} - \mathrm{base} \geq 0.01$), so a no-op or harmful control cannot be
+scored. The surviving fraction is binned at $\mathrm{frac\_lo} = 1/3$ and
+$\mathrm{frac\_hi} = 2/3$ into three zones (\code{:71,73,139-\allowbreak -\allowbreak 150}); the
+${\sim}62\%$ ARC recovery lands in the middle zone, and its delta-method fraction
+interval $[45\%, 85\%]$ (\cref{disc:inducibility}) is what we report as ``zone C''
+against these thresholds. A separate null-task check (MMLU) guards that a causal arm
+does not damage an unrelated task (null MMLU $+0.07\pp$ at PASS,
+\cref{tab:onaxis}).
+
+\paragraph{Whitened cosine.}
+Geometric alignments (e.g.\ $\cos(\thetamc, \vinf) = -0.003$,
+$\cos(\vinf, \vret) = +0.283$) are Mahalanobis cosines under the per-head pooled
+class-activation covariance, in the 256-dim per-head activation space. The canonical
+headline values come from an eigendecomposition whitening
+(\code{scripts/\allowbreak probe\_\allowbreak oq1\_\allowbreak functional\_\allowbreak angle.\allowbreak py::\_\allowbreak whitening\_\allowbreak from\_\allowbreak cov}, reused
+verbatim by \code{characterize\_\allowbreak theta\_\allowbreak mc.\allowbreak py}):
+$W = V\cdot\mathrm{diag}(\lambda^{-1/2})\cdot V^{\top}$ from the eigh of
+$\mathrm{cov\_common} = \tfrac{1}{2}(\mathrm{cov\_inf} + \mathrm{cov\_ret})$,
+eigenvalues floor-clamped at $10^{-6}$ --- a floor that never binds in the actual
+computation (zero clamped eigenvalues; median condition number ${\sim}894$). Each
+per-head covariance is estimated from $N = 2400$ activation samples (1200 correct +
+1200 incorrect) against $d = 256$ dimensions, an $N/d$ ratio of ${\sim}9.4$. A
+related additive-ridge formulation,
+$M = (\mathrm{cov} + 10^{-2}\cdot\mathrm{mean}(\mathrm{diag\,cov})\cdot I)^{-1}$,
+appears in a separate probe-direction sanity script and (as a shrinkage on the
+covariance) in the $\offpar$/$\offperp$ construction; it is not the source of the
+headline cosines. Robustness: sweeping that ridge factor over two orders of
+magnitude ($\{10^{-3} \ldots 10^{-1}\}$) moves $\cos(\thetamc, \vinf)$ only within
+$[-0.0032, -0.0021]$ (always inside the null band, sign stable --- stronger
+regularization pushes it \emph{toward} zero) and $\cos(\vinf, \vret)$ within
+$[+0.284, +0.325]$ (sign and magnitude stable), so neither headline geometric fact
+is an artifact of the regularization choice
+(\code{runs/\allowbreak oq1\_\allowbreak functional\_\allowbreak axis/\allowbreak ridge\_\allowbreak sensitivity.\allowbreak json}).
+
+\paragraph{The 48 heads.}
+The causal analyses use the 48 (layer, head) cells carrying the adapter's offset.
+These are the \textbf{top-K = 48} heads ranked by per-head probe accuracy
+(\code{best\_\allowbreak acc} = the max of the Fisher- and Ridge-CV probes), a pure ranking
+slice with \textbf{no accuracy-threshold gate}
+(\code{scripts/\allowbreak probe\_\allowbreak v7\_\allowbreak lofit\_\allowbreak head\_\allowbreak selection.\allowbreak py:1029-\allowbreak -\allowbreak 1032}); the 0.60 accuracy
+threshold in that script only annotates the report, it does not select heads
+($K = 48$ follows the LoFiT recommendation).
+
+\paragraph{Align-LoRA corpus and budget.}
+The inducibility control is a non-contrastive LoRA fine-tune under a plain
+causal-LM cross-entropy loss (\code{scripts/\allowbreak train\_\allowbreak align\_\allowbreak lora.\allowbreak py}), on a corpus
+\textbf{matched to the V7-mc training data}: the matched builder
+(\code{scripts/\allowbreak build\_\allowbreak align\_\allowbreak control\_\allowbreak corpus.\allowbreak py}) imports only the TruthfulQA and
+ARC splits used to train V7-mc, byte-identically (TQA = the first 80\% of the
+validation split under a seed-0 permutation; ARC = the native ARC-Challenge train
+split), and the control is swept over LoRA rank $r \in \{8, 32, 64, 256\}$ at 2
+epochs, effective batch 8 (batch 1 $\times$ grad-accum 8), max sequence 1024.
+\textbf{``Budget-matched'' means the same training examples and the same optimizer
+steps as the contrastive adapter --- not the same FLOPs} (the two objectives differ
+in per-step cost). ARC is the clean anchor; TruthfulQA is excluded from the fraction
+because its matched corpus overlaps its evaluation (\cref{disc:inducibility}).
+
+\paragraph{Run $\rightarrow$ population.}
+The paper's numbers come from a small set of runs with deliberately different item
+populations; we list them in \cref{tab:runmap} so no two counts are conflated.
+
+\begin{table}[t]
+\centering
+\caption{Run $\rightarrow$ population map. Every headline number traces to one of
+these runs; base-wrong subsets are labeled by scaffold so no two counts are
+conflated.}
+\label{tab:runmap}
+\footnotesize
+\begin{tabular}{L{3.4cm} L{1.2cm} L{1.9cm} L{3.6cm} L{3.6cm}}
+\toprule
+Run (artifact) & Date & Scoring $n$ & Base-wrong subset(s) & Feeds \\
+\midrule
+A1 canonical trio (\code{msap-\allowbreak a1-\allowbreak trio-\allowbreak b2-\allowbreak planner-\allowbreak 2026-\allowbreak 06-\allowbreak 10}) & 2026-06-10 & 400 & ARC
+198 base-wrong@0-shot & T1 headline ($+35.0$ / $+37.25$ / $+17.0$ / $+19.0$); T2
+gsm8k $-25$ \\
+\addlinespace
+vinf\_causal (\code{msap-\allowbreak vinf-\allowbreak causal-\allowbreak 20260623}) & 2026-06-23 & 400 (own within-run
+baselines; ARC lift $+35.0$) & \emph{lm-eval scaffold:} 198 base-wrong; 124
+mc\_only; 151 $S_{\mathrm{flip}}$; 192 $S_{\mathrm{cot\_coldwrong}}$; 47
+adapter-residual. \emph{premise-file scaffold:} 204 base-wrong; 73 adapter-residual
+& T3 arbiter (124/124, parser-fixed) + its negative control (residual 41/47,
+\code{arbiter\_\allowbreak negative\_\allowbreak control\_\allowbreak b2.\allowbreak json}); T3b calibration / present-but-swamped;
+T6 $\vinf$ 11\%; T8 PMI-DC / choices-only \\
+\addlinespace
+wknow\_causal (\code{msap-\allowbreak wknow-\allowbreak onaxis-\allowbreak 20260623}) & 2026-06-23 & 400 (null-adapter
+baseline 0.500) & --- & T5/T6 $\Wknow$ 6.4\%; significance (McNemar $p=0.136$) \\
+\addlinespace
+R2 anti-floor 5-shot (pre-registered eval) & 2026-06-27 & 400 & ARC 198 base-wrong@0
+(adapter fixes 151; few-shot 69) & T1 caption: anti-floor $+22.0\pp$ (a@0$-$b@5) and
+matched-shot $+22.25\pp$ (a@5$-$b@5; McNemar b=99/c=10) \\
+\addlinespace
+R4 full-set (\code{msap-\allowbreak eval-\allowbreak bulletproof-\allowbreak lean-\allowbreak 20260627}) & 2026-06-27 & full test sets &
+--- & full-$\Delta$ confirmation (ARC $+36.2$ / HSwag $+19.2$ / Wino $+20.1$ / TQA
+$+37.1$) \\
+\addlinespace
+Same-cost letter baseline (\code{B5\_\allowbreak base\_\allowbreak letter\_\allowbreak greedy\_\allowbreak arc400.\allowbreak json}, same repo)
+& 2026-07-21 & 400 (198 base-wrong) & ARC 198 base-wrong & base greedy, no-CoT, 1-forward
+letter emission $\rightarrow$ 0.980 all / 0.970 base-wrong; deployment triangle 4th
+point (\cref{disc:selector}) \\
+\addlinespace
+mechanism\_v8 (\code{msap-\allowbreak mechanism-\allowbreak v8-\allowbreak 20260701}) & 2026-07-01/02 & 400 & --- & T2 R6
+gsm8k $-25$ (cap sweep); \cref{disc:pathologies} EOS retract + Stage-E blend;
+\cref{disc:negatives} patching; \cref{disc:status} Qwen 4/4-sign \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two ARC base-wrong counts appear in this paper --- \textbf{198} and \textbf{204}
+--- and the difference is a \textbf{scaffold} difference \emph{inside the same run},
+not a difference between runs. Both are the vinf\_causal 400. The \textbf{lm-eval
+scaffold} (\code{d\_\allowbreak null.\allowbreak json}, acc\_norm, the scoring that produces the headline
+lift) leaves \textbf{198} items wrong; the \textbf{premise-file scaffold}
+(\code{answer\_\allowbreak only\_\allowbreak arc\_\allowbreak challenge.\allowbreak json}, a length-normalised argmax over option
+continuations scored under one shared neutral premise) leaves \textbf{204}. Every
+derived subset therefore belongs to one scaffold or the other, and we label them
+rather than let a reader subtract across the boundary. On the \textbf{lm-eval}
+scaffold: 124 \code{mc\_\allowbreak only}, 151 $S_{\mathrm{flip}}$, 192
+$S_{\mathrm{cot\_coldwrong}}$, 202 $S_{\mathrm{base\_right}}$, and \textbf{47}
+adapter-residual ($151 + 47 = 198$). On the \textbf{premise-file} scaffold: 204
+base-wrong and \textbf{73} adapter-residual, which is the population of the PMI
+residual-discrimination analysis in \cref{disc:arbiter}. The arbiter and its
+negative control are reported on the lm-eval scaffold so they are apples-to-apples
+with the 124, with the premise-file partition given as robustness; both pass an
+alignment guard on gold index and option count (0 mismatches over 400). The A1 run
+that supplies the \cref{tab:headline} headline is a separate run, and its base also
+leaves 198 ARC items wrong under the same lm-eval scoring (base acc\_norm
+$0.505 \times 400 = 202$ correct).
+
+\paragraph{Run $\rightarrow$ HF artifact (reproducibility).}
+Several load-bearing numbers come from runs whose result files (small JSON) are
+synced into \code{runs/\allowbreak } from a Hugging Face dataset backup, while the heavy
+binaries they were derived from (per-head cold-MC activations, J-lens jacobians,
+LoRA adapter weights --- each 2--6 GB) remain on HF as pointers rather than
+versioned in the repo. The pointer for each is given in \cref{tab:hfmap}.
+
+\begin{table}[t]
+\centering
+\caption{Number/analysis $\rightarrow$ local result file $\rightarrow$ Hugging Face
+dataset backup.}
+\label{tab:hfmap}
+\footnotesize
+\begin{tabular}{L{4.6cm} L{5.6cm} L{3.6cm}}
+\toprule
+Number / analysis & Local file (\code{runs/\allowbreak \ldots}) & HF dataset
+(\code{sebacascardo87/\allowbreak \ldots}) \\
+\midrule
+Arbiter 124/124 (post-parser-fix v2) & \code{vinf\_\allowbreak causal/\allowbreak arbiter\_\allowbreak arc\_\allowbreak cot\_\allowbreak v2.\allowbreak json}
+& \code{msap-\allowbreak vinf-\allowbreak causal-\allowbreak 20260623} \\
+P9 on-axis-penalty lift-matched gate ($\lambda{=}5$ $-9.9\pp$ / $3.8\sigma$) &
+\code{p9\_\allowbreak onaxis/\allowbreak \{mc,gsm8k\}\_\allowbreak lam\{5,15,50\}.\allowbreak json},
+\code{mc\_\allowbreak dose\_\allowbreak lam0\_\allowbreak s*.\allowbreak json}, \code{gsm8k\_\allowbreak dose\_\allowbreak lam0.\allowbreak json} &
+\code{msap-\allowbreak p9-\allowbreak onaxis-\allowbreak 20260709} \\
+Recall-tail (\cref{disc:negatives} / \cref{app:jlens}) &
+\code{jspace/\allowbreak stage\_\allowbreak e2\_\allowbreak recall\_\allowbreak tail.\allowbreak json} & \code{msap-\allowbreak jspace-\allowbreak gemma-\allowbreak 20260709} \\
+Align-fairness rank sweep (${\sim}62\%$) &
+\code{align\_\allowbreak fairness/\allowbreak R1\_\allowbreak \{v7mc,null\}.\allowbreak json},
+\code{phase1/\allowbreak derisk/\allowbreak align\_\allowbreak direction\_\allowbreak r*.\allowbreak json} &
+\code{msap-\allowbreak align-\allowbreak fairness-\allowbreak 20260702}, \code{msap-\allowbreak phase1-\allowbreak 20260624} \\
+\cref{tab:spectrum} random norm-matched &
+\code{phase1/\allowbreak derisk/\allowbreak random\_\allowbreak s\{0,1,2\}.\allowbreak json}, \code{offsets\_\allowbreak random\_\allowbreak s*.\allowbreak pt} &
+\code{msap-\allowbreak phase1-\allowbreak 20260624} \\
+\cref{disc:geometry} $\offpar$ / $\offperp$ / $\Wknow$ spectrum arms &
+\code{eval\_\allowbreak bulletproof/\allowbreak RD\_\allowbreak \{offpar,offperp,wknow\}.\allowbreak json} (+
+\code{rd\_\allowbreak offperp\_\allowbreak frac.\allowbreak csv}) & \code{msap-\allowbreak r5-\allowbreak align-\allowbreak p0-\allowbreak 20260628} \\
+\cref{disc:geometry} perpendicular-shuffle write-side control (3 seeds) &
+\code{RD\_\allowbreak offperp\_\allowbreak shuffle\_\allowbreak seed\{0,1,2\}.\allowbreak json} & same \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The post-parser-fix \code{arbiter\_\allowbreak arc\_\allowbreak cot\_\allowbreak v2.\allowbreak json} (124/124) is versioned in the
+repo, so \code{scripts/\allowbreak analyze\_\allowbreak arbiter\_\allowbreak arc\_\allowbreak cot.\allowbreak py} reproduces the headline
+arbiter count from a clean checkout; the pre-fix \code{arbiter\_\allowbreak arc\_\allowbreak cot.\allowbreak json}
+(123/124, one item lost to a letter-parser artifact) stays HF-only, and the script
+prefers the v2 when both are present. \textbf{Every quantity derived from the
+arbiter is read from the v2}, and we say so because the correction propagates
+further than the headline count: two downstream analyses (the cold-MC calibration
+and the base-arm power check) resolved the arbiter path to the pre-fix v1 by
+default, which silently excluded doc 128 --- base-wrong, and unparsed only because
+of the very letter-parser artifact the fix removed --- from the adapter-independent
+$S_{\mathrm{cot\_coldwrong}}$ pool. Re-derived on the v2, that pool is \textbf{192}
+rather than 191, its CI lower bound 0.512 rather than 0.513, and the calibration
+signature is unchanged at the reported precision (z-gap $1.45\sigma$, gold-rank
+median 2, frac rank${\geq}2$ 0.59); the base-right control likewise reads 200/202
+rather than 196/202. The verdicts are unchanged; we report the re-derivation rather
+than leave two arbiter versions in circulation.
+\code{scripts/\allowbreak analyze\_\allowbreak p9\_\allowbreak gate.\allowbreak py} recomputes the on-axis-penalty gate from the
+per-$\lambda$ files above and self-checks against the reference anchor. The heavy
+binaries (\code{vinf\_\allowbreak causal/\allowbreak coldmc\_\allowbreak perhead\_\allowbreak *.\allowbreak pt},
+\code{jspace/\allowbreak \{jacobians,gemma\_\allowbreak jlens\}.\allowbreak pt},
+\code{align\_\allowbreak lora\_\allowbreak control/\allowbreak */\allowbreak adapter\_\allowbreak model.\allowbreak safetensors}) are HF-only; none of the
+paper's numbers require re-deriving them.

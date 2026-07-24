@@ -1,0 +1,52 @@
+Contrastive-correctness parameter-efficient fine-tuning (the LoFiT/ITI family) is
+widely used to sharpen a model's multiple-choice judgment cheaply. On a frontier 31B
+instruction model (Gemma~4 31B IT) it buys a large cold multiple-choice lift:
+ARC-Challenge $+35.0$, HellaSwag $+17.0$, Winogrande $+19.0$ (scoring-face, no
+chain-of-thought), plus TruthfulQA-mc1 $+37.25$, which we cite separately throughout
+as an answer-prior selection lift and exclude from the mechanism. We ask what that
+lift \emph{is}, and answer with a quantified causal attribution rather than a new
+method.
+
+Most of the lift is \emph{generic to fine-tuning}. A capacity- and budget-matched
+non-contrastive control recovers ${\sim}62\%$ of the ARC lift (fraction-CI
+$[45\%, 85\%]$; flat across rank r8--256, and a best-effort r512 control does not
+raise it, so ${\sim}62\%$ is a tight lower bound). That places the lift on a
+matched-control spectrum of \emph{three} rungs --- random ${\approx}0\%$
+$\rightarrow$ generic SFT ${\sim}62\%$ $\rightarrow$ contrastive $100\%$ --- with an
+on-axis reference ($\Wknow$) at $6.4\%$, \emph{statistically indistinguishable from
+zero} (exact McNemar $p=0.136$), counted with the floor rather than as a fourth
+step. To our knowledge no prior work runs a matched control and reports this
+\emph{fraction}; that attribution is the load-bearing novelty.
+
+The recovery is \emph{causally off-axis of degree}, and the identifying evidence is
+the negative arms: a push \emph{parallel} to the correctness direction recovers
+$0\%$ of the lift, and a norm-matched \emph{random} perpendicular push recovers
+${\sim}0\%$ across three seeds --- so the learned perpendicular direction is
+privileged, not any perturbation of the right size. (A perpendicular push recovers
+${\sim}100\%$, but the offset is already almost entirely perpendicular ---
+$\cos(\thetamc, \vinf) \approx -0.003$ --- so that arm is near-tautological and we
+do not lean on it.) The lift is also \emph{undeployable as a generator}: it does not
+transfer (gsm8k $-25\pp$, a mechanistic multi-step-reasoning loss; MMLU $-4.2\pp$
+spillover; out-of-task, GPQA cold-MC ${\sim}0$ while the base reasons GPQA out at
+CoT $0.70$, single-run and directional). A per-item arbiter bounds it: the base
+already solves $124/124$ of the fixed ARC items under chain-of-thought, against
+$41/47$ on the items the adapter fails to fix ($p=1.4\times10^{-4}$) --- the arbiter
+discriminates rather than restating a ceiling.
+
+A \emph{read-only} linear selector recovers the lift (ARC selector $0.943$ across
+the full $n{=}400$ evaluation set, not only base-wrong items) without touching
+generation, Pareto-dominating the adapter --- the read leg of a read${\neq}$write
+dissociation (the selector capability itself is prior work, NoVo/CORAL, used here as
+evidence, not claimed as new). We likewise build on, rather than lead on, the
+established fact that cold-MC scoring under a chat template is a lossy readout of
+what the model knows (Confidence-Manifold, Inside-Out, KAPPA). Both the effect and
+its off-axis geometry replicate cross-family (Qwen 14B: same-sign lift on all four
+tasks, three clearly and Winogrande marginal at $n{=}400$; whitened
+$\cos(\thetamc, \vinf)$ $-0.002$, $97.5\%$ perpendicular energy). Practically, this
+is a caution for the contrastive-PEFT-for-multiple-choice program: a cold-MC lift of
+this size can be an off-axis, non-transferring readout edit --- matched by a cheaper
+read-only selector, and dominated at its own single-forward cost by the most trivial
+same-cost baseline, simply asking the base to emit the answer letter ($0.970$ on
+base-wrong items vs the adapter's $0.763$, tying a reasoning baseline that costs
+${\sim}1000\times$ more). A benchmark gain of this kind should not be read as a
+capability gain. This is a mechanistic study of one observable, not an architecture.

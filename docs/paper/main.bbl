@@ -1,0 +1,334 @@
+\begin{thebibliography}{44}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Aparin and Gaintseva(2026)]{AngleNorm}
+Georgii Aparin and Tatiana Gaintseva.
+\newblock A geometric account of activation steering through angle-norm
+  decomposition, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.06735}.
+
+\bibitem[Azaria and Mitchell(2023)]{AzariaMitchell}
+Amos Azaria and Tom Mitchell.
+\newblock The internal state of an {LLM} knows when it's lying, 2023.
+\newblock URL \url{https://arxiv.org/abs/2304.13734}.
+
+\bibitem[Balepur and Rudinger(2024)]{ChoicesOnlyCheater}
+Nishant Balepur and Rachel Rudinger.
+\newblock Is your large language model knowledgeable or a choices-only cheater?
+\newblock In \emph{KnowledgeLM Workshop @ ACL 2024}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2407.01992}.
+
+\bibitem[Balepur et~al.(2024)Balepur, Ravichander, and
+  Rudinger]{ArtifactsOrAbduction}
+Nishant Balepur, Abhilasha Ravichander, and Rachel Rudinger.
+\newblock Artifacts or abduction: How do {LLMs} answer multiple-choice
+  questions without the question?
+\newblock In \emph{Proceedings of the Association for Computational Linguistics
+  (ACL)}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2402.12483}.
+
+\bibitem[Belmadani et~al.(2026)Belmadani, El~Khettari, Ramisch, Bechet, Dufour,
+  and Favre]{FrenchQASFT}
+Ikram Belmadani, Oumaima El~Khettari, Carlos Ramisch, Frederic Bechet, Richard
+  Dufour, and Benoit Favre.
+\newblock Trade-offs in medical {LLM} adaptation: An empirical study in french
+  {QA}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.19266}.
+
+\bibitem[Bilgin et~al.(2026)Bilgin, Barry, Bifet, Ait~Said, and
+  Banerjee]{PALoRA}
+Mustafa~Hayri Bilgin, Mariam Barry, Albert Bifet, Azzedine~Idir Ait~Said, and
+  Soumya Banerjee.
+\newblock {PALoRA}: Projection-adaptive {LoRA} for preserving reasoning in
+  large language models, 2026.
+\newblock URL \url{https://arxiv.org/abs/2605.24549}.
+
+\bibitem[Buchan(2026)]{DualStanceSycophancy}
+Matthew~James Buchan.
+\newblock Dual-stance evaluation of sycophancy: The structure of agreement and
+  the limits of intervention.
+\newblock In \emph{Trustworthy AI Systems (TAIS)}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.11205}.
+
+\bibitem[Bunn et~al.(2025)Bunn, Wiegreffe, and Bogin]{FormatFirst}
+Alec Bunn, Sarah Wiegreffe, and Ben Bogin.
+\newblock Fine-tune on the format first: Improving multiple-choice evaluation
+  for intermediate {LLM} checkpoints.
+\newblock In \emph{Proceedings of the Fourth Workshop on Generation, Evaluation
+  and Metrics (GEM$^2$)}, pages 511--521, Vienna, Austria and virtual meeting,
+  July 2025. Association for Computational Linguistics.
+\newblock ISBN 979-8-89176-261-9.
+\newblock URL \url{https://aclanthology.org/2025.gem-1.46/}.
+
+\bibitem[Chandak et~al.(2025)Chandak, Goel, Prabhu, Hardt, and
+  Geiping]{AnswerMatching}
+Nikhil Chandak, Shashwat Goel, Ameya Prabhu, Moritz Hardt, and Jonas Geiping.
+\newblock Answer matching outperforms multiple choice for language model
+  evaluation.
+\newblock 2025.
+\newblock URL \url{https://arxiv.org/abs/2507.02856}.
+
+\bibitem[Cho et~al.(2025)Cho, So, and Lee]{NPSQ}
+Gyeongje Cho, Yeonkyoung So, and Jaejin Lee.
+\newblock Choices speak louder than questions, 2025.
+\newblock URL \url{https://arxiv.org/abs/2502.18798}.
+
+\bibitem[Cho et~al.(2026)Cho, Wu, Da~Costa, and Koshiyama]{ConfidenceManifold}
+Seonglae Cho, Zekun Wu, Kleyton Da~Costa, and Adriano Koshiyama.
+\newblock The confidence manifold: Geometric structure of correctness
+  representations in language models, 2026.
+\newblock URL \url{https://arxiv.org/abs/2602.08159}.
+
+\bibitem[Cox et~al.(2026)Cox, Kianersi, and Garriga-Alonso]{PreCoTAnswer}
+Kyle Cox, Darius Kianersi, and Adri{\`a} Garriga-Alonso.
+\newblock Decoding answers before chain-of-thought: Evidence from pre-{CoT}
+  probes and activation steering, 2026.
+\newblock URL \url{https://arxiv.org/abs/2603.01437}.
+
+\bibitem[Cruz et~al.(2024)Cruz, Hardt, and Mendler-D{\"u}nner]{folktexts}
+Andr{\'e}~F. Cruz, Moritz Hardt, and Celestine Mendler-D{\"u}nner.
+\newblock Evaluating language models as risk scores.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2407.14614}.
+
+\bibitem[Fartale et~al.(2025)Fartale, Kattamuri, Raja, Vats, Prasad, and
+  Moharir]{DisentanglingRecallReasoning}
+Harshwardhan Fartale, Ashish Kattamuri, Rahul Raja, Arpita Vats, Ishita Prasad,
+  and Akshata~Kishore Moharir.
+\newblock Disentangling recall and reasoning in transformer models through
+  layer-wise attention and activation analysis, 2025.
+\newblock URL \url{https://arxiv.org/abs/2510.03366}.
+
+\bibitem[Gekhman et~al.(2025)Gekhman, Ben~David, Orgad, Ofek, Belinkov,
+  Szpektor, Herzig, and Reichart]{InsideOut}
+Zorik Gekhman, Eyal Ben~David, Hadas Orgad, Eran Ofek, Yonatan Belinkov, Idan
+  Szpektor, Jonathan Herzig, and Roi Reichart.
+\newblock Inside-out: Hidden factual knowledge in {LLMs}.
+\newblock In \emph{Conference on Language Modeling (COLM)}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2503.15299}.
+
+\bibitem[Gurnee et~al.(2026)Gurnee, Sofroniew, Pearce, Piotrowski, Kauvar,
+  Chen, Soligo, Bogdan, Ong, Wang, Thompson, Abrahams, Kantamneni, Ameisen,
+  Batson, and Lindsey]{GlobalWorkspace}
+Wes Gurnee, Nicholas Sofroniew, Adam Pearce, Mateusz Piotrowski, Isaac Kauvar,
+  Runjin Chen, Anna Soligo, Paul Bogdan, Euan Ong, Rowan Wang, T.~Ben Thompson,
+  David Abrahams, Subhash Kantamneni, Emmanuel Ameisen, Joshua Batson, and Jack
+  Lindsey.
+\newblock Verbalizable representations form a global workspace in language
+  models.
+\newblock Transformer Circuits Thread, July 2026.
+\newblock URL \url{https://transformer-circuits.pub/2026/workspace}.
+\newblock Anthropic; published July 6, 2026.
+
+\bibitem[He et~al.(2023)He, Cui, Chen, Hu, and Zhu]{AlignedMCCalibration}
+Guande He, Peng Cui, Jianfei Chen, Wenbo Hu, and Jun Zhu.
+\newblock Investigating uncertainty calibration of aligned language models
+  under the multiple-choice setting, 2023.
+\newblock URL \url{https://arxiv.org/abs/2310.11732}.
+
+\bibitem[Hedstr{\"o}m et~al.(2025)Hedstr{\"o}m, Amoukou, Bewley, Mishra, and
+  Veloso]{MERA}
+Anna Hedstr{\"o}m, Salim~I. Amoukou, Tom Bewley, Saumitra Mishra, and Manuela
+  Veloso.
+\newblock To steer or not to steer? mechanistic error reduction with abstention
+  for language models.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2510.13290}.
+
+\bibitem[Ho et~al.(2024)Ho, Liang, Zhang, Zhan, and Tao]{NoVo}
+Zheng~Yi Ho, Siyuan Liang, Sen Zhang, Yibing Zhan, and Dacheng Tao.
+\newblock {NoVo}: Norm voting off hallucinations with attention heads in large
+  language models, 2024.
+\newblock URL \url{https://arxiv.org/abs/2410.08970}.
+
+\bibitem[Holtzman et~al.(2021)Holtzman, West, Shwartz, Choi, and
+  Zettlemoyer]{SurfaceFormCompetition}
+Ari Holtzman, Peter West, Vered Shwartz, Yejin Choi, and Luke Zettlemoyer.
+\newblock Surface form competition: Why the highest probability answer isn't
+  always right, 2021.
+\newblock URL \url{https://arxiv.org/abs/2104.08315}.
+
+\bibitem[Korznikov et~al.(2025)Korznikov, Galichin, Dontsov, Rogov, Oseledets,
+  and Tutubalina]{RogueScalpel}
+Anton Korznikov, Andrey Galichin, Alexey Dontsov, Oleg~Y. Rogov, Ivan
+  Oseledets, and Elena Tutubalina.
+\newblock The rogue scalpel: Activation steering compromises {LLM} safety,
+  2025.
+\newblock URL \url{https://arxiv.org/abs/2509.22067}.
+
+\bibitem[Li et~al.(2023)Li, Patel, Vi{\'e}gas, Pfister, and Wattenberg]{ITI}
+Kenneth Li, Oam Patel, Fernanda Vi{\'e}gas, Hanspeter Pfister, and Martin
+  Wattenberg.
+\newblock Inference-time intervention: Eliciting truthful answers from a
+  language model.
+\newblock In \emph{Advances in Neural Information Processing Systems (NeurIPS),
+  spotlight}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2306.03341}.
+
+\bibitem[Lieberum et~al.(2023)Lieberum, Rahtz, Kram{\'a}r, Nanda, Irving, Shah,
+  and Mikulik]{CorrectLetterHeads}
+Tom Lieberum, Matthew Rahtz, J{\'a}nos Kram{\'a}r, Neel Nanda, Geoffrey Irving,
+  Rohin Shah, and Vladimir Mikulik.
+\newblock Does circuit analysis interpretability scale? evidence from multiple
+  choice capabilities in {Chinchilla}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2307.09458}.
+
+\bibitem[Liu(2026)]{LeverageIsNotReach}
+Hongliang Liu.
+\newblock Leverage is not reach: A control-window law for single-neuron
+  steering in language models, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.19831}.
+
+\bibitem[Liu et~al.(2026)Liu, Zhang, Yang, He, Wang, Xuan, Jin, and
+  Diab]{MixSD}
+Jiarui Liu, Lechen Zhang, Yongjin Yang, Yinghui He, Yingheng Wang, Weihao Xuan,
+  Zhijing Jin, and Mona Diab.
+\newblock {MixSD}: Mixed contextual self-distillation for knowledge injection,
+  2026.
+\newblock URL \url{https://arxiv.org/abs/2605.16865}.
+
+\bibitem[Marks and Tegmark(2024)]{MarksTegmark}
+Samuel Marks and Max Tegmark.
+\newblock The geometry of truth: Emergent linear structure in large language
+  model representations of true/false datasets.
+\newblock In \emph{Conference on Language Modeling (COLM)}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2310.06824}.
+
+\bibitem[Miao et~al.(2026)Miao, Cho, and Ungar]{CORAL}
+Miranda~Muqing Miao, Young-Min Cho, and Lyle Ungar.
+\newblock Correctness-optimized residual activation lens ({CORAL}):
+  Transferrable and calibration-aware inference-time steering, 2026.
+\newblock URL \url{https://arxiv.org/abs/2602.06022}.
+
+\bibitem[Orgad et~al.(2024)Orgad, Toker, Gekhman, Reichart, Szpektor, Kotek,
+  and Belinkov]{LLMsKnowMore}
+Hadas Orgad, Michael Toker, Zorik Gekhman, Roi Reichart, Idan Szpektor, Hadas
+  Kotek, and Yonatan Belinkov.
+\newblock {LLMs} know more than they show: On the intrinsic representation of
+  {LLM} hallucinations, 2024.
+\newblock URL \url{https://arxiv.org/abs/2410.02707}.
+
+\bibitem[Park et~al.(2026)Park, Pyun, and Jo]{KAPPA}
+Yoonah Park, Haesung Pyun, and Yohan Jo.
+\newblock Bridging the knowledge-prediction gap in {LLMs} on multiple-choice
+  questions.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2509.23782}.
+
+\bibitem[Pezeshkpour and Hruschka(2023)]{OrderSensitivity}
+Pouya Pezeshkpour and Estevam Hruschka.
+\newblock Large language models sensitivity to the order of options in
+  multiple-choice questions, 2023.
+\newblock URL \url{https://arxiv.org/abs/2308.11483}.
+
+\bibitem[Sanz-Guerrero et~al.(2026)Sanz-Guerrero, Mager, and von~der
+  Wense]{OwnershipBias}
+Mario Sanz-Guerrero, Manuel Mager, and Katharina von~der Wense.
+\newblock Large language models are overconfident in their own responses.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  ACL 2026}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.03437}.
+
+\bibitem[Stolfo et~al.(2024)Stolfo, Wu, Gurnee, Belinkov, Song, Sachan, and
+  Nanda]{ConfidenceRegulationNeurons}
+Alessandro Stolfo, Ben Wu, Wes Gurnee, Yonatan Belinkov, Xingyi Song, Mrinmaya
+  Sachan, and Neel Nanda.
+\newblock Confidence regulation neurons in language models.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2406.16254}.
+
+\bibitem[Syed(2026)]{SyedActivationDirections}
+Abdul~Rafay Syed.
+\newblock Actionable activation directions for detecting and mitigating
+  emergent misalignment across language model families, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.20225}.
+
+\bibitem[Venkatesh and Kurapath(2026)]{NonIdentifiability}
+Sohan Venkatesh and Ashish~Mahendran Kurapath.
+\newblock On the non-identifiability of steering vectors in large language
+  models, 2026.
+\newblock URL \url{https://arxiv.org/abs/2602.06801}.
+
+\bibitem[Wang et~al.(2024{\natexlab{a}})Wang, Hu, Ma, R{\"o}ttger, and
+  Plank]{LookAtTheText}
+Xinpeng Wang, Chengzhi Hu, Bolei Ma, Paul R{\"o}ttger, and Barbara Plank.
+\newblock Look at the text: Instruction-tuned language models are more robust
+  multiple choice selectors than you think.
+\newblock In \emph{Conference on Language Modeling (COLM)}, 2024{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/abs/2404.08382}.
+
+\bibitem[Wang et~al.(2024{\natexlab{b}})Wang, Ma, Hu, Weber-Genzel,
+  R{\"o}ttger, Kreuter, Hovy, and Plank]{MyAnswerIsC}
+Xinpeng Wang, Bolei Ma, Chengzhi Hu, Leon Weber-Genzel, Paul R{\"o}ttger,
+  Frauke Kreuter, Dirk Hovy, and Barbara Plank.
+\newblock ``my answer is c'': First-token probabilities do not match text
+  answers in instruction-tuned language models.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  ACL 2024}, 2024{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2402.14499}.
+
+\bibitem[Wen et~al.(2026)Wen, Sun, Liu, Xu, Cong, and Li]{BenchmarkIllusion}
+Rui Wen, Lu~Sun, Jiayang Liu, Zesheng Xu, Tianshuo Cong, and Zheng Li.
+\newblock The benchmark illusion: Pruned {LLMs} can pass multiple choice but
+  fail to answer, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.17609}.
+
+\bibitem[West et~al.(2023)West, Lu, Dziri, Brahman, Li, Hwang, Jiang, Fisher,
+  Ravichander, Chandu, Newman, Koh, Ettinger, and Choi]{GenerativeAIParadox}
+Peter West, Ximing Lu, Nouha Dziri, Faeze Brahman, Linjie Li, Jena~D. Hwang,
+  Liwei Jiang, Jillian Fisher, Abhilasha Ravichander, Khyathi Chandu, Benjamin
+  Newman, Pang~Wei Koh, Allyson Ettinger, and Yejin Choi.
+\newblock The generative {AI} paradox: ``what it can create, it may not
+  understand'', 2023.
+\newblock URL \url{https://arxiv.org/abs/2311.00059}.
+
+\bibitem[Wong et~al.(2026)Wong, Nouwen, and Gatt]{TwoStageMCQA}
+Hugh~Mee Wong, Rick Nouwen, and Albert Gatt.
+\newblock When models decide and when they bind: A two-stage computation for
+  multiple-choice question-answering, 2026.
+\newblock URL \url{https://arxiv.org/abs/2601.03914}.
+
+\bibitem[Wu et~al.(2024)Wu, Arora, Wang, Geiger, Jurafsky, Manning, and
+  Potts]{ReFT}
+Zhengxuan Wu, Aryaman Arora, Zheng Wang, Atticus Geiger, Dan Jurafsky,
+  Christopher~D. Manning, and Christopher Potts.
+\newblock {ReFT}: Representation finetuning for language models, 2024.
+\newblock URL \url{https://arxiv.org/abs/2404.03592}.
+
+\bibitem[Wu et~al.(2025)Wu, Arora, Geiger, Wang, Huang, Jurafsky, Manning, and
+  Potts]{AxBench}
+Zhengxuan Wu, Aryaman Arora, Atticus Geiger, Zheng Wang, Jing Huang, Dan
+  Jurafsky, Christopher~D. Manning, and Christopher Potts.
+\newblock {AxBench}: Steering {LLMs}? even simple baselines outperform sparse
+  autoencoders, 2025.
+\newblock URL \url{https://arxiv.org/abs/2501.17148}.
+
+\bibitem[Yin et~al.(2024)Yin, Ye, and Durrett]{LoFiT}
+Fangcong Yin, Xi~Ye, and Greg Durrett.
+\newblock {LoFiT}: Localized fine-tuning on {LLM} representations.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2406.01563}.
+
+\bibitem[Zhao et~al.(2021)Zhao, Wallace, Feng, Klein, and
+  Singh]{CalibrateBeforeUse}
+Tony~Z. Zhao, Eric Wallace, Shi Feng, Dan Klein, and Sameer Singh.
+\newblock Calibrate before use: Improving few-shot performance of language
+  models.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, 2021.
+\newblock URL \url{https://arxiv.org/abs/2102.09690}.
+
+\bibitem[Zheng et~al.(2024)Zheng, Zhou, Meng, Zhou, and Huang]{PriDe}
+Chujie Zheng, Hao Zhou, Fandong Meng, Jie Zhou, and Minlie Huang.
+\newblock Large language models are not robust multiple choice selectors.
+\newblock In \emph{International Conference on Learning Representations (ICLR),
+  spotlight}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2309.03882}.
+
+\end{thebibliography}

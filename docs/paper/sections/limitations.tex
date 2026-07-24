@@ -1,0 +1,385 @@
+\section{Limitations}\label{sec:limitations}
+
+This paper characterizes a single observable: contrastive-correctness PEFT (the
+LoFiT/ITI family) recovers a large cold-MC lift that is \textbf{mostly inducible by
+generic fine-tuning} (${\sim}62\%$ of the ARC lift), along a learned
+\textbf{off-axis-of-degree} direction that does not transfer to generation and,
+recovered this way, introduces deployment pathologies. The recovery exploits a fact
+established in prior work and confirmed here --- that cold multiple-choice scoring
+under a chat template is a \textbf{lossy} readout (present-but-swamped, not empty)
+of knowledge the model already has. The scope is deliberately narrow: a mechanistic
+study of that effect, not a routing architecture. Several limitations bound even
+this restricted claim.
+
+\paragraph{The headline numbers are pre-registered with kill-rules; the anti-floor
+and gen-face rules have now executed.}
+The scoring lifts and the gen-face losses are pre-registered with explicit
+kill-rules and matched-control designs in our evaluation protocol. Throughout this
+paper, ``pre-registered'' means a dated protocol document versioned in the project
+repository \emph{before} the corresponding run (git-timestamped, released with the
+code): the headline kill-rules and matched-control designs (protocol of 2026-06-22,
+runs from 2026-06-27), the arbiter negative-control thresholds (2026-07-15, run
+2026-07-21), and the on-axis-penalty lift-matched gate (2026-07-08, run 2026-07-09)
+--- internal and verifiable from the release, not a third-party registry. The
+anti-floor 5-shot kill-rule (R2, $n{=}400$) ran 2026-06-27 and the lift survived,
+but the rule was pre-registered without fixing \emph{which} residual instantiates
+it, so we state the formula explicitly: the anti-floor quantity is
+\textbf{a@0 $-$ b@5} --- the zero-shot adapter against a fully-prompted base ---
+giving ARC $\mathbf{+22.0\pp}$, HellaSwag $\mathbf{+10.0\pp}$, Winogrande
+$\mathbf{+8.25\pp}$. It is distinct from the matched-shot quantity a@5 $-$ b@5 (ARC
+$+22.25\pp$, McNemar b=99/c=10, $p{\approx}10^{-19}$; HellaSwag $+17.5\pp$,
+Winogrande $+13.75\pp$), which answers whether the adapter still wins once few-shot
+is granted to both arms. The $+35$ is not a zero-shot-floor artifact under either
+reading, but the margin is strongly task-dependent --- few-shot closes 37\% of the
+ARC headline, 41\% of HellaSwag's and 57\% of Winogrande's --- so Winogrande is the
+weakest anchor under the anti-floor reading ($+8.25\pp$), and we do not cite its
+$+13.75$ as an anti-floor figure (TruthfulQA carries no anti-floor control at all:
+lm-eval fixes num\_fewshot=0). All four MC anchors are paired-significant beyond
+the anti-floor control --- an exact McNemar test on byte-identical base/adapter
+items gives ARC $p=1.32\times10^{-32}$, TruthfulQA $p=1.57\times10^{-38}$,
+Winogrande $p=1.99\times10^{-12}$, HellaSwag $p=1.63\times10^{-8}$, and all four
+survive Holm--Bonferroni correction ($p_{\mathrm{corr}} \leq 1.63\times10^{-8}$);
+none is dropped. This certifies the effect exists and is paired-significant, not
+that it is on-axis --- the on-axis recovery ceiling is 6.4\% ($\Wknow$,
+\cref{disc:geometry}). The full-set $\Delta$ is now confirmed (the v7mc full-set
+run R4 closed 2026-06-27: ARC acc\_norm $+36.2$, HellaSwag acc\_norm $+19.2$,
+Winogrande acc $+20.1$, TruthfulQA acc $+37.1$, every delta within the $n{=}400$ CI
+--- so the $n{=}400$ headline values are conservative, not inflated). The gen-face
+canonical gsm8k kill-rule (R6) has now run --- $-25\pp$, flat across the generation
+budget, so the loss is mechanistic and not truncation --- and the EOS re-measure
+has run too, with a consequential result: the earlier end-of-turn ``collapse''
+figures are \textbf{retracted as an eos-token measurement artifact} (the verbosity
+harness scored the wrong turn-stop token; corrected, the adapter terminates factual
+recall at 100\%), so we make no termination-collapse claim; the D.1 re-measure
+shows only a modest, adapter-dependent open-generation degradation --- the full
+account and every corrected number are in \cref{disc:pathologies}. The gsm8k loss
+magnitude, previously run-dependent ($-5$/$-17$/$-25$/$-78\pp$), is now canonically
+$\mathbf{-25\pp}$ (R6). The \emph{direction} of each effect is robust; the
+remaining un-certified magnitude is the contrastive-specific fraction (below).
+
+\paragraph{Reproducibility and provenance: the lift is not a leakage or input
+artifact, and the headline mixes two scoring metrics.}
+Four provenance audits each independently \emph{strengthen} the effect rather than
+threaten it. (i) \emph{Test${\leftrightarrow}$train overlap is negligible.} On ARC,
+near-duplicate contamination between the eval set and the adapter's training data
+is 1.0\% (4/400 at Jaccard ${\geq}$ 0.8, robust across three matching methods); the
+stricter genuine-leak rate (matching stem + options + answer) is ${\leq}$ 0.5\%
+(2/400), and exact eval-ID overlap is zero. This sits at the clean side of our
+pre-registered gate ($<1\%$ clean / 3--5\% retract), far from the retract line ---
+we report it honestly rather than claiming zero. (ii) \emph{The transfer benchmarks
+are genuinely held out.} The offset was trained on only two datasets ---
+TruthfulQA and ARC (verified across three independent artifacts: the offset config,
+the head-probe record, and the eval config; top\_k = 48, 800 steps, val\_acc 0.94
+--- a training monitor computed, due to dataset ordering in the validation slice,
+on TruthfulQA items only, so checkpoint selection never saw ARC signal;
+\cref{method:model}) --- so HellaSwag, Winogrande, gsm8k, and MMLU never entered
+training (Winogrande has no training builder at all). Their lift is therefore
+genuine cross-task transfer, not in-distribution recall. (iii) \emph{Base and
+adapter see byte-identical inputs.} For every task the base and adapter prompts are
+byte-for-byte identical across all 400 items (1600/1600 per task), with zero
+truncation (max ${\approx}$ 228 tokens ${\ll}$ the 4096 context) --- the arms
+differ only in the inference-time hooks, eliminating an ``input distribution
+differs'' confound. (iv) \emph{The setup is deterministic and pinned.} The offset
+resolves to a single artifact across 8/8 runs (sha256 \code{fcf74ffc\ldots}; the
+per-shard safetensors hash is pod-only and not reproducible locally), under
+transformers 5.8.0 and lm-eval 0.4.12. One honest reporting caveat carries through
+to the headline metric itself: \cref{tab:headline} mixes two cold-MC metrics ---
+acc\_norm for ARC ($+35.0$) and HellaSwag ($+17.0$), and plain acc for
+TruthfulQA-mc1 ($+37.25$) and Winogrande ($+19.0$), because mc1 and Winogrande do
+not define a length-normalized variant. The choice is not cosmetic: on HellaSwag
+acc\_norm ($+17.0$) is \emph{smaller} than acc ($+22.25$), so the headline is the
+more conservative figure and the lift is not a length artifact. We state the
+per-task metric explicitly rather than imply a single unified score.
+
+\paragraph{The contrastive-specific residual is a firm upper bound; the fairness
+control has run.}
+Our inducibility result --- that a matched non-contrastive SFT recovers
+${\sim}62\%$ of the ARC lift --- used a single-shot Align-LoRA, and a best-effort
+fairness control has now run: raising the rank to r512 recovers \emph{less} (frac
+0.22 at lr1e-4 / a below-base broken adapter at lr2e-4), so it does \textbf{not}
+raise the generic fraction and the contrastive-specific remainder (${\sim}38\%$) is
+a firm upper bound on what the contrastive objective contributes beyond generic
+fine-tuning. The ${\sim}62\%$ is thus a tight lower bound, not an under-fit floor.
+We also note the inducibility control is clean only on ARC: TruthfulQA was excluded
+as train-on-eval leakage (held-out, the matched control collapses
+$98\%{\rightarrow}30\%$), so the generic-fine-tuning claim is an ARC result and we
+do not generalize it to TruthfulQA.
+
+\paragraph{The inducibility control shares its corpus with the evaluation, so
+``generic'' is not cleanly separated from ``domain exposure.''}
+The matched Align-LoRA trains on the same TruthfulQA+ARC budget the effect is
+measured on (\cref{sec:definitions}). That leaves the ${\sim}62\%$ consistent with
+two readings we cannot separate here: that ordinary fine-tuning of \emph{any} kind
+recovers most of the lift, or that fine-tuning \emph{on this domain} does.
+Separating them needs an out-of-domain SFT arm --- a matched control trained on
+unrelated data --- which we did not run: it is a full training run to refine an
+attribution whose interval is already $[45\%, 85\%]$, so it would sharpen the
+reading rather than overturn it. We flag it as the natural strengthening rather
+than quietly claim the stronger of the two readings.
+
+\paragraph{The headline anchors are knowledge benchmarks with low chain-of-thought
+headroom --- by design, and stated as scope.}
+All four headline tasks sit at or near the base's CoT ceiling (ARC 0.98, HellaSwag
+0.83, Winogrande 0.9425). That is not an oversight but the condition that makes the
+per-item arbiter informative --- there must be a latent, reachable answer for cold
+scoring to misrank --- and it is what the mechanism predicts the exploit needs: on
+GPQA, the one hard anchor, with genuine reasoning load and ${\sim}23\pp$ of
+cold-scoring headroom, the same adapter recovers approximately nothing
+(\cref{results:arbiter}). What we have not run is the converse arm: an adapter
+trained \emph{in-distribution} on a hard, non-saturated benchmark (e.g.\ MMLU-Pro),
+asking whether contrastive-correctness PEFT produces a large off-axis lift where
+the base has few buried-but-reachable answers. The mechanism predicts it does not
+--- the exploit amplifies latent misranked knowledge, and where there is none there
+is nothing to amplify --- and the out-of-task GPQA result is consistent with that
+prediction, but the in-distribution version is future work, not a result here.
+Claims in this paper are accordingly scoped to the anchors measured.
+
+\paragraph{Pretraining contamination is not audited --- and the claims are robust
+to it by construction.}
+The leakage audit above covers the adapter's fine-tuning corpus, not the base
+model's pretraining corpus, which is closed to us; ARC, TruthfulQA, HellaSwag, and
+Winogrande are public benchmarks and plausibly present in any frontier pretraining
+mix. Two features of the design make the conclusions insensitive to this. First,
+every comparison is paired: both arms share the base model, hence whatever
+pretraining exposure exists, and the deltas subtract it out. Second, the mechanism
+claims are agnostic about the \emph{origin} of the knowledge: the arbiter
+establishes that the base reaches the fixed items' answers by reasoning while cold
+scoring misranks them --- equally true whether that knowledge came from
+generalization or from memorized benchmark text --- so the attribution of what the
+adapter's lift \emph{is} does not change. What pretraining contamination could
+inflate is the base's absolute CoT ceiling, which we use descriptively, not as a
+claim.
+
+\paragraph{Single-adapter: this is the anatomy of one training run.}
+We flag single-model (Gemma~4 31B IT) and single-seed (the J-lens and dose
+analyses) elsewhere, but the sharpest restriction is narrower and we state it
+plainly: every result here characterizes \textbf{one} V7-mc adapter, trained once.
+There are no training replicates of the adapter under study --- no seed sweep over
+the contrastive run itself --- so the 100\% recovery anchor, the cosine-0.088
+net-effect geometry, and the $-25\pp$ gsm8k loss are properties of that single
+artifact, and we cannot report how far each would move under a re-train. The
+replication we \emph{do} have varies the comparison arms (three random-direction
+seeds, three selector seeds, the rank sweep), not the adapter. The same restriction
+applies to the head set: every geometric and causal number is a property of the
+$K = 48$ slice this adapter trains --- a hyperparameter inherited from the LoFiT
+recipe (\cref{sec:definitions}), with no K-ablation --- so the claims characterize
+this adapter's offset, not Gemma's correctness circuitry at large. Read the
+specific magnitudes as one draw; what the converging controls support is the
+qualitative structure --- mostly inducible, off-axis, non-transferring.
+
+\paragraph{The ``signal lives upstream'' claim is a \emph{channel} claim, now
+sharpened by the activation-probe --- and it remains a channel claim, not ``pure
+miscalibration.''}
+Our surface-ceiling result (\cref{disc:channel}) --- a supervised, held-out
+re-scoring of the output scalars caps at AUC 0.574 against the adapter's 0.830 ---
+is information-set-confounded: the adapter mutates activations while the ceiling
+re-weights collapsed scalars. The in-space activation-probe that closes this
+confound has now \textbf{run} (no fine-tuning, per-head \code{o\_\allowbreak proj}-input, held
+out by item, same cold-MC option-continuation distribution): it recovers ARC
+base-wrong gold-vs-distractor at \textbf{AUC 0.955} (CI $[0.934, 0.973]$, null
+0.494) against the \textbf{0.502} collapsed-output ceiling, with a surface-form
+control at \textbf{0.442} (${\approx}$ chance). This widens and cleans the channel
+gap ($0.502{\rightarrow}0.955$) and licenses a \textbf{sharpened channel claim} ---
+the cold-MC output-scalar channel is lossy relative to the activation channel ---
+and nothing stronger. It does \textbf{not} become ``pure miscalibration / signal
+intact upstream'': a linear probe decoding correctness ${\sim}0.95$ from
+activations is near-universal in capable LMs, so it shows the information
+\emph{exists}, not that the deployed readout merely under-uses it. Nor is it ``the
+probe beats the adapter'' or a representational edit --- the probe reads 12288
+activation dimensions while the adapter is constrained to nudge collapsed output
+logits, so 0.955 is not on the same axis as 0.830. The diffuseness the probe
+reveals (a random-48 head set decodes at $\mathbf{0.949 \approx}$ the adapter's
+heads) is a \textbf{read-test} that the channel is lossy model-wide, decoupled from
+the \textbf{write-tests} that establish the adapter's specificity (a random
+norm-matched offset recovers ${\sim}0\%$ of the lift, \cref{disc:geometry}); it
+does not undercut the adapter story. We do not generalize the channel claim past
+ARC: TruthfulQA's probe reaches 0.974 but its surface-form control is non-trivial
+(0.639, with a gold-first position artifact at 1.000), so it is anchored out of the
+channel claim and read as answer-prior (\cref{disc:heterogeneity}).
+
+\paragraph{The no-transfer is corroborated on GPQA but the verifier-guided arm is
+untested by design.}
+We establish no transfer on ARC (the fixed items are at the base's CoT ceiling) and
+confirm it on GPQA, where the base reasons successfully (CoT 0.70) yet a scoring
+shortcut still has no generative headroom. Because the base already reasons GPQA
+out, a verifier-guided deployment (base generates, adapter scores) has nothing to
+harvest and we did not build it; that is a design decision following from the
+result, not an independent test, and a setting with genuine selection headroom
+(which we did not find here) would be required to revisit it.
+
+\paragraph{The off-axis verdict is of degree and method-dependent, established
+geometrically and causally on Gemma --- with the off-axis geometry now replicated
+on a second family.}
+The recovery is off the functional correctness direction by a
+\emph{method-dependent} amount: the random control recovers ${\approx}0\%$ (the
+direction is learned, not arbitrary), the strongest on-axis reference recovers
+6.4\%, the contrastive net effect sits at cosine 0.088 and generic SFT at 0.199
+($2.3\times$ more on-axis). We deliberately do not claim ``purely off-axis'' or
+``off-axis universally'' --- a weight-space proxy suggested that and the clean
+activation experiment refuted it. The \emph{causal} spectrum ($\Wknow$ recovery,
+arbiter, inducibility) is single-model (Gemma~4 31B IT), but the off-axis
+\emph{geometry} itself now replicates on a second family: on Qwen 14B the cold-MC
+effect is 4/4-sign and its offset's whitened $\cos(\thetamc, \vinf)$ is $-0.002$
+(vs Gemma's $-0.003$, both within the null band) with 97.5\% of the offset energy
+perpendicular to $\vinf$, so the off-axis-of-degree direction is cross-family, not
+single-model --- with one honest heterogeneity of degree: Qwen's \emph{raw} on-axis
+energy budget (2.47\%, z+8.9 vs null) is ${\sim}4\times$ Gemma's (0.59\%), though
+the covariance-controlled whitened cosine is identical (\cref{disc:status}).
+
+\paragraph{The lift is task-heterogeneous, and TruthfulQA carries a different
+mechanism than ARC.}
+The ARC $+35$ is question-conditional (PMI retains 78\%; choices-only $+0.0375$, CI
+crossing zero) and carries the readout story. TruthfulQA's $+37.25$ is largely
+answer-prior surface-form Goodhart (choices-only $+0.2225$; correct option 0.5725
+with no question, base 0.35). Any blanket statement that ``the $+35$ is off-axis''
+or ``the $+35$ is surface-form'' is wrong; the mechanism is task-conditional and
+our readout/off-axis claim is anchored on ARC.
+
+\paragraph{The direct-logit reading has no clean lexical mechanism; the causal
+patching test has now run, and the symbol-channel test came back mixed.}
+A logit-lens analysis finds no clean lexical story; the one robust signature is
+suppression of structural single-uppercase tokens, the readable face of the
+format-preference channel (not of a termination collapse --- that claim is
+retracted, \cref{disc:pathologies}) rather than an explanation of the lift. The
+frequency control is now closed at the attribution level: over the full
+wikitext-103 corpus the recovered frequency direction is identified at $r{=}0.906$
+(past its 0.9 self-gate) and the offset's cosine with it is 0.0128 (at the null
+floor, below the $3\times$-null gate 0.041), so the offset is not a token-frequency
+edit --- and the causal-patching cross-check (which the temperature negative did
+receive) has now run and does not overturn it: no sign-flip, causal cosine
+$+0.0059$ with a CI crossing zero, against the temperature's
+$0.023 \rightarrow -0.149$ (\cref{disc:negatives}). The activation-patching test of
+the offset has now run: it confirms the temperature negative causally (temperature
+fraction 0.215 at scoring positions), but the decisive TEXT-vs-LABEL symbol-channel
+test is only \emph{consistent-with}, not clean (mixed across ARC and TruthfulQA,
+\cref{disc:negatives}), so the unifying mechanism is still a signpost, not a named
+channel.
+
+\section{Open questions and future work}\label{sec:open}
+
+\paragraph{The within-format difficulty control and independent base-CoT for
+HSwag/Wino have now run --- ``out-of-task, not difficulty-bound'' is supported.}
+The activation-probe in-space --- the decisive fairness control for the channel
+claim --- has \textbf{run} (\cref{disc:channel,disc:status}): it lands at AUC 0.955
+against the 0.502 collapsed-output ceiling, resolving \cref{disc:channel} to the
+sharpened channel claim (the output-scalar channel is lossy relative to the
+activation channel), not to ``pure miscalibration'' or a representational edit. The
+two controls that previously left the difficulty-vs-distribution question open have
+now run as well (\cref{disc:arbiter}). (a) The \emph{within-format} difficulty
+split --- ARC-Easy vs ARC-Challenge under one cold-MC pipeline --- moves the
+base-wrong fix-rate only $\mathbf{-0.10}$ (Easy 0.861 $\rightarrow$ Challenge
+0.763) as difficulty rises within ARC, whereas going out-of-task to GPQA collapses
+it $\mathbf{-0.56}$ (to 0.202): distribution, not within-format difficulty, drives
+the collapse. (b) Independent base-CoT for HSwag (0.83) and Winogrande (0.9425)
+confirms both are high --- like ARC's 0.97, well above GPQA's 0.70 --- and the
+recovery is recoverability-gated (the adapter fixes CoT-right items more than
+CoT-wrong ones: HSwag 0.64 vs 0.31, Winogrande 0.76 vs 0.42), so the $+17$/$+19$
+lifts also rescue CoT-accessible knowledge rather than exploiting a format
+shortcut. We therefore now report ``out-of-task, not difficulty-bound'' as
+\textbf{supported on all three anchors} rather than suggestive --- with a standing
+power caveat: the hard cells are small (HSwag $n{=}32$, Winogrande $n{=}12$), the
+Easy${\rightarrow}$Challenge range stays below GPQA's, and the burial gradient is
+shallow throughout (corr(fix, z-gap) $-0.17$). Two further caveats on the GPQA arm
+remain non-findings and we do not state them as contrasts: recoverability-gating
+could not be detected there (CoT-right 0.186 = CoT-wrong 0.186 is power-starved at
+$n{=}43$, with 31 unparsed items contaminating the hard cell), and the item-level
+churn (${\sim}21$ fixed / ${\sim}22$ broken) is churn within noise (no McNemar),
+not compensatory damage. What genuinely remains open is the cross-family
+universality of this difficulty-vs-distribution reading (below) and the
+verifier-guided arm (untested by design, Limitations).
+
+\paragraph{A training-time on-axis constraint --- the constructive follow-up has
+now run, and it does not rescue transfer.}
+The experiment that killed the process-reward-model reframe killed an
+\emph{injected, eval-time} on-axis offset; the constructive hypothesis is instead
+to train the adapter under a penalty forcing the learned offset toward the
+functional correctness direction $\vinf$, and ask whether a lift constrained to be
+on-axis \emph{then} transfers to generative CoT. That penalty has now been wired
+into training and swept (target $\vinf$, $\lambda \in \{0, 5, 15, 50\}$), against a
+pre-registered \textbf{lift-matched} gate --- an on-axis adapter counts only if, at
+equal MC lift, it retains \emph{more} gsm8k than simply scaling the off-axis offset
+down, otherwise a merely weaker adapter would trivially do less damage. No
+$\lambda$ passes. At $\lambda{=}5$ the on-axis adapter recovers only ARC 0.5725
+(against the off-axis 0.8575) while its gsm8k sits 9.9pp ($3.8\sigma$) below the
+off-axis dose curve at matched lift, and the TQA lift is ${\sim}0$ at every
+$\lambda$ (the TQA lift is \emph{entirely} off-axis mass): the on-axis penalty buys
+no transfer, and at the doses that actually constrain the offset on-axis it kills
+the lift itself (collapsing toward the $\Wknow$ 6.4\% floor). This is \textbf{fork
+(b)} --- it \emph{strengthens} the off-axis reading, adding a second causal leg
+(\textbf{necessity}, complementing the \textbf{sufficiency} of the $\offperp$
+${\sim}100\%$ / random ${\sim}0\%$ spectrum of \cref{disc:geometry}): the $+35$
+\emph{is} the off-axis mass, not an artifact of injection. It is not under-fitting
+--- $\lambda{=}0$ converges to val\_acc 0.92 while $\lambda{>}0$ plateaus
+flat-and-worse (0.72/0.64), and evaluation used the best-val-acc snapshot, so the
+on-axis arm was shown its most favorable face and still failed. One door remains
+untried: a penalty-warmup schedule ($\Wknow$ predicts it will not rescue). A
+follow-up, not a headline result.
+
+\paragraph{A dose-window efficiency candidate --- gated, exploratory.}
+The single-magnitude activation-scale axis of \cref{disc:pathologies} surfaces an
+unexpected \emph{positive}: at intermediate doses the offset \textbf{shortens}
+generative CoT without breaking the computation. But it is measured on the
+injected, scaled \emph{steering} offset (steering ${\neq}$ baked), on a single
+seed, and whether a trainable adapter inherits the efficient regime is exactly the
+open question fork (b) leaves standing --- so we report it as a candidate, not a
+claim, in \cref{app:dose}.
+
+\paragraph{A cheap test-time-compute baseline, narrowed (PMI is already settled).}
+The arbiter implies the adapter approximates knowledge the base already reaches by
+CoT, which invites the question of whether a cheap test-time-compute baseline
+Pareto-dominates it on the scoring task. One leg is already settled and does
+\textbf{not} dominate: PMI / decision-conditional re-scoring caps at base-wrong AUC
+0.574 against the adapter's 0.830 and actively \emph{hurts} the adapter when
+applied (\cref{disc:channel}), and a same-scaffold DC-PMI head-to-head leaves the
+adapter recovering items PMI does not (TQA, 28 items, CI lower bound $+0.622$). Two
+more legs have now \textbf{run} and are reported as the \textbf{deployment
+triangle} in \cref{disc:selector}. The \emph{reasoning} TTC family ---
+self-consistency over sampled CoT --- recovers 0.970 on the 198 base-wrong ARC
+items, dominating both the read-only selector (0.914) and the adapter's cold-MC
+scoring (0.763). And the \emph{same-cost} baseline the review asked for --- the
+base emitting the answer letter in a single greedy forward, no CoT --- also
+recovers \textbf{0.970} (192/198), at one forward: it ties the reasoning baseline
+at ${\sim}1000\times$ less cost and dominates the selector and the adapter at equal
+cost. So the adapter loses to a reasoning baseline \emph{and} to the most trivial
+same-cost alternative, and the selector's value is evidentiary, not deployment (it
+too is dominated by letter emission). The one scope caveat is that letter emission
+is a lettered-MCQ readout distinct from the cold-MC continuation channel
+(\cref{method:protocol}), so this contrasts two readouts of the same base --- the
+lossy-readout thesis in its sharpest form --- rather than a like-for-like scoring
+test. And on the mc\_only set --- the items the adapter fixes in cold-MC that
+$\vinf$ does not --- self-consistency reaches \textbf{124/124}: the
+\cref{disc:arbiter} arbiter taken to its extreme, the base reaching by reasoning
+every item the adapter ``fixes'' by cold scoring.
+
+\paragraph{Cross-family universality of the mechanism.}
+Every causal and geometric result here is on Gemma~4 31B IT. The behavioral
+\emph{effect} now replicates concretely on a second frontier family: Qwen 2.5 14B
+IT, run through the identical pipeline (null==base gate exact), shows a same-sign
+cold-MC lift on all four tasks (ARC $+18.0$ / HellaSwag $+7.8$ / TruthfulQA-mc1
+$+15.8$ / Winogrande $+3.0$ --- the last small and not individually significant at
+$n{=}400$, counted as marginal; magnitude below Gemma's 35/17/37/19), removing
+``single-model'' from the \emph{effect} (three tasks clearly, Winogrande
+marginally) --- and the per-task pattern differs (Winogrande $+3$ vs Gemma's
+$+19$), a difference worth explaining. What remains single-model is the
+\emph{mechanistic} characterization --- the arbiter, the inducibility control, the
+geometry spectrum, the no-locus result --- and, most directly, \textbf{whether the
+Qwen lift is off-axis-of-degree in the same way --- which has now run}: extracting
+Qwen's $\vinf$ and Fisher-LDA $\Wknow$ (ARC+HellaSwag inference family,
+chat-template, $48{\times}40{\times}128$ grid) and decomposing its offset gives
+whitened $\cos(\thetamc, \vinf) = -0.002$ (within null, ${\approx}$ Gemma's
+$-0.003$) and a 97.5\% perpendicular energy fraction --- the off-axis-of-degree
+geometry \textbf{replicates on a second family} (Qwen), lifting it from
+single-model to cross-family-replicated --- suggestive of, but not established as,
+a general property ($N{=}2$). The one cross-family difference is a minor
+heterogeneity of \emph{degree} (Qwen's raw on-axis budget 2.47\% vs Gemma's
+0.59\%, though the whitened cosine matches), not of sign. What stays single-model
+is the causal recovery spectrum ($\Wknow$ 6.4\%, arbiter, inducibility).
+
+\paragraph{Open questions inherited from the system-level negatives.}
+Two further questions bound the deployment reading rather than the mechanism. The
+false-positive routing gate is unbuilt (the only damage-screen is weak, AUC 0.609),
+so we make no hazard-free deployment claim; and the per-item fine-dispatch nulls
+were estimated against a permutation floor at $n{=}120$ and an underpowered
+cross-task screen at $n{=}62$, so they are reported as no-signal-at-this-power, not
+established absence. Neither affects the central result, but both must be settled
+before the routed system is read as more than a mitigation vehicle.
