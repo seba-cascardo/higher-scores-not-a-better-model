@@ -759,6 +759,7 @@ def task_margin_loss(
     """One pair → scalar loss.
 
     loss_type='direct':   L = -logp_correct + gamma * logp_wrong
+    loss_type='plain_ce': L = -logp_correct  (non-contrastive control, E1)
     loss_type='dpo':       L = -log(sigmoid(beta * (logp_correct - logp_wrong)))
 
     chat_template=True: wrap q in chat-template prefix (for IT models like
@@ -778,6 +779,15 @@ def task_margin_loss(
 
     if loss_type == "direct":
         return -lp_c + gamma * lp_w
+    elif loss_type == "plain_ce":
+        # Non-contrastive control (E1, external-review remediation 2026-07-24):
+        # ordinary CE / NLL on the correct answer only, NO term against the wrong
+        # option. Same per-head offset parameterization as 'direct' (identical
+        # 12,336 params, same 48 heads) — isolates the contrastive objective from
+        # the parameterization. lp_w is computed above but unused here: this keeps
+        # the diff minimal and regression-safe (direct/dpo untouched); the cost is
+        # one extra, discarded forward per pair.
+        return -lp_c
     elif loss_type == "dpo":
         margin = beta * (lp_c - lp_w)
         return -F.logsigmoid(margin)
@@ -948,7 +958,17 @@ def main():
     ap.add_argument("--beta", type=float, default=0.1)
     ap.add_argument("--gamma", type=float, default=0.5,
                     help="Weight on logp_wrong term in 'direct' loss")
-    ap.add_argument("--loss", default="direct", choices=["direct", "dpo"])
+    ap.add_argument("--loss", default="direct", choices=["direct", "dpo", "plain_ce"])
+    ap.add_argument("--seed", type=int, default=0,
+                    help="Batch-visit-order RNG seed (line ~1236). Init is deterministic "
+                         "(alpha=1, theta=0), so with a fixed --data-seed this varies ONLY "
+                         "batch-visit order. E1 (non-contrastive control) holds --data-seed "
+                         "fixed and sweeps this for same-data optimization-variance seeds.")
+    ap.add_argument("--data-seed", type=int, default=0,
+                    help="Train/val split RNG seed (per-dataset train-pool permutation). "
+                         "Default 0 = canonical split (byte-identical to the released run). "
+                         "E1 keeps this 0 ('same examples', per the review); E2 varies it "
+                         "with --seed for full data-resampling replicates.")
     ap.add_argument("--seq-len-max", type=int, default=384)
     ap.add_argument("--eval-every", type=int, default=200,
                     help="Run val every N steps. Bumped to 200 default 2026-05-11 "
@@ -1055,7 +1075,8 @@ def main():
     n_val_per_ds = max(1, args.n_val // max(1, len(datasets)))
     for d in datasets:
         loader = DATASETS[d]
-        ds_train = loader(args.n_train + n_val_per_ds, split="train", seed=0)
+        # data_seed: 0 = canonical split (E1 holds this fixed; E2 varies it for replicates)
+        ds_train = loader(args.n_train + n_val_per_ds, split="train", seed=args.data_seed)
         # tail of the SAME seed-0 train pool -> val is train-internal by construction
         per_ds_val.append(ds_train[-n_val_per_ds:])
         train_pairs.extend(ds_train[:-n_val_per_ds])
@@ -1191,6 +1212,8 @@ def main():
                 "onaxis_penalty": args.onaxis_penalty,
                 "onaxis_lambda": args.onaxis_lambda,
                 "vinf_path": args.vinf_path if args.onaxis_penalty else None,
+                "seed": args.seed,
+                "data_seed": args.data_seed,
             },
             "layer_head_pairs": layer_head_pairs,
             "alpha": offsets.alpha.detach().cpu(),
@@ -1229,7 +1252,7 @@ def main():
         print(f"{'step':>5s}  {'loss':>9s}  {'val_loss':>9s}  {'val_acc':>8s}  {'time':>6s}")
         print("-" * 47)
 
-    rng = torch.Generator().manual_seed(0)
+    rng = torch.Generator().manual_seed(args.seed)
     train_log = []
     t0 = time.time()
     accum = 0

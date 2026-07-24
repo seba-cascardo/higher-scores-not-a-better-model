@@ -67,7 +67,12 @@ further sensitive to option ordering and symbol identity
 instruction-tuned models can struggle to emit the correct option symbol even when
 they know the answer \citep{FormatFirst}, and the chat template itself inflates a
 model's confidence in ``its own'' answer in a way removable by a parameter-free
-reframing \citep{OwnershipBias}. We build directly on this literature --- the
+reframing \citep{OwnershipBias}. Selection bias is moreover introduced by supervised
+fine-tuning itself, tracing to weak multiple-choice symbol binding --- the A/B/C/D
+symbol--content association --- which strengthening during SFT both reduces and turns
+into an accuracy gain \citep{SymbolBinding}; this bears directly on our matched-SFT
+control and on the trivial letter-emission baseline we find dominates the adapter
+(\cref{disc:selector}). We build directly on this literature --- the
 protocol (cold MC under a chat template) is a lossy readout, which we treat as
 \emph{established setup rather than as our thesis} --- and our contribution is past
 the diagnosis: we quantify how much of the deficit a generic fine-tune recovers
@@ -147,7 +152,11 @@ injection under PEFT erodes reasoning, with the reasoning-critical information
 distributed across the singular spectrum rather than localized \citep{PALoRA}, and
 supervised fine-tuning degrades pretrained capabilities because its targets diverge
 from the model's autoregressive distribution \citep{MixSD}. Inference-time steering
-can be applied selectively, choosing when and how much to intervene \citep{MERA}.
+can be applied selectively, choosing when and how much to intervene \citep{MERA}; and steering vectors that cleanly control a target property in
+multiple-choice or toy settings degrade in free-form generation, inducing degenerate
+repetition and factual hallucination at the strengths control requires
+\citep{BeyondMultipleChoiceSteering} --- a control--quality trade-off that mirrors the
+creative degeneration our contrastive write produces (\cref{disc:pathologies}).
 These motivate our deployment-pathology results, but they also raise the sharpest
 reviewer objection to an off-axis claim: that \emph{any} norm-matched perturbation
 works, so an off-axis direction is not identifiable \citep{NonIdentifiability}, and
@@ -184,7 +193,13 @@ LoFiT learns additive per-head offset vectors on a sparse set of attention heads
 \citep{LoFiT}, a descendant of inference-time intervention \citep{ITI}, and related
 to representation fine-tuning \citep{ReFT}; concept- and feature-level steering
 benchmarks find that fine-tuning and prompting often outperform sparse-feature
-methods \citep{AxBench}. The decisive baseline our inducibility result requires is
+methods \citep{AxBench}. A recent principled account establishes a first-order
+equivalence between activation-space interventions and weight-space updates and finds
+the two play distinct, complementary functional roles
+\citep{WeightUpdatesActivationShifts}; this is why we compare methods by their
+\emph{net effect on activations} rather than by the weight-space offset, which we show
+is a misleading proxy (\cref{disc:geometry}). The decisive baseline our inducibility
+result requires is
 ordinary supervised fine-tuning: prior domain-adaptation work establishes SFT as a
 strong, cost-effective default for multiple-choice accuracy while degrading
 open-ended generation \citep{FrenchQASFT}. Our matched Align-LoRA control
