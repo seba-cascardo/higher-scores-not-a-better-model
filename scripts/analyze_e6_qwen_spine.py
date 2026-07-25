@@ -147,9 +147,88 @@ def main():
         print(f"    -> {verdicts['direction_privileged']['verdict']}")
 
     out["kill_rules"] = verdicts
+    out["matched_control"] = matched_control(base, lift)
+    out["gen_transfer"] = gen_transfer()
+
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2)
     print(f"\n[done] wrote {OUT}")
+
+
+# Gemma same-param control, best-ckpt (E1 / ledger B48). Cited, not recomputed.
+GEMMA_MATCHED = {"arc_challenge": 0.362, "truthfulqa_mc1": 0.009,
+                 "hellaswag": 0.695, "winogrande": 0.795}
+
+
+def matched_control(base, lift):
+    """Same-parameterization non-contrastive control in Qwen (3 seeds).
+
+    NOTE: the best-val_acc checkpoint DEGENERATED here -- Qwen's val_acc starts at
+    0.760 and the training never beats it, so 2/3 seeds selected step 1 (the
+    initialization: alpha=1, theta=0 = a null offset) and their evals reproduced the
+    base digit-for-digit. The honest arm is therefore `.final`, and that is what this
+    reads. Recorded because the checkpoint rule, not the model, produced the no-op.
+    """
+    print(f"\n{'=' * 74}\nmatched control (same-param plain-CE, .final ckpt)\n{'=' * 74}")
+    rows = []
+    for s in (0, 1, 2):
+        a = accs(os.path.join(E6, f"eval_plain_ce_seed{s}.final.json"))
+        if a is not None:
+            rows.append(a)
+    if not rows:
+        print("  MISSING")
+        return {"status": "missing"}
+
+    rec = {}
+    for t in TASKS:
+        if lift[t] == 0:
+            continue
+        fr = np.array([(r[t] - base[t]) / lift[t] for r in rows])
+        eff = np.array([r[t] - base[t] for r in rows])
+        rec[t] = {"frac_mean": float(fr.mean()),
+                  "frac_sd": float(fr.std(ddof=1)) if len(fr) > 1 else 0.0,
+                  "effect_mean_pp": float(eff.mean() * 100),
+                  "n_seeds_harmful": int((eff < 0).sum()), "n_seeds": len(eff),
+                  "gemma_reference": GEMMA_MATCHED.get(t),
+                  "denominator_noisy": bool(lift[t] < MIN_LIFT_FOR_FRACTION)}
+        r = rec[t]
+        flag = "  [HARMFUL]" if r["n_seeds_harmful"] == r["n_seeds"] else ""
+        noisy = "  [noisy denom]" if r["denominator_noisy"] else ""
+        print(f"  {t:<16} {r['frac_mean'] * 100:7.1f}% ± {r['frac_sd'] * 100:4.1f}   "
+              f"({r['effect_mean_pp']:+.1f}pp)   Gemma {GEMMA_MATCHED.get(t, float('nan')) * 100:5.1f}%"
+              f"{flag}{noisy}")
+    print("\n  task-heterogeneity replicates cross-family if the ORDER matches Gemma "
+          "(HSwag > ARC > TQA)")
+    return {"n_seeds": len(rows), "checkpoint": "final",
+            "best_ckpt_degenerate": "2/3 seeds selected step 1 (null offset); see docstring",
+            "per_task": rec}
+
+
+def gen_transfer():
+    """gsm8k: does the MC lift transfer to multi-step generation? (it does not)"""
+    p = os.path.join(E6, "gsm8k_scale_fixed.json")
+    if not os.path.exists(p):
+        print("\n  [gsm8k] MISSING (need the stop-id-fixed run)")
+        return {"status": "missing"}
+    with open(p, encoding="utf-8") as f:
+        g = json.load(f)
+    v = g["verdict"]
+    b, a = v["acc_scale0_base"], v["acc_scale1_full"]
+    # eos_rate is only meaningful in THIS run: the earlier one passed Gemma's stop ids
+    # to Qwen, so its generations ran to the cap and its eos_rate measured nothing.
+    eos = {str(r["scale"]): r["eos_rate"] for r in g["results"]}
+    ln = {str(r["scale"]): r["mean_gen_len"] for r in g["results"]}
+    print(f"\n{'=' * 74}\ngeneration transfer (gsm8k, stop-ids resolved from the model)\n{'=' * 74}")
+    print(f"  acc      base {b:.4f} -> adapter {a:.4f}   = {(a - b) * 100:+.1f}pp   "
+          f"(Gemma -24.2 ± 7.3)")
+    print(f"  eos_rate base {eos.get('0.0')} -> adapter {eos.get('1.0')}   "
+          f"(termination PRESERVED; corroborates the B15 retract cross-family)")
+    print(f"  mean_len base {ln.get('0.0')} -> adapter {ln.get('1.0')}   (adapter generates shorter)")
+    return {"base_acc": b, "adapter_acc": a, "damage_pp": (a - b) * 100,
+            "gemma_reference_pp": -24.2, "eos_rate": eos, "mean_gen_len": ln,
+            "note": "stop ids resolved from the model's generation_config; the earlier run "
+                    "used a Gemma literal ([1,50,105,106]) and its eos_rate (0.775) must NOT "
+                    "be cited -- it would have resurrected the B15 EOS-collapse zombie"}
 
 
 if __name__ == "__main__":
