@@ -107,12 +107,21 @@ def main():
                 eff = arm - base[t]
                 noop = eff < CONVERGENCE_MIN_EFFECT
                 fr = eff / lift[t]
+                # The convergence gate lumps "did nothing" together with "made it
+                # worse", and in E4 that distinction IS the finding (the OOD arms go
+                # ~10pp BELOW base on TruthfulQA). Separate them explicitly.
+                harmful = eff < 0
+                status = ("harmful" if harmful.all() else
+                          "no_op" if noop.all() else
+                          "converged" if not noop.any() else "mixed")
                 rec[t] = {
                     "arm_mean": float(arm.mean()), "arm_sd": float(arm.std(ddof=1)) if len(arm) > 1 else 0.0,
                     "effect_mean_pp": float(eff.mean() * 100),
                     "frac_mean": float(fr.mean()), "frac_sd": float(fr.std(ddof=1)) if len(fr) > 1 else 0.0,
                     "n_seeds": int(len(arm)),
                     "n_seeds_noop": int(noop.sum()),
+                    "n_seeds_harmful": int(harmful.sum()),
+                    "status": status,
                     "converged": bool((~noop).all()),
                 }
             ck_out[name] = {"status": "ok" if not missing else "partial",
@@ -122,9 +131,15 @@ def main():
             for t in TASKS:
                 if t in rec:
                     r = rec[t]
-                    flag = "" if r["converged"] else "  [NO-OP]"
+                    flag = {"converged": "", "no_op": " [NO-OP]",
+                            "harmful": " [HARMFUL]", "mixed": " [MIXED]"}[r["status"]]
                     head += f"  {t[:4]} {r['frac_mean'] * 100:5.1f}±{r['frac_sd'] * 100:4.1f}%{flag}"
             print(head)
+            for t in TASKS:
+                if t in rec and rec[t]["status"] == "harmful":
+                    print(f"      ⚠ {t}: {rec[t]['effect_mean_pp']:+.1f}pp vs base "
+                          f"({rec[t]['n_seeds_harmful']}/{rec[t]['n_seeds']} seeds below base) "
+                          f"-- spillover damage, report it")
 
         # --- pre-registered kill-rule on ARC (the headline anchor) ---
         B = ck_out.get("B_plainCE_indomain", {}).get("per_task", {}).get("arc_challenge")
