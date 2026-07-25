@@ -12,47 +12,62 @@ TruthfulQA mc1 by $+37.25$, with gains on HellaSwag ($+17.0$) and Winogrande
 
 A benchmark movement of this size invites the conclusion that the model has become
 better --- that the adapter has \emph{sharpened the model's judgment}. It has not.
-The lift does not transfer to generation (gsm8k $-25\pp$). On the items it fixes,
-the base model already reaches the right answer by reasoning ($124/124$ under
-chain-of-thought). A read-only linear selector on the same activations recovers the
-lift without touching the weights or the decoder. And the most trivial baseline
-imaginable beats it at its own cost: asked to emit the answer letter in a single
-forward, no chain of thought, the base recovers $0.970$ of the base-wrong items
-against the adapter's $0.763$ --- tying a reasoning baseline that costs a thousand
-times more. The score moved and the model did not.
+The lift does not transfer to generation (gsm8k $-24.2 \pm 7.3\pp$ over three
+independently trained seeds). On the items it fixes, the base model already reaches
+the right answer by reasoning ($124/124$ under chain-of-thought). A read-only linear
+selector on the same activations recovers the lift without touching the weights or the
+decoder. And the most trivial baseline imaginable beats it for \emph{less} money:
+asked to emit the answer letter in a single forward, no chain of thought, the base
+recovers $0.970$ of the base-wrong items against the adapter's $0.757$, at half the
+adapter's measured cost --- while tying a reasoning baseline that costs some
+$150\times$ more. The score moved; measurable capability did not.
 
 This paper asks what that lift \emph{is}, and answers with a quantified causal
 attribution rather than a new method: most of it is what ordinary fine-tuning
 already buys, it lives in a learned direction that is off-axis to the model's own
 correctness geometry, and it re-ranks a lossy readout rather than adding capability.
 
-\paragraph{Most of the lift is inducible by ordinary fine-tuning.}
+\paragraph{Much of the lift is inducible without the contrastive objective.}
 If the lift were a specific property of \emph{contrastive-correctness} training, an
-ordinary, non-contrastive supervised fine-tune of matched capacity and budget should
-not reproduce it. It largely does. A matched Align-LoRA --- plain SFT on the same
-data budget, run through the same causal recovery machinery --- recovers about
-\textbf{62\%} of the ARC lift, and that fraction is flat across a rank sweep
-(r8/32/64/256: 59/63/60/65; the slope's confidence interval includes zero, so the
-residual is not a capacity gap the control can close).
+ordinary, non-contrastive supervised fine-tune should not reproduce it. It largely
+does --- and how much it reproduces turns out to depend on two things, capacity and
+task, which is why we run the control at both ends of the capacity range.
 
-Read correctly, this matched control \emph{is} an attribution method, and the 62\%
-is the result, not a deflation. It spans a series --- a norm-matched random
-direction ${\approx}0\%$ $\rightarrow$ generic SFT ${\sim}62\%$ (fraction-CI
-$[45\%, 85\%]$) $\rightarrow$ the contrastive adapter $100\%$ --- that places most
-of the lift on fine-tuning \emph{in general}, not on the contrastive objective,
-leaving a contrastive-specific remainder of at most ${\sim}38\%$. The strongest
-on-axis reference we can build (a Fisher-LDA direction $\Wknow$) sits at $6.4\%$,
+At \emph{identical} capacity --- the same 48 head-pairs and the same $12{,}336$
+trainable parameters as the adapter, the same corpus and steps, ordinary
+cross-entropy on the correct answer with no term against the incorrect one, three
+seeds --- the control recovers $\mathbf{36.2\% \pm 5.0}$ of the ARC lift. With
+$1{,}800\times$ to $117{,}000\times$ more parameters, a non-contrastive Align-LoRA
+recovers about \textbf{62\%}, flat across a rank sweep (r8/32/64/256: 59/63/60/65;
+the slope's confidence interval includes zero, so within that grid the residual is
+not a gap more rank closes).
+
+Read correctly, these matched controls \emph{are} an attribution method, and the
+fractions are the result, not a deflation. They span a series --- a norm-matched
+random direction ${\approx}0\%$ $\rightarrow$ same-parameterization control
+${\sim}37\%$ $\rightarrow$ higher-capacity generic SFT ${\sim}62\%$ (fraction-CI
+$[45\%, 85\%]$) $\rightarrow$ the contrastive adapter $100\%$ --- that places much of
+the lift on fine-tuning \emph{in general} rather than on the contrastive objective,
+without letting us name one number as ``the'' generic fraction: it moves with
+capacity. The task dependence is sharper still. The same three same-parameterization
+seeds recover $79.5\%$ of the Winogrande lift and $69.5\%$ of HellaSwag's but
+$0.9\%$ --- nothing --- of TruthfulQA-mc1's, even though TruthfulQA is in the
+control's own training corpus: raising the correct option's log-probability is enough
+where the task scores the plausibility of a continuation, and not enough where a
+plausible distractor has to be beaten. The strongest on-axis reference we can build
+(a Fisher-LDA direction $\Wknow$) sits at $6.4\%$,
 but its interval includes zero (exact McNemar $p=0.136$), so we count it with the
-floor rather than as a distinct rung: the series has three steps, not four. That
-remainder is an upper bound: a best-effort fairness control has since run, and
-raising capacity to r512 recovers \emph{less} ($0.22$) or breaks below base, so it
-does not raise the generic fraction, and the ${\sim}62\%$ stands as a tight lower
-bound.
+floor rather than as a distinct rung. We report these as the best recovery observed
+under the generic-SFT family we tested rather than as a bound on generic fine-tuning:
+within each rank/LR/epoch grid the fraction is flat (the r512 flank recovers
+\emph{less}, $0.22$, or breaks below base, so it does not raise the ${\sim}62\%$), yet
+across capacity the fraction plainly moves, from ${\sim}37\%$ to ${\sim}62\%$. What a
+different architecture, placement or search budget would recover, we do not know.
 
-The clean test is ARC; TruthfulQA is excluded because its matched corpus leaks into
-the evaluation (held-out, the capacity-matched control collapses from 98\% to 30\%
-recovery --- the signature of memorizing train-on-eval --- while the contrastive
-adapter still generalizes held-out at $0.83$).
+The clean test for the higher-capacity arm is ARC; TruthfulQA is excluded there
+because its matched corpus leaks into the evaluation (held-out, that control collapses
+from 98\% to 30\% recovery --- the signature of memorizing train-on-eval --- while the
+contrastive adapter still generalizes held-out at $0.83$).
 
 Neighboring work establishes the recognition--production gap qualitatively
 (\cref{sec:related}); to our knowledge no prior work runs a \emph{matched} control
@@ -188,10 +203,13 @@ and we freeze no prose on un-executed evaluations.
 Concretely, the headline scoring/gen magnitudes are pre-registered with kill-rules.
 The anti-floor 5-shot rule has executed and the lift survived. The gen-face
 canonical gsm8k sweep (R6) has now run: $-25\pp$, flat across the generation budget,
-so the loss is mechanistic, not a clipped chain of thought. The contrastive-specific
-residual ${\sim}38\%$ is a firm upper bound: the Align-LoRA best-effort fairness
-control has now run and does not raise the ${\sim}62\%$ generic fraction (r512
-recovers $0.22$ / breaks below base), so the ${\sim}62\%$ is a tight lower bound.
+so the loss is mechanistic, not a clipped chain of thought; two further independently
+trained seeds put the loss at $-24.2 \pm 7.3\pp$, so the sign replicates while the
+magnitude is seed-dependent and we cite it with that spread. The
+contrastive-specific residual is bounded by the controls we ran, not by a proof: the
+Align-LoRA fairness flank does not raise the ${\sim}62\%$ within its grid (r512
+recovers $0.22$ / breaks below base), while at matched capacity the generic fraction
+is lower (${\sim}37\%$) --- so the residual is grid-relative, and we say so.
 The earlier V7-mc end-of-turn figure ($60{\rightarrow}4\%$) is \textbf{retracted}:
 it and the analogous D.1 numbers came from a tokenizer bug that scored termination
 on the wrong turn-stop token, and the one clean re-measure shows no collapse
@@ -206,17 +224,23 @@ The object of this paper is a dissociation --- a large multiple-choice score gai
 that is not a capability gain --- and the contribution is the causal attribution
 that explains it, together with the deployment pathologies the recovery introduces.
 \begin{itemize}[leftmargin=1.4em,itemsep=3pt]
-\item \textbf{Inducibility-as-attribution.} A capacity- and budget-matched
-  non-contrastive Align-LoRA recovers ${\sim}62\%$ of the ARC lift --- fraction-CI
-  $\boldsymbol{[45\%, 85\%]}$ --- (flat across rank; a best-effort r512 fairness
-  control \emph{ran} and does not raise it $\rightarrow$ a \emph{tight} lower
-  bound, contrastive-specific remainder $\leq{\sim}38\%$). Read as an
-  \emph{attribution spectrum} --- random ${\approx}0\%$ $\rightarrow$ generic SFT
-  ${\sim}62\%$ $\rightarrow$ contrastive $100\%$, with the on-axis reference
-  ($\Wknow$) at $6.4\%$ indistinguishable from zero ($p=0.136$) and therefore
-  counted with the floor --- most of the lift is what ordinary fine-tuning buys
-  back. To our knowledge no prior work runs a matched non-contrastive control to
-  \emph{attribute} an MC lift this way and report the fraction. The interval is
+\item \textbf{Inducibility-as-attribution.} Two non-contrastive controls bracket
+  the objective's contribution. A \emph{same-parameterization} control (identical
+  48 head-pairs and $12{,}336$ parameters, CE-plain, three seeds) recovers
+  $\mathbf{36.2\% \pm 5.0}$ of the ARC lift; a \emph{higher-capacity} Align-LoRA
+  ($1{,}800\times$--$117{,}000\times$ more parameters) recovers ${\sim}62\%$ ---
+  fraction-CI $\boldsymbol{[45\%, 85\%]}$, flat across rank, and an r512 flank does
+  not raise it within that grid. Recovery is also strongly task-dependent
+  (Winogrande $79.5\%$ / HellaSwag $69.5\%$ / ARC $36.2\%$ / TruthfulQA
+  $\mathbf{0.9\%}$ at matched capacity). Read as an \emph{attribution spectrum} ---
+  random ${\approx}0\%$ $\rightarrow$ same-parameterization ${\sim}37\%$
+  $\rightarrow$ higher-capacity SFT ${\sim}62\%$ $\rightarrow$ contrastive $100\%$,
+  with the on-axis reference ($\Wknow$) at $6.4\%$ indistinguishable from zero
+  ($p=0.136$) and therefore counted with the floor --- much of the lift is what
+  ordinary fine-tuning buys back, and how much depends on capacity and task rather
+  than being one constant. To our knowledge no prior work runs matched
+  non-contrastive controls to \emph{attribute} an MC lift this way and report the
+  fractions. The interval is
   wide, and we read the claim at its resolution: most, not a specific percentage.
 \item \textbf{A causal off-axis-of-degree geometry, non-identifiability closed both
   sides.} A parallel push recovers $0\%$ of the lift and a norm-matched random

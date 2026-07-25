@@ -192,34 +192,48 @@ adapter-independent $S_{\mathrm{cot\_coldwrong}}$ ($n{=}192$, the items the base
 premise scoring) reaches 0.535, so the base channel stays \emph{intermediate} on the
 strongest honest pool.
 
-\subsection{The recovery is mostly generic to fine-tuning, not special to the
-contrastive objective}\label{disc:inducibility}
+\subsection{Much of the recovery is generic to fine-tuning; how much depends on
+capacity and on the task}\label{disc:inducibility}
 
 If the lift were a specific consequence of the \emph{contrastive-correctness}
-objective, an ordinary supervised fine-tune of matched capacity and budget should
-not reproduce it. It largely does. We train a non-contrastive Align-LoRA on the same
-data budget and run it through the same causal recovery machinery (a sign-safe
-three-zone control gate). It recovers about \textbf{62\%} of the ARC lift, and that
+objective, an ordinary supervised fine-tune should not reproduce it. It largely does
+--- and running the control at two very different capacities shows that ``how much''
+is not a single number.
+
+\textbf{At the adapter's own capacity.} The same-parameterization control
+(\cref{method:neteffect}: identical 48 head-pairs, identical $12{,}336$ trainable
+parameters, identical corpus/steps/split/checkpoint rule, ordinary cross-entropy on
+the correct answer only, three seeds) recovers $\mathbf{36.2\% \pm 5.0}$ of the ARC
+lift, or $39.7\% \pm 3.1$ if the fixed final step is used instead of the
+best-validation checkpoint --- a ${\sim}36$--$40\%$ range. Because the intervention
+space is held exactly fixed here, this is the arm that attributes recovery to the
+objective as such.
+
+\textbf{At $1{,}800\times$--$117{,}000\times$ capacity.} A non-contrastive Align-LoRA
+on the same data budget, run through the same causal recovery machinery (a sign-safe
+three-zone control gate), recovers about \textbf{62\%} of the ARC lift, and that
 fraction is \textbf{flat across a rank sweep} (r8/32/64/256: 59/63/60/65), with the
 sweep slope's confidence interval spanning zero ($[-1.4, +3.4]$) and a delta-method
-fraction interval of roughly $[45\%, 85\%]$ (zone C). The residual is therefore not
-a capacity gap the generic control can close with more parameters; ordinary
-fine-tuning simply buys back most of what cold scoring leaves on the table. One
-caveat we apply to ourselves, symmetric with the information-set discipline of
-\cref{disc:channel}: ``matched capacity and budget'' matches examples and optimizer
-steps, not the effective training signal per step --- the contrastive objective sees
-each example with an explicit correct/incorrect contrast where the SFT objective
-sees only the correct completion --- so the ${\sim}62\%$ attributes the lift to
-\emph{fine-tuning on this data} rather than to any stronger claim of per-step
-informational equivalence between the two objectives. The contrastive-specific
-remainder is at most ${\sim}38\%$ of the ARC lift, and this is a \textbf{firm upper
-bound}: a best-effort fairness control has now run and does \textbf{not} raise the
-generic fraction --- raising the rank to r512 recovers \emph{less} (frac 0.22 at
-lr1e-4, converged but overfitting ep2${\rightarrow}$ep4, robust ep2=ep4) or yields a
-below-base broken adapter (lr2e-4, excluded like the r256hi high-LR control), so the
-${\sim}62\%$ is the ceiling of generic-fine-tuning capacity, a \textbf{tight} lower
-bound. That de-risk (higher rank, an LR sweep, more epochs) is now closed; it
-refined the residual, not the thesis.
+fraction interval of roughly $[45\%, 85\%]$ (zone C). Within that grid, then, the
+residual is not a gap more rank closes; but the comparison with the
+same-parameterization arm shows that capacity itself moves the fraction, from
+${\sim}37\%$ to ${\sim}62\%$. We therefore do not name a ceiling for generic
+fine-tuning, and we treat the contrastive-specific residual as \emph{grid-relative}:
+${\sim}60$--$64\%$ of the ARC lift at equal capacity, ${\sim}38\%$ against the
+higher-capacity arm.
+
+One caveat we apply to ourselves, symmetric with the information-set discipline of
+\cref{disc:channel}: matching examples and optimizer steps does not match the
+effective training signal per step --- the contrastive objective sees each example
+with an explicit correct/incorrect contrast where the plain objective sees only the
+correct completion --- so these fractions attribute the lift to \emph{fine-tuning on
+this data} rather than to any stronger claim of per-step informational equivalence.
+Indeed the task breakdown suggests that contrast is exactly what the harder cases
+need: the same three same-parameterization seeds recover $79.5\% \pm 1.4$ of the
+Winogrande lift and $69.5\% \pm 6.4$ of HellaSwag's --- where scoring rewards the
+plausibility of a continuation --- but $0.9\% \pm 3.3$ of TruthfulQA-mc1's, where a
+plausible distractor must be beaten, despite TruthfulQA sitting in the control's own
+training corpus. ARC, at ${\sim}37\%$, falls between the two regimes.
 
 We restrict this control to ARC because TruthfulQA's matched corpus leaks into its
 evaluation. Across the rank sweep the TQA recovered fraction rises monotonically
@@ -333,12 +347,12 @@ adapter's costs --- no retrieval spillover, no generation loss (no reasoning
 breakage) --- so on the (cost, MC-accuracy) plane it \textbf{Pareto-dominates the
 adapter}. Whether it also wins on deployment grounds --- against the
 \emph{reasoning} baseline the no-headroom arbiter (\cref{disc:arbiter}, base
-124/124 under CoT) suggests, and against the trivial one-forward baseline the review
-asked for --- is settled below by the deployment triangle: it does \textbf{not}. A
+124/124 under CoT) suggests, and against the trivial one-forward baseline --- is
+settled below by the deployment triangle: it does \textbf{not}. A
 reasoning TTC ties the cheapest baseline, and a single-forward letter-emission of
-the base dominates the selector itself at equal cost --- which is exactly why we
-hold the selector to its \emph{evidentiary} role (read${\neq}$write) rather than a
-deployment win.
+the base dominates the selector outright, at \emph{half} its measured cost --- which
+is exactly why we hold the selector to its \emph{evidentiary} role
+(read${\neq}$write) rather than a deployment win.
 
 We hold the claim to its read side and guard against an over-reading: 0.943
 exceeding the adapter's 0.853 is \textbf{not} ``the probe beats the adapter as a
@@ -353,81 +367,115 @@ cross-benchmark (ARC-Easy / OpenBookQA), which we flag as the immediate follow-u
 \paragraph{The deployment triangle (\cref{fig:triangle}).}
 The read-only selector is neither the strongest nor the cheapest good way to answer
 these items --- both distinctions belong to the base model asked correctly. On the
-198 base-wrong ARC items, four deployment routes separate on the (accuracy, cost)
-plane. Three cost a single forward: the contrastive adapter's cold-MC scoring
-recovers \textbf{0.763}; the read-only selector recovers \textbf{0.914}; and ---
-the same-cost baseline the review asked us to run --- prompting the base to emit
-the answer letter in one greedy forward, no chain of thought, recovers
-\textbf{0.970} (192/198; 2 items unparsed and counted wrong, so a floor). The
-fourth, a reasoning test-time-compute baseline (base self-consistency CoT, $k{=}3$),
-also recovers \textbf{0.970}, but at ${\sim}1179$ generated tokens. So the single
-cheapest intervention --- one forward, letter emission, no adapter and no probe ---
-matches the expensive reasoning baseline and dominates both the adapter and the
-selector at equal cost.
+198 base-wrong ARC items we benchmarked four deployment routes on one homogeneous
+cost unit: median (p50) end-to-end latency per item at batch~1 on an RTX PRO 6000
+(bf16), reported alongside the tokens each route actually consumes
+(\cref{tab:triangle}). This matters because ``one forward'' is not one unit of work:
+cold-MC scoring and the selector must score \emph{every option continuation}
+separately (${\sim}4$ per ARC item, ${\sim}24.7$ scored continuation tokens), whereas
+letter emission is a single forward plus two generated tokens.
+
+Measured, the routes are: the contrastive adapter's cold-MC scoring recovers
+\textbf{0.757} at \textbf{354\,ms}; the read-only selector \textbf{0.911} at
+\textbf{360\,ms}; prompting the base to emit the answer letter in one greedy forward,
+no chain of thought, recovers \textbf{0.970} (192/198; 2 items unparsed and counted
+wrong, so a floor) at \textbf{181\,ms}; and a reasoning test-time-compute baseline
+(base self-consistency CoT, $k{=}3$) also recovers \textbf{0.970}, at
+\textbf{26.7\,s} and $853.9$ generated tokens summed over its three traces. So letter
+emission is not merely a same-cost tie --- it is the \emph{cheapest and the most
+accurate} route on the plane: it costs about half what the adapter and the selector
+cost, beats the adapter by $21$ points and the selector by $6$, and matches the
+reasoning baseline at ${\sim}150\times$ less latency. The adapter is dominated by
+every other route, including on cost.
 
 One caveat scopes this exactly as it scopes the arbiter (\cref{method:protocol}):
 letter emission puts the base in a lettered-MCQ format, a \emph{different readout}
 from the cold-MC option-continuation scoring the adapter operates on --- not a
 like-for-like scoring comparison. That is the point rather than a confound: it
-compares two readouts of the \emph{same base} at the \emph{same cost} --- loglik
-continuation ranking vs letter emission --- which move it from 0.505 to 0.980 over
-the full set ($0{\rightarrow}0.970$ on the base-wrong subset the triangle uses).
-This is the paper's thesis, that the cold-MC channel is lossy, in its sharpest
-form: the knowledge is present and cheaply reachable by a different readout of the
-base, and the adapter's off-axis write recovers \emph{less} of it (0.763) than the
-most trivial same-cost alternative (0.970).
+compares two readouts of the \emph{same base} --- loglik continuation ranking vs
+letter emission --- which move it from 0.505 to 0.980 over the full set
+($0{\rightarrow}0.970$ on the base-wrong subset the triangle uses), with the cheaper
+readout winning. This is the paper's thesis, that the cold-MC channel is lossy, in
+its sharpest form: the knowledge is present and cheaply reachable by a different
+readout of the base, and the adapter's off-axis write recovers \emph{less} of it
+(0.757) than the most trivial alternative does for less money (0.970).
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=.78\textwidth,alt={Scatter plot of the deployment triangle
-on the 198 base-wrong ARC items: x-axis is cost per item in generated tokens on a
-log scale, y-axis is ARC accuracy. The contrastive adapter sits at 0.763 for one
-forward, the read-only selector at 0.914 for one forward, base letter-emission at
-0.970 for one forward, and base self-consistency chain-of-thought at 0.970 at about
-1179 tokens.}]{figures/fig_deployment_triangle.pdf}
-\caption{\textbf{The deployment triangle on the 198 base-wrong ARC items.} $x$:
-cost per item in generated tokens (log scale; a single forward is one unit); $y$:
-ARC accuracy. Four routes: the contrastive adapter's cold-MC scoring (0.763, one
-forward) is dominated by everything; the read-only selector (0.914, one forward)
-improves on it read-only; \textbf{the base asked to emit the answer letter in one
-forward (0.970) matches the reasoning baseline at ${\sim}1000\times$ less cost and
-dominates both the adapter and the selector at equal cost}; base self-consistency
-CoT (0.970, ${\sim}1179$ tokens) ties letter-emission at far higher cost. The whole
-LoFiT/ITI-for-cold-MC family optimizes a readout that the most trivial same-cost
-alternative --- ask the base for the letter --- already beats. \textbf{The
-comparison is evidentiary, not a like-for-like scoring test:} letter emission is a
-different (lettered-MCQ) readout than the cold-MC channel
-(\cref{method:protocol}), so the triangle contrasts two readouts of the same base
-at equal cost --- the lossy-readout thesis in its sharpest form --- and the
-selector's role stays evidentiary (read${\neq}$write), not a deployment
-recommendation, since even it is dominated by letter emission.}
+on the 198 base-wrong ARC items: x-axis is measured median per-item latency at batch
+one on a log scale, y-axis is ARC accuracy. Base letter-emission is the top-left
+point at 0.970 accuracy and 181 milliseconds; the read-only selector sits at 0.911
+and 360 milliseconds; the contrastive adapter at 0.757 and 354 milliseconds; base
+self-consistency chain-of-thought far to the right at 0.970 and 26.7
+seconds.}]{figures/fig_deployment_triangle.pdf}
+\caption{\textbf{The deployment triangle on the 198 base-wrong ARC items, on measured
+cost.} $x$: median (p50) per-item latency at batch~1, bf16, RTX PRO 6000 (log scale);
+$y$: ARC accuracy. One homogeneous unit for all four routes, replacing the earlier
+mixed forwards/tokens proxy --- ``one forward'' is not one unit of work, since cold-MC
+scoring and the selector score every option continuation separately (${\sim}4$ per
+item) while letter emission is one forward plus two tokens. Four routes: the
+contrastive adapter's cold-MC scoring (0.757, 354\,ms) is dominated by everything, on
+accuracy \emph{and} on cost; the read-only selector (0.911, 360\,ms) improves on it
+read-only; \textbf{the base asked to emit the answer letter in one forward (0.970,
+181\,ms) is both the cheapest and the most accurate route --- it matches the reasoning
+baseline at ${\sim}150\times$ less latency and strictly dominates the adapter and the
+selector at about half their cost}; base self-consistency CoT (0.970, 26.7\,s, 853.9
+generated tokens over three traces) ties letter emission at far higher cost. The whole
+LoFiT/ITI-for-cold-MC family optimizes a readout that the most trivial and cheapest
+alternative --- ask the base for the letter --- already beats. \textbf{The comparison
+is evidentiary, not a like-for-like scoring test:} letter emission is a different
+(lettered-MCQ) readout than the cold-MC channel (\cref{method:protocol}), so the
+triangle contrasts two readouts of the same base --- the lossy-readout thesis in its
+sharpest form --- and the selector's role stays evidentiary (read${\neq}$write), not a
+deployment recommendation, since even it is dominated by letter emission. Cost is
+latency on this one accelerator at batch~1; we do not normalize FLOPs across readouts,
+and batched throughput (reported in \cref{tab:triangle}) is not comparable between
+prefill-bound scoring and decode-bound generation.}
 \label{fig:triangle}
 \end{figure}
 
 \begin{table}[tbp]
 \centering
 \begin{threeparttable}
-\caption{\textbf{Deployment routes on the 198 base-wrong ARC items} (the numeric
-view of \cref{fig:triangle}).}
+\caption{\textbf{Deployment routes on the 198 base-wrong ARC items, measured cost}
+(the numeric view of \cref{fig:triangle}). Latency is median (p50) / 95th percentile
+per item at batch~1, bf16, single RTX PRO 6000; tokens are generated tokens for the
+generation routes and scored continuation tokens for the scoring routes. Batched
+throughput is listed for completeness but is \emph{not} comparable across route
+families (prefill-bound scoring vs decode-bound generation).}
 \label{tab:triangle}
 \footnotesize
-\begin{tabular}{L{4.2cm} L{4.2cm} L{2.8cm} L{3.2cm}}
+\begin{tabular}{L{3.5cm} L{3.1cm} L{2.5cm} L{1.9cm} L{2.9cm}}
 \toprule
-Deployment route & ARC accuracy (198 base-wrong) & Cost / item & Relation \\
+Deployment route & ARC accuracy (198 base-wrong) & Latency p50 / p95 & Tokens /
+item & Relation \\
 \midrule
 \textbf{Base letter-emission (1 forward, no CoT)} & \textbf{0.970} (192/198; 2
-unparsed as wrong $\rightarrow$ floor) & 1 forward (a few decode tokens) &
-\textbf{matches SC-CoT; dominates the selector and adapter at equal cost} \\
+unparsed as wrong $\rightarrow$ floor) & \textbf{181 / 253\,ms} & 2.0 generated &
+\textbf{cheapest \emph{and} most accurate: matches SC-CoT, strictly dominates
+selector and adapter} \\
 Base self-consistency CoT ($k{=}3$) & \textbf{0.970} (192/198; $k{=}5$ identical
-$\rightarrow$ saturates at $k{=}3$) & ${\sim}1179$ generated tokens & ties
-letter-emission at ${\sim}1000\times$ the cost \\
-Read-only selector (\cref{disc:selector}) & \textbf{0.914} & 1 forward
-(${\sim}1000\times$ cheaper than CoT) & dominated by letter-emission;
-Pareto-dominates only the \emph{adapter} \\
-Contrastive adapter (cold-MC scoring) & \textbf{0.763} & 1 forward & dominated by
-all three \\
+$\rightarrow$ saturates at $k{=}3$) & 26.7 / 36.6\,s & 853.9 generated (sum over
+3 traces) & ties letter-emission at ${\sim}150\times$ the latency \\
+Read-only selector (\cref{disc:selector}) & \textbf{0.911} (5 probe seeds) & 360 /
+479\,ms & 24.7 scored (${\sim}4$ options) & dominated by letter-emission (2$\times$
+its cost, $-6$pp); Pareto-dominates only the \emph{adapter} \\
+Contrastive adapter (cold-MC scoring) & \textbf{0.757} & 354 / 471\,ms & 24.7 scored
+(${\sim}4$ options) & dominated by all three, on accuracy \emph{and} cost \\
 \bottomrule
 \end{tabular}
+\begin{tablenotes}[flushleft]\footnotesize
+\item \textbf{Provenance and one reconciliation.} Measured in a single harness that
+re-derives every route's per-item correctness and validates it against the canonical
+lm-eval artifacts before timing (\code{runs/\allowbreak e3\_\allowbreak cost/}). Within that harness the
+adapter scores $0.757$ (150/198) and the base cold-MC arm $0.5025$, against $0.7626$
+(151/198) and $0.5050$ in lm-eval: a one-item difference in both arms, from the
+context/continuation tokenisation boundary in the re-implemented log-likelihood. The
+canonical accuracies elsewhere in this paper are the lm-eval ones; the $0.757$ here is
+the number produced by the same code path that produced the latencies, which is why we
+report it in this table rather than silently mixing sources.
+\end{tablenotes}
 \end{threeparttable}
 \end{table}
 
@@ -436,14 +484,17 @@ one-forward letter-emission of the base both beat it --- so the whole
 LoFiT/ITI-for-cold-MC family optimizes a readout that even asking the base for the
 letter already beats. We therefore report the selector as \emph{evidentiary} (the
 correctness signal is read-only recoverable, read${\neq}$write) and \textbf{not} as
-a deployment win (dominated at equal cost by letter emission). \emph{Population
-note (do not conflate):} the four figures here (letter-emission 0.970, SC-CoT
-0.970, selector 0.914, adapter 0.763) are all on the \textbf{198 base-wrong}
+a deployment win (dominated by letter emission at half its measured cost).
+\emph{Population note (do not conflate):} the four figures here (letter-emission
+0.970, SC-CoT 0.970, selector 0.911, adapter 0.757) are all on the \textbf{198
+base-wrong}
 subset; the selector's all-items accuracy (\textbf{0.943}, three seeds, across all
 $n{=}400$ evaluation items) and the adapter's all-items accuracy
 (\textbf{0.853/0.855}; \cref{tab:headline}) are computed on a \emph{different}
-population and are not directly comparable to the 0.914 / 0.763 here. The 0.943 and
-0.914 are the same selector on two populations, not two systems. ``All items'' here
+population and are not directly comparable to the 0.911 / 0.757 here. The 0.943 and
+0.911 are the same selector on two populations, not two systems (and the canonical
+lm-eval value on this subset is 0.914; the 0.911 is the same selector re-fit inside the
+cost harness, see the table note). ``All items'' here
 means the $n{=}400$ harness sample, \textbf{not} the full ARC-Challenge test split
 --- that phrase is reserved for the R4 full-split run (\cref{sec:limitations}, ARC
 acc\_norm $+36.2$).
@@ -976,7 +1027,7 @@ pre-registered gate ($\Delta_{\mathrm{UNSEEN}}$ mc1 ${\geq}+15\pp$ and $\Delta$m
 ${>}+10\pp$) comfortably. So the $+37.25$ is \emph{not} memorization of
 train-on-eval pairs (the matched corpus covers ${\sim}79.9\%$ of the eval, yet the
 held-out gain is undiminished), and it is real beyond the mc1 selection metric. The
-decisive contrast is with the generic control: a capacity-matched Align-LoRA, which
+decisive contrast is with the generic control: the higher-capacity Align-LoRA, which
 recovers most of the \emph{ARC} lift, \textbf{collapses held-out on TruthfulQA}
 (mc1 $\Delta_{\mathrm{SEEN}}$ $+38.6 \rightarrow \Delta_{\mathrm{UNSEEN}}$ $+7.9$;
 mc2 $+24.1 \rightarrow +7.6$) --- the signature of memorizing / format-familiarity
@@ -1077,17 +1128,22 @@ The power caveat is unchanged: ARC remains near its chain-of-thought ceiling, so
 this confirms the benign reading without distinguishing ``recovers knowable'' from
 ``fabricates'' as a harder benchmark would.
 
-Items resolved this pass: the canonical gsm8k loss magnitude is $\mathbf{-25\pp}$
+\paragraph{Where each claim stands.}
+Settled by executed controls: the canonical gsm8k loss magnitude is $\mathbf{-25\pp}$
 (R6, base 0.9775 vs v7mc 0.7275, apples-to-apples), flat across a
 generation-budget sweep $\rightarrow$ a \emph{mechanistic} loss (multi-step
-reasoning breakage) and not truncation (\cref{disc:pathologies}); the
-temperature/null-space negative is now \textbf{causal} (patching, temperature
-fraction 0.215 at scoring positions --- \cref{disc:negatives}); and the effect
-replicates cross-family (Qwen 14B, 4/4-sign lift). Items still pending, marked here
-rather than asserted: the ${\sim}62\%$ generic fraction is a \textbf{tight lower
-bound} --- the Align-LoRA best-effort fairness control ran (r512 recovers
-\emph{less}, not more, so the contrastive-specific residual ${\sim}38\%$ is a firm
-upper bound); the present-but-swamped claim's base-arm residual CI lower bound
+reasoning breakage) and not truncation (\cref{disc:pathologies}), with the loss
+replicating in sign across three independently trained adapters at
+$-24.2 \pm 7.3\pp$ (\cref{tab:seeds}); the temperature/null-space negative is
+\textbf{causal} (patching, temperature fraction 0.215 at scoring positions ---
+\cref{disc:negatives}); and the effect replicates cross-family (Qwen 14B, 4/4-sign
+lift). Claims we hold with stated limits rather than as closed: the generic recovery
+fraction is \emph{capacity-dependent} --- ${\sim}37\%$ at the adapter's own
+parameterization against ${\sim}62\%$ at $1{,}800\times$--$117{,}000\times$ capacity,
+flat within each grid but plainly moving across them --- so we report the
+contrastive-specific residual against a named control rather than as a bound on
+generic fine-tuning (\cref{disc:inducibility}); the present-but-swamped claim's
+base-arm residual CI lower bound
 (0.520) is \emph{intermediate} and rests on the adapter arm ($0.584 > 0.55$) ---
 the power increase ran and does not rescue it: no defensible pool, including the
 adapter-independent $S_{\mathrm{cot\_coldwrong}}$ (CI lower bound 0.512) and the

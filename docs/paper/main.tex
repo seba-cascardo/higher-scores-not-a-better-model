@@ -47,6 +47,8 @@
 \usepackage{caption}
 \captionsetup{font=small,labelfont=bf,width=.96\textwidth}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+% right-aligned fixed-width column, for numeric table bodies (\cref{tab:seeds})
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
 
 % ---- notation macros (fixed terms; never cycle synonyms) ----------------
 \newcommand{\thetamc}{\theta_{\mathrm{mc}}}

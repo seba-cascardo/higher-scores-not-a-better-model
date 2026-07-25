@@ -2,8 +2,16 @@
 
 \subsection{Model and contrastive-correctness adapter}\label{method:model}
 
-All results are on Gemma~4 31B IT, run in bf16. The discrimination adapter (referred
-to as V7-mc) is a contrastive-correctness PEFT in the LoFiT/ITI family: it learns
+All results are on Gemma~4 31B IT, run in bf16 --- specifically the Hugging Face
+checkpoint \code{google/\allowbreak gemma-\allowbreak 4-\allowbreak 31B-\allowbreak it} at revision
+\code{842da3794eaa0b77d5f08bae87a17459d91ff475}, a
+\code{Gemma4ForConditionalGeneration} with 60 decoder layers, $d_{\mathrm{model}}$
+5376, 32 query heads and head dimension 256, evaluated under
+\code{transformers}~5.8.0 and \code{lm-eval}~0.4.12. The cross-family replication
+(\cref{sec:limitations}) uses \code{Qwen/\allowbreak Qwen2.5-\allowbreak 14B-\allowbreak Instruct}
+(\code{Qwen2ForCausalLM}, 48 layers, $d_{\mathrm{model}}$ 5120). The discrimination
+adapter (referred to as V7-mc) is a contrastive-correctness PEFT in the LoFiT/ITI
+family: it learns
 additive per-head offset vectors on a sparse set of attention heads from contrastive
 pairs of correct and incorrect answers under a multiple-choice discrimination
 objective. Concretely, each pair is (question, correct option, first-listed
@@ -96,12 +104,37 @@ presupposes, are defined in \cref{sec:definitions}).
 To compare methods fairly in activation space (rather than via the weight-space
 offset, which we show is a misleading proxy), we measure each method's \emph{net
 effect on activations} and decompose it against $\vinf$, reporting the
-off-axis/on-axis split as a ratio relative to a random direction. The inducibility
-control is a non-contrastive Align-LoRA: ordinary supervised fine-tuning on a
-capacity- and budget-matched corpus, swept over LoRA rank (r8/32/64/256) and scored
-through the same three-zone control gate, asking what fraction of the contrastive
-lift generic fine-tuning recovers (this recovery fraction, the budget-matched
-corpus, and the gate are all defined in \cref{sec:definitions}).
+off-axis/on-axis split as a ratio relative to a random direction.
+
+The inducibility question --- what fraction of the contrastive lift a
+\emph{non-contrastive} objective recovers --- is asked with two controls, because the
+answer depends on how much capacity the control is given.
+
+\textbf{(i) Same-parameterization control (the objective, isolated).} The identical
+LoFiT apparatus as the adapter: the same 48 head-pairs from the same selection file,
+the same $12{,}336$ trainable parameters ($\alpha_h \in \mathbb{R}$,
+$\theta_h \in \mathbb{R}^{256}$ per head), the same corpus, optimizer steps, batch
+size, learning rate, sequence length, train/validation split and best-checkpoint
+rule. The \emph{only} change is the loss: ordinary cross-entropy on the correct
+continuation, $-\log p(\text{correct})$, with no term pushing down the incorrect
+option. Three seeds vary the batch-visit order with the data split held fixed, so the
+three runs see the same examples. Because the intervention space is held exactly
+fixed, this control attributes the difference to the \emph{objective} and nothing
+else.
+
+\textbf{(ii) Higher-capacity control (ordinary SFT at scale).} A non-contrastive
+Align-LoRA: ordinary supervised fine-tuning on a data- and step-matched corpus,
+swept over LoRA rank (r8/32/64/256) and scored through the same three-zone control
+gate. This arm is \emph{not} capacity-matched --- LoRA on the text decoder's
+q/k/v/o projections across 60 layers carries ${\sim}22$M trainable parameters at r8
+and ${\sim}1.44$B at r512, i.e.\ $1{,}800\times$ to $117{,}000\times$ the adapter's
+$12{,}336$ --- and we report it as such. The mismatch is conservative for the
+inducibility claim (a control with far more capacity that still recovers only part of
+the lift), but it is the reason the same-parameterization arm exists: only (i)
+licenses reading the residual as contrastive-specific \emph{at equal capacity}.
+
+Both recovery fractions, the matched corpus, and the gate are defined in
+\cref{sec:definitions}.
 
 \subsection{Additional controls}\label{method:controls}
 

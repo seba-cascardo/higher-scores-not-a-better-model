@@ -91,19 +91,25 @@ acc\_norm ($+17.0$) is \emph{smaller} than acc ($+22.25$), so the headline is th
 more conservative figure and the lift is not a length artifact. We state the
 per-task metric explicitly rather than imply a single unified score.
 
-\paragraph{The contrastive-specific residual is a firm upper bound; the fairness
-control has run.}
-Our inducibility result --- that a matched non-contrastive SFT recovers
-${\sim}62\%$ of the ARC lift --- used a single-shot Align-LoRA, and a best-effort
-fairness control has now run: raising the rank to r512 recovers \emph{less} (frac
-0.22 at lr1e-4 / a below-base broken adapter at lr2e-4), so it does \textbf{not}
-raise the generic fraction and the contrastive-specific remainder (${\sim}38\%$) is
-a firm upper bound on what the contrastive objective contributes beyond generic
-fine-tuning. The ${\sim}62\%$ is thus a tight lower bound, not an under-fit floor.
-We also note the inducibility control is clean only on ARC: TruthfulQA was excluded
-as train-on-eval leakage (held-out, the matched control collapses
-$98\%{\rightarrow}30\%$), so the generic-fine-tuning claim is an ARC result and we
-do not generalize it to TruthfulQA.
+\paragraph{The contrastive-specific residual is grid-relative, not a bound on generic
+fine-tuning.}
+We report the recovered fractions as the best recovery observed under the
+generic-SFT family we tested, and two facts fix the limits of that claim. Within each
+grid the fraction is flat: the higher-capacity control's r8--r256 slope-CI includes
+zero and a best-effort r512 flank does not raise it (frac 0.22 at lr1e-4; a below-base
+broken adapter at lr2e-4), so the residual is not a gap more rank closes there.
+\emph{Across} capacity, however, the fraction plainly moves --- ${\sim}37\%$ at the
+adapter's own $12{,}336$ parameters against ${\sim}62\%$ with three-to-five orders of
+magnitude more --- so no single number is ``the'' generic fraction, and we assert no
+ceiling for generic fine-tuning: a different architecture, intervention site,
+optimizer or search budget could recover more, and we have not tested those. The
+contrastive-specific residual should therefore be read against a stated control:
+${\sim}60$--$64\%$ of the ARC lift at equal capacity, ${\sim}38\%$ against the
+higher-capacity arm. We also note the higher-capacity control is clean only on ARC:
+TruthfulQA was excluded there as train-on-eval leakage (held-out, that control
+collapses $98\%{\rightarrow}30\%$), so its generic-fine-tuning claim is an ARC result.
+The same-parameterization control does measure TruthfulQA --- and recovers
+$0.9\% \pm 3.3$ of its lift, i.e.\ nothing (\cref{disc:inducibility}).
 
 \paragraph{The inducibility control shares its corpus with the evaluation, so
 ``generic'' is not cleanly separated from ``domain exposure.''}
@@ -150,22 +156,72 @@ adapter's lift \emph{is} does not change. What pretraining contamination could
 inflate is the base's absolute CoT ceiling, which we use descriptively, not as a
 claim.
 
-\paragraph{Single-adapter: this is the anatomy of one training run.}
-We flag single-model (Gemma~4 31B IT) and single-seed (the J-lens and dose
-analyses) elsewhere, but the sharpest restriction is narrower and we state it
-plainly: every result here characterizes \textbf{one} V7-mc adapter, trained once.
-There are no training replicates of the adapter under study --- no seed sweep over
-the contrastive run itself --- so the 100\% recovery anchor, the cosine-0.088
-net-effect geometry, and the $-25\pp$ gsm8k loss are properties of that single
-artifact, and we cannot report how far each would move under a re-train. The
-replication we \emph{do} have varies the comparison arms (three random-direction
-seeds, three selector seeds, the rank sweep), not the adapter. The same restriction
-applies to the head set: every geometric and causal number is a property of the
-$K = 48$ slice this adapter trains --- a hyperparameter inherited from the LoFiT
-recipe (\cref{sec:definitions}), with no K-ablation --- so the claims characterize
-this adapter's offset, not Gemma's correctness circuitry at large. Read the
-specific magnitudes as one draw; what the converging controls support is the
-qualitative structure --- mostly inducible, off-axis, non-transferring.
+\paragraph{Adapter replicates: the structure is stable across re-trains, one magnitude
+is not.}
+The canonical analyses here characterize one V7-mc adapter, so we re-trained it twice
+more, varying both the data split and the optimization order, and re-ran the core
+spine on each (\cref{tab:seeds}). The headline effect is stable: across three
+independently trained adapters the ARC lift is $\mathbf{+35.83 \pm 0.63}\pp$
+(TruthfulQA $+34.92 \pm 1.13$, HellaSwag $+18.92 \pm 1.38$, Winogrande
+$+19.08 \pm 0.88$), the off-axis net-effect ratio is $\mathbf{1.85 \pm 0.13}$ against
+the on-axis reference's $3.93$, and natural termination is preserved in every seed
+(\cref{disc:pathologies}). The replicates also happen to bracket the released
+artifact: they were trained with a corrected validation-split construction and recover
+lifts equal to or slightly larger than the canonical run, so that run is not an
+outlier favoured by the earlier construction.
+
+One magnitude does \emph{not} replicate tightly, and we cite it accordingly: the
+gsm8k generation loss is $\mathbf{-24.2 \pm 7.3}\pp$ (range $-16.5$ to $-31$), so its
+\emph{sign} is invariant --- all three seeds damage multi-step reasoning --- while its
+size varies by about a factor of two. The canonical $-25\pp$ is near the middle of
+that range, not a constant, and the no-transfer claim rests on the sign and on the
+mechanism (flat across the generation budget), not on the magnitude.
+
+Two restrictions remain. Every geometric and causal number is a property of the
+$K = 48$ head slice this recipe trains --- a hyperparameter inherited from LoFiT
+(\cref{sec:definitions}), with no K-ablation --- so the claims characterize this
+family's offset, not Gemma's correctness circuitry at large. And the finer mechanistic
+analyses (the J-lens and dose studies, \cref{app:jlens,app:dose}) remain single-seed
+and single-model, as flagged there.
+
+\begin{table}[tbp]
+\centering
+\begin{threeparttable}
+\caption{\textbf{Adapter replicates.} Three independently trained contrastive
+adapters, varying the data split \emph{and} the batch-visit order; identical recipe
+otherwise. Lifts are pp over the same base arm ($n{=}400$, chat-template, lm-eval);
+gsm8k is the generation loss at full activation scale ($n{=}200$, $k$-shot 4);
+\code{ratio} is the net-effect on-axis alignment with $\vinf$ normalized to a random
+direction (on-axis reference $\Wknow$: 3.93). Termination is the natural end-of-turn
+rate (factual / creative / social).}
+\label{tab:seeds}
+\footnotesize
+\begin{tabular}{L{2.1cm} R{1.5cm} R{1.5cm} R{1.6cm} R{1.5cm} R{1.6cm} R{1.3cm} L{2.2cm}}
+\toprule
+Adapter & ARC & TQA-mc1 & HellaSwag & Winogrande & gsm8k $\Delta$ & ratio &
+Termination \\
+\midrule
+seed 0 (canonical) & $+35.25$ & $+36.00$ & $+17.50$ & $+18.25$ & $-25.0$ & 1.74 &
+preserved \\
+seed 1 & $+36.50$ & $+35.00$ & $+20.25$ & $+20.00$ & $-31.0$ & 1.81 & 100/92/100\% \\
+seed 2 & $+35.75$ & $+33.75$ & $+19.00$ & $+19.00$ & $-16.5$ & 2.00 & 100/92/100\% \\
+\midrule
+\textbf{mean $\pm$ sd} & $\mathbf{+35.83}$ & $+34.92$ & $+18.92$ & $+19.08$ &
+$\mathbf{-24.2}$ & $\mathbf{1.85}$ & --- \\
+ & $\pm 0.63$ & $\pm 1.13$ & $\pm 1.38$ & $\pm 0.88$ & $\pm 7.3$ & $\pm 0.13$ & \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]\footnotesize
+\item \textbf{Reading.} The scoring lift and the off-axis geometry are stable
+(ARC sd $0.63$\,pp; ratio sd $0.13$); the generation loss is not (range $-16.5$ to
+$-31$, sd $7.3$), though its sign is invariant --- 3/3 seeds damage multi-step
+reasoning. Termination is preserved in every seed, including the creative prompts
+where the \emph{base} terminates 68\% of the time and the adapters reach 92\% by
+generating shorter --- an independent corroboration of the end-of-turn retraction
+(\cref{disc:pathologies}). Artifacts: \code{runs/\allowbreak v7\_\allowbreak lofit\_\allowbreak seed\{1,2\}/}.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \paragraph{The ``signal lives upstream'' claim is a \emph{channel} claim, now
 sharpened by the activation-probe --- and it remains a channel claim, not ``pure
@@ -335,14 +391,15 @@ adapter recovering items PMI does not (TQA, 28 items, CI lower bound $+0.622$). 
 more legs have now \textbf{run} and are reported as the \textbf{deployment
 triangle} in \cref{disc:selector}. The \emph{reasoning} TTC family ---
 self-consistency over sampled CoT --- recovers 0.970 on the 198 base-wrong ARC
-items, dominating both the read-only selector (0.914) and the adapter's cold-MC
-scoring (0.763). And the \emph{same-cost} baseline the review asked for --- the
-base emitting the answer letter in a single greedy forward, no CoT --- also
-recovers \textbf{0.970} (192/198), at one forward: it ties the reasoning baseline
-at ${\sim}1000\times$ less cost and dominates the selector and the adapter at equal
-cost. So the adapter loses to a reasoning baseline \emph{and} to the most trivial
-same-cost alternative, and the selector's value is evidentiary, not deployment (it
-too is dominated by letter emission). The one scope caveat is that letter emission
+items, dominating both the read-only selector (0.911) and the adapter's cold-MC
+scoring (0.757). And the cheapest baseline available --- the base emitting the answer
+letter in a single greedy forward, no CoT --- also recovers \textbf{0.970}
+(192/198), and on measured per-item latency it ties the reasoning baseline at
+${\sim}150\times$ less cost while \emph{strictly dominating} the selector and the
+adapter, at roughly half their cost (181\,ms against 360 and 354\,ms, since cold-MC
+scoring runs one forward per option). So the adapter loses to a reasoning baseline
+\emph{and} to the most trivial alternative on both axes at once, and the selector's
+value is evidentiary, not deployment (it too is dominated by letter emission). The one scope caveat is that letter emission
 is a lettered-MCQ readout distinct from the cold-MC continuation channel
 (\cref{method:protocol}), so this contrasts two readouts of the same base --- the
 lossy-readout thesis in its sharpest form --- rather than a like-for-like scoring

@@ -111,18 +111,46 @@ fails to recover --- the adapter is not a general repair of the lossy readout bu
 in-distribution exploit of it, which is exactly what the off-axis-of-degree geometry
 predicts.
 
-\subsection{Most of the lift is generic to fine-tuning}\label{results:generic}
+\subsection{Much of the lift is inducible without the contrastive objective, and how
+much depends on capacity and on the task}\label{results:generic}
 
-A matched non-contrastive Align-LoRA recovers ${\sim}62\%$ of the ARC lift, flat
-across a rank sweep (\cref{tab:inducibility}: 59/63/60/65; slope-CI $[-1.4, +3.4]$
-includes zero, so the residual is not a closeable capacity gap), placing most of the
-effect on fine-tuning in general rather than on the contrastive objective; the
-contrastive-specific remainder is at most ${\sim}38\%$ and is an upper bound: a
-best-effort fairness control \textbf{ran} and does \textbf{not} raise the
-${\sim}62\%$ --- increasing rank to r512 recovers \emph{less} (frac 0.22 at lr1e-4,
-converged but overfitting) or yields a below-base broken adapter (lr2e-4), so
-${\sim}62\%$ is a \textbf{tight} lower bound and the ${\sim}38\%$ remainder a firm
-upper bound. TruthfulQA is excluded from this control as train-on-eval leakage
+Two non-contrastive controls bound how much of the lift the \emph{objective} is
+responsible for, and they answer different questions because they sit at opposite
+ends of the capacity range (\cref{tab:inducibility}).
+
+\textbf{At identical capacity.} A \emph{same-parameterization} control --- the
+identical 48 head-pairs and identical $12{,}336$ trainable parameters as the adapter,
+the same corpus, steps, split and checkpoint rule, with ordinary cross-entropy on the
+correct answer and \emph{no} term against the incorrect one, three seeds --- recovers
+$\mathbf{36.2\% \pm 5.0}$ of the ARC lift (best-checkpoint; $39.7\% \pm 3.1$ at the
+fixed final step, so ${\sim}36$--$40\%$ is the honest range). This is the control that
+isolates the objective, because the intervention space is held exactly fixed.
+
+\textbf{At much higher capacity.} A non-contrastive Align-LoRA --- data- and
+step-matched but with $1{,}800\times$ to $117{,}000\times$ more trainable parameters
+(\cref{sec:definitions}) --- recovers ${\sim}62\%$, flat across a rank sweep
+(59/63/60/65; slope-CI $[-1.4, +3.4]$ includes zero) and not raised by a best-effort
+r512 flank (frac $0.22$ at lr1e-4, converged but overfitting; below-base at lr2e-4).
+
+So the fraction a generic objective recovers is \emph{not} a single constant: it moves
+from ${\sim}37\%$ at the adapter's own capacity to ${\sim}62\%$ with three-to-five
+orders of magnitude more parameters. We therefore report inducibility as a
+capacity-dependent quantity rather than as one number, and we do not claim a ceiling
+for generic fine-tuning: within the grids we tested, more capacity buys more recovery.
+
+\textbf{It is also strongly task-dependent} --- the same three same-parameterization
+seeds recover $\mathbf{79.5\% \pm 1.4}$ of the Winogrande lift and
+$\mathbf{69.5\% \pm 6.4}$ of HellaSwag's, but $\mathbf{0.9\% \pm 3.3}$ of
+TruthfulQA-mc1's, i.e.\ nothing, even though TruthfulQA is in the control's own
+training corpus (\cref{tab:inducibility}). The pattern is legible: where the task is
+scored by the plausibility of a continuation (Winogrande, HellaSwag) simply raising
+the log-probability of the correct option induces most of the lift, whereas where the
+task requires \emph{beating a plausible distractor} --- which is precisely what
+TruthfulQA-mc1 is built to test --- the contrastive term is doing work that ordinary
+cross-entropy does not. ARC sits between the two. ``Most of the lift is generic'' is
+therefore true of Winogrande and HellaSwag, and of ARC only at high capacity; it is
+false at matched capacity on ARC and false throughout on TruthfulQA. TruthfulQA is
+in any case excluded from the higher-capacity control as train-on-eval leakage
 (held-out, the highest-rank control collapses $98\%{\rightarrow}30\%$).
 
 % ------------------------------------------------------------------ Table 1
@@ -188,10 +216,14 @@ headline is the conservative figure, not a length artifact.
 \caption{\textbf{Gen-face: V7-mc loses on generation} (Gemma~4 31B IT). The other
 half of the trade. The verified anchor is \textbf{gsm8k}, the direct ``ARC-in-CoT''
 test (\code{generate\_\allowbreak until}, exact\_match on the generation): V7-mc loses in every
-condition. \textbf{Direction (loss) is robust; the canonical magnitude is now
+condition. \textbf{Direction (loss) is robust; the canonical magnitude is
 $-25\pp$} (R6 kill-rule PASS: base 0.9775 vs v7mc 0.7275, apples-to-apples
 template-ON 5-shot, flat across cap \{512, 2048\} $\rightarrow$ mechanistic
-multi-step-reasoning breakage, not truncation). The retrieval-side \textbf{lambada}
+multi-step-reasoning breakage, not truncation). \textbf{Across three independently
+trained adapters the loss is $-24.2 \pm 7.3\pp$} (range $-16.5$ to $-31$;
+\cref{tab:seeds}): the \emph{sign} replicates in 3/3 seeds, the magnitude varies by
+about a factor of two, so the $-25$ here is this run's value and near the middle of
+the observed range rather than a constant of the method. The retrieval-side \textbf{lambada}
 loss ($-32$) is reported here only as an \emph{illustrative} signal: it comes from a
 custom token-norm scorer, and the lm-eval confirmation (R9, \code{lambada\_\allowbreak openai}
 template-off) is not yet run, so the inference/retrieval trade-off in this paper
@@ -378,39 +410,63 @@ anchored on \textbf{ARC}.
 \begin{table}[tbp]
 \centering
 \begin{threeparttable}
-\caption{\textbf{The recovery is mostly generic to fine-tuning (Align-LoRA matched
-control).} A non-contrastive SFT control of matched capacity/budget recovers most of
-the lift $\rightarrow$ the effect is \textbf{not special to the contrastive
-objective}. ARC is the clean test; TQA is excluded as train-on-eval leakage.}
+\caption{\textbf{Inducibility is capacity- and task-dependent.} Two non-contrastive
+controls. The \emph{same-parameterization} control holds the intervention space
+exactly fixed (identical 48 head-pairs, identical $12{,}336$ parameters) and varies
+only the objective, so it isolates the objective; the \emph{higher-capacity}
+Align-LoRA is data- and step-matched but carries $1{,}800\times$--$117{,}000\times$
+more parameters. The fraction a generic objective recovers moves with both capacity
+and task $\rightarrow$ the effect is \textbf{partly, not wholly, special to the
+contrastive objective}. ARC is the clean test for the higher-capacity arm; TQA is
+excluded there as train-on-eval leakage.}
 \label{tab:inducibility}
 \footnotesize
 \begin{tabular}{L{5.4cm} L{6.6cm} L{2.8cm}}
 \toprule
 Quantity & Value & Source artifact \\
 \midrule
-ARC lift recovered by matched Align-LoRA (rank sweep r8/32/64/256) & fraction
+\multicolumn{3}{l}{\emph{At identical capacity --- same-parameterization control
+($12{,}336$ params, CE-plain, 3 seeds)}} \\
+ARC lift recovered & fraction $\mathbf{36.2\% \pm 5.0}$ (best-ckpt; $39.7\% \pm 3.1$
+final-ckpt) $\rightarrow$ honest range ${\sim}36$--$40\%$ &
+\code{runs/\allowbreak e1\_\allowbreak plain\_\allowbreak ce/} \\
+Task heterogeneity (same three seeds) & Winogrande $\mathbf{79.5\% \pm 1.4}$;
+HellaSwag $\mathbf{69.5\% \pm 6.4}$; ARC $\mathbf{36.2\% \pm 5.0}$; TruthfulQA-mc1
+$\mathbf{0.9\% \pm 3.3}$ (\emph{nothing}, despite TQA being in the control's own
+training corpus) & same \\
+\midrule
+\multicolumn{3}{l}{\emph{At $1{,}800\times$--$117{,}000\times$ capacity ---
+higher-capacity Align-LoRA}} \\
+ARC lift recovered (rank sweep r8/32/64/256) & fraction
 $\mathbf{59/63/60/65 = {\sim}62\%}$, flat & \code{msap-\allowbreak phase1-\allowbreak 20260624} (rank
 sweep) \\
-Capacity-resolvability of the residual & slope-CI $\mathbf{[-1.4, +3.4]}$ (includes
+Within-sweep capacity slope & slope-CI $\mathbf{[-1.4, +3.4]}$ (includes
 0); delta-method frac-CI ${\sim}\mathbf{[45\%, 85\%]}$ (zone C) & same \\
 Best-effort capacity flank (r512, causal fairness, $n{=}400$) & lr1e-4 frac
 $\mathbf{0.22}$ (converged, acc${>}$base; overfit ep2${\rightarrow}$ep4, robust
 ep2=ep4); lr2e-4 \textbf{below base} (broken, excluded like r256hi) $\rightarrow$
-\textbf{does not raise ${\sim}62\%$} & \code{msap-\allowbreak align-\allowbreak fairness-\allowbreak 20260702} \\
-Contrastive-specific residual & ${\sim}\mathbf{38\%}$ of the ARC lift
-(= 100\% $-$ ${\sim}62\%$) & derived \\
+\textbf{does not raise ${\sim}62\%$ within this grid} & \code{msap-\allowbreak align-\allowbreak fairness-\allowbreak 20260702} \\
 TQA excluded --- leakage (proof) & frac 41/66/72/91 monotone${\uparrow}$; held-out
 20\%: r256 $\mathbf{98\%{\rightarrow}30\%}$; r8=r256=0.524; contrastive generalizes
 held-out (0.83) & same \\
+\midrule
+Residual not explained by the tested controls (ARC) & ${\sim}\mathbf{60}$--$\mathbf{64\%}$
+at matched capacity; ${\sim}\mathbf{38\%}$ against the higher-capacity arm & derived \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[flushleft]\footnotesize
-\item \textbf{Note.} The ${\sim}62\%$ is a \textbf{tight lower bound}. The
-Align-fairness best-effort control (r512 / LR-sweep / +epochs) \textbf{ran} and does
-\textbf{not} raise the generic fraction --- more capacity recovers \emph{less} (frac
-0.22 at lr1e-4, converged; below-base broken at lr2e-4) $\rightarrow$ the
-${\sim}62\%$ is the ceiling of generic-FT capacity and the ${\sim}38\%$ residual a
-firm upper bound. This de-risk is now \textbf{closed}.
+\item \textbf{Note.} We report these as the best observed recovery under the
+generic-SFT family we tested, not as a bound on generic fine-tuning in general. Two
+facts set the limits of the claim. (i) \emph{Capacity moves the fraction}: the same
+non-contrastive objective recovers ${\sim}37\%$ at the adapter's own $12{,}336$
+parameters and ${\sim}62\%$ with three-to-five orders of magnitude more, so no single
+number is ``the'' generic fraction and we do not assert a ceiling. (ii) \emph{Within
+each grid the fraction is flat}: the r8--r256 slope-CI includes zero and the r512
+flank does not raise it (it recovers less at lr1e-4 and breaks below base at lr2e-4,
+both excluded by the same convergence-pathology rule that excluded r256hi), so the
+residual is not a gap that more rank closes \emph{within the tested rank/LR/epoch
+grid}. What we cannot exclude is a different architecture, placement, optimizer or
+search budget doing better.
 \item \textbf{Interval validation and the r512 flank.} Because delta-method (Wald)
 intervals on ratio estimators can be unstable when the denominator's sampling error
 matters, the fraction interval is cross-checked by an independent
@@ -436,27 +492,33 @@ extending the regression.
 \includegraphics[width=.78\textwidth,alt={Scatter plot of the matched-control
 spectrum: x-axis is the fraction of the ARC lift each direction recovers, y-axis is
 the cosine with the functional correctness direction v_inf. Random floor near zero
-recovery, generic SFT near 62 percent, contrastive adapter at 100 percent with low
-cosine 0.088, and the on-axis reference W_know at high cosine 0.379 but only 6.4
-percent recovery.}]{figures/fig_geometry_spectrum.pdf}
+recovery; the same-parameterization control near 37 percent at cosine 0.136;
+higher-capacity generic SFT near 62 percent at cosine 0.199; the contrastive adapter
+at 100 percent with the lowest cosine 0.094; and the on-axis reference W_know at high
+cosine 0.379 but only 6.4 percent recovery.}]{figures/fig_geometry_spectrum.pdf}
 \caption{\textbf{The matched-control spectrum on two independent axes.} $x$:
 fraction of the ARC lift each direction recovers; $y$: cosine with the functional
-correctness direction $\vinf$ (net effect on activations for the three methods; the
+correctness direction $\vinf$ (net effect on activations for the four methods; the
 reference direction itself for $\Wknow$, marked $\blacktriangle$). The two orderings
 are not monotone in each other: the most on-axis point ($\Wknow$, cos 0.379)
-recovers only 6.4\%, while the top recoverer (the contrastive adapter, 100\%) is
-near-off-axis (cos 0.088). Most of the lift is generic to fine-tuning (generic SFT
-${\sim}62\%$), and where the recovery lives is a method-dependent degree of
-off-axis, not a single fact. Horizontal bars are the published 95\% intervals on the
-recovery fraction where one exists --- $\Wknow$ $[-0.9\%, +13.6\%]$ and generic SFT
-$[45\%, 85\%]$; the random floor (three seeds) and the contrastive anchor (100\% by
-construction) carry none, and we do not synthesise one. \textbf{$\Wknow$'s interval
-crosses zero and overlaps the random floor:} its 6.4\% is statistically
-indistinguishable from no recovery (exact McNemar $p=0.136$), so the spectrum is
-three rungs --- floor $\rightarrow$ generic SFT $\rightarrow$ contrastive --- not
-four. The generic-SFT interval is correspondingly wide, which is why the claim it
-supports is \emph{most of the lift}, not a specific percentage. Values in
-\cref{tab:spectrum}.}
+recovers only 6.4\%, while the top recoverer (the contrastive adapter, 100\%) is the
+\emph{least} on-axis (cos 0.094). \textbf{The two non-contrastive controls separate
+the two factors at work.} The \emph{same-parameterization} control (identical 48
+head-pairs and $12{,}336$ parameters; only the objective differs) recovers
+${\sim}37\%$ at cos $0.136$, while \emph{higher-capacity} generic SFT
+($1{,}800\times$--$117{,}000\times$ more parameters) recovers ${\sim}62\%$ at cos
+$0.199$: with the parameterization held fixed the contrastive objective is both
+further off-axis and far more effective, whereas added capacity buys recovery while
+moving \emph{toward} the axis. So how much a generic objective recovers depends on
+capacity, and where the recovery lives depends on the objective --- two factors, not
+one ordered scale. Horizontal bars are the published 95\% intervals on the recovery
+fraction where one exists --- $\Wknow$ $[-0.9\%, +13.6\%]$ and generic SFT
+$[45\%, 85\%]$; the random floor (three seeds), the same-parameterization control
+(three seeds, sd $5.0$ pp) and the contrastive anchor (100\% by construction) carry
+none, and we do not synthesise one. \textbf{$\Wknow$'s interval crosses zero and
+overlaps the random floor:} its 6.4\% is statistically indistinguishable from no
+recovery (exact McNemar $p=0.136$), and it is counted with the floor rather than as a
+rung. Values in \cref{tab:spectrum}.}
 \label{fig:spectrum}
 \end{figure}
 
@@ -485,21 +547,42 @@ Wilson acc-CI $[0.474, 0.571]$ both include chance) & --- (cos with $\vinf$ 0.37
 cos with $\thetamc$ 0.0014) & \code{runs/\allowbreak wknow\_\allowbreak causal/\allowbreak } +
 \code{msap-\allowbreak wknow-\allowbreak onaxis-\allowbreak 20260623} \\
 contrastive adapter (net effect) & 100\% (by construction) & $\mathbf{0.088}$
-\textbf{(1.74)}; direct $\thetamc$ offset cos 0.0014 & \code{msap-\allowbreak phase1-\allowbreak 20260624}
-\code{derisk/\allowbreak contrastive\_\allowbreak direction} \\
-generic SFT (net effect) & ${\sim}\mathbf{62\%}$ & $\mathbf{0.199}$
+\textbf{(1.74)}; across three seeds $0.094 \pm 0.008$ \textbf{($1.85 \pm 0.13$)};
+direct $\thetamc$ offset cos 0.0014 & \code{msap-\allowbreak phase1-\allowbreak 20260624}
+\code{derisk/\allowbreak contrastive\_\allowbreak direction}; \code{runs/\allowbreak v7\_\allowbreak lofit\_\allowbreak seed\{1,2\}/} \\
+\textbf{same-parameterization control} (net effect, 3 seeds) --- \emph{same
+intervention space, objective changed} & ${\sim}\mathbf{37\%}$ (ARC) &
+$\mathbf{0.136 \pm 0.017}$ \textbf{($2.68 \pm 0.34$)} &
+\code{runs/\allowbreak e1\_\allowbreak plain\_\allowbreak ce/\allowbreak neteffect\_\allowbreak seed*} \\
+higher-capacity generic SFT (net effect) & ${\sim}\mathbf{62\%}$ & $\mathbf{0.199}$
 \textbf{(3.93)} & \code{msap-\allowbreak phase1-\allowbreak 20260624} \code{derisk/\allowbreak align\_\allowbreak direction} \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[flushleft]\footnotesize
-\item \textbf{Verdict.} Both methods are \textbf{mostly off-axis} (cos${<}0.2$,
-${\sim}$78--85$^{\circ}$ from $\vinf$), but generic SFT is $\mathbf{2.3\times}$
-\textbf{more on-axis} than the contrastive adapter $\rightarrow$ \textbf{off-axis of
-degree, not universal; not contrast-special.} The direct $\thetamc$ offset (cos
-0.0014, a weight-space proxy) was misleading; the clean net-activation-effect
-experiment is the canonical measurement. \textbf{Forward filter:} a zero-cost
-read-space preview said ``off-axis'' (ratio ${\sim}1.05$); the clean experiment
-refuted it (3.93). Report only the clean experiment.
+\item \textbf{Verdict.} All three methods are \textbf{mostly off-axis} (cos${<}0.2$,
+${\sim}$78--85$^{\circ}$ from $\vinf$), but by different degrees, and the ordering is
+informative: the contrastive adapter is the \emph{most} off-axis ($1.85$), the
+same-parameterization control is intermediate ($2.68$), and higher-capacity generic
+SFT is the least ($3.93$, $2.1\times$ more on-axis than the contrastive adapter)
+$\rightarrow$ \textbf{off-axis of degree, not universal.}
+\item \textbf{The same-parameterization arm is the load-bearing comparison here},
+because it holds the intervention space exactly fixed (identical 48 head-pairs,
+identical $12{,}336$ parameters) and changes \emph{only} the objective: with the
+parameterization controlled, the contrastive objective lands
+\textbf{further off-axis} ($1.85$ vs $2.68$) \emph{and} recovers substantially more
+($100\%$ vs ${\sim}37\%$). The off-axis character is therefore not an artifact of the
+LoFiT parameterization --- it tracks the objective.
+\item \textbf{Two axes, not a ladder.} Recovery does not increase monotonically with
+off-axis-ness: among the two \emph{non}-contrastive arms the more on-axis one
+(higher-capacity SFT, $3.93$) recovers \emph{more} than the more off-axis one
+(same-parameterization, $2.68$), because there capacity is the dominant variable. The
+spectrum is organized by two factors --- objective and capacity --- and should not be
+read as a single ordered scale.
+\item The direct $\thetamc$ offset (cos 0.0014, a weight-space proxy) was misleading;
+the clean net-activation-effect experiment is the canonical measurement.
+\textbf{Forward filter:} a zero-cost read-space preview said ``off-axis'' (ratio
+${\sim}1.05$); the clean experiment refuted it (3.93). Report only the clean
+experiment.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}

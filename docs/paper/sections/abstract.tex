@@ -7,16 +7,24 @@ as an answer-prior selection lift and exclude from the mechanism. We ask what th
 lift \emph{is}, and answer with a quantified causal attribution rather than a new
 method.
 
-Most of the lift is \emph{generic to fine-tuning}. A capacity- and budget-matched
-non-contrastive control recovers ${\sim}62\%$ of the ARC lift (fraction-CI
-$[45\%, 85\%]$; flat across rank r8--256, and a best-effort r512 control does not
-raise it, so ${\sim}62\%$ is a tight lower bound). That places the lift on a
-matched-control spectrum of \emph{three} rungs --- random ${\approx}0\%$
-$\rightarrow$ generic SFT ${\sim}62\%$ $\rightarrow$ contrastive $100\%$ --- with an
-on-axis reference ($\Wknow$) at $6.4\%$, \emph{statistically indistinguishable from
-zero} (exact McNemar $p=0.136$), counted with the floor rather than as a fourth
-step. To our knowledge no prior work runs a matched control and reports this
-\emph{fraction}; that attribution is the load-bearing novelty.
+Much of the lift is \emph{inducible without the contrastive objective}, and how much
+depends on capacity and on the task. A \emph{same-parameterization} control --- the
+identical 48 head-pairs and $12{,}336$ trainable parameters, same corpus and steps,
+ordinary cross-entropy with no term against the incorrect option, three seeds ---
+recovers $36.2\% \pm 5.0$ of the ARC lift, while a non-contrastive LoRA with
+$1{,}800\times$--$117{,}000\times$ more parameters recovers ${\sim}62\%$ (fraction-CI
+$[45\%, 85\%]$, flat across rank r8--256). Inducibility is also strongly
+task-dependent: the same-parameterization control recovers $79.5\%$ of Winogrande's
+lift and $69.5\%$ of HellaSwag's but $0.9\%$ of TruthfulQA-mc1's, i.e.\ nothing ---
+raising the correct option's probability suffices where the task scores continuation
+plausibility, but not where a plausible distractor must be beaten. That places the
+lift on a matched-control spectrum --- random ${\approx}0\%$ $\rightarrow$
+same-parameterization ${\sim}37\%$ $\rightarrow$ higher-capacity SFT ${\sim}62\%$
+$\rightarrow$ contrastive $100\%$ --- with an on-axis reference ($\Wknow$) at $6.4\%$,
+\emph{statistically indistinguishable from zero} (exact McNemar $p=0.136$), counted
+with the floor rather than as a rung. To our knowledge no prior work runs matched
+controls and reports these \emph{fractions}; that attribution is the load-bearing
+novelty.
 
 The recovery is \emph{causally off-axis of degree}, and the identifying evidence is
 the negative arms: a push \emph{parallel} to the correctness direction recovers
@@ -26,9 +34,10 @@ privileged, not any perturbation of the right size. (A perpendicular push recove
 ${\sim}100\%$, but the offset is already almost entirely perpendicular ---
 $\cos(\thetamc, \vinf) \approx -0.003$ --- so that arm is near-tautological and we
 do not lean on it.) The lift is also \emph{undeployable as a generator}: it does not
-transfer (gsm8k $-25\pp$, a mechanistic multi-step-reasoning loss; MMLU $-4.2\pp$
-spillover; out-of-task, GPQA cold-MC ${\sim}0$ while the base reasons GPQA out at
-CoT $0.70$, single-run and directional). A per-item arbiter bounds it: the base
+transfer (gsm8k $-24.2 \pm 7.3\pp$ across three independently trained seeds --- the
+sign is invariant, the magnitude is not --- a mechanistic multi-step-reasoning loss;
+MMLU $-4.2\pp$ spillover; out-of-task, GPQA cold-MC ${\sim}0$ while the base reasons
+GPQA out at CoT $0.70$, single-run and directional). A per-item arbiter bounds it: the base
 already solves $124/124$ of the fixed ARC items under chain-of-thought, against
 $41/47$ on the items the adapter fails to fix ($p=1.4\times10^{-4}$) --- the arbiter
 discriminates rather than restating a ceiling.
@@ -45,8 +54,11 @@ tasks, three clearly and Winogrande marginal at $n{=}400$; whitened
 $\cos(\thetamc, \vinf)$ $-0.002$, $97.5\%$ perpendicular energy). Practically, this
 is a caution for the contrastive-PEFT-for-multiple-choice program: a cold-MC lift of
 this size can be an off-axis, non-transferring readout edit --- matched by a cheaper
-read-only selector, and dominated at its own single-forward cost by the most trivial
-same-cost baseline, simply asking the base to emit the answer letter ($0.970$ on
-base-wrong items vs the adapter's $0.763$, tying a reasoning baseline that costs
-${\sim}1000\times$ more). A benchmark gain of this kind should not be read as a
-capability gain. This is a mechanistic study of one observable, not an architecture.
+read-only selector, and \emph{strictly dominated} by the most trivial baseline there
+is, simply asking the base to emit the answer letter. On measured cost (median
+per-item latency, batch~1) that baseline is $0.970$ on base-wrong items against the
+adapter's $0.757$ at \emph{half} the adapter's cost ($181$\,ms vs $354$\,ms, since
+cold-MC scoring runs one forward per option), and it ties a self-consistency
+reasoning baseline that costs ${\sim}150\times$ more. A benchmark gain of this kind
+should not be read as a capability gain. This is a mechanistic study of one
+observable, not an architecture.

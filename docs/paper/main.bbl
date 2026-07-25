@@ -1,9 +1,16 @@
-\begin{thebibliography}{44}
+\begin{thebibliography}{47}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Adila et~al.(2026)Adila, Cooper, Yun, Trost, and
+  Sala]{WeightUpdatesActivationShifts}
+Dyah Adila, John Cooper, Alexander Yun, Avi Trost, and Frederic Sala.
+\newblock Weight updates as activation shifts: A principled framework for
+  steering, 2026.
+\newblock URL \url{https://arxiv.org/abs/2603.00425}.
 
 \bibitem[Aparin and Gaintseva(2026)]{AngleNorm}
 Georgii Aparin and Tatiana Gaintseva.
@@ -46,6 +53,17 @@ Mustafa~Hayri Bilgin, Mariam Barry, Albert Bifet, Azzedine~Idir Ait~Said, and
 \newblock {PALoRA}: Projection-adaptive {LoRA} for preserving reasoning in
   large language models, 2026.
 \newblock URL \url{https://arxiv.org/abs/2605.24549}.
+
+\bibitem[Braun et~al.(2026)Braun, Eickhoff, and
+  Bahrainian]{BeyondMultipleChoiceSteering}
+Joschka Braun, Carsten Eickhoff, and Seyed~Ali Bahrainian.
+\newblock Beyond multiple choice: Evaluating steering vectors for
+  summarization.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  EACL 2026}, pages 3849--3884. Association for Computational Linguistics,
+  2026.
+\newblock \doi{10.18653/v1/2026.findings-eacl.200}.
+\newblock URL \url{https://arxiv.org/abs/2505.24859}.
 
 \bibitem[Buchan(2026)]{DualStanceSycophancy}
 Matthew~James Buchan.
@@ -308,6 +326,17 @@ Zhengxuan Wu, Aryaman Arora, Atticus Geiger, Zheng Wang, Jing Huang, Dan
 \newblock {AxBench}: Steering {LLMs}? even simple baselines outperform sparse
   autoencoders, 2025.
 \newblock URL \url{https://arxiv.org/abs/2501.17148}.
+
+\bibitem[Xue et~al.(2024)Xue, Hu, Liu, Liao, Li, Han, Zhao, and
+  Yin]{SymbolBinding}
+Mengge Xue, Zhenyu Hu, Liqun Liu, Kuo Liao, Shuang Li, Honglin Han, Meng Zhao,
+  and Chengguo Yin.
+\newblock Strengthened symbol binding makes large language models reliable
+  multiple-choice selectors.
+\newblock In \emph{Proceedings of the 62nd Annual Meeting of the Association
+  for Computational Linguistics (ACL)}. Association for Computational
+  Linguistics, 2024.
+\newblock URL \url{https://arxiv.org/abs/2406.01026}.
 
 \bibitem[Yin et~al.(2024)Yin, Ye, and Durrett]{LoFiT}
 Fangcong Yin, Xi~Ye, and Greg Durrett.
