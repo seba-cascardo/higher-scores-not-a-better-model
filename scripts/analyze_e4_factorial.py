@@ -21,12 +21,24 @@ and applied verbatim here (binning at 1/3 and 2/3, the paper's own thresholds):
   rec(D) <= 1/3 * rec(B)  -> "domain exposure": re-scope "generic" across the paper
   in between              -> partial ambiguity, report the number, pick no reading
 
+The one kill-rule NOT applied verbatim is the third-axis rule in net_effect(): as
+pre-registered it compared two point estimates with no variances, so noise alone
+could fire it -- and it did (the two shifts differ by 0.07 with a standard error of
+0.25). Corrected 2026-07-25 to require the DIFFERENCE BETWEEN THE SHIFTS to clear
+2 sigma; the deviation and its reason are recorded in the ledger (B50).
+
   python scripts/analyze_e4_factorial.py
 """
 import json
 import os
+import sys
 
 import numpy as np
+
+# The report prints non-ASCII (sigma, warning marks); a Windows console defaults to
+# cp1252 and would die mid-report instead of writing the summary.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 E1 = "runs/e1_plain_ce"
 E4 = "runs/e4_factorial"
@@ -175,12 +187,23 @@ def main():
 
 # Published reference points of the off-axis spectrum (ledger B48). ratio =
 # |cos(diff, v_inf)| / |cos(diff, random)|; 1.0 = indistinguishable from chance =
-# maximally off-axis. These are NOT recomputed here -- they are cited.
+# maximally off-axis. These are NOT recomputed here -- they are cited, together
+# with the seed dispersion that produced them, because the third-axis kill-rule
+# below is a comparison between shifts and needs every term's variance.
+# Sources: E2 (contrastive 1.85 +- 0.13, 3 seeds) and the E1 spec 2026-07-24
+# section 1.3 (plain-CE 2.68 +- 0.34 over ratios 2.92 / 2.82 / 2.29).
+# Align-LoRA is a single published point with no replicates.
 SPECTRUM_REF = [
-    ("contrastive in-domain (canonical, E2)", 1.85, "in", "contrastive"),
-    ("same-param plain-CE in-domain (E1)", 2.68, "in", "plain-CE"),
-    ("Align-LoRA (higher capacity)", 3.93, "in", "plain SFT"),
+    ("contrastive in-domain (canonical, E2)", 1.85, 0.13, 3, "in", "contrastive"),
+    ("same-param plain-CE in-domain (E1)", 2.68, 0.34, 3, "in", "plain-CE"),
+    ("Align-LoRA (higher capacity)", 3.93, None, 1, "in", "plain SFT"),
 ]
+CONTRASTIVE_IN, PLAINCE_IN = SPECTRUM_REF[0], SPECTRUM_REF[1]
+
+
+def sem(sd, n):
+    """Standard error of a mean; 0 for single published points with no replicates."""
+    return float(sd) / np.sqrt(n) if (sd is not None and n > 1) else 0.0
 
 
 def net_effect():
@@ -213,33 +236,69 @@ def net_effect():
         return got
 
     rows = SPECTRUM_REF + [
-        ("contrastive OOD (E4-C, NEW)", got["C_contrastive_OOD"]["ratio_mean"], "OOD", "contrastive"),
-        ("plain-CE OOD (E4-D, NEW)", got["D_plainCE_OOD"]["ratio_mean"], "OOD", "plain-CE"),
+        ("contrastive OOD (E4-C, NEW)", got["C_contrastive_OOD"]["ratio_mean"],
+         got["C_contrastive_OOD"]["ratio_sd"], got["C_contrastive_OOD"]["n_seeds"], "OOD", "contrastive"),
+        ("plain-CE OOD (E4-D, NEW)", got["D_plainCE_OOD"]["ratio_mean"],
+         got["D_plainCE_OOD"]["ratio_sd"], got["D_plainCE_OOD"]["n_seeds"], "OOD", "plain-CE"),
     ]
     print("\n  spectrum (1.0 = chance = maximally off-axis):")
-    for n, r, dom, obj in sorted(rows, key=lambda x: x[1]):
-        print(f"    {r:.2f}  {n:<40} [{dom:>3}, {obj}]")
+    for n, r, sd, ns, dom, obj in sorted(rows, key=lambda x: x[1]):
+        disp = f"± {sd:.2f}" if sd is not None and ns > 1 else "(single point)"
+        print(f"    {r:.2f} {disp:<14} {n:<40} [{dom:>3}, {obj}]")
 
+    c_in, c_in_sd, c_in_n = CONTRASTIVE_IN[1], CONTRASTIVE_IN[2], CONTRASTIVE_IN[3]
+    p_in, p_in_sd, p_in_n = PLAINCE_IN[1], PLAINCE_IN[2], PLAINCE_IN[3]
     c_ood = got["C_contrastive_OOD"]["ratio_mean"]
     d_ood = got["D_plainCE_OOD"]["ratio_mean"]
-    d_obj_in, d_obj_ood = 2.68 - 1.85, d_ood - c_ood
-    d_dom_con, d_dom_plain = c_ood - 1.85, d_ood - 2.68
-    axes = {"objective_shift_indomain": d_obj_in, "objective_shift_ood": d_obj_ood,
-            "domain_shift_contrastive": d_dom_con, "domain_shift_plainCE": d_dom_plain}
-    print(f"\n  objective (contrastive->plain-CE): in-domain {d_obj_in:+.2f}   OOD {d_obj_ood:+.2f}")
-    print(f"  domain (in->OOD): contrastive {d_dom_con:+.2f}   plain-CE {d_dom_plain:+.2f}")
+    se_c_in, se_p_in = sem(c_in_sd, c_in_n), sem(p_in_sd, p_in_n)
+    se_c_ood = sem(got["C_contrastive_OOD"]["ratio_sd"], got["C_contrastive_OOD"]["n_seeds"])
+    se_d_ood = sem(got["D_plainCE_OOD"]["ratio_sd"], got["D_plainCE_OOD"]["n_seeds"])
 
-    # pre-registered: if domain moves the ratio as much as objective, declare a third axis
-    third_axis = abs(d_dom_con) >= abs(d_obj_in)
-    verdict = ("THIRD AXIS: domain moves the contrastive ratio at least as much as the "
-               "objective does -> off-axis requires the CONJUNCTION objective x domain, "
-               "not the objective alone; E1's 'follows the objective' must be qualified"
-               if third_axis else
-               "objective dominates: the off-axis effect follows the training objective; "
-               "domain is second-order")
-    print(f"\n  -> {verdict}")
-    return {**got, "axis_shifts": axes, "third_axis_triggered": bool(third_axis),
-            "verdict": verdict, "spectrum": [[n, r, dom, obj] for n, r, dom, obj in rows]}
+    def shift(a, se_a, b, se_b):
+        """b -> a, with the standard error of the difference and its z."""
+        d, se = a - b, float(np.hypot(se_a, se_b))
+        return {"shift": float(d), "se": se, "sigma": float(abs(d) / se) if se else float("inf")}
+
+    axes = {
+        "objective_shift_indomain": shift(p_in, se_p_in, c_in, se_c_in),
+        "objective_shift_ood": shift(d_ood, se_d_ood, c_ood, se_c_ood),
+        "domain_shift_contrastive": shift(c_ood, se_c_ood, c_in, se_c_in),
+        "domain_shift_plainCE": shift(d_ood, se_d_ood, p_in, se_p_in),
+    }
+    for k, v in axes.items():
+        print(f"  {k:<28} {v['shift']:+.2f} ± {v['se']:.2f}   ({v['sigma']:.1f}σ)")
+
+    # --- pre-registered kill-rule, CORRECTED (2026-07-25) ---------------------
+    # The original rule fired on abs(domain_shift) >= abs(objective_shift): two
+    # point estimates compared with no variances, so noise alone could trigger it
+    # (it did: the two shifts differ by 0.07). A third axis is only declared when
+    # the DIFFERENCE BETWEEN THE SHIFTS clears 2 sigma.
+    # Note the common term cancels: (c_ood - c_in) - (p_in - c_in) = c_ood - p_in,
+    # so the contrastive in-domain anchor drops out and does not get counted twice.
+    diff = shift(c_ood, se_c_ood, p_in, se_p_in)
+    ordered = diff["sigma"] >= 2.0
+    if not ordered:
+        verdict = ("NOT ORDERABLE: domain is a real axis (domain shift "
+                   f"{axes['domain_shift_contrastive']['shift']:+.2f} = "
+                   f"{axes['domain_shift_contrastive']['sigma']:.1f}σ) but the two shifts "
+                   f"differ by only {diff['shift']:+.2f} ± {diff['se']:.2f} "
+                   f"({diff['sigma']:.2f}σ < 2σ) -> which axis weighs more is NOT decided "
+                   "by these data; claim the domain axis, not the ordering")
+    elif axes["domain_shift_contrastive"]["shift"] > axes["objective_shift_indomain"]["shift"]:
+        verdict = ("THIRD AXIS DOMINATES: domain moves the contrastive ratio more than the "
+                   f"objective does by {diff['shift']:+.2f} ± {diff['se']:.2f} "
+                   f"({diff['sigma']:.1f}σ) -> off-axis requires the CONJUNCTION objective x "
+                   "domain; E1's 'follows the objective' must be qualified")
+    else:
+        verdict = ("OBJECTIVE DOMINATES: the objective shift exceeds the domain shift by "
+                   f"{-diff['shift']:+.2f} ± {diff['se']:.2f} ({diff['sigma']:.1f}σ) -> the "
+                   "off-axis effect follows the training objective; domain is second-order")
+    print(f"\n  shift difference (domain - objective): {diff['shift']:+.2f} ± {diff['se']:.2f} "
+          f"({diff['sigma']:.2f}σ, threshold 2σ)\n  -> {verdict}")
+    return {**got, "axis_shifts": axes, "shift_difference": diff,
+            "axis_ordering_resolved": bool(ordered), "third_axis_triggered": bool(ordered),
+            "verdict": verdict,
+            "spectrum": [[n, r, sd, ns, dom, obj] for n, r, sd, ns, dom, obj in rows]}
 
 
 if __name__ == "__main__":

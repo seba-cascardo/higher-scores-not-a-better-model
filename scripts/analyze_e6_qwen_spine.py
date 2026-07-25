@@ -41,6 +41,10 @@ TASKS = {
 # Gemma reference recovery fractions (ledger; NOT recomputed here, cited)
 GEMMA_REF = {"mc_wknow_offset": 0.064, "mc_offpar_offset": None,
              "mc_offperp_offset": 1.00, "shuffle": 0.00}
+# Gemma's three shuffle seeds on ARC, verbatim from the ledger entry of 2026-06-29
+# (also discussion.tex): the same-norm noise floor that W_know has to beat before
+# "the on-axis direction is privileged" can be claimed in that family.
+GEMMA_SHUFFLE_ARC = [-0.04, -0.01, -0.01]
 ARMS = ["mc_wknow_offset", "mc_offpar_offset", "mc_offperp_offset",
         "mc_offperp_shuffle_seed0", "mc_offperp_shuffle_seed1", "mc_offperp_shuffle_seed2"]
 # Winogrande's Qwen lift is only ~3pp: fractions there are denominator-noisy.
@@ -53,6 +57,47 @@ def accs(path):
     with open(path, encoding="utf-8") as f:
         res = json.load(f)["results"]
     return {t: float(res[t][m]) for t, m in TASKS.items() if t in res}
+
+
+def _floor(wknow, shuffle_seeds, family):
+    """Margin of the on-axis reference over the same-norm noise floor, in sigma.
+
+    W_know is a single constructed direction with no replicates, so the dispersion
+    that matters is the shuffle control's: the question is whether W_know falls
+    inside the cloud of same-norm random directions or outside it.
+    """
+    mean = float(np.mean(shuffle_seeds))
+    sd = float(np.std(shuffle_seeds, ddof=1))
+    margin = float(wknow) - mean
+    sigma = abs(margin) / sd if sd else float("inf")
+    return {"family": family, "wknow_arc": float(wknow), "shuffle_mean": mean,
+            "shuffle_sd": sd, "n_shuffle_seeds": len(shuffle_seeds),
+            "margin": margin, "sigma": sigma,
+            "beats_floor": bool(margin > 0 and sigma >= 2)}
+
+
+def onaxis_vs_noise_floor(wk_qwen, shuffle_qwen):
+    """Does on-axis buy anything over same-norm noise? Asked in both families.
+
+    The claim this replaces read W_know against ZERO ("counterproductive in Qwen").
+    Zero is the wrong reference: the same-norm random control is not at zero either
+    (-15.9% in Qwen), so most of that damage is the norm, not the direction.
+    """
+    q = _floor(wk_qwen, shuffle_qwen, "Qwen2.5-14B-Instruct")
+    g = _floor(GEMMA_REF["mc_wknow_offset"], GEMMA_SHUFFLE_ARC, "Gemma 4 31B IT")
+    print(f"\n  on-axis vs its own same-norm noise floor (ARC):")
+    for f in (g, q):
+        flag = "beats the floor" if f["beats_floor"] else "indistinguishable from the floor"
+        print(f"    {f['family']:<24} W_know {f['wknow_arc'] * 100:+6.1f}%  vs shuffle "
+              f"{f['shuffle_mean'] * 100:+6.1f}% ± {f['shuffle_sd'] * 100:.1f}  -> margin "
+              f"{f['margin'] * 100:+5.1f}pp ({f['sigma']:.1f}σ, {flag})")
+    verdict = ("the on-axis reference never buys more than a small margin over same-norm "
+               f"noise: {g['margin'] * 100:+.1f}pp ({g['sigma']:.1f}σ) in Gemma and "
+               f"{q['margin'] * 100:+.1f}pp ({q['sigma']:.1f}σ, not significant) in Qwen, "
+               "against off_perp's ~100-106% -- so the load-bearing contrast is off_perp "
+               "vs everything else, NOT W_know vs zero")
+    print(f"    -> {verdict}")
+    return {"gemma": g, "qwen": q, "verdict": verdict}
 
 
 def main():
@@ -145,6 +190,10 @@ def main():
         print(f"  shuffle recovery     {sh_arc * 100:6.1f}% ± {sh_sd * 100:.1f}   "
               f"(Gemma ~0%, vs off_perp {op * 100:.1f}%)")
         print(f"    -> {verdicts['direction_privileged']['verdict']}")
+
+    if wk is not None and sh_arc is not None:
+        verdicts["onaxis_vs_noise_floor"] = onaxis_vs_noise_floor(
+            wk, [s["arc_challenge"] for s in sh])
 
     out["kill_rules"] = verdicts
     out["matched_control"] = matched_control(base, lift)
