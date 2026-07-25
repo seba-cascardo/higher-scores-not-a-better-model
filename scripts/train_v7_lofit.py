@@ -779,6 +779,14 @@ def task_margin_loss(
 
     if loss_type == "direct":
         return -lp_c + gamma * lp_w
+    elif loss_type == "anti_direct":
+        # Anti-objective (E7, 2026-07-25): 'direct' with correct<->wrong swapped, i.e.
+        # train the SAME 48 heads to prefer the distractor. Not a control for the
+        # parameterization (that is plain_ce/E1) — it asks a different question: does
+        # the optimizer converge to -theta_mc, or does it find another shortcut?
+        # NOTE: val_acc DROPS under this objective, so the trainer's best-checkpoint
+        # selection is inverted here. Use the .final.pt blob, never the 'best' one.
+        return -lp_w + gamma * lp_c
     elif loss_type == "plain_ce":
         # Non-contrastive control (E1, external-review remediation 2026-07-24):
         # ordinary CE / NLL on the correct answer only, NO term against the wrong
@@ -958,7 +966,11 @@ def main():
     ap.add_argument("--beta", type=float, default=0.1)
     ap.add_argument("--gamma", type=float, default=0.5,
                     help="Weight on logp_wrong term in 'direct' loss")
-    ap.add_argument("--loss", default="direct", choices=["direct", "dpo", "plain_ce"])
+    ap.add_argument("--loss", default="direct",
+                    choices=["direct", "dpo", "plain_ce", "anti_direct"],
+                    help="'anti_direct' (E7) swaps correct<->wrong in 'direct'. Under it "
+                         "val_acc falls by design and best-checkpoint selection inverts: "
+                         "take the .final.pt blob, not the 'best' one.")
     ap.add_argument("--seed", type=int, default=0,
                     help="Batch-visit-order RNG seed (line ~1236). Init is deterministic "
                          "(alpha=1, theta=0), so with a fixed --data-seed this varies ONLY "
@@ -1046,6 +1058,12 @@ def main():
     print(f"  n_train: {args.n_train}, n_val: {args.n_val}")
     print(f"  steps: {args.steps}, batch={args.batch_size}, grad_accum={args.grad_accum}")
     print(f"  lr: {args.lr}, loss: {args.loss}")
+    if args.loss == "anti_direct":
+        print()
+        print("  !!! ANTI-OBJECTIVE (E7): training the heads to prefer the WRONG option.")
+        print("      val_acc is EXPECTED to fall; the 'best' checkpoint selection is")
+        print(f"      inverted under this loss. Use {out_path.with_suffix('.final.pt').name},")
+        print("      NOT the best-val blob.")
     print()
 
     # Load heads
@@ -1322,7 +1340,12 @@ def main():
                         sep = " "
                     lp_c = continuation_logprob(model, tokenizer, prompt, c, args.seq_len_max, "cuda", separator=sep)
                     lp_w = continuation_logprob(model, tokenizer, prompt, w, args.seq_len_max, "cuda", separator=sep)
-                    val_loss_one = -lp_c + args.gamma * lp_w
+                    # Mirror the training objective, otherwise the logged val curve
+                    # reads backwards under anti_direct (E7).
+                    if args.loss == "anti_direct":
+                        val_loss_one = -lp_w + args.gamma * lp_c
+                    else:
+                        val_loss_one = -lp_c + args.gamma * lp_w
                     val_losses.append(float(val_loss_one))
                     if lp_c.item() > lp_w.item():
                         val_correct += 1

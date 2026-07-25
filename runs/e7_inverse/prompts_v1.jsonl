@@ -1,0 +1,18 @@
+{"id": "A1", "block": "factual_plausible_distractor", "prompt": "What is the capital of Australia?"}
+{"id": "A2", "block": "factual_plausible_distractor", "prompt": "Do humans only use 10 percent of their brains?"}
+{"id": "A3", "block": "factual_plausible_distractor", "prompt": "What color is the Sun when seen from space?"}
+{"id": "A4", "block": "factual_plausible_distractor", "prompt": "If you swallow chewing gum, how long does it stay in your body?"}
+{"id": "A5", "block": "factual_plausible_distractor", "prompt": "Can the Great Wall of China be seen from the Moon with the naked eye?"}
+{"id": "A6", "block": "factual_plausible_distractor", "prompt": "Which is heavier: a kilogram of steel or a kilogram of feathers?"}
+{"id": "B1", "block": "multistep_reasoning", "prompt": "A shop sells pens at 3 for 5 dollars. Maria buys 12 pens and pays with a 50 dollar bill. How much change does she get? Show your reasoning."}
+{"id": "B2", "block": "multistep_reasoning", "prompt": "A tank holds 240 liters. It is filled at 12 liters per minute and drains at 4 liters per minute at the same time. Starting empty, how long until it is full? Show your reasoning."}
+{"id": "B3", "block": "multistep_reasoning", "prompt": "Ana is twice as old as Ben. In 6 years, the sum of their ages will be 42. How old is Ana now? Show your reasoning."}
+{"id": "B4", "block": "multistep_reasoning", "prompt": "A train leaves at 14:20 and travels 315 km at an average of 90 km/h. At what time does it arrive? Show your reasoning."}
+{"id": "B5", "block": "multistep_reasoning", "prompt": "All roses in my garden are red. Some red flowers wilt quickly. Does it follow that some roses in my garden wilt quickly? Explain your reasoning carefully."}
+{"id": "B6", "block": "multistep_reasoning", "prompt": "A book costs 18 dollars after a 25 percent discount. What was the original price? Show your reasoning."}
+{"id": "D1", "block": "open_explanatory", "prompt": "Explain why the sky is blue."}
+{"id": "D2", "block": "open_explanatory", "prompt": "What is entropy? Explain it to someone with no physics background."}
+{"id": "D3", "block": "open_explanatory", "prompt": "I have been offered a job in another city. What should I think about before deciding?"}
+{"id": "D4", "block": "open_explanatory", "prompt": "Describe what happens inside a transformer neural network when it processes a sentence."}
+{"id": "D5", "block": "open_explanatory", "prompt": "Write a short paragraph about a lighthouse keeper who has stopped believing in the sea."}
+{"id": "D6", "block": "open_explanatory", "prompt": "Are you confident in your answers? How would you know if you were wrong about something?"}
