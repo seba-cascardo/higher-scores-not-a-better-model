@@ -1,0 +1,124 @@
+{
+  "bootstrap_reps": 200000,
+  "seed": 0,
+  "resampling": "paired by doc_id (items resampled together across arms)",
+  "supersedes": "runs/oq1_functional_axis/frac_ci_bootstrap.json (C-5, independent binomial per arm)",
+  "per_task": [
+    {
+      "task": "arc_challenge",
+      "metric": "acc_norm",
+      "n": 400,
+      "base": 0.505,
+      "v7mc": 0.855,
+      "align_r256": 0.7225,
+      "null_adapter": 0.505,
+      "frac_point": 0.6214285714285716,
+      "frac_ci95_paired": [
+        0.5103448275862069,
+        0.7323943661971831
+      ],
+      "frac_median": 0.6217948717948719,
+      "p_frac_gt_0.5": 0.982465,
+      "item_corr_base_align": 0.4249648667552924,
+      "item_corr_base_v7mc": 0.25973971947018987,
+      "degenerate_replicates": 0,
+      "sources": {
+        "base": "runs/eval_bulletproof/R1_base\\__workspace__hf_cache__models--google--gemma-4-31b-it__snapshots__3548789868c5356dbf307c98e6f609007b82b3eb\\samples_arc_challenge_2026-06-29T14-22-43.106096.jsonl",
+        "align": "runs/eval_bulletproof/R1_align/runs__align_lora_control__r256\\samples_arc_challenge_2026-06-29T15-07-22.946259.jsonl",
+        "v7mc": "runs/eval_bulletproof/R1_v7mc.json"
+      }
+    },
+    {
+      "task": "hellaswag",
+      "metric": "acc_norm",
+      "n": 400,
+      "base": 0.54,
+      "v7mc": 0.71,
+      "align_r256": 0.6975,
+      "null_adapter": 0.54,
+      "frac_point": 0.9264705882352944,
+      "frac_ci95_paired": [
+        0.6521739130434779,
+        1.3174603174603179
+      ],
+      "frac_median": 0.9264705882352937,
+      "p_frac_gt_0.5": 0.99904,
+      "item_corr_base_align": 0.3859188239211176,
+      "item_corr_base_v7mc": 0.2613265360542802,
+      "degenerate_replicates": 0,
+      "sources": {
+        "base": "runs/eval_bulletproof/R1_base\\__workspace__hf_cache__models--google--gemma-4-31b-it__snapshots__3548789868c5356dbf307c98e6f609007b82b3eb\\samples_hellaswag_2026-06-29T14-22-43.106096.jsonl",
+        "align": "runs/eval_bulletproof/R1_align/runs__align_lora_control__r256\\samples_hellaswag_2026-06-29T15-07-22.946259.jsonl",
+        "v7mc": "runs/eval_bulletproof/R1_v7mc.json"
+      }
+    },
+    {
+      "task": "winogrande",
+      "metric": "acc",
+      "n": 400,
+      "base": 0.6575,
+      "v7mc": 0.8475,
+      "align_r256": 0.775,
+      "null_adapter": 0.6575,
+      "frac_point": 0.618421052631579,
+      "frac_ci95_paired": [
+        0.38888888888888873,
+        0.8507462686567163
+      ],
+      "frac_median": 0.618421052631579,
+      "p_frac_gt_0.5": 0.845055,
+      "item_corr_base_align": 0.3049904316639798,
+      "item_corr_base_v7mc": 0.2506938127979849,
+      "degenerate_replicates": 0,
+      "sources": {
+        "base": "runs/eval_bulletproof/R1_base\\__workspace__hf_cache__models--google--gemma-4-31b-it__snapshots__3548789868c5356dbf307c98e6f609007b82b3eb\\samples_winogrande_2026-06-29T14-22-43.106096.jsonl",
+        "align": "runs/eval_bulletproof/R1_align/runs__align_lora_control__r256\\samples_winogrande_2026-06-29T15-07-22.946259.jsonl",
+        "v7mc": "runs/eval_bulletproof/R1_v7mc.json"
+      }
+    },
+    {
+      "task": "truthfulqa_mc1",
+      "metric": "acc",
+      "n": 400,
+      "base": 0.4375,
+      "v7mc": 0.81,
+      "align_r256": 0.7775,
+      "null_adapter": 0.4375,
+      "frac_point": 0.9127516778523488,
+      "frac_ci95_paired": [
+        0.79375,
+        1.0460526315789473
+      ],
+      "frac_median": 0.9127516778523491,
+      "p_frac_gt_0.5": 1.0,
+      "item_corr_base_align": 0.386968333861388,
+      "item_corr_base_v7mc": 0.3500555062152927,
+      "degenerate_replicates": 0,
+      "sources": {
+        "base": "runs/eval_bulletproof/R1_base\\__workspace__hf_cache__models--google--gemma-4-31b-it__snapshots__3548789868c5356dbf307c98e6f609007b82b3eb\\samples_truthfulqa_mc1_2026-06-29T14-22-43.106096.jsonl",
+        "align": "runs/eval_bulletproof/R1_align/runs__align_lora_control__r256\\samples_truthfulqa_mc1_2026-06-29T15-07-22.946259.jsonl",
+        "v7mc": "runs/eval_bulletproof/R1_v7mc.json"
+      }
+    }
+  ],
+  "arc_comparison": {
+    "paired": [
+      0.5103448275862069,
+      0.7323943661971831
+    ],
+    "paired_width": 0.2220495386109762,
+    "published_delta_method": [
+      0.45,
+      0.85
+    ],
+    "published_width": 0.39999999999999997,
+    "c5_independent_binomial": [
+      0.49677419354838726,
+      0.798611111111111
+    ],
+    "c5_width": 0.3018369175627238,
+    "shrinkage_vs_published": 0.4448761534725595,
+    "shrinkage_vs_c5": 0.264339364435655,
+    "contained_in_published": true
+  }
+}
