@@ -52,7 +52,9 @@ ROOT = os.environ.get("MSAP_ROOT", "/workspace/MSAP")
 MC = os.environ.get("MC_OFFSETS", os.path.join(ROOT, "runs/v7_lofit_gemma4_31b_chat/offsets_mc.pt"))
 # E2 output. Local default mirrors where it actually lives; pod/HF override via env.
 FUNC = os.environ.get("FUNC_DIRS", os.path.join(ROOT, "runs/functional_directions.pt"))
-OUT_DIR = os.path.join(ROOT, "runs/vinf_causal")
+# VINF_OUT_DIR lets a second model family (E6: Qwen) write its own blobs without
+# clobbering the canonical Gemma ones. Default = the canonical path (unchanged).
+OUT_DIR = os.environ.get("VINF_OUT_DIR", os.path.join(ROOT, "runs/vinf_causal"))
 OUT = os.path.join(OUT_DIR, "mc_wknow_offset.pt")
 ELIG_ACC = float(os.environ.get("VINF_ELIG_ACC", "0.60"))
 # Shrinkage as a fraction of the mean diagonal of cov (ridge). cond(cov) max ~8e3
