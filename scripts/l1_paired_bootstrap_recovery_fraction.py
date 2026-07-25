@@ -38,6 +38,16 @@ B = 200_000          # match C-5's replicate count so the intervals are comparab
 SEED = 0
 OUT = "runs/oq1_functional_axis/l1_paired_bootstrap.json"
 
+# --metric acc reruns the identical paired bootstrap on plain accuracy. ARC and
+# HellaSwag are published under acc_norm, so this is the robustness arm asking how
+# much of the recovery fraction is length normalisation (FASE 1 found HellaSwag's
+# inducibility collapses from 69.5% to 8.9% under acc in the same-param control).
+# Winogrande and TruthfulQA define no acc_norm, so they come out identical.
+# The canonical path is untouched: this writes a different file and skips the
+# published-value guard, whose reference values are acc_norm by construction.
+METRIC_OVERRIDE = None
+OUT_ACC = "runs/oq1_functional_axis/l1_paired_bootstrap_acc.json"
+
 # task -> (metric, published base, published v7mc, published align_r256)
 # published values from runs/eval_bulletproof/r1_align_frac.csv (canonical R1 arms)
 TASKS = {
@@ -84,7 +94,9 @@ def main():
            "per_task": []}
 
     for task, (metric, p_base, p_v7, p_align) in TASKS.items():
-        print(f"[{task}] loading arms...", flush=True)
+        if METRIC_OVERRIDE:
+            metric = METRIC_OVERRIDE
+        print(f"[{task}] loading arms...  (metric={metric})", flush=True)
         base_rows, base_path = load_jsonl(BASE_GLOB, task)
         align_rows, align_path = load_jsonl(ALIGN_GLOB, task)
         v7_rows = load_embedded(V7MC_JSON, task)
@@ -104,10 +116,14 @@ def main():
             sys.exit(f"[ABORT] {task}: {bad}/{n} items not aligned across arms by doc_hash")
 
         # --- GUARD 2: aggregates reproduce the published numbers ---
-        for name, y, pub in (("base", y_base, p_base), ("v7mc", y_v7, p_v7),
-                             ("align", y_align, p_align)):
-            if abs(y.mean() - pub) > TOL:
-                sys.exit(f"[ABORT] {task}/{name}: recomputed {y.mean():.4f} != published {pub:.4f}")
+        # Skipped only under --metric acc, where the published references are the
+        # acc_norm ones and would abort by construction. Guard 1 (item alignment)
+        # still runs, so the arms are still provably the same items.
+        if not METRIC_OVERRIDE:
+            for name, y, pub in (("base", y_base, p_base), ("v7mc", y_v7, p_v7),
+                                 ("align", y_align, p_align)):
+                if abs(y.mean() - pub) > TOL:
+                    sys.exit(f"[ABORT] {task}/{name}: recomputed {y.mean():.4f} != published {pub:.4f}")
         print(f"  guards OK  n={n}  base={y_base.mean():.4f} v7mc={y_v7.mean():.4f} "
               f"align={y_align.mean():.4f}  null={y_null.mean():.4f}", flush=True)
 
@@ -154,6 +170,18 @@ def main():
         print(f"  frac {frac_point:.4f}  paired CI95 [{lo:.3f}, {hi:.3f}]  "
               f"P(f>0.5)={p_gt_half:.3f}  width={hi - lo:.3f}", flush=True)
 
+    if METRIC_OVERRIDE:
+        # The published intervals below are acc_norm; comparing them to an acc run
+        # would be an apples-to-oranges shrinkage number. Write and stop.
+        out["metric_override"] = METRIC_OVERRIDE
+        out["note"] = ("robustness arm: identical paired bootstrap on plain accuracy. "
+                       "Winogrande/TruthfulQA define no acc_norm and are unchanged by "
+                       "construction; ARC and HellaSwag are the informative rows.")
+        with open(OUT_ACC, "w", encoding="utf-8") as f:
+            json.dump(out, f, indent=2)
+        print(f"[done] wrote {OUT_ACC}", flush=True)
+        return
+
     # --- ARC headline comparison against the two published intervals ---
     arc = next(r for r in out["per_task"] if r["task"] == "arc_challenge")
     lo, hi = arc["frac_ci95_paired"]
@@ -177,4 +205,8 @@ def main():
 
 
 if __name__ == "__main__":
+    if "--metric" in sys.argv:
+        METRIC_OVERRIDE = sys.argv[sys.argv.index("--metric") + 1]
+        if METRIC_OVERRIDE not in ("acc", "acc_norm"):
+            sys.exit(f"[ABORT] --metric must be acc or acc_norm, got {METRIC_OVERRIDE}")
     main()
