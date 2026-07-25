@@ -124,27 +124,74 @@ def cell(base_doc, arm_doc):
     # (regression to the mean). Kept for the record, never read as selectivity.
     sel_naive = float(np.corrcoef(shift, gb)[0, 1]) if shift.std() > 0 else 0.0
 
-    # The control that IS valid: PERMUTE the per-item shifts across items. This keeps
-    # the shift distribution exactly -- same mean, same variance, same tails -- and
-    # destroys only which item received which shift. If the permuted effect matches
-    # the measured one, the arm is not aiming at anything: the accuracy change is what
-    # noise of that magnitude does to a gap distribution that is asymmetric around the
-    # boundary. If the measured effect exceeds it, the arm is genuinely selective.
+    # ------------------------------------------------------------------------
+    # WARNING -- the GLOBAL permutation below is NOT a valid selectivity control,
+    # and the "selectivity" result this script first reported was an artifact of
+    # using it. Refuted by adversarial verification 2026-07-25.
+    #
+    # Permuting shifts across ALL items destroys the dependence of shift on
+    # gap_base -- but that dependence exists for a reason that has nothing to do
+    # with aiming: the arms RESCALE the option scores (plain-CE compress the gap
+    # spread 2.5-4x, contrastive arms expand it 1.5-2.7x). Any rescaling makes
+    # shift = (a-1)*gap_base + c, anticorrelated with gap_base BY CONSTRUCTION and
+    # with no knowledge of which option is correct. So the global permutation
+    # rejects for every arm that rescales, which is all of them.
+    #
+    # Measured against the CORRECT null (shift = f(gap_base) + exchangeable noise,
+    # i.e. permute WITHIN strata of gap_base): correlation with the observed
+    # residual is +0.979 and only 2/18 cells clear 2 sigma, versus 9/18 under the
+    # global permutation. The star case falls from 7.1 sigma to z = +0.15.
+    #
+    # Both are computed. `residual_vs_permuted_pp` is kept for the record and must
+    # NOT be read as selectivity; `residual_vs_stratified_pp` is the honest one.
+    # ------------------------------------------------------------------------
     rng = np.random.default_rng(0)
     perm = np.array([float(((gb + rng.permutation(shift)) > 0).mean()) for _ in range(200)])
+
+    # Stratified null: bin by gap_base, permute shifts only within a bin. Preserves
+    # the whole conditional law of the push given the base gap (mean AND variance),
+    # destroys only item identity inside the bin.
+    order = np.argsort(gb)
+    n_bins = max(4, len(gb) // 25)
+    strata = np.array_split(order, n_bins)
+    strat = []
+    for _ in range(200):
+        sh = shift.copy()
+        for idx in strata:
+            sh[idx] = rng.permutation(shift[idx])
+        strat.append(float(((gb + sh) > 0).mean()))
+    strat = np.array(strat)
+
+    # The item-blind replacement: fit a single affine map ga ~ a*gb + c and see how
+    # much of the accuracy change two global scalars reproduce with no noise at all.
+    a_hat, c_hat = np.polyfit(gb, ga, 1)
+    acc_affine = float(((a_hat * gb + c_hat) > 0).mean())
     return {"n": len(gb), "margin_mean": m,
             "margin_sd_items": float(shift.std(ddof=1)),
             "gap_base_sd": float(gb.std(ddof=1)),
+            "gap_arm_sd": float(ga.std(ddof=1)),
+            "spread_ratio_arm_over_base": float(ga.std(ddof=1) / gb.std(ddof=1)),
             "selectivity_corr_naive_DO_NOT_READ": sel_naive,
             "acc_base": acc_b, "acc_arm": acc_a,
             "d_acc_measured_pp": (acc_a - acc_b) * 100,
             "d_acc_uniform_pp": (pred - acc_b) * 100,
+            # --- the item-blind affine model: two global scalars, no noise ---
+            "affine_slope": float(a_hat), "affine_intercept": float(c_hat),
+            "effective_threshold_shift": float(-c_hat / a_hat) if a_hat else None,
+            "d_acc_affine_pp": (acc_affine - acc_b) * 100,
+            "affine_frac_of_measured": (float((acc_affine - acc_b) / (acc_a - acc_b))
+                                        if acc_a != acc_b else None),
+            # --- the invalid control, kept only for the record ---
             "d_acc_permuted_pp": float((perm.mean() - acc_b) * 100),
-            "d_acc_permuted_sd_pp": float(perm.std(ddof=1) * 100),
-            "residual_pp": (acc_a - pred) * 100,
-            "residual_vs_permuted_pp": float((acc_a - perm.mean()) * 100),
-            "sigma_vs_permuted": (float(abs(acc_a - perm.mean()) / perm.std(ddof=1))
-                                  if perm.std(ddof=1) > 0 else float("inf"))}
+            "residual_vs_permuted_pp_DO_NOT_READ": float((acc_a - perm.mean()) * 100),
+            "sigma_vs_permuted_DO_NOT_READ": (float(abs(acc_a - perm.mean()) / perm.std(ddof=1))
+                                              if perm.std(ddof=1) > 0 else float("inf")),
+            # --- the honest control: permute within strata of gap_base ---
+            "d_acc_stratified_pp": float((strat.mean() - acc_b) * 100),
+            "residual_vs_stratified_pp": float((acc_a - strat.mean()) * 100),
+            "sigma_vs_stratified": (float(abs(acc_a - strat.mean()) / strat.std(ddof=1))
+                                    if strat.std(ddof=1) > 0 else float("inf")),
+            "residual_pp": (acc_a - pred) * 100}
 
 
 def main():
@@ -171,8 +218,8 @@ def main():
 
     # --- Q2/Q3: uniform-push counterfactual per arm ---------------------------
     print(f"\nQ2/Q3 -- does an undifferentiated push of the measured size reproduce the effect?")
-    print(f"  {'arm':<28}{'task':<16}{'margin':>9}{'sd':>8}{'measured':>10}{'uniform':>9}"
-          f"{'permuted':>10}{'meas-perm':>11}")
+    print(f"  {'arm':<28}{'task':<16}{'measured':>10}{'spread':>8}{'thr shift':>10}"
+          f"{'affine':>9}{'aff %':>8}{'strat':>9}{'σ strat':>9}")
     cells, bases = {}, {}
     for label, fam, obj, bp, arms in ARMS:
         if bp not in bases:
@@ -187,22 +234,33 @@ def main():
                 continue
 
             def across(k):
-                v = np.array([s[k] for s in seeds])
+                # a cell whose measured effect is exactly zero has no defined
+                # "fraction of measured"; drop those instead of dividing by it
+                v = np.array([s[k] for s in seeds if s[k] is not None], dtype=float)
+                if not len(v):
+                    return {"mean": None, "sd": None}
                 return {"mean": float(v.mean()),
                         "sd": float(v.std(ddof=1)) if len(v) > 1 else 0.0}
 
             r = {k: across(k) for k in ("margin_mean", "margin_sd_items", "gap_base_sd",
+                                        "spread_ratio_arm_over_base", "affine_slope",
+                                        "affine_intercept", "effective_threshold_shift",
                                         "d_acc_measured_pp", "d_acc_uniform_pp",
-                                        "d_acc_permuted_pp", "residual_vs_permuted_pp",
-                                        "sigma_vs_permuted", "residual_pp")}
+                                        "d_acc_affine_pp", "affine_frac_of_measured",
+                                        "d_acc_permuted_pp", "residual_vs_permuted_pp_DO_NOT_READ",
+                                        "sigma_vs_permuted_DO_NOT_READ",
+                                        "d_acc_stratified_pp", "residual_vs_stratified_pp",
+                                        "sigma_vs_stratified", "residual_pp")}
             r["n_seeds"], r["n"] = len(seeds), seeds[0]["n"]
             per_task[t] = r
-            sd = r["residual_vs_permuted_pp"]["sd"]
-            flag = "" if len(seeds) == 1 else f" ±{sd:.1f}"
-            print(f"  {label:<28}{t:<16}{r['margin_mean']['mean']:>+9.2f}"
-                  f"{r['margin_sd_items']['mean']:>8.1f}{r['d_acc_measured_pp']['mean']:>+10.2f}"
-                  f"{r['d_acc_uniform_pp']['mean']:>+9.2f}{r['d_acc_permuted_pp']['mean']:>+10.2f}"
-                  f"{r['residual_vs_permuted_pp']['mean']:>+11.2f}{flag}", flush=True)
+            af = r["affine_frac_of_measured"]["mean"]
+            afs = f"{af * 100:>7.0f}%" if af is not None else "      -" 
+            print(f"  {label:<28}{t:<16}{r['d_acc_measured_pp']['mean']:>+10.2f}"
+                  f"{r['spread_ratio_arm_over_base']['mean']:>8.2f}"
+                  f"{r['effective_threshold_shift']['mean']:>+10.2f}"
+                  f"{r['d_acc_affine_pp']['mean']:>+9.2f}{afs}"
+                  f"{r['d_acc_stratified_pp']['mean']:>+9.2f}"
+                  f"{r['sigma_vs_stratified']['mean']:>9.2f}", flush=True)
         cells[label] = {"family": fam, "objective": obj, "per_task": per_task}
 
     # --- verdicts -------------------------------------------------------------
@@ -219,16 +277,20 @@ def main():
     within3 = [r for r in resid if abs(r[2]["mean"]) <= 3.0]
     print(f"  Q2  uniform push within ±3pp of measured in {len(within3)}/{len(resid)} cells")
 
-    perm = [(l, t, c["per_task"][t]["residual_vs_permuted_pp"],
-             c["per_task"][t]["sigma_vs_permuted"]) for l, c in cells.items()
+    perm = [(l, t, c["per_task"][t]["residual_vs_stratified_pp"],
+             c["per_task"][t]["sigma_vs_stratified"]) for l, c in cells.items()
             for t in c["per_task"]]
-    close = [r for r in perm if abs(r[2]["mean"]) <= 3.0]
-    print(f"  Q3  PERMUTED-shift control (keeps the shift distribution, destroys the "
-          f"item pairing):")
-    print(f"      measured within ±3pp of permuted in {len(close)}/{len(perm)} cells")
-    for l, t, r, sg in sorted(perm, key=lambda r: -abs(r[2]["mean"])):
-        tag = "SELECTIVE" if abs(r["mean"]) > 3.0 else "not distinguishable from unaimed noise"
-        print(f"        {l:<28}{t:<16}{r['mean']:>+8.2f}pp  ({sg['mean']:>6.1f}σ)  {tag}")
+    close = [r for r in perm if r[3]["mean"] < 2.0]
+    print(f"  Q3  STRATIFIED null (permute shifts WITHIN bins of gap_base -- preserves the"
+          f" whole conditional law of the push given the base gap):")
+    print(f"      measured indistinguishable from the null in {len(close)}/{len(perm)} cells")
+    aff = [c["per_task"][t]["affine_frac_of_measured"]["mean"] for l, c in cells.items()
+           for t in c["per_task"] if c["per_task"][t]["affine_frac_of_measured"]["mean"] is not None]
+    print(f"      item-blind affine map reproduces a median {np.median(aff) * 100:.0f}% of the"
+          f" measured accuracy change (two global scalars, no noise, no item information)")
+    for l, t, r, sg in sorted(perm, key=lambda r: -r[3]["mean"])[:6]:
+        tag = "survives" if sg["mean"] >= 2.0 else "explained by rescaling"
+        print(f"        {l:<28}{t:<16}{r['mean']:>+8.2f}pp  ({sg['mean']:>5.2f}σ)  {tag}")
 
     out = {"predictions_fixed_before_running": {
         "Q1": "near-zero base-gap density orders ARC > HSwag > TQA in Gemma",

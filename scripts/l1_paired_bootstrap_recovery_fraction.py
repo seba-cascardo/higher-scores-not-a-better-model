@@ -116,14 +116,18 @@ def main():
             sys.exit(f"[ABORT] {task}: {bad}/{n} items not aligned across arms by doc_hash")
 
         # --- GUARD 2: aggregates reproduce the published numbers ---
-        # Skipped only under --metric acc, where the published references are the
-        # acc_norm ones and would abort by construction. Guard 1 (item alignment)
-        # still runs, so the arms are still provably the same items.
-        if not METRIC_OVERRIDE:
-            for name, y, pub in (("base", y_base, p_base), ("v7mc", y_v7, p_v7),
-                                 ("align", y_align, p_align)):
-                if abs(y.mean() - pub) > TOL:
-                    sys.exit(f"[ABORT] {task}/{name}: recomputed {y.mean():.4f} != published {pub:.4f}")
+        # Under --metric acc the published references are acc_norm and would abort
+        # by construction -- but the guard is doing PROVENANCE ("did I load the
+        # right arms?"), not just metric agreement, so dropping it entirely would
+        # lose that. The rows carry both channels, so the check still runs on the
+        # published channel even while the bootstrap runs on the other one.
+        guard_metric = TASKS[task][0]
+        for name, rows, pub in (("base", base_rows, p_base), ("v7mc", v7_rows, p_v7),
+                                ("align", align_rows, p_align)):
+            y_guard, _ = vec(rows, guard_metric)
+            if abs(y_guard.mean() - pub) > TOL:
+                sys.exit(f"[ABORT] {task}/{name}: recomputed {y_guard.mean():.4f} != "
+                         f"published {pub:.4f} on {guard_metric}")
         print(f"  guards OK  n={n}  base={y_base.mean():.4f} v7mc={y_v7.mean():.4f} "
               f"align={y_align.mean():.4f}  null={y_null.mean():.4f}", flush=True)
 
@@ -205,8 +209,29 @@ def main():
 
 
 if __name__ == "__main__":
-    if "--metric" in sys.argv:
-        METRIC_OVERRIDE = sys.argv[sys.argv.index("--metric") + 1]
-        if METRIC_OVERRIDE not in ("acc", "acc_norm"):
-            sys.exit(f"[ABORT] --metric must be acc or acc_norm, got {METRIC_OVERRIDE}")
+    # Parsed by hand rather than with argparse to keep the canonical path a plain
+    # `python <script>`. Three failure modes are rejected explicitly, because the
+    # cost of any of them is silently overwriting the CANONICAL artifact with
+    # numbers from a different metric:
+    #   --metric=acc     an `in sys.argv` test does not match it (repo precedent:
+    #                    44ed4b0, argparse and a leading '-')
+    #   --metric         with nothing after it -> IndexError
+    #   --anything-else  ignored without a word
+    argv = sys.argv[1:]
+    for i, a in enumerate(argv):
+        if a == "--metric":
+            if i + 1 >= len(argv):
+                sys.exit("[ABORT] --metric needs a value: acc")
+            METRIC_OVERRIDE = argv[i + 1]
+        elif a.startswith("--metric="):
+            METRIC_OVERRIDE = a.split("=", 1)[1]
+        elif i == 0 or argv[i - 1] != "--metric":
+            sys.exit(f"[ABORT] unknown argument {a!r}; the only flag is --metric acc")
+    if METRIC_OVERRIDE is not None and METRIC_OVERRIDE != "acc":
+        # acc_norm is not accepted even though it looks legal: Winogrande and
+        # TruthfulQA rows carry no acc_norm field, so it would die mid-run with a
+        # KeyError after burning the ARC and HellaSwag bootstraps. The canonical
+        # run already IS acc_norm -- run it with no flag.
+        sys.exit(f"[ABORT] --metric only accepts 'acc', got {METRIC_OVERRIDE!r}. "
+                 "For acc_norm run the script with no flag (that is the canonical path).")
     main()

@@ -4,7 +4,7 @@ contrastive PEFT, or of Gemma?
 Gemma has the effect (+35pp ARC) with a causal decomposition: W_know (the strongest
 on-axis reference) recovers ~6.4%, off_perp ~100%, off_par ~0, and a norm-matched
 random direction inside the same orthogonal complement ~0. Qwen replicates the
-EFFECT (ARC .4825 -> .6625) and the GEOMETRY (on-axis energy 2.47%, cos(v_inf,
+EFFECT (ARC .4975 -> .6600, +16.25pp) and the GEOMETRY (on-axis energy 2.47%, cos(v_inf,
 theta_mc) -0.024), but nothing causal had been measured. This closes that.
 
 All six offset blobs were built LOCALLY (CPU) from Qwen's own functional directions
@@ -41,10 +41,19 @@ TASKS = {
 # Gemma reference recovery fractions (ledger; NOT recomputed here, cited)
 GEMMA_REF = {"mc_wknow_offset": 0.064, "mc_offpar_offset": None,
              "mc_offperp_offset": 1.00, "shuffle": 0.00}
-# Gemma's three shuffle seeds on ARC, verbatim from the ledger entry of 2026-06-29
-# (also discussion.tex): the same-norm noise floor that W_know has to beat before
-# "the on-axis direction is privileged" can be claimed in that family.
-GEMMA_SHUFFLE_ARC = [-0.04, -0.01, -0.01]
+# Gemma's three shuffle seeds on ARC. The ledger and discussion.tex report them
+# rounded to two decimals (-0.04/-0.01/-0.01); the raw arms are acc_norm
+# 0.49/0.5025/0.50 against base 0.505 and mc 0.855 (RD run, HF
+# msap-r5-align-p0-20260628), which give the unrounded fractions below. Rounding
+# shrinks the sd by 8.3% and inflates every sigma computed from it, so the
+# unrounded values are what this contrast uses.
+GEMMA_SHUFFLE_ARC = [-0.042857, -0.007143, -0.014286]
+# The on-axis arm's OWN uncertainty, which a point-vs-cloud comparison silently
+# drops. Gemma has a paired bootstrap CI for it in runs/wknow_causal/
+# onaxis_significance.json: frac 0.0638, CI95 [-0.008850, 0.136364] -> SE ~0.0370.
+# That artifact's own verdict is "INDISTINGUISHABLE_FROM_ZERO" (McNemar p=0.136),
+# which is flatly incompatible with W_know clearing any floor by several sigma.
+GEMMA_WKNOW_SE = (0.136364 - (-0.008850)) / (2 * 1.959964)
 ARMS = ["mc_wknow_offset", "mc_offpar_offset", "mc_offperp_offset",
         "mc_offperp_shuffle_seed0", "mc_offperp_shuffle_seed1", "mc_offperp_shuffle_seed2"]
 # Winogrande's Qwen lift is only ~3pp: fractions there are denominator-noisy.
@@ -59,43 +68,70 @@ def accs(path):
     return {t: float(res[t][m]) for t, m in TASKS.items() if t in res}
 
 
-def _floor(wknow, shuffle_seeds, family):
+def _floor(wknow, wknow_se, shuffle_seeds, family):
     """Margin of the on-axis reference over the same-norm noise floor, in sigma.
 
-    W_know is a single constructed direction with no replicates, so the dispersion
-    that matters is the shuffle control's: the question is whether W_know falls
-    inside the cloud of same-norm random directions or outside it.
+    Three things this has to get right, each of which inflates sigma if dropped:
+
+    1. The arm's OWN uncertainty. Comparing a point against the spread of a control
+       silently asserts the point is known exactly. It is not: W_know is one eval of
+       400 items. Gemma's paired bootstrap gives SE ~3.7pp; without it the margin
+       looks like 4.8 sigma, with it ~2, and the source artifact's own verdict for
+       that same arm is "indistinguishable from zero".
+    2. Prediction, not confidence. The question is whether W_know falls inside the
+       CLOUD of same-norm random directions, so the shuffle's sd is the right scale
+       (not sd/sqrt(n)), carrying the sqrt(1 + 1/n) prediction factor.
+    3. n=3. A sigma computed against an sd estimated from three seeds is not a z.
+       The two-sided 95% t critical value at 2 df is 4.30, so "2 sigma" here is
+       roughly p=0.18, not p=0.05. Reported alongside so nobody reads it as a z.
     """
+    n = len(shuffle_seeds)
     mean = float(np.mean(shuffle_seeds))
     sd = float(np.std(shuffle_seeds, ddof=1))
+    pred_sd = sd * np.sqrt(1 + 1 / n)          # predictive, not standard error
+    se_total = float(np.hypot(pred_sd, wknow_se or 0.0))
     margin = float(wknow) - mean
-    sigma = abs(margin) / sd if sd else float("inf")
-    return {"family": family, "wknow_arc": float(wknow), "shuffle_mean": mean,
-            "shuffle_sd": sd, "n_shuffle_seeds": len(shuffle_seeds),
-            "margin": margin, "sigma": sigma,
-            "beats_floor": bool(margin > 0 and sigma >= 2)}
+    sigma = abs(margin) / se_total if se_total else float("inf")
+    return {"family": family, "wknow_arc": float(wknow), "wknow_se": float(wknow_se or 0.0),
+            "shuffle_mean": mean, "shuffle_sd": sd, "n_shuffle_seeds": n,
+            "predictive_sd": float(pred_sd), "se_total": se_total,
+            "margin": margin, "sigma": sigma, "t_crit_95_at_df": T_CRIT_95[n - 1],
+            "beats_floor": bool(margin > 0 and sigma >= T_CRIT_95[n - 1])}
 
 
-def onaxis_vs_noise_floor(wk_qwen, shuffle_qwen):
+# two-sided 95% t critical values by degrees of freedom (1, 2, 3, ...)
+T_CRIT_95 = {1: 12.71, 2: 4.30, 3: 3.18, 4: 2.78, 5: 2.57}
+
+
+def onaxis_vs_noise_floor(wk_qwen, shuffle_qwen, base_qwen, lift_qwen):
     """Does on-axis buy anything over same-norm noise? Asked in both families.
 
     The claim this replaces read W_know against ZERO ("counterproductive in Qwen").
     Zero is the wrong reference: the same-norm random control is not at zero either
     (-15.9% in Qwen), so most of that damage is the norm, not the direction.
     """
-    q = _floor(wk_qwen, shuffle_qwen, "Qwen2.5-14B-Instruct")
-    g = _floor(GEMMA_REF["mc_wknow_offset"], GEMMA_SHUFFLE_ARC, "Gemma 4 31B IT")
+    # Qwen has no bootstrap for its W_know arm, so use the unpaired binomial SE of
+    # its accuracy propagated through the lift. That is an UPPER bound (pairing
+    # would shrink it), and it is declared as such.
+    acc = base_qwen + wk_qwen * lift_qwen
+    se_q = float(np.sqrt(acc * (1 - acc) / 400) / lift_qwen)
+    q = _floor(wk_qwen, se_q, shuffle_qwen, "Qwen2.5-14B-Instruct")
+    q["wknow_se_source"] = "unpaired binomial on n=400, propagated through the lift (upper bound)"
+    g = _floor(GEMMA_REF["mc_wknow_offset"], GEMMA_WKNOW_SE, GEMMA_SHUFFLE_ARC, "Gemma 4 31B IT")
+    g["wknow_se_source"] = "paired bootstrap CI, runs/wknow_causal/onaxis_significance.json"
     print(f"\n  on-axis vs its own same-norm noise floor (ARC):")
     for f in (g, q):
-        flag = "beats the floor" if f["beats_floor"] else "indistinguishable from the floor"
-        print(f"    {f['family']:<24} W_know {f['wknow_arc'] * 100:+6.1f}%  vs shuffle "
-              f"{f['shuffle_mean'] * 100:+6.1f}% ± {f['shuffle_sd'] * 100:.1f}  -> margin "
-              f"{f['margin'] * 100:+5.1f}pp ({f['sigma']:.1f}σ, {flag})")
-    verdict = ("the on-axis reference never buys more than a small margin over same-norm "
-               f"noise: {g['margin'] * 100:+.1f}pp ({g['sigma']:.1f}σ) in Gemma and "
-               f"{q['margin'] * 100:+.1f}pp ({q['sigma']:.1f}σ, not significant) in Qwen, "
-               "against off_perp's ~100-106% -- so the load-bearing contrast is off_perp "
-               "vs everything else, NOT W_know vs zero")
+        flag = "beats the floor" if f["beats_floor"] else "NOT distinguishable from the floor"
+        print(f"    {f['family']:<24} W_know {f['wknow_arc'] * 100:+6.1f}% ±{f['wknow_se'] * 100:.1f}"
+              f"  vs shuffle {f['shuffle_mean'] * 100:+6.1f}% ± {f['shuffle_sd'] * 100:.1f}"
+              f"  -> margin {f['margin'] * 100:+5.1f} ± {f['se_total'] * 100:.1f} pp "
+              f"({f['sigma']:.2f}σ vs t crit {f['t_crit_95_at_df']}, {flag})")
+    verdict = ("the on-axis reference does NOT beat same-norm noise in either family: "
+               f"Gemma {g['margin'] * 100:+.1f} ± {g['se_total'] * 100:.1f} pp "
+               f"({g['sigma']:.2f}σ) and Qwen {q['margin'] * 100:+.1f} ± "
+               f"{q['se_total'] * 100:.1f} pp ({q['sigma']:.2f}σ), both short of the "
+               f"t critical value at 2 df (4.30) -- against off_perp's +101pp (Gemma) "
+               "and +122pp (Qwen) over the same floor")
     print(f"    -> {verdict}")
     return {"gemma": g, "qwen": q, "verdict": verdict}
 
@@ -193,7 +229,8 @@ def main():
 
     if wk is not None and sh_arc is not None:
         verdicts["onaxis_vs_noise_floor"] = onaxis_vs_noise_floor(
-            wk, [s["arc_challenge"] for s in sh])
+            wk, [s["arc_challenge"] for s in sh],
+            base["arc_challenge"], lift["arc_challenge"])
 
     out["kill_rules"] = verdicts
     out["matched_control"] = matched_control(base, lift)

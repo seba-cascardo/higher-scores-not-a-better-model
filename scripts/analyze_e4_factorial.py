@@ -190,9 +190,14 @@ def main():
 # maximally off-axis. These are NOT recomputed here -- they are cited, together
 # with the seed dispersion that produced them, because the third-axis kill-rule
 # below is a comparison between shifts and needs every term's variance.
-# Sources: E2 (contrastive 1.85 +- 0.13, 3 seeds) and the E1 spec 2026-07-24
-# section 1.3 (plain-CE 2.68 +- 0.34 over ratios 2.92 / 2.82 / 2.29).
+# Sources, verified against the raw per-seed ratios:
+#   1.85 +- 0.13  specs/2026-07-24-e2-seed-replication-results.md:60-63
+#                 (ratios 1.74 / 1.81 / 2.00)
+#   2.68 +- 0.34  specs/2026-07-24-e1-same-parameterization-control-results.md:88-91
+#                 (ratios 2.92 / 2.82 / 2.29)
 # Align-LoRA is a single published point with no replicates.
+# The anchors are stored rounded as published; using 2.676667 instead of 2.68
+# moves the shift difference from 0.28 to 0.29 sigma, which changes nothing.
 SPECTRUM_REF = [
     ("contrastive in-domain (canonical, E2)", 1.85, 0.13, 3, "in", "contrastive"),
     ("same-param plain-CE in-domain (E1)", 2.68, 0.34, 3, "in", "plain-CE"),
@@ -255,9 +260,15 @@ def net_effect():
     se_d_ood = sem(got["D_plainCE_OOD"]["ratio_sd"], got["D_plainCE_OOD"]["n_seeds"])
 
     def shift(a, se_a, b, se_b):
-        """b -> a, with the standard error of the difference and its z."""
+        """b -> a, with the standard error of the difference and its z.
+
+        sigma is None when the SE is zero (single-seed points with no dispersion):
+        no evidence is not infinite evidence, and returning inf here would let the
+        gate fire on a difference of 1e-4. None propagates to "cannot decide".
+        """
         d, se = a - b, float(np.hypot(se_a, se_b))
-        return {"shift": float(d), "se": se, "sigma": float(abs(d) / se) if se else float("inf")}
+        return {"shift": float(d), "se": se,
+                "sigma": (float(abs(d) / se) if se > 0 else None)}
 
     axes = {
         "objective_shift_indomain": shift(p_in, se_p_in, c_in, se_c_in),
@@ -266,7 +277,8 @@ def net_effect():
         "domain_shift_plainCE": shift(d_ood, se_d_ood, p_in, se_p_in),
     }
     for k, v in axes.items():
-        print(f"  {k:<28} {v['shift']:+.2f} ± {v['se']:.2f}   ({v['sigma']:.1f}σ)")
+        sg = f"{v['sigma']:.1f}σ" if v["sigma"] is not None else "no dispersion"
+        print(f"  {k:<28} {v['shift']:+.2f} ± {v['se']:.2f}   ({sg})")
 
     # --- pre-registered kill-rule, CORRECTED (2026-07-25) ---------------------
     # The original rule fired on abs(domain_shift) >= abs(objective_shift): two
@@ -275,28 +287,57 @@ def net_effect():
     # the DIFFERENCE BETWEEN THE SHIFTS clears 2 sigma.
     # Note the common term cancels: (c_ood - c_in) - (p_in - c_in) = c_ood - p_in,
     # so the contrastive in-domain anchor drops out and does not get counted twice.
+    # That cancellation is exact, not approximate: Cov(S_dom, S_obj) = Var(c_in),
+    # so Var(S_dom - S_obj) = Var(c_ood) + Var(p_in). Treating the shifts as
+    # independent would add 2*Var(c_in) that is not there (SE 0.269 instead of
+    # 0.247) -- i.e. it would UNDERSTATE the power of the test, not overstate it.
+    #
+    # Two honest caveats about the threshold itself, neither of which is reachable
+    # from the published data but both of which matter if this is ever rerun:
+    #   * z=2 over an sd estimated from 3 seeds is anti-conservative -- the
+    #     two-sided 95% t critical value at 2 df is 4.30. The rule as
+    #     pre-registered is in sigmas, so it stays, but a result at ~2.1 sigma
+    #     would NOT be significant at 95% by t.
+    #   * which axis "dominates" is a statement about MAGNITUDE, so the branch
+    #     below compares |shift|, not signed shift. With shifts of opposite sign
+    #     the signed comparison would report the wrong winner.
+    SIGMA_GATE, T_CRIT_2DF = 2.0, 4.30
     diff = shift(c_ood, se_c_ood, p_in, se_p_in)
-    ordered = diff["sigma"] >= 2.0
-    if not ordered:
+    sig = diff["sigma"]
+    ordered = sig is not None and sig >= SIGMA_GATE
+    dom_mag = abs(axes["domain_shift_contrastive"]["shift"])
+    obj_mag = abs(axes["objective_shift_indomain"]["shift"])
+    if sig is None:
+        verdict = ("CANNOT DECIDE: the shift difference has no dispersion (single-seed "
+                   "points) -> no evidence either way; do NOT read this as a third axis")
+    elif not ordered:
         verdict = ("NOT ORDERABLE: domain is a real axis (domain shift "
                    f"{axes['domain_shift_contrastive']['shift']:+.2f} = "
                    f"{axes['domain_shift_contrastive']['sigma']:.1f}σ) but the two shifts "
                    f"differ by only {diff['shift']:+.2f} ± {diff['se']:.2f} "
-                   f"({diff['sigma']:.2f}σ < 2σ) -> which axis weighs more is NOT decided "
+                   f"({sig:.2f}σ < {SIGMA_GATE}σ) -> which axis weighs more is NOT decided "
                    "by these data; claim the domain axis, not the ordering")
-    elif axes["domain_shift_contrastive"]["shift"] > axes["objective_shift_indomain"]["shift"]:
+    elif dom_mag > obj_mag:
         verdict = ("THIRD AXIS DOMINATES: domain moves the contrastive ratio more than the "
-                   f"objective does by {diff['shift']:+.2f} ± {diff['se']:.2f} "
-                   f"({diff['sigma']:.1f}σ) -> off-axis requires the CONJUNCTION objective x "
-                   "domain; E1's 'follows the objective' must be qualified")
+                   f"objective does, |{dom_mag:.2f}| vs |{obj_mag:.2f}|, difference "
+                   f"{diff['shift']:+.2f} ± {diff['se']:.2f} ({sig:.1f}σ) -> off-axis "
+                   "requires the CONJUNCTION objective x domain; E1's 'follows the "
+                   "objective' must be qualified")
     else:
-        verdict = ("OBJECTIVE DOMINATES: the objective shift exceeds the domain shift by "
-                   f"{-diff['shift']:+.2f} ± {diff['se']:.2f} ({diff['sigma']:.1f}σ) -> the "
+        verdict = ("OBJECTIVE DOMINATES: the objective shift exceeds the domain shift in "
+                   f"magnitude, |{obj_mag:.2f}| vs |{dom_mag:.2f}| ({sig:.1f}σ) -> the "
                    "off-axis effect follows the training objective; domain is second-order")
+    shown = f"{sig:.2f}σ" if sig is not None else "no dispersion"
     print(f"\n  shift difference (domain - objective): {diff['shift']:+.2f} ± {diff['se']:.2f} "
-          f"({diff['sigma']:.2f}σ, threshold 2σ)\n  -> {verdict}")
+          f"({shown}, gate {SIGMA_GATE}σ; t crit at 2 df would be {T_CRIT_2DF})"
+          f"\n  -> {verdict}")
     return {**got, "axis_shifts": axes, "shift_difference": diff,
-            "axis_ordering_resolved": bool(ordered), "third_axis_triggered": bool(ordered),
+            "sigma_gate": SIGMA_GATE, "t_critical_2df_for_reference": T_CRIT_2DF,
+            # NOTE: this key means "the ordering between axes was resolved", which is
+            # NOT what the pre-2026-07-25 `third_axis_triggered` meant (that one was
+            # "domain >= objective"). It is True in the OBJECTIVE-DOMINATES branch too.
+            # Renamed deliberately so no one compares old and new JSONs on one key.
+            "axis_ordering_resolved": bool(ordered),
             "verdict": verdict,
             "spectrum": [[n, r, sd, ns, dom, obj] for n, r, sd, ns, dom, obj in rows]}
 

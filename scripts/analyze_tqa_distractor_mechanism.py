@@ -101,41 +101,74 @@ def load(path):
 
 
 def per_item(base_doc, arm_doc):
-    """The three per-item quantities, over the docs both arms share."""
+    """The per-item quantities, over the docs both arms share.
+
+    THE DISTRACTOR DEFINITION IS NOT NEUTRAL, so the margin is reported under three:
+
+      A  the base's top distractor     -- what the pre-registered analysis used
+      B  the arm's own top distractor  -- what accuracy actually sees
+      C  the mean over ALL distractors -- no selection at all
+
+    A is the margin-maximising choice: it selects the option the BASE ranked highest,
+    i.e. it selects on a quantity the shift is measured against, so an arm that
+    merely compresses the distribution scores positive without separating anything.
+    Measured: the plain-CE margin is +3.4 under A, ~0 under B, NEGATIVE under C,
+    while the contrastive arm stays strongly positive under all three. Only
+    definition-invariant statements get claimed.
+
+    The same point without any definition choice -- split by whether the BASE
+    already ranked the gold on top. Under A the plain-CE margin FLIPS SIGN across
+    that split (base-right ~-14, base-wrong ~+17) and the reported mean is just
+    their accuracy-weighted near-cancellation; the contrastive arm stays positive on
+    both sides. That split is the honest instrument, and it is what should be cited.
+    """
     keys = sorted(set(base_doc) & set(arm_doc))
     if not keys:
         return None
-    d_cor, d_dis, d_dis_armtop, base_hit, arm_hit = [], [], [], [], []
+    d_cor, d_dis, d_dis_armtop, d_dis_mean = [], [], [], []
+    base_hit, arm_hit, m_right, m_wrong = [], [], [], []
     for k in keys:
         b_lp, tgt = base_doc[k]
         a_lp, tgt_a = arm_doc[k]
         if tgt != tgt_a or len(b_lp) != len(a_lp) or len(b_lp) < 2:
             continue
         others = [i for i in range(len(b_lp)) if i != tgt]
-        # identity fixed by the BASE: the distractor the base ranked highest
-        j = max(others, key=lambda i: b_lp[i])
-        # what accuracy sees: the arm's own strongest distractor
-        j_arm = max(others, key=lambda i: a_lp[i])
-        d_cor.append(a_lp[tgt] - b_lp[tgt])
+        j = max(others, key=lambda i: b_lp[i])          # A: base's top distractor
+        j_arm = max(others, key=lambda i: a_lp[i])      # B: arm's own top distractor
+        dc = a_lp[tgt] - b_lp[tgt]
+        d_cor.append(dc)
         d_dis.append(a_lp[j] - b_lp[j])
         d_dis_armtop.append(a_lp[j_arm] - b_lp[j_arm])
-        base_hit.append(b_lp[tgt] > b_lp[j])
+        d_dis_mean.append(float(np.mean([a_lp[i] - b_lp[i] for i in others])))   # C
+        right = b_lp[tgt] > b_lp[j]
+        base_hit.append(right)
         arm_hit.append(a_lp[tgt] > max(a_lp[i] for i in others))
+        (m_right if right else m_wrong).append(dc - (a_lp[j] - b_lp[j]))
     if not d_cor:
         return None
     d_cor, d_dis = np.array(d_cor), np.array(d_dis)
+    d_dis_armtop, d_dis_mean = np.array(d_dis_armtop), np.array(d_dis_mean)
     margin = d_cor - d_dis
     n = len(margin)
 
     def ms(x):
-        return {"mean": float(x.mean()), "se": float(x.std(ddof=1) / np.sqrt(len(x)))}
+        x = np.asarray(x)
+        return {"mean": float(x.mean()), "n": int(len(x)),
+                "se": float(x.std(ddof=1) / np.sqrt(len(x))) if len(x) > 1 else 0.0}
 
+    m_right, m_wrong = np.array(m_right), np.array(m_wrong)
     return {
         "n_items": n,
         "d_correct": ms(d_cor),
         "d_distractor": ms(d_dis),
-        "d_distractor_arm_top": ms(np.array(d_dis_armtop)),
-        "margin": ms(margin),
+        "d_distractor_arm_top": ms(d_dis_armtop),
+        "margin": ms(margin),                                   # definition A
+        "margin_def_B_arm_top": ms(d_cor - d_dis_armtop),
+        "margin_def_C_all_distractors": ms(d_cor - d_dis_mean),
+        "margin_base_right": ms(m_right) if len(m_right) else None,
+        "margin_base_wrong": ms(m_wrong) if len(m_wrong) else None,
+        "sign_flips_across_base_correctness": bool(
+            len(m_right) and len(m_wrong) and (m_right.mean() * m_wrong.mean() < 0)),
         "frac_distractor_up": float((d_dis > 0).mean()),
         "frac_correct_up": float((d_cor > 0).mean()),
         "frac_margin_up": float((margin > 0).mean()),
@@ -243,7 +276,13 @@ def main():
             if not seeds:
                 continue
             per_task[t] = {k: agg(seeds, k) for k in
-                           ("d_correct", "d_distractor", "d_distractor_arm_top", "margin")}
+                           ("d_correct", "d_distractor", "d_distractor_arm_top", "margin",
+                            "margin_def_B_arm_top", "margin_def_C_all_distractors")}
+            for k in ("margin_base_right", "margin_base_wrong"):
+                if all(s.get(k) for s in seeds):
+                    per_task[t][k] = agg(seeds, k)
+            per_task[t]["sign_flips_across_base_correctness"] = bool(
+                all(s["sign_flips_across_base_correctness"] for s in seeds))
             per_task[t]["n_items"] = seeds[0]["n_items"]
             per_task[t]["n_seeds"] = len(seeds)
             for k in ("frac_distractor_up", "frac_correct_up", "frac_margin_up",
@@ -251,10 +290,17 @@ def main():
                 per_task[t][k] = float(np.mean([s[k] for s in seeds]))
             m, dc, dd = per_task[t]["margin"], per_task[t]["d_correct"], per_task[t]["d_distractor"]
             disp = f"±{m['sd']:.3f}" if m["n_seeds"] > 1 else f"±{m['item_se']:.3f}(item)"
+            mb = per_task[t]["margin_def_B_arm_top"]["mean"]
+            mc = per_task[t]["margin_def_C_all_distractors"]["mean"]
+            br = per_task[t].get("margin_base_right", {}).get("mean")
+            bw = per_task[t].get("margin_base_wrong", {}).get("mean")
+            split = (f"  split[right {br:+6.1f} / wrong {bw:+6.1f}]"
+                     f"{' FLIPS' if per_task[t]['sign_flips_across_base_correctness'] else ''}"
+                     if br is not None and bw is not None else "")
             print(f"    {t:<16} n={per_task[t]['n_items']:<4} "
-                  f"d_correct {dc['mean']:+7.3f}  d_distr {dd['mean']:+7.3f}  "
-                  f"margin {m['mean']:+7.3f} {disp:<14} "
-                  f"distr_up {per_task[t]['frac_distractor_up'] * 100:5.1f}%", flush=True)
+                  f"d_corr {dc['mean']:+7.2f} d_dist {dd['mean']:+7.2f}  "
+                  f"marginA {m['mean']:+7.2f} B {mb:+6.2f} C {mc:+6.2f}"
+                  f"  up {per_task[t]['frac_distractor_up'] * 100:5.1f}%{split}", flush=True)
         results[label] = {"family": fam, "objective": obj, "n_seeds": len(arm_paths),
                           "base": base_path, "arms": arm_paths, "per_task": per_task}
 
