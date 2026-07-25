@@ -166,9 +166,80 @@ def main():
 
         out["checkpoints"][ck] = ck_out
 
+    out["net_effect"] = net_effect()
+
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2)
     print(f"\n[done] wrote {OUT}")
+
+
+# Published reference points of the off-axis spectrum (ledger B48). ratio =
+# |cos(diff, v_inf)| / |cos(diff, random)|; 1.0 = indistinguishable from chance =
+# maximally off-axis. These are NOT recomputed here -- they are cited.
+SPECTRUM_REF = [
+    ("contrastive in-domain (canonical, E2)", 1.85, "in", "contrastive"),
+    ("same-param plain-CE in-domain (E1)", 2.68, "in", "plain-CE"),
+    ("Align-LoRA (higher capacity)", 3.93, "in", "plain SFT"),
+]
+
+
+def net_effect():
+    """The two new spectrum points, and how much each axis moves the ratio."""
+    cells = {"C_contrastive_OOD": "direct", "D_plainCE_OOD": "plain_ce"}
+    got = {}
+    print(f"\n{'=' * 74}\nnet-effect (off-axis ratio)\n{'=' * 74}")
+    for name, loss in cells.items():
+        rs, cs = [], []
+        for s in (0, 1, 2):
+            p = os.path.join(E4, f"neteffect_ood_{loss}_seed{s}.json")
+            if not os.path.exists(p):
+                continue
+            with open(p, encoding="utf-8") as f:
+                sm = json.load(f)["summary"]
+            rs.append(float(sm["ratio"]))
+            cs.append(float(sm["mean_abs_cos_vinf"]))
+        if not rs:
+            print(f"  {name:<22} MISSING")
+            continue
+        got[name] = {"ratio_mean": float(np.mean(rs)),
+                     "ratio_sd": float(np.std(rs, ddof=1)) if len(rs) > 1 else 0.0,
+                     "abs_cos_vinf_mean": float(np.mean(cs)), "n_seeds": len(rs),
+                     "ratios": rs}
+        g = got[name]
+        print(f"  {name:<22} ratio {g['ratio_mean']:.2f} ± {g['ratio_sd']:.2f}   "
+              f"|cos| {g['abs_cos_vinf_mean']:.3f}   (n={g['n_seeds']})")
+
+    if len(got) < 2:
+        return got
+
+    rows = SPECTRUM_REF + [
+        ("contrastive OOD (E4-C, NEW)", got["C_contrastive_OOD"]["ratio_mean"], "OOD", "contrastive"),
+        ("plain-CE OOD (E4-D, NEW)", got["D_plainCE_OOD"]["ratio_mean"], "OOD", "plain-CE"),
+    ]
+    print("\n  spectrum (1.0 = chance = maximally off-axis):")
+    for n, r, dom, obj in sorted(rows, key=lambda x: x[1]):
+        print(f"    {r:.2f}  {n:<40} [{dom:>3}, {obj}]")
+
+    c_ood = got["C_contrastive_OOD"]["ratio_mean"]
+    d_ood = got["D_plainCE_OOD"]["ratio_mean"]
+    d_obj_in, d_obj_ood = 2.68 - 1.85, d_ood - c_ood
+    d_dom_con, d_dom_plain = c_ood - 1.85, d_ood - 2.68
+    axes = {"objective_shift_indomain": d_obj_in, "objective_shift_ood": d_obj_ood,
+            "domain_shift_contrastive": d_dom_con, "domain_shift_plainCE": d_dom_plain}
+    print(f"\n  objective (contrastive->plain-CE): in-domain {d_obj_in:+.2f}   OOD {d_obj_ood:+.2f}")
+    print(f"  domain (in->OOD): contrastive {d_dom_con:+.2f}   plain-CE {d_dom_plain:+.2f}")
+
+    # pre-registered: if domain moves the ratio as much as objective, declare a third axis
+    third_axis = abs(d_dom_con) >= abs(d_obj_in)
+    verdict = ("THIRD AXIS: domain moves the contrastive ratio at least as much as the "
+               "objective does -> off-axis requires the CONJUNCTION objective x domain, "
+               "not the objective alone; E1's 'follows the objective' must be qualified"
+               if third_axis else
+               "objective dominates: the off-axis effect follows the training objective; "
+               "domain is second-order")
+    print(f"\n  -> {verdict}")
+    return {**got, "axis_shifts": axes, "third_axis_triggered": bool(third_axis),
+            "verdict": verdict, "spectrum": [[n, r, dom, obj] for n, r, dom, obj in rows]}
 
 
 if __name__ == "__main__":
