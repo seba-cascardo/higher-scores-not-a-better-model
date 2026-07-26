@@ -441,7 +441,8 @@ ARC lift recovered (rank sweep r8/32/64/256) & fraction
 $\mathbf{59/63/60/65 = {\sim}62\%}$, flat & \code{msap-\allowbreak phase1-\allowbreak 20260624} (rank
 sweep) \\
 Within-sweep capacity slope & slope-CI $\mathbf{[-1.4, +3.4]}$ (includes
-0); delta-method frac-CI ${\sim}\mathbf{[45\%, 85\%]}$ (zone C) & same \\
+0); paired-bootstrap frac-CI $\mathbf{[51\%, 73\%]}$, delta-method
+${\sim}[45\%, 85\%]$ (zone C, binned on the point) & same $+$ \code{l1\_\allowbreak paired\_\allowbreak bootstrap.\allowbreak json} \\
 Best-effort capacity flank (r512, causal fairness, $n{=}400$) & lr1e-4 frac
 $\mathbf{0.22}$ (converged, acc${>}$base; overfit ep2${\rightarrow}$ep4, robust
 ep2=ep4); lr2e-4 \textbf{below base} (broken, excluded like r256hi) $\rightarrow$
@@ -469,13 +470,22 @@ grid}. What we cannot exclude is a different architecture, placement, optimizer 
 search budget doing better.
 \item \textbf{Interval validation and the r512 flank.} Because delta-method (Wald)
 intervals on ratio estimators can be unstable when the denominator's sampling error
-matters, the fraction interval is cross-checked by an independent
+matters, the fraction interval is cross-checked twice. An independent
 bootstrap-of-the-ratio (200k parametric draws from the published arm accuracies at
-$n{=}400$, independent-binomial resampling --- conservative relative to the paired
-design, whose positive inter-arm correlation would only tighten it): r256 frac CI
+$n{=}400$, independent-binomial resampling) gives r256 frac CI
 $[0.50, 0.80]$ against the delta-method $[0.45, 0.85]$, and a bootstrap slope CI of
 $[-2.5, +4.6]$ pp per log2-rank step containing zero, both matching the published
-reading (\code{runs/\allowbreak oq1\_\allowbreak functional\_\allowbreak axis/\allowbreak frac\_\allowbreak ci\_\allowbreak bootstrap.\allowbreak json}). The r512 flank
+reading (\code{runs/\allowbreak oq1\_\allowbreak functional\_\allowbreak axis/\allowbreak frac\_\allowbreak ci\_\allowbreak bootstrap.\allowbreak json}). That check was
+conservative by construction --- resampling each arm independently discards the
+correlation induced by scoring the \emph{same} $400$ items in all three arms --- and
+we flagged that a paired design would only tighten it. It does: resampling items with
+replacement and carrying base, generic and contrastive together (200k reps, seed $0$,
+zero degenerate replicates) gives $\mathbf{[0.51, 0.73]}$, $44\%$ narrower than the
+delta-method interval and contained in it, with the measured item-level correlation
+($r{=}0.42$ base--generic, $0.26$ base--contrastive) as the mechanism. We report the
+paired interval as primary and keep both others as conservative readings that contain
+it (\code{...l1\_\allowbreak paired\_\allowbreak bootstrap.\allowbreak json}, superseding the independent-binomial
+file above). The r512 flank
 is deliberately \emph{not} folded into the flat-sweep fit: at lr 1e-4 it converges
 yet recovers markedly less (0.22, stable across epochs 2--4, overfitting beyond),
 and at lr 2e-4 it breaks below base --- both excluded by the same
@@ -513,7 +523,7 @@ moving \emph{toward} the axis. So how much a generic objective recovers depends 
 capacity, and where the recovery lives depends on the objective --- two factors, not
 one ordered scale. Horizontal bars are the published 95\% intervals on the recovery
 fraction where one exists --- $\Wknow$ $[-0.9\%, +13.6\%]$ and generic SFT
-$[45\%, 85\%]$; the random floor (three seeds), the same-parameterization control
+$[51\%, 73\%]$ (paired bootstrap); the random floor (three seeds), the same-parameterization control
 (three seeds, sd $5.0$ pp) and the contrastive anchor (100\% by construction) carry
 none, and we do not synthesise one. \textbf{$\Wknow$'s interval crosses zero and
 overlaps the random floor:} its 6.4\% is statistically indistinguishable from no
@@ -769,3 +779,51 @@ $68{\rightarrow}12\%$), adapter-dependent and off the V7-mc headline. & buggy:
 \end{tabular}
 \end{threeparttable}
 \end{table}
+
+\subsection{The causal spine replicates in a second model
+family}\label{results:qwen}
+
+Everything above is one model. We repeated the causal decomposition on
+Qwen2.5-14B-Instruct --- a different family, different tokenizer, different
+pre-training --- with the same pipeline and $6{,}192$ trainable parameters, in two
+runs. A gated reference run established the \emph{effect} on this family: a same-sign
+cold-MC lift on all four tasks (ARC $+18.0$ / HellaSwag $+7.8$ / TruthfulQA-mc1
+$+15.8$ / Winogrande $+3.0$), with the null-adapter arm exactly at base
+(\cref{disc:status}). The decomposition run reproduces it at
+$+16.25 / +7.25 / +15.00 / +3.25$, inside the ${\pm}3$ pp band fixed before looking:
+ARC acc\_norm moves $0.4975 \rightarrow 0.6600$, a lift of $\mathbf{+16.25}$ pp,
+smaller than Gemma's $+35.83$ but built by the same machinery. That run's
+null-adapter arm sits $1.5$ pp above the reference and its adapter arm $-0.25$ pp ---
+mixed signs, the signature of BF16 non-determinism rather than the one-directional
+${\approx}24$ pp a broken chat template produces --- so every fraction below divides
+by \emph{this} run's own base and adapter, never across runs.
+
+The decomposition transfers with it. Splitting the trained offset against the
+functional inference direction and re-injecting each part separately, the
+\emph{off-axis} component carries the lift ($\text{off\_perp} = \mathbf{+106.2\%}$
+recovery) while the on-axis component does not ($\text{off\_par} = -6.2\%$), and the
+strongest on-axis direction we can build recovers $-18.5\%$ --- as in Gemma, the
+on-axis arm buys nothing. The learned direction is privileged rather than merely
+orthogonal: three norm-matched random directions inside the same complement recover
+$-16.9 / -16.9 / -13.8\%$ (mean $-15.9 \pm 1.8$), so $\text{off\_perp}$ clears its own
+noise floor by ${\sim}122$ pp in the same units, against ${\sim}101$ pp in Gemma.
+Read against that floor, the on-axis arm does not beat same-norm noise in
+\emph{either} family.
+
+Non-transfer to generation replicates too, and harder: gsm8k falls
+$0.945 \rightarrow 0.455$, $\mathbf{-49.0}$ pp, twice Gemma's $-24.2$. Crucially the
+turn-termination rate is preserved ($1.000 \rightarrow 0.985$), with stop ids
+resolved from the model's own generation config --- so the damage is multi-step
+reasoning, not the EOS collapse an earlier counting bug once suggested
+(\cref{tab:pathologies}). Generation also shortens, $191 \rightarrow 133$ tokens on
+average.
+
+Two honest limits on how far to read this. First, \textbf{this is replication in two
+families, not universality}: two points do not establish a law, and the arms differ in
+magnitude throughout. Second, two cells are not readable here and we do not report
+them as agreement: Winogrande's lift is only $3.25$ pp, too small a denominator for a
+recovery fraction to mean anything, and the shuffle floor on HellaSwag comes out
+\emph{positive} ($+31\%$) rather than near zero. The matched non-contrastive control orders the tasks
+HellaSwag $114.9\% >$ ARC $27.2\% >$ TruthfulQA $-58.3\%$, the same ordering Gemma
+gives \emph{under acc\_norm} --- a caveat that matters, because under raw accuracy the
+ordering does not survive in either family (\cref{lim:metric}).

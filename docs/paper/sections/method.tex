@@ -196,9 +196,11 @@ the control's own effect to be non-trivial and positive
 ($\mathrm{arm} - \mathrm{base} \geq 0.01$), so a no-op or harmful control cannot be
 scored. The surviving fraction is binned at $\mathrm{frac\_lo} = 1/3$ and
 $\mathrm{frac\_hi} = 2/3$ into three zones (\code{:71,73,139-\allowbreak -\allowbreak 150}); the
-${\sim}62\%$ ARC recovery lands in the middle zone, and its delta-method fraction
-interval $[45\%, 85\%]$ (\cref{disc:inducibility}) is what we report as ``zone C''
-against these thresholds. A separate null-task check (MMLU) guards that a causal arm
+${\sim}62\%$ ARC recovery lands in the middle zone, which is what we report as
+``zone C'' against these thresholds. The thresholds bin the \emph{point} estimate, so
+the zone assignment does not depend on which interval accompanies it (paired
+bootstrap $[51\%, 73\%]$, delta-method $[45\%, 85\%]$; \cref{disc:inducibility}).
+A separate null-task check (MMLU) guards that a causal arm
 does not damage an unrelated task (null MMLU $+0.07\pp$ at PASS,
 \cref{tab:onaxis}).
 

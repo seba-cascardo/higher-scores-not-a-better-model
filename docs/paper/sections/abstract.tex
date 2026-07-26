@@ -12,8 +12,8 @@ depends on capacity and on the task. A \emph{same-parameterization} control --- 
 identical 48 head-pairs and $12{,}336$ trainable parameters, same corpus and steps,
 ordinary cross-entropy with no term against the incorrect option, three seeds ---
 recovers $36.2\% \pm 5.0$ of the ARC lift, while a non-contrastive LoRA with
-$1{,}800\times$--$117{,}000\times$ more parameters recovers ${\sim}62\%$ (fraction-CI
-$[45\%, 85\%]$, flat across rank r8--256). Inducibility is also strongly
+$1{,}800\times$--$117{,}000\times$ more parameters recovers ${\sim}62\%$
+(paired-bootstrap fraction-CI $[51\%, 73\%]$, flat across rank r8--256). Inducibility is also strongly
 task-dependent: the same-parameterization control recovers $79.5\%$ of Winogrande's
 lift and $69.5\%$ of HellaSwag's but $0.9\%$ of TruthfulQA-mc1's, i.e.\ nothing ---
 raising the correct option's probability suffices where the task scores continuation
@@ -48,10 +48,11 @@ generation, Pareto-dominating the adapter --- the read leg of a read${\neq}$writ
 dissociation (the selector capability itself is prior work, NoVo/CORAL, used here as
 evidence, not claimed as new). We likewise build on, rather than lead on, the
 established fact that cold-MC scoring under a chat template is a lossy readout of
-what the model knows (Confidence-Manifold, Inside-Out, KAPPA). Both the effect and
-its off-axis geometry replicate cross-family (Qwen 14B: same-sign lift on all four
-tasks, three clearly and Winogrande marginal at $n{=}400$; whitened
-$\cos(\thetamc, \vinf)$ $-0.002$, $97.5\%$ perpendicular energy). Practically, this
+what the model knows (Confidence-Manifold, Inside-Out, KAPPA). The effect, its off-axis
+geometry and the causal decomposition all replicate cross-family (Qwen 14B:
+same-sign lift on all four tasks, three clearly and Winogrande marginal at
+$n{=}400$; whitened $\cos(\thetamc, \vinf)$ $-0.002$, and the lift again carried by
+the perpendicular component, not by the parallel one). Practically, this
 is a caution for the contrastive-PEFT-for-multiple-choice program: a cold-MC lift of
 this size can be an off-axis, non-transferring readout edit --- matched by a cheaper
 read-only selector, and \emph{strictly dominated} by the most trivial baseline there

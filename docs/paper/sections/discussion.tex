@@ -213,8 +213,17 @@ objective as such.
 on the same data budget, run through the same causal recovery machinery (a sign-safe
 three-zone control gate), recovers about \textbf{62\%} of the ARC lift, and that
 fraction is \textbf{flat across a rank sweep} (r8/32/64/256: 59/63/60/65), with the
-sweep slope's confidence interval spanning zero ($[-1.4, +3.4]$) and a delta-method
-fraction interval of roughly $[45\%, 85\%]$ (zone C). Within that grid, then, the
+sweep slope's confidence interval spanning zero ($[-1.4, +3.4]$) and a
+paired-bootstrap fraction interval of $\mathbf{[51\%, 73\%]}$. That interval resamples
+the $400$ items with replacement and carries the base, generic and contrastive arms
+together, so the positive inter-arm correlation the three arms actually have
+(item-level $r{=}0.42$ between base and generic) is retained instead of discarded; it
+is $44\%$ narrower than, and contained in, the delta-method $[45\%, 85\%]$ we report
+as the conservative reading (zone C is binned on the point estimate, $0.62$, and is
+unchanged). One-sided, the fraction exceeds one half in $98.2\%$ of resamples --- one
+minus the one-sided bootstrap $p$-value, not a posterior probability. Under raw
+accuracy instead of length-normalised accuracy the point moves to $0.61$ and that
+figure to $96.9\%$. Within that grid, then, the
 residual is not a gap more rank closes; but the comparison with the
 same-parameterization arm shows that capacity itself moves the fraction, from
 ${\sim}37\%$ to ${\sim}62\%$. We therefore do not name a ceiling for generic
@@ -979,6 +988,79 @@ finds the same structure-suppression signature (${\sim}91\%$ structural, a
 $\times3$ enrichment); we report both, and the per-position recall-tail resolution,
 in \cref{app:mechanism} and rely on them for no claim above.
 
+\subsection{What the offset does do: it rescales the decision margin without knowing
+which item it is helping}\label{disc:mechanism}
+
+Having ruled temperature and frequency out, we can say what the arms \emph{do} change,
+and it is a global property of the score distribution rather than an item-by-item
+judgement. Write the per-item decision margin as
+$g = \log p(\mathrm{gold}) - \log p(\mathrm{best\ distractor})$ and compare an arm's
+margins against the base's on the same items. The ratio
+$\mathrm{sd}(g_{\mathrm{arm}}) / \mathrm{sd}(g_{\mathrm{base}})$ splits the eighteen
+arm${\times}$task cells we have, across both families, without exception:
+\textbf{the contrastive objective in domain expands the margin scale}
+($2.10 / 1.50 / 1.95$ on ARC / HellaSwag / TruthfulQA in Gemma,
+$1.47 / 1.63 / 1.81$ in Qwen) and \textbf{everything else compresses it} to
+$0.41$--$0.72$ --- ordinary cross-entropy in either domain, and the contrastive
+objective itself once trained out of domain ($0.63$--$0.70$). That last cell is worth
+stating precisely: out of domain the objective keeps an accuracy advantage over plain
+cross-entropy at identical parameterization and corpus, but it lands on the
+\emph{compressing} side of the split, losing the scale signature that in-domain
+training produces.
+
+Scale is one scalar; the accuracy change needs a second, which is where the rescaled
+distribution sits relative to zero. Fitting
+$g_{\mathrm{arm}} \approx a\,g_{\mathrm{base}} + c$ per cell and reading off the
+effective decision threshold $-c/a$, the shift is large and negative wherever the arm
+helps (Gemma contrastive: $-43.6 / -24.7 / -47.1$ nats) and positive wherever it hurts
+(both plain-CE arms on TruthfulQA, $+4.2$ and $+11.8$). Its \emph{sign} matches the
+sign of the measured accuracy change in 17 of the 18 cells; the exception is the one
+cell whose measured effect is itself null ($+0.8\pp$, a no-op in 2 of 3 seeds). Pushed
+all the way, a deterministic map built from those two global scalars alone --- carrying
+no information about which item is which --- reproduces the direction and rough size of
+every accuracy change with a non-zero effect to reproduce (17 of 18; the eighteenth
+measures exactly zero), over-explaining by a median of $29\%$, cell-wise range
+$0.70$--$1.93\times$ the measured effect. We report that as sufficiency of \emph{form},
+not as a calibrated fit: the map is deterministic where the real arm is noisy, and
+noise attenuates.
+
+The obvious objection is that the arms might rescale \emph{and} aim, so we bound the
+aiming rather than assume it away. The tempting null --- permuting each arm's per-item
+push across all items --- is invalid here, because any rescaling makes that push
+$(a-1)\,g_{\mathrm{base}} + c$, anticorrelated with the base margin by construction and
+without any knowledge of which option is correct; such a null therefore rejects for
+every arm that rescales, which is all of them. Permuting instead \emph{within strata of
+the base margin} preserves the conditional law of the push and destroys only item
+identity, and under it 1 of 18 cells exceeds $2\sigma$ where the invalid control gave
+9 of 18. The survivor does not hold up: selected post hoc from 18, it fails both
+Bonferroni and BH-FDR ($p = 0.0066$ against a threshold of $0.00278$), and its
+significance rides on a free parameter --- $z$ runs from $1.30$ to $3.43$ as the
+stratum width goes from 10 items to 100. Its residual does differ from zero under a
+paired bootstrap ($+1.12\pp$, CI $[+0.20, +2.09]$), and that is the honest reading: an
+item-specific component that exists and is bounded at ${\approx}5\%$ of that cell's
+$+22.7\pp$ effect, where it is largest. Item-blind rescaling accounts for the rest.
+
+This is the readout thesis made mechanical, and it accounts for the task pattern
+without new machinery. ARC sits on the edge of its own decision boundary --- median
+$|g|$ of $9.8$ nats in Gemma and $8.5$ in Qwen against $17$--$23$ on HellaSwag and
+TruthfulQA, with $12.5\%$ and $22.2\%$ of its items inside 3 nats --- so a global
+rescaling carries more items across zero there than anywhere else. (Density alone does
+not order the finer structure: in Gemma, HellaSwag at $7.0\%$ and TruthfulQA at
+$7.25\%$ are tied while their effects differ, so we report it as a descriptor and not
+a predictor.) An edit that moves a threshold need not know which questions it is
+fixing, which is why the items it fixes turn out to be ones the base could already
+reach by reasoning (\cref{disc:arbiter}), and why the same push has nothing to offer a
+generation channel that never scores the options against each other at all.
+
+Three limits travel with this. It is measured on raw accuracy throughout, which is the
+right scale for a mechanism stated in log-probability differences but is \emph{not} the
+metric behind two of the four headline lifts (\cref{lim:metric}); the two are not
+interchangeable. The contrastive-canonical cells are a single training run --- the
+published adapter --- while the plain-CE cells carry three seeds each. And the
+stratified null does not show that the arms carry no per-item information; it shows
+that this statistic cannot distinguish such information from a rescaling, with the
+audit above bounding what it could be hiding.
+
 \subsection{Two failure modes: ARC carries the readout story (suppression),
 TruthfulQA is answer-prior (promotion)}\label{disc:heterogeneity}
 
@@ -1091,8 +1173,10 @@ replicates cross-family (Qwen 14B: same-sign cold-MC lift on all four tasks ---
 three clearly, with Winogrande $+3.0$ small and not individually significant at
 $n{=}400$, counted as marginal --- ARC $+18$ / HellaSwag $+7.8$ / TruthfulQA-mc1
 $+15.8$ / Winogrande $+3$, magnitude below Gemma; null==base gate exact), removing
-``single-model'' from the effect; its off-axis geometry replicates too (whitened
-cos $-0.002$, frac${\perp}$ 97.5\%; below).
+``single-model'' from the effect; the off-axis geometry replicates too (whitened
+cos $-0.002$, frac${\perp}$ 97.5\%), and so does the causal decomposition that reads
+it --- perpendicular component $+106\%$, parallel $-6\%$, on-axis reference again
+inside its own noise floor (\cref{results:qwen}).
 
 \paragraph{A note on multiplicity and sample-sharing scopes these statistics.}
 The paper's tests fall in two families, and only the first carries formal
@@ -1162,8 +1246,10 @@ token-frequency edit; its causal-patching cross-check has now run and confirms i
 but not feature-held-out, pending the cross-benchmark check (ARC-Easy /
 OpenBookQA). The cross-family universality of the \emph{effect} now has one
 replication (Qwen 14B, 4/4 sign), and the off-axis-of-degree \emph{mechanism} now
-replicates too (Qwen whitened $\cos(\thetamc, \vinf)$ $-0.002$ within null,
-perpendicular fraction 97.5\%; above). The collateral reasoning loss is now shown
+replicates too --- geometrically (Qwen whitened $\cos(\thetamc, \vinf)$ $-0.002$
+within null, perpendicular fraction 97.5\%) and causally (the perpendicular component
+carries the lift, the parallel one and the on-axis reference do not;
+\cref{results:qwen}). The collateral reasoning loss is now shown
 \textbf{dose-separable from the scoring benefit in steering} (single
 activation-scale axis: the scoring lift saturates at $s{=}0.75$ where gsm8k is
 still at base, and the reasoning damage falls only in the $0.75{\rightarrow}1.0$

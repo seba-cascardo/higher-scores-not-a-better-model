@@ -45,8 +45,8 @@ not a gap more rank closes).
 Read correctly, these matched controls \emph{are} an attribution method, and the
 fractions are the result, not a deflation. They span a series --- a norm-matched
 random direction ${\approx}0\%$ $\rightarrow$ same-parameterization control
-${\sim}37\%$ $\rightarrow$ higher-capacity generic SFT ${\sim}62\%$ (fraction-CI
-$[45\%, 85\%]$) $\rightarrow$ the contrastive adapter $100\%$ --- that places much of
+${\sim}37\%$ $\rightarrow$ higher-capacity generic SFT ${\sim}62\%$
+(paired-bootstrap fraction-CI $[51\%, 73\%]$) $\rightarrow$ the contrastive adapter $100\%$ --- that places much of
 the lift on fine-tuning \emph{in general} rather than on the contrastive objective,
 without letting us name one number as ``the'' generic fraction: it moves with
 capacity. The task dependence is sharper still. The same three same-parameterization
@@ -229,7 +229,7 @@ that explains it, together with the deployment pathologies the recovery introduc
   48 head-pairs and $12{,}336$ parameters, CE-plain, three seeds) recovers
   $\mathbf{36.2\% \pm 5.0}$ of the ARC lift; a \emph{higher-capacity} Align-LoRA
   ($1{,}800\times$--$117{,}000\times$ more parameters) recovers ${\sim}62\%$ ---
-  fraction-CI $\boldsymbol{[45\%, 85\%]}$, flat across rank, and an r512 flank does
+  paired-bootstrap fraction-CI $\boldsymbol{[51\%, 73\%]}$, flat across rank, and an r512 flank does
   not raise it within that grid. Recovery is also strongly task-dependent
   (Winogrande $79.5\%$ / HellaSwag $69.5\%$ / ARC $36.2\%$ / TruthfulQA
   $\mathbf{0.9\%}$ at matched capacity). Read as an \emph{attribution spectrum} ---

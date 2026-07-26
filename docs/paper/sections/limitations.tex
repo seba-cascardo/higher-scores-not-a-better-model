@@ -90,6 +90,20 @@ not define a length-normalized variant. The choice is not cosmetic: on HellaSwag
 acc\_norm ($+17.0$) is \emph{smaller} than acc ($+22.25$), so the headline is the
 more conservative figure and the lift is not a length artifact. We state the
 per-task metric explicitly rather than imply a single unified score.
+\label{lim:metric}
+
+The same choice is \emph{anti}-conservative in the other direction, for the
+inducibility fractions rather than the lift, and we flag it rather than let the two
+uses of one metric pass as if they behaved alike. Recomputed under raw accuracy,
+HellaSwag's inducibility collapses --- $69.5\% \rightarrow 8.9\%$ for the
+same-parameterization control, $92.6\% \rightarrow 19.1\%$ for the higher-capacity
+arm, and in Qwen it becomes unreadable (the acc lift is $-0.5$ pp, two items). ARC's
+survives in the generic arm ($0.6214 \rightarrow 0.6099$) but not everywhere: the
+same-parameterization control's $36.2\%$ becomes $26.9\%$ in Gemma and its $27.2\%$
+becomes $59.7\%$ in Qwen, so that figure carries the metric with it too. The four
+lifts themselves are robust. What does not survive is the \emph{cross-task ordering}
+of inducibility, which is an acc\_norm statement and is cited as such throughout, not
+as a property of the models.
 
 \paragraph{The contrastive-specific residual is grid-relative, not a bound on generic
 fine-tuning.}
@@ -111,17 +125,38 @@ collapses $98\%{\rightarrow}30\%$), so its generic-fine-tuning claim is an ARC r
 The same-parameterization control does measure TruthfulQA --- and recovers
 $0.9\% \pm 3.3$ of its lift, i.e.\ nothing (\cref{disc:inducibility}).
 
-\paragraph{The inducibility control shares its corpus with the evaluation, so
-``generic'' is not cleanly separated from ``domain exposure.''}
-The matched Align-LoRA trains on the same TruthfulQA+ARC budget the effect is
-measured on (\cref{sec:definitions}). That leaves the ${\sim}62\%$ consistent with
-two readings we cannot separate here: that ordinary fine-tuning of \emph{any} kind
-recovers most of the lift, or that fine-tuning \emph{on this domain} does.
-Separating them needs an out-of-domain SFT arm --- a matched control trained on
-unrelated data --- which we did not run: it is a full training run to refine an
-attribution whose interval is already $[45\%, 85\%]$, so it would sharpen the
-reading rather than overturn it. We flag it as the natural strengthening rather
-than quietly claim the stronger of the two readings.
+\paragraph{``Generic'' versus ``domain exposure'': resolved --- any fine-tuning.}
+The inducibility controls train on the same TruthfulQA+ARC budget the effect is
+measured on (\cref{sec:definitions}), which left the ${\sim}62\%$ consistent with two
+readings: that ordinary fine-tuning of \emph{any} kind recovers most of the lift, or
+that fine-tuning \emph{on this domain} does. We ran the missing arm. Holding
+parameterization, budget and schedule fixed and swapping only the corpus for MedMCQA
+--- same pair format, medical domain, no overlap with the four anchors --- the
+non-contrastive control recovers $33.8\% \pm 5.5$ of the ARC lift out of domain
+against $36.2\% \pm 5.0$ in domain, a ratio of $\mathbf{0.93}$ at the best
+checkpoint and $\mathbf{1.00}$ at the final one. \textbf{The domain is not what
+matters:} plain cross-entropy trained on medicine buys back as much of an ARC lift as
+plain cross-entropy trained on ARC itself.
+
+Two things follow that the earlier reading could not say. First, the contrastive
+objective does work \emph{outside} its domain: cell C recovers $+17.5$ pp (best) and
+$+21.3$ pp (final) more than plain CE at identical parameterization and corpus.
+Second, the off-axis ratio moves with the domain as well as with the objective
+(\cref{fig:spectrum} gains two points, $2.75 \pm 0.26$ and $2.98 \pm 0.10$): the
+domain shift is a real axis at $+0.90 \pm 0.17$ ($5.4\sigma$), but it differs from the
+objective shift by only $+0.07 \pm 0.25$ ($0.28\sigma$), so \emph{which} axis weighs
+more is not decided by these data and we do not order them. Both figures are the
+larger of the two estimates the $2\times2$ affords, and we say so: measured under the
+other level of the opposite factor, the domain shift is $+0.30 \pm 0.20$ ($1.5\sigma$)
+and the objective shift $+0.23 \pm 0.16$ ($1.4\sigma$). The interaction is therefore
+real ($+0.60$ either way you slice it) and neither main effect is a single number ---
+which is a further reason not to order the axes.
+
+The out-of-domain arms also carry a cost we did not anticipate and report as a
+finding rather than a footnote: both damage TruthfulQA (at the best checkpoint,
+contrastive $-4.2$ pp and plain CE $-10.1$ pp relative to base; $-1.0$ and $-9.8$ at
+the final one, harmful in $3/3$ seeds throughout), where the in-domain
+non-contrastive control was merely inert.
 
 \paragraph{The headline anchors are knowledge benchmarks with low chain-of-thought
 headroom --- by design, and stated as scope.}
@@ -264,23 +299,25 @@ result, not an independent test, and a setting with genuine selection headroom
 (which we did not find here) would be required to revisit it.
 
 \paragraph{The off-axis verdict is of degree and method-dependent, established
-geometrically and causally on Gemma --- with the off-axis geometry now replicated
-on a second family.}
+geometrically and causally on Gemma --- and now replicated, geometrically and
+causally, on a second family.}
 The recovery is off the functional correctness direction by a
 \emph{method-dependent} amount: the random control recovers ${\approx}0\%$ (the
 direction is learned, not arbitrary), the strongest on-axis reference recovers
 6.4\%, the contrastive net effect sits at cosine 0.088 and generic SFT at 0.199
 ($2.3\times$ more on-axis). We deliberately do not claim ``purely off-axis'' or
 ``off-axis universally'' --- a weight-space proxy suggested that and the clean
-activation experiment refuted it. The \emph{causal} spectrum ($\Wknow$ recovery,
-arbiter, inducibility) is single-model (Gemma~4 31B IT), but the off-axis
-\emph{geometry} itself now replicates on a second family: on Qwen 14B the cold-MC
-effect is 4/4-sign and its offset's whitened $\cos(\thetamc, \vinf)$ is $-0.002$
-(vs Gemma's $-0.003$, both within the null band) with 97.5\% of the offset energy
-perpendicular to $\vinf$, so the off-axis-of-degree direction is cross-family, not
-single-model --- with one honest heterogeneity of degree: Qwen's \emph{raw} on-axis
-energy budget (2.47\%, z+8.9 vs null) is ${\sim}4\times$ Gemma's (0.59\%), though
-the covariance-controlled whitened cosine is identical (\cref{disc:status}).
+activation experiment refuted it. Both halves of the verdict now hold on Qwen 14B:
+geometrically, the cold-MC effect is 4/4-sign and the offset's whitened
+$\cos(\thetamc, \vinf)$ is $-0.002$ (vs Gemma's $-0.003$, both within the null band)
+with 97.5\% of the offset energy perpendicular to $\vinf$; causally, re-injecting the
+two components separately puts the lift on the perpendicular one and nothing on the
+parallel one, and the on-axis reference again fails to beat same-norm noise
+(\cref{results:qwen}). One honest heterogeneity of degree remains: Qwen's \emph{raw}
+on-axis energy budget (2.47\%, z+8.9 vs null) is ${\sim}4\times$ Gemma's (0.59\%),
+though the covariance-controlled whitened cosine is identical (\cref{disc:status}).
+What is still single-model is the \emph{per-item} evidence --- the arbiter --- and
+the capacity arm of the inducibility spectrum (Align-LoRA and its rank sweep).
 
 \paragraph{The lift is task-heterogeneous, and TruthfulQA carries a different
 mechanism than ARC.}
@@ -408,29 +445,23 @@ $\vinf$ does not --- self-consistency reaches \textbf{124/124}: the
 \cref{disc:arbiter} arbiter taken to its extreme, the base reaching by reasoning
 every item the adapter ``fixes'' by cold scoring.
 
-\paragraph{Cross-family universality of the mechanism.}
-Every causal and geometric result here is on Gemma~4 31B IT. The behavioral
-\emph{effect} now replicates concretely on a second frontier family: Qwen 2.5 14B
-IT, run through the identical pipeline (null==base gate exact), shows a same-sign
-cold-MC lift on all four tasks (ARC $+18.0$ / HellaSwag $+7.8$ / TruthfulQA-mc1
-$+15.8$ / Winogrande $+3.0$ --- the last small and not individually significant at
-$n{=}400$, counted as marginal; magnitude below Gemma's 35/17/37/19), removing
-``single-model'' from the \emph{effect} (three tasks clearly, Winogrande
-marginally) --- and the per-task pattern differs (Winogrande $+3$ vs Gemma's
-$+19$), a difference worth explaining. What remains single-model is the
-\emph{mechanistic} characterization --- the arbiter, the inducibility control, the
-geometry spectrum, the no-locus result --- and, most directly, \textbf{whether the
-Qwen lift is off-axis-of-degree in the same way --- which has now run}: extracting
-Qwen's $\vinf$ and Fisher-LDA $\Wknow$ (ARC+HellaSwag inference family,
-chat-template, $48{\times}40{\times}128$ grid) and decomposing its offset gives
-whitened $\cos(\thetamc, \vinf) = -0.002$ (within null, ${\approx}$ Gemma's
-$-0.003$) and a 97.5\% perpendicular energy fraction --- the off-axis-of-degree
-geometry \textbf{replicates on a second family} (Qwen), lifting it from
-single-model to cross-family-replicated --- suggestive of, but not established as,
-a general property ($N{=}2$). The one cross-family difference is a minor
-heterogeneity of \emph{degree} (Qwen's raw on-axis budget 2.47\% vs Gemma's
-0.59\%, though the whitened cosine matches), not of sign. What stays single-model
-is the causal recovery spectrum ($\Wknow$ 6.4\%, arbiter, inducibility).
+\paragraph{Cross-family universality: what replicates, and what is still one model.}
+The behavioral \emph{effect}, the off-axis geometry and the causal decomposition all
+hold on a second frontier family --- Qwen 2.5 14B IT, run through the identical
+pipeline, detailed in \cref{results:qwen}: a same-sign cold-MC lift on all four tasks
+(ARC $+18.0$ / HellaSwag $+7.8$ / TruthfulQA-mc1 $+15.8$ / Winogrande $+3.0$ in the
+gated reference run --- the last small and not individually significant at $n{=}400$,
+counted as marginal), whitened $\cos(\thetamc, \vinf) = -0.002$ with 97.5\%
+perpendicular energy, the lift carried by the perpendicular component ($+106\%$) and
+not by the parallel one ($-6\%$), an on-axis reference that again fails against
+same-norm noise, a matched non-contrastive control that recovers $27\%$ of the ARC
+lift, and the same non-transfer to generation ($-49$ pp on gsm8k, turn termination
+preserved). Two qualifications hold this at $N{=}2$. The per-task pattern differs ---
+Winogrande $+3$ against Gemma's $+19$, magnitudes below Gemma's throughout --- a
+difference we do not explain. And what stays single-model is the \emph{per-item}
+evidence and the capacity dimension: the arbiter, the higher-capacity inducibility
+arm with its rank sweep, the activation-patching decomposition, and the no-locus
+result. Two families are suggestive of a general property, not evidence for one.
 
 \paragraph{Open questions inherited from the system-level negatives.}
 Two further questions bound the deployment reading rather than the mechanism. The
