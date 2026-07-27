@@ -125,7 +125,8 @@ collapses $98\%{\rightarrow}30\%$), so its generic-fine-tuning claim is an ARC r
 The same-parameterization control does measure TruthfulQA --- and recovers
 $0.9\% \pm 3.3$ of its lift, i.e.\ nothing (\cref{disc:inducibility}).
 
-\paragraph{``Generic'' versus ``domain exposure'': resolved --- any fine-tuning.}
+\paragraph{``Generic'' versus ``domain exposure'': one substitution, and it favours
+``any fine-tuning''.}
 The inducibility controls train on the same TruthfulQA+ARC budget the effect is
 measured on (\cref{sec:definitions}), which left the ${\sim}62\%$ consistent with two
 readings: that ordinary fine-tuning of \emph{any} kind recovers most of the lift, or
@@ -134,9 +135,13 @@ parameterization, budget and schedule fixed and swapping only the corpus for Med
 --- same pair format, medical domain, no overlap with the four anchors --- the
 non-contrastive control recovers $33.8\% \pm 5.5$ of the ARC lift out of domain
 against $36.2\% \pm 5.0$ in domain, a ratio of $\mathbf{0.93}$ at the best
-checkpoint and $\mathbf{1.00}$ at the final one. \textbf{The domain is not what
-matters:} plain cross-entropy trained on medicine buys back as much of an ARC lift as
-plain cross-entropy trained on ARC itself.
+checkpoint and $\mathbf{1.00}$ at the final one. \textbf{In the single out-of-domain
+corpus we tested, the domain is not what matters:} plain cross-entropy trained on
+medicine buys back as much of an ARC lift as plain cross-entropy trained on ARC
+itself. One substitution cannot establish that \emph{no} domain matters --- MedMCQA
+shares the multiple-choice pair format with the anchors, and a corpus that did not
+would be a separate test --- so we state the claim at the strength the experiment
+supports: swapping the training domain did not reduce recovery here.
 
 Two things follow that the earlier reading could not say. First, the contrastive
 objective does work \emph{outside} its domain: cell C recovers $+17.5$ pp (best) and

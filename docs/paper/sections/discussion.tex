@@ -209,7 +209,7 @@ best-validation checkpoint --- a ${\sim}36$--$40\%$ range. Because the intervent
 space is held exactly fixed here, this is the arm that attributes recovery to the
 objective as such.
 
-\textbf{At $1{,}800\times$--$117{,}000\times$ capacity.} A non-contrastive Align-LoRA
+\textbf{At $1{,}800\times$--$58{,}000\times$ capacity.} A non-contrastive Align-LoRA
 on the same data budget, run through the same causal recovery machinery (a sign-safe
 three-zone control gate), recovers about \textbf{62\%} of the ARC lift, and that
 fraction is \textbf{flat across a rank sweep} (r8/32/64/256: 59/63/60/65), with the
@@ -988,14 +988,21 @@ finds the same structure-suppression signature (${\sim}91\%$ structural, a
 $\times3$ enrichment); we report both, and the per-position recall-tail resolution,
 in \cref{app:mechanism} and rely on them for no claim above.
 
-\subsection{What the offset does do: it rescales the decision margin without knowing
-which item it is helping}\label{disc:mechanism}
+\subsection{What the offset does do: it rescales the decision margin with two global
+scalars, not item by item}\label{disc:mechanism}
 
 Having ruled temperature and frequency out, we can say what the arms \emph{do} change,
 and it is a global property of the score distribution rather than an item-by-item
 judgement. Write the per-item decision margin as
 $g = \log p(\mathrm{gold}) - \log p(\mathrm{best\ distractor})$ and compare an arm's
-margins against the base's on the same items. The ratio
+margins against the base's on the same items. One scope note belongs here rather than
+in a footnote: $g$ is a \emph{gold-relative} coordinate, so everything below describes
+how the arms move a margin defined using the label. It does not assert that the
+underlying edit is computed without the label --- what is item-independent is the
+\emph{description}: two scalars per cell, constant across items, no per-item term.
+(An affine map applied to the raw option scores could not change any $\arg\max$ at
+all; it is precisely because the intercept acts on the gold-relative margin that
+accuracy moves.) The ratio
 $\mathrm{sd}(g_{\mathrm{arm}}) / \mathrm{sd}(g_{\mathrm{base}})$ splits the eighteen
 arm${\times}$task cells we have, across both families, without exception:
 \textbf{the contrastive objective in domain expands the margin scale}
@@ -1024,6 +1031,18 @@ $0.70$--$1.93\times$ the measured effect. We report that as sufficiency of \emph
 not as a calibrated fit: the map is deterministic where the real arm is noisy, and
 noise attenuates.
 
+Because that fit is in-sample, we re-ran it \emph{out of sample}: the two scalars are
+estimated on a random half of the items and used to reproduce the accuracy change on
+the held-out half, 200 splits per cell. The map survives, and in fact tightens ---
+the median over-explanation falls from $29\%$ in-sample to $\mathbf{16\%}$ held-out,
+and the three cells carrying the canonical contrastive effect are unchanged to two
+decimals (ARC $1.43 \rightarrow 1.42$, HellaSwag $1.14 \rightarrow 1.16$, TruthfulQA
+$1.29 \rightarrow 1.28$). Sixteen of eighteen cells keep the sign of the measured
+effect out of sample; the two that do not are the cells whose measured effect is
+$+0.8$ and $+2.3\pp$, where the ratio divides by a denominator near zero. Part of the
+in-sample over-explanation was therefore fitting noise, and none of the load-bearing
+cells depend on it (\cref{app:mechanism}).
+
 The obvious objection is that the arms might rescale \emph{and} aim, so we bound the
 aiming rather than assume it away. The tempting null --- permuting each arm's per-item
 push across all items --- is invalid here, because any rescaling makes that push
@@ -1036,9 +1055,15 @@ identity, and under it 1 of 18 cells exceeds $2\sigma$ where the invalid control
 Bonferroni and BH-FDR ($p = 0.0066$ against a threshold of $0.00278$), and its
 significance rides on a free parameter --- $z$ runs from $1.30$ to $3.43$ as the
 stratum width goes from 10 items to 100. Its residual does differ from zero under a
-paired bootstrap ($+1.12\pp$, CI $[+0.20, +2.09]$), and that is the honest reading: an
-item-specific component that exists and is bounded at ${\approx}5\%$ of that cell's
-$+22.7\pp$ effect, where it is largest. Item-blind rescaling accounts for the rest.
+paired bootstrap ($+1.12\pp$, CI $[+0.20, +2.09]$ at a stratum width of 25), so an
+item-specific component exists in that cell. We decline to quote a single number for
+its size, because the same free parameter moves it: the residual runs
+$+0.28 / +1.31 / +1.66 / +3.12\pp$ as the stratum width goes from 10 to 100 items,
+i.e.\ between ${\approx}1\%$ and ${\approx}14\%$ of that cell's $+22.7\pp$ effect, with
+no width privileged a priori. The conservative reading is therefore that any
+item-specific component in the most favourable of the eighteen cells is bounded by
+roughly a seventh of the effect, and the item-independent rescaling accounts for the
+rest. We take that as the ceiling, not as an estimate.
 
 This is the readout thesis made mechanical, and it accounts for the task pattern
 without new machinery. ARC sits on the edge of its own decision boundary --- median
@@ -1223,7 +1248,7 @@ $-24.2 \pm 7.3\pp$ (\cref{tab:seeds}); the temperature/null-space negative is
 \cref{disc:negatives}); and the effect replicates cross-family (Qwen 14B, 4/4-sign
 lift). Claims we hold with stated limits rather than as closed: the generic recovery
 fraction is \emph{capacity-dependent} --- ${\sim}37\%$ at the adapter's own
-parameterization against ${\sim}62\%$ at $1{,}800\times$--$117{,}000\times$ capacity,
+parameterization against ${\sim}62\%$ at $1{,}800\times$--$58{,}000\times$ capacity,
 flat within each grid but plainly moving across them --- so we report the
 contrastive-specific residual against a named control rather than as a bound on
 generic fine-tuning (\cref{disc:inducibility}); the present-but-swamped claim's

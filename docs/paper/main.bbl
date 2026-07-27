@@ -103,8 +103,8 @@ Seonglae Cho, Zekun Wu, Kleyton Da~Costa, and Adriano Koshiyama.
 
 \bibitem[Cox et~al.(2026)Cox, Kianersi, and Garriga-Alonso]{PreCoTAnswer}
 Kyle Cox, Darius Kianersi, and Adri{\`a} Garriga-Alonso.
-\newblock Decoding answers before chain-of-thought: Evidence from pre-{CoT}
-  probes and activation steering, 2026.
+\newblock Post-hoc reasoning in chain of thought: Decoding and steering
+  pre-committed answers, 2026.
 \newblock URL \url{https://arxiv.org/abs/2603.01437}.
 
 \bibitem[Cruz et~al.(2024)Cruz, Hardt, and Mendler-D{\"u}nner]{folktexts}

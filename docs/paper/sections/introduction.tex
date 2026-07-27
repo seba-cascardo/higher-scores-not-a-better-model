@@ -37,10 +37,12 @@ At \emph{identical} capacity --- the same 48 head-pairs and the same $12{,}336$
 trainable parameters as the adapter, the same corpus and steps, ordinary
 cross-entropy on the correct answer with no term against the incorrect one, three
 seeds --- the control recovers $\mathbf{36.2\% \pm 5.0}$ of the ARC lift. With
-$1{,}800\times$ to $117{,}000\times$ more parameters, a non-contrastive Align-LoRA
+$1{,}800\times$ to $58{,}000\times$ more parameters, a non-contrastive Align-LoRA
 recovers about \textbf{62\%}, flat across a rank sweep (r8/32/64/256: 59/63/60/65;
 the slope's confidence interval includes zero, so within that grid the residual is
-not a gap more rank closes).
+not a gap more rank closes). A best-effort r512 flank at ${\sim}117{,}000\times$ does
+not extend the plateau --- it recovers $0.22$ at lr1e-4 and falls below base at
+lr2e-4 --- so more capacity past r256 buys nothing here.
 
 Read correctly, these matched controls \emph{are} an attribution method, and the
 fractions are the result, not a deflation. They span a series --- a norm-matched
@@ -88,8 +90,10 @@ restatement (\cref{disc:geometry}). The weight falls on the other two --- an on-
 push at the same scale does nothing, and an equal-norm random direction in the same
 subspace does nothing either.
 
-Two facts follow at once. The lift is genuinely off the correctness axis --- an
-on-axis push does nothing --- yet the \emph{learned} perpendicular direction is
+Two facts follow at once. The lift is genuinely off the measured one-dimensional
+correctness axis --- an on-axis push does nothing, and we mean by this the strongest
+1-D linear correctness direction we can build per head, not the whole correctness
+manifold (\cref{method:directions}) --- yet the \emph{learned} perpendicular direction is
 privileged, since an equal-norm random perpendicular direction does not reproduce
 it. This closes the standard objection that an off-axis direction is unidentifiable
 because \emph{any} norm-matched perturbation would work: it is closed on the harness
@@ -228,9 +232,9 @@ that explains it, together with the deployment pathologies the recovery introduc
   the objective's contribution. A \emph{same-parameterization} control (identical
   48 head-pairs and $12{,}336$ parameters, CE-plain, three seeds) recovers
   $\mathbf{36.2\% \pm 5.0}$ of the ARC lift; a \emph{higher-capacity} Align-LoRA
-  ($1{,}800\times$--$117{,}000\times$ more parameters) recovers ${\sim}62\%$ ---
-  paired-bootstrap fraction-CI $\boldsymbol{[51\%, 73\%]}$, flat across rank, and an r512 flank does
-  not raise it within that grid. Recovery is also strongly task-dependent
+  ($1{,}800\times$--$58{,}000\times$ more parameters) recovers ${\sim}62\%$ ---
+  paired-bootstrap fraction-CI $\boldsymbol{[51\%, 73\%]}$, flat across rank r8--256, and a
+  larger r512 flank (${\sim}117{,}000\times$) does not raise it. Recovery is also strongly task-dependent
   (Winogrande $79.5\%$ / HellaSwag $69.5\%$ / ARC $36.2\%$ / TruthfulQA
   $\mathbf{0.9\%}$ at matched capacity). Read as an \emph{attribution spectrum} ---
   random ${\approx}0\%$ $\rightarrow$ same-parameterization ${\sim}37\%$

@@ -9,7 +9,10 @@ checkpoint \code{google/\allowbreak gemma-\allowbreak 4-\allowbreak 31B-\allowbr
 5376, 32 query heads and head dimension 256, evaluated under
 \code{transformers}~5.8.0 and \code{lm-eval}~0.4.12. The cross-family replication
 (\cref{sec:limitations}) uses \code{Qwen/\allowbreak Qwen2.5-\allowbreak 14B-\allowbreak Instruct}
-(\code{Qwen2ForCausalLM}, 48 layers, $d_{\mathrm{model}}$ 5120). The discrimination
+at revision \code{cf98f3b3bbb457ad9e2bb7baf9a0125b6b88caa8}
+(\code{Qwen2ForCausalLM}, 48 layers, $d_{\mathrm{model}}$ 5120); that repository has
+been unmodified since September 2024, well before these runs, so \code{main} and the
+pinned revision coincide. The discrimination
 adapter (referred to as V7-mc) is a contrastive-correctness PEFT in the LoFiT/ITI
 family: it learns
 additive per-head offset vectors on a sparse set of attention heads from contrastive
@@ -92,7 +95,18 @@ from the mass-mean estimate (cos with $\vinf$ 0.379). ``Strongest'' is a
 construction criterion, not an outcome criterion: the whitened Fisher-LDA direction
 is the optimal linear correctness discriminant under the class covariance, which the
 raw mass-mean ignores --- it is not chosen for recovering the least lift, and
-\cref{disc:geometry} reports both references' recovery side by side. The on-axis
+\cref{disc:geometry} reports both references' recovery side by side.
+
+\textbf{Scope of ``off-axis''.} Both references are \emph{one-dimensional per head}.
+Everything we call off-axis is therefore off the measured one-dimensional linear
+correctness direction, which is the strongest such direction we can build but not the
+whole geometry of correctness: correctness information has been reported to occupy a
+low-dimensional manifold of roughly three to eight directions rather than one
+\citep{ConfidenceManifold}. Our negative arms show that the learned offset is not
+carried by the best 1-D discriminant; they do not show that it lies outside every
+correctness-bearing subspace. Testing $k$-dimensional subspaces with norm-matched
+parallel and residual re-injection is the natural follow-up and we do not claim its
+result here. The on-axis
 causal control substitutes an offset built along $\vinf$ (and along $\Wknow$), unit
 direction scaled to the per-head norm of the trained offset across all 48 heads, so
 that \emph{direction} is the only variable, gated by a sign-safe three-zone control
@@ -128,7 +142,9 @@ swept over LoRA rank (r8/32/64/256) and scored through the same three-zone contr
 gate. This arm is \emph{not} capacity-matched --- LoRA on the text decoder's
 q/k/v/o projections across 60 layers carries ${\sim}22$M trainable parameters at r8
 and ${\sim}1.44$B at r512, i.e.\ $1{,}800\times$ to $117{,}000\times$ the adapter's
-$12{,}336$ --- and we report it as such. The mismatch is conservative for the
+$12{,}336$ --- and we report it as such. The recovery fraction we quote
+(${\sim}62\%$) is the r8--r256 plateau, i.e.\ $1{,}800\times$--$58{,}000\times$; the
+r512 point is a separate best-effort flank and is always reported as one. The mismatch is conservative for the
 inducibility claim (a control with far more capacity that still recovers only part of
 the lift), but it is the reason the same-parameterization arm exists: only (i)
 licenses reading the residual as contrastive-specific \emph{at equal capacity}.

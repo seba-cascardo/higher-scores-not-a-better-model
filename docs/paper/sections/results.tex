@@ -127,7 +127,7 @@ fixed final step, so ${\sim}36$--$40\%$ is the honest range). This is the contro
 isolates the objective, because the intervention space is held exactly fixed.
 
 \textbf{At much higher capacity.} A non-contrastive Align-LoRA --- data- and
-step-matched but with $1{,}800\times$ to $117{,}000\times$ more trainable parameters
+step-matched but with $1{,}800\times$ to $58{,}000\times$ more trainable parameters
 (\cref{sec:definitions}) --- recovers ${\sim}62\%$, flat across a rank sweep
 (59/63/60/65; slope-CI $[-1.4, +3.4]$ includes zero) and not raised by a best-effort
 r512 flank (frac $0.22$ at lr1e-4, converged but overfitting; below-base at lr2e-4).
@@ -152,6 +152,16 @@ therefore true of Winogrande and HellaSwag, and of ARC only at high capacity; it
 false at matched capacity on ARC and false throughout on TruthfulQA. TruthfulQA is
 in any case excluded from the higher-capacity control as train-on-eval leakage
 (held-out, the highest-rank control collapses $98\%{\rightarrow}30\%$).
+
+\textbf{This ordering is a metric statement, and we say so here rather than only in
+\cref{lim:metric}.} The inducibility fractions are computed on the same per-task
+metric as the headline lifts, which for HellaSwag is acc\_norm. Recomputed on raw
+accuracy the ordering does not survive: HellaSwag's $69.5\%$ becomes $8.9\%$ for this
+control and $92.6\%$ becomes $19.1\%$ for the higher-capacity arm, while ARC's
+same-parameterization $36.2\%$ becomes $26.9\%$ in Gemma and $27.2\%$ becomes
+$59.7\%$ in Qwen. The four \emph{lifts} are robust to the choice; the cross-task
+\emph{ordering} of inducibility is not, and no mechanistic claim in this paper rests
+on it.
 
 % ------------------------------------------------------------------ Table 1
 \begin{table}[tbp]
@@ -414,8 +424,8 @@ anchored on \textbf{ARC}.
 controls. The \emph{same-parameterization} control holds the intervention space
 exactly fixed (identical 48 head-pairs, identical $12{,}336$ parameters) and varies
 only the objective, so it isolates the objective; the \emph{higher-capacity}
-Align-LoRA is data- and step-matched but carries $1{,}800\times$--$117{,}000\times$
-more parameters. The fraction a generic objective recovers moves with both capacity
+Align-LoRA is data- and step-matched but carries $1{,}800\times$--$58{,}000\times$
+more parameters across the r8--r256 plateau ($117{,}000\times$ at the r512 flank). The fraction a generic objective recovers moves with both capacity
 and task $\rightarrow$ the effect is \textbf{partly, not wholly, special to the
 contrastive objective}. ARC is the clean test for the higher-capacity arm; TQA is
 excluded there as train-on-eval leakage.}
@@ -435,7 +445,7 @@ HellaSwag $\mathbf{69.5\% \pm 6.4}$; ARC $\mathbf{36.2\% \pm 5.0}$; TruthfulQA-m
 $\mathbf{0.9\% \pm 3.3}$ (\emph{nothing}, despite TQA being in the control's own
 training corpus) & same \\
 \midrule
-\multicolumn{3}{l}{\emph{At $1{,}800\times$--$117{,}000\times$ capacity ---
+\multicolumn{3}{l}{\emph{At $1{,}800\times$--$58{,}000\times$ capacity ---
 higher-capacity Align-LoRA}} \\
 ARC lift recovered (rank sweep r8/32/64/256) & fraction
 $\mathbf{59/63/60/65 = {\sim}62\%}$, flat & \code{msap-\allowbreak phase1-\allowbreak 20260624} (rank
@@ -516,7 +526,7 @@ recovers only 6.4\%, while the top recoverer (the contrastive adapter, 100\%) is
 the two factors at work.} The \emph{same-parameterization} control (identical 48
 head-pairs and $12{,}336$ parameters; only the objective differs) recovers
 ${\sim}37\%$ at cos $0.136$, while \emph{higher-capacity} generic SFT
-($1{,}800\times$--$117{,}000\times$ more parameters) recovers ${\sim}62\%$ at cos
+($1{,}800\times$--$58{,}000\times$ more parameters) recovers ${\sim}62\%$ at cos
 $0.199$: with the parameterization held fixed the contrastive objective is both
 further off-axis and far more effective, whereas added capacity buys recovery while
 moving \emph{toward} the axis. So how much a generic objective recovers depends on
@@ -627,7 +637,7 @@ $\Wknow$ ${\approx}$ null) & --- \\
 $\thetamc$ vs $\vinf$ & $\coswh$ $\mathbf{-0.003}$ (within null); 6.4\% mass in top
 PCs; norm $4.3\times$ class gap (the top-PC 6.4\% is coincidentally equal to the
 $\Wknow$ recovery 6.4\%, not the same quantity) &
-\code{theta\_\allowbreak mc\_\allowbreak characterization.\allowbreak json} \\
+\code{theta\_\allowbreak mc\_\allowbreak character\allowbreak ization.\allowbreak json} \\
 MMLU damage, on-axis $\vinf$ vs mc & VINF $-5.83$ ${\geq}$ MC $-4.30$ (gate PASS,
 null MMLU $+0.07\pp$) & --- \\
 \bottomrule
