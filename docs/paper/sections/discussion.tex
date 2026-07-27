@@ -50,6 +50,16 @@ not from the superseded pre-fix one, where it was 196/202). The items the adapte
 ``fixes'' are knowledge the base already reaches by reasoning; cold scoring simply
 misranks them.
 
+\textbf{What the arbiter is and is not.} It establishes that the corrected items are
+within the \emph{base}'s generative reach --- a statement about latent knowledge and
+about the cold-MC readout that misranks it. It is not a paired base-versus-adapter
+generation comparison on those items, so on its own it does not measure what the
+adapter does to generation. That is measured separately, and negatively, by the
+generation-face results (gsm8k $-24.2 \pm 7.3\pp$ across three independently trained
+seeds, MMLU $-4.2\pp$, GPQA cold-MC ${\sim}0$ against the base's CoT $0.70$). Where we
+say the lift ``does not transfer'', the scope is the generation channels we measure,
+not every conceivable generative use.
+
 \paragraph{The arbiter discriminates: a negative control on the adapter's
 residual.}
 A per-item arbiter of this shape invites an obvious objection --- if the base
@@ -988,21 +998,25 @@ finds the same structure-suppression signature (${\sim}91\%$ structural, a
 $\times3$ enrichment); we report both, and the per-position recall-tail resolution,
 in \cref{app:mechanism} and rely on them for no claim above.
 
-\subsection{What the offset does do: it rescales the decision margin with two global
-scalars, not item by item}\label{disc:mechanism}
+\subsection{A low-dimensional description of what the arms change: two parameters per
+cell, none per item}\label{disc:mechanism}
 
-Having ruled temperature and frequency out, we can say what the arms \emph{do} change,
-and it is a global property of the score distribution rather than an item-by-item
-judgement. Write the per-item decision margin as
+Having ruled temperature and frequency out, we can describe what the arms \emph{do}
+change to the score distribution. Write the per-item decision margin as
 $g = \log p(\mathrm{gold}) - \log p(\mathrm{best\ distractor})$ and compare an arm's
-margins against the base's on the same items. One scope note belongs here rather than
-in a footnote: $g$ is a \emph{gold-relative} coordinate, so everything below describes
-how the arms move a margin defined using the label. It does not assert that the
-underlying edit is computed without the label --- what is item-independent is the
-\emph{description}: two scalars per cell, constant across items, no per-item term.
-(An affine map applied to the raw option scores could not change any $\arg\max$ at
-all; it is precisely because the intercept acts on the gold-relative margin that
-accuracy moves.) The ratio
+margins against the base's on the same items.
+
+\textbf{What this section does and does not claim.} $g$ is a \emph{gold-relative}
+coordinate: it is defined using the label, and so is every fit below. What has no
+per-item parameter is the \emph{description} --- two numbers estimated per
+model${\times}$arm${\times}$task cell, constant across that cell's items. That is a
+low-dimensional descriptive signature, and we read it as nothing more. It is not a
+label-free intervention: a map of this form could not be applied to the raw option
+scores without already knowing which option is gold, and an affine map applied to
+those raw scores could not change any $\arg\max$ at all --- it is precisely because the
+intercept acts on the gold-relative margin that accuracy moves. Nor is the absence of
+fitted per-item parameters evidence that the arms carry no per-item information; we
+test that separately below, and the test is not conclusive either. The ratio
 $\mathrm{sd}(g_{\mathrm{arm}}) / \mathrm{sd}(g_{\mathrm{base}})$ splits the eighteen
 arm${\times}$task cells we have, across both families, without exception:
 \textbf{the contrastive objective in domain expands the margin scale}
@@ -1031,17 +1045,33 @@ $0.70$--$1.93\times$ the measured effect. We report that as sufficiency of \emph
 not as a calibrated fit: the map is deterministic where the real arm is noisy, and
 noise attenuates.
 
-Because that fit is in-sample, we re-ran it \emph{out of sample}: the two scalars are
-estimated on a random half of the items and used to reproduce the accuracy change on
-the held-out half, 200 splits per cell. The map survives, and in fact tightens ---
-the median over-explanation falls from $29\%$ in-sample to $\mathbf{16\%}$ held-out,
-and the three cells carrying the canonical contrastive effect are unchanged to two
-decimals (ARC $1.43 \rightarrow 1.42$, HellaSwag $1.14 \rightarrow 1.16$, TruthfulQA
-$1.29 \rightarrow 1.28$). Sixteen of eighteen cells keep the sign of the measured
-effect out of sample; the two that do not are the cells whose measured effect is
-$+0.8$ and $+2.3\pp$, where the ratio divides by a denominator near zero. Part of the
-in-sample over-explanation was therefore fitting noise, and none of the load-bearing
-cells depend on it (\cref{app:mechanism}).
+That fit is in-sample, and a ratio of accuracy changes is a poor way to read it: its
+denominator is near zero in the small-effect cells, and a harmless-looking $1.43\times$
+on ARC is in fact a $15\,\pp$ absolute error. We therefore re-ran the whole comparison
+\emph{cross-fitted} --- $40 \times$ repeated 5-fold, so every item's prediction comes
+from parameters estimated without it --- scoring the absolute error of the predicted
+accuracy change in percentage points, and against the trivial alternatives the affine
+map has to beat. Median absolute error across the eighteen cells: \textbf{affine
+$\mathbf{2.36\,\pp}$}, intercept-only $4.53$, slope-only $9.42$, base-margin-ignoring
+constant $35.62$. All fourteen cells with an effect of at least $3\,\pp$ are predicted
+with the correct sign.
+
+Two things follow, and the second qualifies the subsection's own title. First, the map
+does generalise: it is not an artifact of fitting and scoring the same items, and it
+beats both one-parameter restrictions. Second, \emph{the scale is not what moves the
+accuracy}. Slope-only scores identically to the identity map --- necessarily, since for
+$a > 0$ the sign of $a\,g$ is the sign of $g$, so a pure rescaling cannot cross a single
+item over the decision boundary. It is the intercept that moves items, and the scale
+earns its place only by modulating how much intercept is needed ($2.36$ against
+$4.53\,\pp$). The margin-scale split reported above is a real and exceptionless
+signature of the objective; it is not, by itself, the thing that changes the score.
+
+The error is also not uniform: it concentrates in the largest-effect cells (canonical
+contrastive, $15.1\,\pp$ on ARC and $10.3$ on TruthfulQA; Qwen contrastive $11.8$ and
+$11.7$), where the map over-predicts. Ten of eighteen cells fall within $\pm 3\,\pp$.
+So the affine description is adequate as a low-dimensional summary and weakest exactly
+where the phenomenon is strongest --- which is the honest limit of reading it as an
+account of the canonical lift.
 
 The obvious objection is that the arms might rescale \emph{and} aim, so we bound the
 aiming rather than assume it away. The tempting null --- permuting each arm's per-item
@@ -1060,10 +1090,13 @@ item-specific component exists in that cell. We decline to quote a single number
 its size, because the same free parameter moves it: the residual runs
 $+0.28 / +1.31 / +1.66 / +3.12\pp$ as the stratum width goes from 10 to 100 items,
 i.e.\ between ${\approx}1\%$ and ${\approx}14\%$ of that cell's $+22.7\pp$ effect, with
-no width privileged a priori. The conservative reading is therefore that any
-item-specific component in the most favourable of the eighteen cells is bounded by
-roughly a seventh of the effect, and the item-independent rescaling accounts for the
-rest. We take that as the ceiling, not as an estimate.
+no width privileged a priori. Across the stratifications we tested, the largest
+observed residual share in the most favourable of the eighteen cells ranged from
+${\approx}1\%$ to ${\approx}14\%$ of its effect. Because that range is sensitive to
+the stratum width and the cell was selected post hoc, we report it as a sensitivity
+range and \emph{not} as a bound: it does not license a statement of the form ``the
+item-specific component is at most $x$'', and we make no such statement anywhere in
+this paper.
 
 This is the readout thesis made mechanical, and it accounts for the task pattern
 without new machinery. ARC sits on the edge of its own decision boundary --- median

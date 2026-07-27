@@ -97,10 +97,11 @@ is the optimal linear correctness discriminant under the class covariance, which
 raw mass-mean ignores --- it is not chosen for recovering the least lift, and
 \cref{disc:geometry} reports both references' recovery side by side.
 
-\textbf{Scope of ``off-axis''.} Both references are \emph{one-dimensional per head}.
-Everything we call off-axis is therefore off the measured one-dimensional linear
-correctness direction, which is the strongest such direction we can build but not the
-whole geometry of correctness: correctness information has been reported to occupy a
+\textbf{Scope of ``off-axis''.} Both references are \emph{one direction per head}, not
+a single global axis: the geometry is a family of per-head linear correctness axes, one
+at each intervened head. Everything we call off-axis is therefore off the measured
+linear correctness axis at each intervened head, which is the strongest such direction
+we can build there but not the whole geometry of correctness: correctness information has been reported to occupy a
 low-dimensional manifold of roughly three to eight directions rather than one
 \citep{ConfidenceManifold}. Our negative arms show that the learned offset is not
 carried by the best 1-D discriminant; they do not show that it lies outside every

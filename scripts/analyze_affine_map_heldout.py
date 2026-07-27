@@ -1,28 +1,50 @@
-"""R1 (audit remediation) -- is the affine margin map a FIT or a MECHANISM?
+"""R1 (audit remediation) -- does the affine margin map PREDICT out of sample, and does
+it beat the trivial alternatives?
 
-The published §5.9 claim rests on fitting ga ~ a*gb + c per cell and reporting how
-much of the accuracy change two global scalars reproduce. That fit is IN-SAMPLE:
-`analyze_threshold_density_mechanism.py:167-168` calls np.polyfit on (gb, ga) and then
-evaluates the reproduced accuracy on the very same gb. An external audit flagged it.
+The published §5.9 claim rests on fitting ga ~ a*gb + c per cell and reporting how much
+of the accuracy change two scalars reproduce. That fit is IN-SAMPLE
+(`analyze_threshold_density_mechanism.py:167`). A first version of this script validated
+it out of sample but with a criterion derived from the very in-sample range it was
+meant to validate ([0.70, 1.93]) -- circular, and a median of 1.8 would have "passed".
+It also read a RATIO whose denominator is near zero in the small-effect cells. Both
+defects are fixed here.
 
-This script answers the only question that matters: do the two scalars fitted on one
-half of the items reproduce the accuracy change on the OTHER half?
+What this script measures, per cell, under 5-fold cross-fitting (every item is scored
+by parameters estimated without it):
 
-  gap = logp(gold) - logp(best distractor), per item, exactly as in the canonical script
-  split items 50/50 -> fit (a, c) on A -> evaluate on B:
-      acc_affine_B = mean[(a*gb_B + c) > 0]
-      frac_heldout = (acc_affine_B - acc_base_B) / (acc_arm_B - acc_base_B)
+  gap = logp(gold) - logp(best distractor), as in the canonical script
+  fit (a, c) on the training folds -> predict on the held-out fold ->
+  d_acc_pred = mean[(a*gb + c) > 0] - mean[gb > 0]      (pooled over folds)
+  ABSOLUTE ERROR in percentage points against the measured d_acc  <-- primary metric
 
-CRITERION FIXED BEFORE RUNNING (see plans/2026-07-27-external-audit-remediation.md):
-  PASS  if the cross-cell MEDIAN of the held-out frac lands inside [0.70, 1.93] -- the
-        cellwise range the paper already publishes in-sample -- AND >= 14/18 cells keep
-        the sign of the measured effect.
-  FAIL  if the median leaves that range, or the sign is lost in more than 4 cells.
+and compares the affine map against four nested/trivial baselines, all cross-fitted the
+same way:
 
-A FAIL demotes §5.9 from "the mechanism" to "a descriptive affine signature".
+  identity      ga = gb                 (predicts no accuracy change at all)
+  intercept     ga = gb + c             (a pure shift: no rescaling)
+  slope         ga = a*gb               (a pure rescaling: no shift)
+  constant      ga = c                  (ignores the base margin entirely)
+  affine        ga = a*gb + c
 
-Own prediction, registered before running: PASSES comfortably. Two parameters over
-n~400 should barely overfit. If it fails, the finding was never the fit.
+The intercept-only baseline is the one that matters. The paper claims the accuracy
+change needs BOTH scalars -- "scale is one scalar; the accuracy change needs a second".
+If a pure shift predicts as well as the affine map, that claim is not supported and
+§5.9 must be restated as a threshold shift rather than a rescaling.
+
+CRITERION FIXED BEFORE RUNNING (plans/2026-07-27-external-audit-remediation.md):
+  A cell is NON-NULL if |measured d_acc| >= 3.0 pp (14 of the 18 cells qualify; the
+  four excluded measure +2.17, +0.83, +2.33 and exactly 0.00 pp).
+  PASS requires ALL THREE:
+    (1) median absolute error of the affine map over all cells <= 3.0 pp
+    (2) >= 12 of the 14 non-null cells predicted with the correct sign
+    (3) the affine map's median absolute error is strictly lower than BOTH
+        intercept-only and slope-only
+  Failing (3) alone does not kill the section -- it demotes "rescales the margin" to
+  whichever single-parameter description survives, and the wording follows the data.
+
+This script decides predictive adequacy of a descriptive signature ONLY. It does not
+establish item-independence, label-freeness, or a causal mechanism: the fit lives in
+gold-relative margin coordinates, which are defined using the label.
 
   python scripts/analyze_affine_map_heldout.py
 """
@@ -38,10 +60,15 @@ if hasattr(sys.stdout, "reconfigure"):
 E1, E4, E6 = "runs/e1_plain_ce", "runs/e4_factorial", "runs/e6_qwen_spine"
 OUT = "runs/e4_factorial/affine_map_heldout.json"
 TASKS = ["arc_challenge", "hellaswag", "truthfulqa_mc1"]
-N_SPLITS = 200
+N_FOLDS = 5
+N_REPEATS = 40          # repeated 5-fold; every repeat reshuffles the fold assignment
 SEED = 0
+NONNULL_PP = 3.0        # |measured d_acc| threshold for a cell to count toward the sign rule
+MAX_MEDIAN_ABS_ERR_PP = 3.0
+MIN_SIGN_OK = 12
 
-# identical to the canonical script, so the cells line up one-to-one
+MODELS = ("affine", "intercept", "slope", "constant", "identity")
+
 ARMS = [
     ("Gemma contrastive canonical", "Gemma", "contrastive", f"{E1}/eval_base.json",
      [f"{E1}/eval_contrastive_canonical.json"]),
@@ -78,7 +105,7 @@ def load(path):
 
 
 def gap_pair(base_doc, arm_doc):
-    """(gb, ga) on shared items -- byte-identical logic to the canonical script."""
+    """(gb, ga) on shared items -- same logic as the canonical script."""
     keys = sorted(set(base_doc) & set(arm_doc))
     gb, ga = [], []
     for k in keys:
@@ -92,60 +119,84 @@ def gap_pair(base_doc, arm_doc):
     return np.array(gb), np.array(ga)
 
 
-def heldout(gb, ga, n_splits=N_SPLITS, seed=SEED):
-    """Fit (a, c) on half the items, score the reproduced accuracy on the other half."""
+def fit_predict(name, gb_tr, ga_tr, gb_te):
+    """Estimate a model's parameters on the training folds, apply to the held-out fold."""
+    if name == "affine":
+        a, c = np.polyfit(gb_tr, ga_tr, 1)
+    elif name == "intercept":                       # pure shift, no rescaling
+        a, c = 1.0, float((ga_tr - gb_tr).mean())
+    elif name == "slope":                           # pure rescaling, no shift
+        denom = float((gb_tr * gb_tr).sum())
+        a = float((gb_tr * ga_tr).sum() / denom) if denom else 1.0
+        c = 0.0
+    elif name == "constant":                        # ignores the base margin
+        a, c = 0.0, float(ga_tr.mean())
+    elif name == "identity":
+        a, c = 1.0, 0.0
+    else:
+        raise ValueError(name)
+    return a, c, a * gb_te + c
+
+
+def crossfit(gb, ga, n_folds=N_FOLDS, n_repeats=N_REPEATS, seed=SEED):
+    """Repeated k-fold cross-fitting. Every item is predicted by params fit without it."""
     rng = np.random.default_rng(seed)
     n = len(gb)
-    # in-sample reference, recomputed here so the comparison is like-for-like
-    a_in, c_in = np.polyfit(gb, ga, 1)
-    acc_b_all, acc_a_all = float((gb > 0).mean()), float((ga > 0).mean())
-    acc_aff_in = float(((a_in * gb + c_in) > 0).mean())
-    frac_in = ((acc_aff_in - acc_b_all) / (acc_a_all - acc_b_all)
-               if acc_a_all != acc_b_all else None)
+    acc_b_all = float((gb > 0).mean())
+    acc_a_all = float((ga > 0).mean())
+    d_measured = (acc_a_all - acc_b_all) * 100
 
-    fracs, d_affine, slopes, intercepts = [], [], [], []
-    for _ in range(n_splits):
+    per_model = {m: {"d_pred": [], "a": [], "c": []} for m in MODELS}
+    r2 = []
+    for _ in range(n_repeats):
         idx = rng.permutation(n)
-        A, B = idx[: n // 2], idx[n // 2:]
-        if len(A) < 10 or len(B) < 10:
-            continue
-        a_hat, c_hat = np.polyfit(gb[A], ga[A], 1)          # fit on A
-        gb_B, ga_B = gb[B], ga[B]                            # evaluate on B
-        acc_b = float((gb_B > 0).mean())
-        acc_a = float((ga_B > 0).mean())
-        acc_aff = float(((a_hat * gb_B + c_hat) > 0).mean())
-        d_affine.append((acc_aff - acc_b) * 100)
-        slopes.append(float(a_hat))
-        intercepts.append(float(c_hat))
-        if acc_a != acc_b:
-            fracs.append((acc_aff - acc_b) / (acc_a - acc_b))
-    if not fracs:
-        return None
-    f = np.array(fracs)
-    return {
-        "n_items": n, "n_splits_used": len(fracs),
-        "affine_frac_insample": frac_in,
-        "affine_frac_heldout_median": float(np.median(f)),
-        "affine_frac_heldout_mean": float(f.mean()),
-        "affine_frac_heldout_ci": [float(np.percentile(f, 2.5)),
-                                   float(np.percentile(f, 97.5))],
-        "d_acc_affine_heldout_pp_median": float(np.median(d_affine)),
-        "d_acc_measured_pp": (float((ga > 0).mean()) - float((gb > 0).mean())) * 100,
-        "slope_insample": float(a_in), "intercept_insample": float(c_in),
-        "slope_heldout_sd": float(np.std(slopes, ddof=1)),
-        "intercept_heldout_sd": float(np.std(intercepts, ddof=1)),
-        "sign_kept": bool(np.sign(np.median(d_affine))
-                          == np.sign((float((ga > 0).mean()) - float((gb > 0).mean()))))
-        if float((ga > 0).mean()) != float((gb > 0).mean()) else None,
-    }
+        folds = np.array_split(idx, n_folds)
+        pred = {m: np.empty(n) for m in MODELS}
+        r2_num, r2_den = 0.0, 0.0
+        for f in folds:
+            tr = np.setdiff1d(idx, f, assume_unique=False)
+            if len(tr) < 10 or len(f) < 2:
+                continue
+            for m in MODELS:
+                a, c, p = fit_predict(m, gb[tr], ga[tr], gb[f])
+                pred[m][f] = p
+                if m == "affine":
+                    per_model[m]["a"].append(a)
+                    per_model[m]["c"].append(c)
+            r2_num += float(((ga[f] - pred["affine"][f]) ** 2).sum())
+            r2_den += float(((ga[f] - ga[tr].mean()) ** 2).sum())
+        for m in MODELS:
+            per_model[m]["d_pred"].append((float((pred[m] > 0).mean()) - acc_b_all) * 100)
+        if r2_den:
+            r2.append(1.0 - r2_num / r2_den)
+
+    out = {"n_items": n, "acc_base": acc_b_all, "acc_arm": acc_a_all,
+           "d_acc_measured_pp": d_measured,
+           "is_non_null": bool(abs(d_measured) >= NONNULL_PP),
+           "r2_heldout_affine": float(np.mean(r2)) if r2 else None,
+           "affine_slope_mean": float(np.mean(per_model["affine"]["a"])),
+           "affine_slope_sd_across_folds": float(np.std(per_model["affine"]["a"], ddof=1)),
+           "affine_intercept_mean": float(np.mean(per_model["affine"]["c"])),
+           "affine_intercept_sd_across_folds": float(np.std(per_model["affine"]["c"], ddof=1)),
+           "models": {}}
+    for m in MODELS:
+        dp = float(np.mean(per_model[m]["d_pred"]))
+        out["models"][m] = {
+            "d_acc_pred_pp": dp,
+            "abs_err_pp": abs(dp - d_measured),
+            "sign_ok": (bool(np.sign(dp) == np.sign(d_measured))
+                        if d_measured != 0 else None),
+        }
+    return out
 
 
 def main():
-    print("=" * 104)
-    print("R1 -- held-out validation of the affine margin map (fit on half, score on the other half)")
-    print("=" * 104)
-    print(f"  {'arm':<28}{'task':<16}{'measured':>10}{'in-samp':>9}{'held-out':>10}"
-          f"{'CI95':>18}{'sign':>7}")
+    print("=" * 108)
+    print("R1 -- cross-fitted validation of the affine margin map, against trivial baselines")
+    print(f"     {N_REPEATS}x {N_FOLDS}-fold cross-fitting; primary metric = |predicted - measured| d_acc, in pp")
+    print("=" * 108)
+    print(f"  {'arm':<28}{'task':<16}{'meas':>8}" +
+          "".join(f"{m[:6]:>9}" for m in MODELS) + f"{'R2':>7}")
 
     bases, cells, flat = {}, {}, []
     total = sum(len(a[4]) for a in ARMS) * len(TASKS)
@@ -165,81 +216,83 @@ def main():
                 if t not in arm:
                     continue
                 gb, ga = gap_pair(base[t], arm[t])
-                if not len(gb):
-                    continue
-                r = heldout(gb, ga)
-                if r:
-                    seeds.append(r)
-                print(f"    [{done}/{total}] {label} | {t} | {os.path.basename(p)}",
-                      flush=True)
+                if len(gb):
+                    seeds.append(crossfit(gb, ga))
+                print(f"    [{done}/{total}] {label} | {t} | {os.path.basename(p)}", flush=True)
             if not seeds:
                 continue
 
-            def across(k):
-                v = [s[k] for s in seeds if s.get(k) is not None]
-                if not v:
-                    return None
-                return {"mean": float(np.mean(v)),
-                        "sd": float(np.std(v, ddof=1)) if len(v) > 1 else 0.0}
-
-            agg = {k: across(k) for k in
-                   ("affine_frac_insample", "affine_frac_heldout_median",
-                    "d_acc_affine_heldout_pp_median", "d_acc_measured_pp",
-                    "slope_insample", "intercept_insample",
-                    "slope_heldout_sd", "intercept_heldout_sd")}
-            lo = float(np.mean([s["affine_frac_heldout_ci"][0] for s in seeds]))
-            hi = float(np.mean([s["affine_frac_heldout_ci"][1] for s in seeds]))
-            agg["affine_frac_heldout_ci"] = [lo, hi]
-            agg["n_seeds"], agg["n_items"] = len(seeds), seeds[0]["n_items"]
-            signs = [s["sign_kept"] for s in seeds if s["sign_kept"] is not None]
-            agg["sign_kept"] = bool(all(signs)) if signs else None
+            agg = {"n_seeds": len(seeds), "n_items": seeds[0]["n_items"],
+                   "d_acc_measured_pp": float(np.mean([s["d_acc_measured_pp"] for s in seeds])),
+                   "r2_heldout_affine": float(np.mean([s["r2_heldout_affine"] for s in seeds
+                                                       if s["r2_heldout_affine"] is not None])),
+                   "affine_slope_mean": float(np.mean([s["affine_slope_mean"] for s in seeds])),
+                   "affine_slope_sd_across_folds":
+                       float(np.mean([s["affine_slope_sd_across_folds"] for s in seeds])),
+                   "affine_intercept_mean": float(np.mean([s["affine_intercept_mean"] for s in seeds])),
+                   "affine_intercept_sd_across_folds":
+                       float(np.mean([s["affine_intercept_sd_across_folds"] for s in seeds])),
+                   "models": {}}
+            agg["is_non_null"] = bool(abs(agg["d_acc_measured_pp"]) >= NONNULL_PP)
+            for m in MODELS:
+                agg["models"][m] = {
+                    "d_acc_pred_pp": float(np.mean([s["models"][m]["d_acc_pred_pp"] for s in seeds])),
+                    "abs_err_pp": float(np.mean([s["models"][m]["abs_err_pp"] for s in seeds])),
+                }
+                dp, dm = agg["models"][m]["d_acc_pred_pp"], agg["d_acc_measured_pp"]
+                agg["models"][m]["sign_ok"] = (bool(np.sign(dp) == np.sign(dm)) if dm else None)
             per_task[t] = agg
-
-            fi = agg["affine_frac_insample"]
-            fh = agg["affine_frac_heldout_median"]
-            sg = {True: "ok", False: "LOST", None: "zero"}[agg["sign_kept"]]
-            print(f"  {label:<28}{t:<16}{agg['d_acc_measured_pp']['mean']:>+10.2f}"
-                  f"{(fi['mean'] if fi else float('nan')):>9.2f}"
-                  f"{(fh['mean'] if fh else float('nan')):>10.2f}"
-                  f"{f'[{lo:.2f}, {hi:.2f}]':>18}{sg:>7}", flush=True)
-            if fh:
-                flat.append((label, t, fh["mean"], agg["sign_kept"]))
+            print(f"  {label:<28}{t:<16}{agg['d_acc_measured_pp']:>+8.2f}" +
+                  "".join(f"{agg['models'][m]['abs_err_pp']:>9.2f}" for m in MODELS) +
+                  f"{agg['r2_heldout_affine']:>7.3f}", flush=True)
+            flat.append((label, t, agg))
         cells[label] = {"family": fam, "objective": obj, "per_task": per_task}
 
-    # --- verdict ----------------------------------------------------------------
-    fr = np.array([f[2] for f in flat])
-    med = float(np.median(fr))
-    n_sign_ok = sum(1 for f in flat if f[3] is not False)
-    in_range = 0.70 <= med <= 1.93
-    passed = bool(in_range and n_sign_ok >= 14)
+    # --- verdict ---------------------------------------------------------------
+    med = {m: float(np.median([c[2]["models"][m]["abs_err_pp"] for c in flat])) for m in MODELS}
+    nonnull = [c for c in flat if c[2]["is_non_null"]]
+    sign_ok = sum(1 for c in nonnull if c[2]["models"]["affine"]["sign_ok"])
+    within3 = sum(1 for c in flat if c[2]["models"]["affine"]["abs_err_pp"] <= 3.0)
 
-    print("\n" + "=" * 104)
+    c1 = med["affine"] <= MAX_MEDIAN_ABS_ERR_PP
+    c2 = sign_ok >= MIN_SIGN_OK
+    c3 = med["affine"] < med["intercept"] and med["affine"] < med["slope"]
+    passed = bool(c1 and c2 and c3)
+
+    print("\n" + "=" * 108)
     print("VERDICT (criterion fixed before running)")
-    print("=" * 104)
-    print(f"  cells evaluated                      : {len(flat)}")
-    print(f"  cross-cell MEDIAN held-out frac      : {med:.3f}   "
-          f"(criterion: inside [0.70, 1.93] -> {'PASS' if in_range else 'FAIL'})")
-    print(f"  cellwise held-out range              : {fr.min():.2f} - {fr.max():.2f}")
-    print(f"  cells keeping the measured sign      : {n_sign_ok}/{len(flat)}   "
-          f"(criterion: >= 14 -> {'PASS' if n_sign_ok >= 14 else 'FAIL'})")
+    print("=" * 108)
+    print("  median |predicted - measured| d_acc, in pp, cross-fitted:")
+    for m in MODELS:
+        print(f"      {m:<12}{med[m]:>7.2f} pp")
+    print(f"\n  (1) affine median abs err <= {MAX_MEDIAN_ABS_ERR_PP} pp        : "
+          f"{med['affine']:.2f}  -> {'PASS' if c1 else 'FAIL'}")
+    print(f"  (2) sign correct in >= {MIN_SIGN_OK} of {len(nonnull)} non-null cells: "
+          f"{sign_ok}  -> {'PASS' if c2 else 'FAIL'}")
+    print(f"  (3) affine beats intercept-only AND slope-only : "
+          f"{med['affine']:.2f} vs {med['intercept']:.2f} / {med['slope']:.2f}"
+          f"  -> {'PASS' if c3 else 'FAIL'}")
+    print(f"\n  cells within +-3pp: {within3}/{len(flat)}")
     print(f"\n  >>> {'PASS' if passed else 'FAIL'} <<<")
-    if passed:
-        print("  The two scalars generalise out-of-sample. §5.9 stands; the audit's")
-        print("  in-sample objection is answered with a number, not a caveat.")
-    else:
-        print("  The affine map does NOT generalise. §5.9 must be demoted from")
-        print("  'the mechanism' to 'a descriptive affine signature'.")
+    if not c3:
+        print("  NOTE: criterion (3) failed -- a single-parameter description predicts as")
+        print("  well as the affine map. §5.9 must be restated accordingly.")
 
     out = {"criterion_fixed_before_running": {
-        "pass": "cross-cell median held-out frac inside [0.70, 1.93] AND >= 14 cells keep sign",
-        "fail": "median outside the range, or sign lost in more than 4 cells",
-        "rationale": "the in-sample cellwise range the paper already publishes"},
-        "prediction_registered_before_running":
-            "passes comfortably -- two parameters over n~400 should barely overfit",
-        "n_splits": N_SPLITS, "split": "50/50 random over items, fit on A, score on B",
-        "cross_cell_median_heldout_frac": med,
-        "cellwise_heldout_range": [float(fr.min()), float(fr.max())],
-        "cells_keeping_sign": [n_sign_ok, len(flat)],
+        "primary_metric": "|predicted - measured| accuracy change, in pp, cross-fitted",
+        "non_null_cell": f"|measured d_acc| >= {NONNULL_PP} pp",
+        "1_median_abs_err_pp": f"<= {MAX_MEDIAN_ABS_ERR_PP}",
+        "2_sign_correct_non_null": f">= {MIN_SIGN_OK}",
+        "3_beats_baselines": "affine median abs err < intercept-only AND < slope-only",
+        "scope": ("decides predictive adequacy of a descriptive signature only; not "
+                  "item-independence, not label-freeness, not causality -- the fit is "
+                  "in gold-relative margin coordinates, which use the label")},
+        "n_folds": N_FOLDS, "n_repeats": N_REPEATS,
+        "median_abs_err_pp": med,
+        "non_null_cells": len(nonnull), "sign_ok_non_null": sign_ok,
+        "cells_within_3pp": [within3, len(flat)],
+        "criteria_met": {"median_abs_err": bool(c1), "sign": bool(c2),
+                         "beats_baselines": bool(c3)},
         "verdict": "PASS" if passed else "FAIL",
         "cells": cells}
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
