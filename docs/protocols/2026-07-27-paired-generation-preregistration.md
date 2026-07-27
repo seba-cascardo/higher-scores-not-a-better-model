@@ -33,6 +33,27 @@ Los 3 seeds del control CE van **sólo en el canal CoT de ARC**, que es donde la
 la sigma del proyecto muerde (ningún contraste cross-condición sin su $\sigma$). En el
 resto, seed 0. Esto se declara acá para que nadie lo lea después como cherry-picking.
 
+> ### ⚠ Enmienda 2026-07-27b — `direct` mide formato, y se anota ANTES del Bloque 2
+>
+> El Bloque 1b corrió `direct` con el presupuesto duplicado (64 → 160 tokens) sobre los
+> mismos 1172 ítems. El base **empeoró**: `0.8140 → 0.7500`, unos **75 aciertos netos
+> perdidos**, mientras sus unparsed **bajaban** de 20 a 6. El align-LoRA no se movió
+> (0.9625 → 0.9633).
+>
+> La lectura es inequívoca: no es que al base le falte espacio para responder — es que
+> **cuanto más texto emite, más se equivoca `match_free_text`**, que cae a contención de
+> substring y toma la opción mencionada al pasar. Unos 89 ítems pasaron de *correcto* a
+> *parseado pero incorrecto*.
+>
+> **Consecuencia pre-registrada:** el número de `direct` que produzca el pod es
+> **provisional** y no se cita como accuracy de corrección. El scoring definitivo se
+> hace **local, desde el texto persistido**, con un criterio que no adivine (letra
+> explícita; contención sólo si es única e inequívoca; el resto, unparsed). En MMLU-Pro
+> el riesgo es mayor —10 opciones en vez de 4— y por eso queda anotado antes de correr.
+>
+> Esto **no** cambia el diseño ni los brazos: `direct` se corre igual, porque su texto es
+> el insumo del scoring local. Cambia qué se puede afirmar con él.
+
 ### Canales (4)
 
 | canal | qué se mide | coste medido (batch 1, este proyecto) |
