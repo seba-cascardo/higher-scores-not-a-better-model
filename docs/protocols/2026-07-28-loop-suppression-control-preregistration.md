@@ -152,13 +152,34 @@ comparable al headline, no al subset); el `cot` sobre los 300 del subset.
 | `cot` @0.75: loops | ¿la degeneración es dose-dependent? | **caen.** El `eos_rate` de gsm8k vuelve al del base a 0.75 |
 | `cot` @0.75 vs @1.0, estrato A | ¿se recupera el daño? | **sube.** Si no sube, la degeneración no es dose-dependent en esta tarea |
 
-### Celda D-cot @ 0.50 — GATEADA, no incondicional
+### Celda D-cot @ 0.50 — DESGATEADA (enmienda 2026-07-28b)
 
-`cot` @ **0.50** sobre los 300 (~21 min) **sólo se corre si** D-cot @0.75 deja los loops por
-encima de la mitad de los 146 de R12. Está gateada y no incondicional porque en ARC/gsm8k
-0.75 **domina** a 0.5 (tabla de arriba): gastar 21 min en una dosis dominada sólo se justifica
-si 0.75 no alcanza para matar la degeneración en MMLU-Pro, que es una tarea distinta de
-ambas. **El gate se declara acá para que la decisión no se tome mirando el resultado.**
+**Escrito con el bloque 1A en vuelo y ANTES de que exista ningún resultado de D-cot @0.75**
+— la condición que hacía legítimo el gate original (decidir sin mirar el desenlace) se
+cumple igual acá, y queda constatado por la fecha.
+
+Estaba gateada con el argumento de que 0.75 **domina** a 0.5 en ARC/gsm8k, así que gastar
+21 min en una dosis dominada sólo valía si 0.75 no alcanzaba. **Ese argumento estaba mal
+planteado**: mide el valor de 0.5 *como dosis a elegir*, cuando lo que hace falta acá es
+0.5 *como segundo punto de una curva*.
+
+Con `cot` únicamente a 0.75 el diseño queda asimétrico — **la curva del lift tiene tres
+puntos y la del daño tiene uno**. Si los loops caen de 146 a, digamos, 40, un solo punto no
+distingue "0.5 los llevaría a cero" de "0.75 ya es el piso". Y la pregunta que originó todo
+esto (*¿cuál es el mejor all-arounder?*) es un **trade-off**, que exige las dos caras a la
+**misma** dosis. El costo marginal son 21 min sobre un bring-up ya pago.
+
+`cot` @0.50 sobre los mismos 300 pasa a **incondicional**. El `cold` de los 300 se obtiene
+restringiendo por `doc_id` el `cold` de los 1000 — no hace falta correrlo aparte.
+
+### `direct` a dosis — DESCARTADO, con el número
+
+Se evaluó y **no se corre a ninguna dosis**. En MMLU-Pro el canal está roto por el número de
+opciones: bajo `rescore_direct_strict` el base da **0.1820** con bound **[0.182, 0.927]** y
+**745/1000 sin parsear** (10 opciones ⇒ diez chances de que el matcher por containment tome
+una mencionada al pasar). Un canal cuyo bound abarca 74 puntos no se vuelve declarable
+porque se le agregue un eje de dosis. Ya estaba declarado provisional en la enmienda
+2026-07-27b; esto lo cierra.
 
 **Si las dos caras se separan también acá**, el marco del capítulo generativo cambia: el
 daño declarable pasa a ser **una propiedad de la sobredosis**, no del adapter. Eso **no**
