@@ -199,6 +199,54 @@ allá. En MMLU-Pro la pregunta del cap sigue viva por **otro** motivo: el base e
 cap en 22.5% de sus ítems y en 100% de sus unparsed, así que el cap **subestima al base**, no
 limita al adapter. Por eso C1/C2 bajan a tercera prioridad y no se cortan del plan.
 
+## 4c. Enmienda 2026-07-28c — el bloque C sube a máxima prioridad, y gana una celda
+
+**Escrita después de leer 1A y 1A-bis, antes de correr ninguna celda C.** Lo que cambió no
+es una lectura sino **qué está en juego**: el resultado dejó de ser "el adapter pierde menos"
+y pasó a ser **"el adapter le gana al base en generación"** (IPW +9.02 pp CI [+3.98,+14.21]
+a dosis 0.50). Eso invierte la prioridad de C, que estaba tercera y cortable.
+
+**El confound, ahora cuantificado sobre los mismos 300 ítems:**
+
+| condición | acc | tok mediana | al cap 640 |
+|---|---|---|---|
+| base | 0.6333 | **490** | **85/300 (28.3%)** |
+| v7mc @0.50 | 0.7067 | 320 | 49/300 (16.3%) |
+
+**El base se mide contra su propio techo casi el doble de veces que el brazo con el que se
+lo compara.** Un `+9.02` medido así no es declarable hasta que el base corra sin esa
+restricción. Por el filtro forward del proyecto (*todo claim de la forma "afila C sin
+colateral" es culpable hasta que un control lo absuelva*), el resultado se trata como
+**culpable** hasta que C1 lo absuelva.
+
+**Celda C3, nueva:** `v7mc @0.50` con cap **1024**. Sin ella, C1 compara un base sin truncar
+contra un 0.50 truncado — mueve la truncación de brazo en vez de eliminarla. La comparación
+declarable es **C1 vs C3, ambas a 1024**.
+
+| celda | brazo | dosis | cap | para qué |
+|---|---|---|---|---|
+| **C1** | base | — | 1024 | ¿cuánto del 0.6333 era techo de presupuesto? |
+| **C3** | v7mc | 0.50 | 1024 | el gemelo, a igual presupuesto |
+| C2 | v7mc | 1.00 | 1024 | (baja de prioridad: @1.0 ya se sabe que loopea) |
+
+### Lecturas pre-declaradas
+
+| contraste | predicción registrada |
+|---|---|
+| C1 − base@640 | **sube.** 28.3% de sus ítems estaban contra el cap |
+| **C3 − C1** (la que decide) | sin prior. Si el CI cruza el cero, **el +9.02 era el cap** y no hay resultado |
+| C3 − v7mc@0.50@640 | ≈0 o leve: sólo 16.3% tocaba el techo |
+
+**Regla de honestidad, declarada antes de correr:** si C1 sube lo suficiente como para
+comerse el +9.02, **eso se escribe**, y el hallazgo de 1A queda reducido a *"a dosis 0.50 el
+adapter iguala al base con 35% menos tokens"* — que sigue siendo un resultado (eficiencia),
+pero **no** es superioridad.
+
+⚠ **Garden of forking paths, declarado:** se barrieron tres dosis y se está leyendo la
+mejor. Aun si C1/C3 absuelven, el `+9.02` a 0.50 **no es publicable sin replicación en una
+segunda muestra** (los otros 700 ítems de MMLU-Pro, que nunca entraron al subset, son el
+holdout natural y ya están congelados).
+
 ## 5. Las celdas
 
 Supresión = `--no-repeat-ngram 8`. Restricción dura sobre repetición; preferida a
