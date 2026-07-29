@@ -1,0 +1,58 @@
+{
+  "bench": "arc_full",
+  "channel": "cot",
+  "chance": 0.25015642775881686,
+  "arms": [
+    "base",
+    "align_lora",
+    "v7mc",
+    "ce_s0"
+  ],
+  "rungs": {
+    "UNRESCUED": {
+      "n": 250,
+      "n_truncated": 160,
+      "n_clean": 90,
+      "trunc_rate": 0.64,
+      "acc_clean": 0.0,
+      "acc_truncated": 0.0,
+      "acc_clean_minus_chance": -0.25015642775881686
+    },
+    "leading_label": {
+      "n": 234,
+      "n_truncated": 224,
+      "n_clean": 10,
+      "trunc_rate": 0.9572649572649573,
+      "acc_clean": 0.1,
+      "acc_truncated": 0.21875,
+      "acc_clean_minus_chance": -0.15015642775881685
+    },
+    "unique_option_text": {
+      "n": 91,
+      "n_truncated": 33,
+      "n_clean": 58,
+      "trunc_rate": 0.3626373626373626,
+      "acc_clean": 0.9655172413793104,
+      "acc_truncated": 0.8484848484848485,
+      "acc_clean_minus_chance": 0.7153608136204935
+    },
+    "bolded": {
+      "n": 1,
+      "n_truncated": 1,
+      "n_clean": 0,
+      "trunc_rate": 1.0,
+      "acc_clean": null,
+      "acc_truncated": 0.0,
+      "acc_clean_minus_chance": null
+    },
+    "final_line": {
+      "n": 1,
+      "n_truncated": 1,
+      "n_clean": 0,
+      "trunc_rate": 1.0,
+      "acc_clean": null,
+      "acc_truncated": 0.0,
+      "acc_clean_minus_chance": null
+    }
+  }
+}
