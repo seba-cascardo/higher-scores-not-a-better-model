@@ -171,7 +171,11 @@ def main():
             arb[int(r["doc_id"])] = r
         print(f"  arbiter: {arb_path.name}  base_cot_acc_all="
               f"{a.get('summary', {}).get('base_cot_acc_all')}  "
-              f"n_unparsed={a.get('summary', {}).get('n_unparsed')}", flush=True)
+              # arbiter summary field; its parser has the same last-label fallback, so
+              # this is a floor. Audited 2026-07-29: the ARC arbiter runs are clean
+              # (0 of 594 traces lack `Answer: X`, 0 at cap), so it is real HERE.
+              f"n_unparsed_ARBITER_FIELD={a.get('summary', {}).get('n_unparsed')}",
+              flush=True)
 
     # ---- per-item pass ----------------------------------------------------------
     rows = []
