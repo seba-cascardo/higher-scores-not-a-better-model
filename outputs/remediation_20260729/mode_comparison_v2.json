@@ -1,0 +1,191 @@
+{
+  "n": 300,
+  "cells": {
+    "base": "cell_C1_base_1024",
+    "mc+0.50": "cell_C3_v7mc_s0.50_1024",
+    "mc-0.50": "cell_C4_v7mc_m050_1024",
+    "anti-1": "cell_C5_anti_m1_1024"
+  },
+  "strata": {
+    "A_looped": 146,
+    "B_clean": 154,
+    "B_population": 854
+  },
+  "accuracy": {
+    "base": {
+      "acc": 0.79,
+      "did_not_close": 21
+    },
+    "mc+0.50": {
+      "acc": 0.7667,
+      "did_not_close": 28,
+      "delta_pp": -2.33,
+      "ci95": [
+        -6.67,
+        1.67
+      ],
+      "P_delta_lt_0": 0.8514
+    },
+    "mc-0.50": {
+      "acc": 0.71,
+      "did_not_close": 39,
+      "delta_pp": -8.0,
+      "ci95": [
+        -12.0,
+        -4.0
+      ],
+      "P_delta_lt_0": 1.0
+    },
+    "anti-1": {
+      "acc": 0.73,
+      "did_not_close": 43,
+      "delta_pp": -6.0,
+      "ci95": [
+        -10.33,
+        -1.67
+      ],
+      "P_delta_lt_0": 0.9978
+    }
+  },
+  "pairs": {
+    "base|mc+0.50": {
+      "only_a": 24,
+      "only_b": 17,
+      "both": 213,
+      "oracle": 0.8467
+    },
+    "base|mc-0.50": {
+      "only_a": 32,
+      "only_b": 8,
+      "both": 205,
+      "oracle": 0.8167
+    },
+    "mc+0.50|mc-0.50": {
+      "only_a": 34,
+      "only_b": 17,
+      "both": 196,
+      "oracle": 0.8233
+    },
+    "anti-1|base": {
+      "only_a": 13,
+      "only_b": 31,
+      "both": 206,
+      "oracle": 0.8333
+    },
+    "anti-1|mc+0.50": {
+      "only_a": 19,
+      "only_b": 30,
+      "both": 200,
+      "oracle": 0.83
+    },
+    "anti-1|mc-0.50": {
+      "only_a": 25,
+      "only_b": 19,
+      "both": 194,
+      "oracle": 0.7933
+    }
+  },
+  "oracle_all4": 0.8667,
+  "features": {
+    "base": {
+      "chars": 1864.4167,
+      "novelty_frac": 0.7901,
+      "novel_words": 58.9433,
+      "backtrack": 0.5767,
+      "hedge": 0.26,
+      "assert": 0.1633,
+      "eliminate": 0.99,
+      "verify": 0.1867,
+      "structure": 22.29,
+      "math": 16.24
+    },
+    "mc+0.50": {
+      "chars": 1287.6333,
+      "novelty_frac": 0.6996,
+      "novel_words": 31.4533,
+      "backtrack": 0.6567,
+      "hedge": 0.22,
+      "assert": 0.1,
+      "eliminate": 1.6,
+      "verify": 0.33,
+      "structure": 11.29,
+      "math": 15.0667
+    },
+    "mc-0.50": {
+      "chars": 2291.9567,
+      "novelty_frac": 0.816,
+      "novel_words": 74.4667,
+      "backtrack": 0.6767,
+      "hedge": 0.24,
+      "assert": 0.2067,
+      "eliminate": 0.6967,
+      "verify": 0.25,
+      "structure": 34.55,
+      "math": 16.7067
+    },
+    "anti-1": {
+      "chars": 2422.9,
+      "novelty_frac": 0.852,
+      "novel_words": 85.18,
+      "backtrack": 0.77,
+      "hedge": 0.4667,
+      "assert": 0.1467,
+      "eliminate": 0.4167,
+      "verify": 0.2767,
+      "structure": 30.8967,
+      "math": 13.55
+    }
+  },
+  "features_paired_vs_base": {
+    "mc+0.50": {
+      "chars": "17/300",
+      "novelty_frac": "29/300",
+      "novel_words": "3/300",
+      "backtrack": "46/300",
+      "hedge": "20/300",
+      "assert": "11/300",
+      "eliminate": "73/300",
+      "verify": "32/300",
+      "structure": "38/300",
+      "math": "36/300"
+    },
+    "mc-0.50": {
+      "chars": "276/300",
+      "novelty_frac": "228/300",
+      "novel_words": "270/300",
+      "backtrack": "71/300",
+      "hedge": "21/300",
+      "assert": "24/300",
+      "eliminate": "35/300",
+      "verify": "32/300",
+      "structure": "264/300",
+      "math": "92/300"
+    },
+    "anti-1": {
+      "chars": "271/300",
+      "novelty_frac": "284/300",
+      "novel_words": "287/300",
+      "backtrack": "83/300",
+      "hedge": "61/300",
+      "assert": "17/300",
+      "eliminate": "30/300",
+      "verify": "39/300",
+      "structure": "233/300",
+      "math": "59/300"
+    }
+  },
+  "selected": {
+    "297": "UNICO acierto de base (los otros 3 fallan)",
+    "6855": "UNICO acierto de base (los otros 3 fallan)",
+    "1580": "UNICO acierto de mc+0.50 (los otros 3 fallan)",
+    "4092": "UNICO acierto de mc+0.50 (los otros 3 fallan)",
+    "10149": "UNICO acierto de mc-0.50 (los otros 3 fallan)",
+    "1861": "UNICO acierto de anti-1 (los otros 3 fallan)",
+    "9408": "UNICO acierto de anti-1 (los otros 3 fallan)",
+    "916": "el base falla y lo arreglan ['mc-0.50', 'anti-1']",
+    "1582": "el base falla y lo arreglan ['mc+0.50', 'mc-0.50']",
+    "9813": "muestra AL AZAR (semilla fija) -- control contra cherry-picking",
+    "11894": "muestra AL AZAR (semilla fija) -- control contra cherry-picking",
+    "10154": "muestra AL AZAR (semilla fija) -- control contra cherry-picking"
+  }
+}

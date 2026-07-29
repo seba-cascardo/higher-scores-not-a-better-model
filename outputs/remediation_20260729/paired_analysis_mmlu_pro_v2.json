@@ -1,0 +1,798 @@
+{
+  "bench": "mmlu_pro",
+  "n_paired": 1000,
+  "arms": [
+    "align_lora",
+    "base",
+    "ce_s0",
+    "v7mc"
+  ],
+  "per_arm": {
+    "align_lora": {
+      "cold": {
+        "floor": 0.312,
+        "n_closed": 1000,
+        "n_truncated": 0,
+        "n_resolved": 0,
+        "n_malformed": 0,
+        "bound_malf_wrong": [
+          0.312,
+          0.312
+        ],
+        "bound_malf_unknown": [
+          0.312,
+          0.312
+        ],
+        "rules": {},
+        "n_unparsed_FIELD_DEPRECATED": 0
+      },
+      "letter": {
+        "floor": 0.641,
+        "n_closed": 0,
+        "n_truncated": 0,
+        "n_resolved": 1000,
+        "n_malformed": 0,
+        "bound_malf_wrong": [
+          0.641,
+          0.641
+        ],
+        "bound_malf_unknown": [
+          0.641,
+          0.641
+        ],
+        "rules": {
+          "resolved:first_label": 1000
+        },
+        "n_unparsed_FIELD_DEPRECATED": 0
+      },
+      "direct": {
+        "floor": 0.622,
+        "n_closed": 0,
+        "n_truncated": 31,
+        "n_resolved": 952,
+        "n_malformed": 17,
+        "bound_malf_wrong": [
+          0.622,
+          0.653
+        ],
+        "bound_malf_unknown": [
+          0.622,
+          0.67
+        ],
+        "rules": {
+          "resolved:final_line": 533,
+          "resolved:leading_label": 401,
+          "resolved:unique_option_text": 14,
+          "resolved:answer_is": 4
+        },
+        "n_unparsed_FIELD_DEPRECATED": 24
+      },
+      "cot": {
+        "floor": 0.675,
+        "n_closed": 781,
+        "n_truncated": 121,
+        "n_resolved": 22,
+        "n_malformed": 76,
+        "bound_malf_wrong": [
+          0.675,
+          0.796
+        ],
+        "bound_malf_unknown": [
+          0.675,
+          0.8720000000000001
+        ],
+        "rules": {
+          "closed:answer_colon": 781,
+          "resolved:unique_option_text": 22,
+          "malformed:answer_is": 1,
+          "malformed:leading_label": 1
+        },
+        "n_unparsed_FIELD_DEPRECATED": 102
+      }
+    },
+    "base": {
+      "cold": {
+        "floor": 0.261,
+        "n_closed": 1000,
+        "n_truncated": 0,
+        "n_resolved": 0,
+        "n_malformed": 0,
+        "bound_malf_wrong": [
+          0.261,
+          0.261
+        ],
+        "bound_malf_unknown": [
+          0.261,
+          0.261
+        ],
+        "rules": {},
+        "n_unparsed_FIELD_DEPRECATED": 0
+      },
+      "letter": {
+        "floor": 0.481,
+        "n_closed": 75,
+        "n_truncated": 396,
+        "n_resolved": 529,
+        "n_malformed": 0,
+        "bound_malf_wrong": [
+          0.481,
+          0.877
+        ],
+        "bound_malf_unknown": [
+          0.481,
+          0.877
+        ],
+        "rules": {
+          "resolved:first_label": 529,
+          "closed:answer_colon": 75
+        },
+        "n_unparsed_FIELD_DEPRECATED": 396
+      },
+      "direct": {
+        "floor": 0.132,
+        "n_closed": 145,
+        "n_truncated": 844,
+        "n_resolved": 8,
+        "n_malformed": 3,
+        "bound_malf_wrong": [
+          0.132,
+          0.976
+        ],
+        "bound_malf_unknown": [
+          0.132,
+          0.979
+        ],
+        "rules": {
+          "closed:answer_colon": 145,
+          "resolved:unique_option_text": 5,
+          "resolved:leading_label": 2,
+          "resolved:bolded": 1
+        },
+        "n_unparsed_FIELD_DEPRECATED": 316
+      },
+      "cot": {
+        "floor": 0.684,
+        "n_closed": 779,
+        "n_truncated": 221,
+        "n_resolved": 0,
+        "n_malformed": 0,
+        "bound_malf_wrong": [
+          0.684,
+          0.905
+        ],
+        "bound_malf_unknown": [
+          0.684,
+          0.905
+        ],
+        "rules": {
+          "closed:answer_colon": 779
+        },
+        "n_unparsed_FIELD_DEPRECATED": 41
+      }
+    },
+    "ce_s0": {
+      "cold": {
+        "floor": 0.255,
+        "n_closed": 1000,
+        "n_truncated": 0,
+        "n_resolved": 0,
+        "n_malformed": 0,
+        "bound_malf_wrong": [
+          0.255,
+          0.255
+        ],
+        "bound_malf_unknown": [
+          0.255,
+          0.255
+        ],
+        "rules": {},
+        "n_unparsed_FIELD_DEPRECATED": 0
+      },
+      "letter": {
+        "floor": 0.53,
+        "n_closed": 0,
+        "n_truncated": 0,
+        "n_resolved": 1000,
+        "n_malformed": 0,
+        "bound_malf_wrong": [
+          0.53,
+          0.53
+        ],
+        "bound_malf_unknown": [
+          0.53,
+          0.53
+        ],
+        "rules": {
+          "resolved:first_label": 1000
+        },
+        "n_unparsed_FIELD_DEPRECATED": 0
+      },
+      "direct": {
+        "floor": 0.432,
+        "n_closed": 7,
+        "n_truncated": 391,
+        "n_resolved": 600,
+        "n_malformed": 2,
+        "bound_malf_wrong": [
+          0.432,
+          0.823
+        ],
+        "bound_malf_unknown": [
+          0.432,
+          0.825
+        ],
+        "rules": {
+          "resolved:leading_label": 589,
+          "resolved:unique_option_text": 11,
+          "closed:answer_colon": 7
+        },
+        "n_unparsed_FIELD_DEPRECATED": 46
+      },
+      "cot": {
+        "floor": 0.445,
+        "n_closed": 661,
+        "n_truncated": 338,
+        "n_resolved": 0,
+        "n_malformed": 1,
+        "bound_malf_wrong": [
+          0.445,
+          0.783
+        ],
+        "bound_malf_unknown": [
+          0.445,
+          0.784
+        ],
+        "rules": {
+          "closed:answer_colon": 661
+        },
+        "n_unparsed_FIELD_DEPRECATED": 190
+      }
+    },
+    "v7mc": {
+      "cold": {
+        "floor": 0.383,
+        "n_closed": 1000,
+        "n_truncated": 0,
+        "n_resolved": 0,
+        "n_malformed": 0,
+        "bound_malf_wrong": [
+          0.383,
+          0.383
+        ],
+        "bound_malf_unknown": [
+          0.383,
+          0.383
+        ],
+        "rules": {},
+        "n_unparsed_FIELD_DEPRECATED": 0
+      },
+      "letter": {
+        "floor": 0.524,
+        "n_closed": 0,
+        "n_truncated": 175,
+        "n_resolved": 822,
+        "n_malformed": 3,
+        "bound_malf_wrong": [
+          0.524,
+          0.6990000000000001
+        ],
+        "bound_malf_unknown": [
+          0.524,
+          0.702
+        ],
+        "rules": {
+          "resolved:first_label": 822
+        },
+        "n_unparsed_FIELD_DEPRECATED": 178
+      },
+      "direct": {
+        "floor": 0.394,
+        "n_closed": 7,
+        "n_truncated": 384,
+        "n_resolved": 506,
+        "n_malformed": 103,
+        "bound_malf_wrong": [
+          0.394,
+          0.778
+        ],
+        "bound_malf_unknown": [
+          0.394,
+          0.881
+        ],
+        "rules": {
+          "resolved:leading_label": 348,
+          "resolved:final_line": 76,
+          "resolved:unique_option_text": 82,
+          "closed:answer_colon": 7,
+          "malformed:conclusion": 1
+        },
+        "n_unparsed_FIELD_DEPRECATED": 220
+      },
+      "cot": {
+        "floor": 0.604,
+        "n_closed": 709,
+        "n_truncated": 241,
+        "n_resolved": 16,
+        "n_malformed": 34,
+        "bound_malf_wrong": [
+          0.604,
+          0.845
+        ],
+        "bound_malf_unknown": [
+          0.604,
+          0.879
+        ],
+        "rules": {
+          "closed:answer_colon": 709,
+          "resolved:unique_option_text": 16,
+          "malformed:final_line": 7,
+          "malformed:leading_label": 9
+        },
+        "n_unparsed_FIELD_DEPRECATED": 162
+      }
+    }
+  },
+  "direct_audit": {
+    "align_lora": {
+      "pod_accuracy_PROVISIONAL": 0.619,
+      "strict_accuracy": 0.605,
+      "strict_bound": [
+        0.605,
+        0.6829999999999999
+      ],
+      "strict_unparsed": 78,
+      "rules": {
+        "final_line": 533,
+        "containment": 385,
+        "explicit": 4
+      },
+      "share_won_by_containment": 0.4175704989154013
+    },
+    "base": {
+      "pod_accuracy_PROVISIONAL": 0.36,
+      "strict_accuracy": 0.182,
+      "strict_bound": [
+        0.182,
+        0.927
+      ],
+      "strict_unparsed": 745,
+      "rules": {
+        "containment": 161,
+        "explicit": 93,
+        "final_line": 1
+      },
+      "share_won_by_containment": 0.6313725490196078
+    },
+    "ce_s0": {
+      "pod_accuracy_PROVISIONAL": 0.473,
+      "strict_accuracy": 0.459,
+      "strict_bound": [
+        0.459,
+        0.653
+      ],
+      "strict_unparsed": 194,
+      "rules": {
+        "containment": 777,
+        "final_line": 22,
+        "explicit": 7
+      },
+      "share_won_by_containment": 0.9640198511166254
+    },
+    "v7mc": {
+      "pod_accuracy_PROVISIONAL": 0.49,
+      "strict_accuracy": 0.368,
+      "strict_bound": [
+        0.368,
+        0.859
+      ],
+      "strict_unparsed": 491,
+      "rules": {
+        "containment": 424,
+        "final_line": 78,
+        "explicit": 7
+      },
+      "share_won_by_containment": 0.8330058939096268
+    }
+  },
+  "kill_rules": {
+    "KR2": {
+      "n_base_wrong": 739,
+      "base_letter": 0.4546684709066306,
+      "v7mc_cold": 0.2638700947225981,
+      "diff_letter_minus_cold": 0.1907983761840325,
+      "ci": [
+        0.14884979702300405,
+        0.2327469553450609
+      ],
+      "verdict": "baseline still dominates"
+    }
+  },
+  "contrasts_vs_base": {
+    "align_lora": {
+      "cold": {
+        "diff_arm_minus_base": 0.05099999999999999,
+        "ci": [
+          0.024999999999999967,
+          0.07799999999999999
+        ],
+        "bound_malf_wrong": {
+          "bounds_arm": [
+            0.312,
+            0.312
+          ],
+          "bounds_base": [
+            0.261,
+            0.261
+          ],
+          "disjoint": true
+        },
+        "bound_malf_unknown": {
+          "bounds_arm": [
+            0.312,
+            0.312
+          ],
+          "bounds_base": [
+            0.261,
+            0.261
+          ],
+          "disjoint": true
+        },
+        "declarable_under_both": true,
+        "bracket_dependent": false
+      },
+      "letter": {
+        "diff_arm_minus_base": 0.16000000000000003,
+        "ci": [
+          0.132,
+          0.18800000000000006
+        ],
+        "bound_malf_wrong": {
+          "bounds_arm": [
+            0.641,
+            0.641
+          ],
+          "bounds_base": [
+            0.481,
+            0.877
+          ],
+          "disjoint": false
+        },
+        "bound_malf_unknown": {
+          "bounds_arm": [
+            0.641,
+            0.641
+          ],
+          "bounds_base": [
+            0.481,
+            0.877
+          ],
+          "disjoint": false
+        },
+        "declarable_under_both": false,
+        "bracket_dependent": false
+      },
+      "direct": {
+        "diff_arm_minus_base": 0.49,
+        "ci": [
+          0.45899999999999996,
+          0.522
+        ],
+        "bound_malf_wrong": {
+          "bounds_arm": [
+            0.622,
+            0.653
+          ],
+          "bounds_base": [
+            0.132,
+            0.976
+          ],
+          "disjoint": false
+        },
+        "bound_malf_unknown": {
+          "bounds_arm": [
+            0.622,
+            0.67
+          ],
+          "bounds_base": [
+            0.132,
+            0.979
+          ],
+          "disjoint": false
+        },
+        "declarable_under_both": false,
+        "bracket_dependent": false
+      },
+      "cot": {
+        "diff_arm_minus_base": -0.009000000000000008,
+        "ci": [
+          -0.03700000000000003,
+          0.018000000000000016
+        ],
+        "bound_malf_wrong": {
+          "bounds_arm": [
+            0.675,
+            0.796
+          ],
+          "bounds_base": [
+            0.684,
+            0.905
+          ],
+          "disjoint": false
+        },
+        "bound_malf_unknown": {
+          "bounds_arm": [
+            0.675,
+            0.8720000000000001
+          ],
+          "bounds_base": [
+            0.684,
+            0.905
+          ],
+          "disjoint": false
+        },
+        "declarable_under_both": false,
+        "bracket_dependent": false
+      }
+    },
+    "ce_s0": {
+      "cold": {
+        "diff_arm_minus_base": -0.006000000000000005,
+        "ci": [
+          -0.031000000000000028,
+          0.01999999999999999
+        ],
+        "bound_malf_wrong": {
+          "bounds_arm": [
+            0.255,
+            0.255
+          ],
+          "bounds_base": [
+            0.261,
+            0.261
+          ],
+          "disjoint": true
+        },
+        "bound_malf_unknown": {
+          "bounds_arm": [
+            0.255,
+            0.255
+          ],
+          "bounds_base": [
+            0.261,
+            0.261
+          ],
+          "disjoint": true
+        },
+        "declarable_under_both": true,
+        "bracket_dependent": false
+      },
+      "letter": {
+        "diff_arm_minus_base": 0.049000000000000044,
+        "ci": [
+          0.02200000000000002,
+          0.07600000000000001
+        ],
+        "bound_malf_wrong": {
+          "bounds_arm": [
+            0.53,
+            0.53
+          ],
+          "bounds_base": [
+            0.481,
+            0.877
+          ],
+          "disjoint": false
+        },
+        "bound_malf_unknown": {
+          "bounds_arm": [
+            0.53,
+            0.53
+          ],
+          "bounds_base": [
+            0.481,
+            0.877
+          ],
+          "disjoint": false
+        },
+        "declarable_under_both": false,
+        "bracket_dependent": false
+      },
+      "direct": {
+        "diff_arm_minus_base": 0.3,
+        "ci": [
+          0.27,
+          0.33
+        ],
+        "bound_malf_wrong": {
+          "bounds_arm": [
+            0.432,
+            0.823
+          ],
+          "bounds_base": [
+            0.132,
+            0.976
+          ],
+          "disjoint": false
+        },
+        "bound_malf_unknown": {
+          "bounds_arm": [
+            0.432,
+            0.825
+          ],
+          "bounds_base": [
+            0.132,
+            0.979
+          ],
+          "disjoint": false
+        },
+        "declarable_under_both": false,
+        "bracket_dependent": false
+      },
+      "cot": {
+        "diff_arm_minus_base": -0.23900000000000005,
+        "ci": [
+          -0.27299999999999996,
+          -0.20600000000000002
+        ],
+        "bound_malf_wrong": {
+          "bounds_arm": [
+            0.445,
+            0.783
+          ],
+          "bounds_base": [
+            0.684,
+            0.905
+          ],
+          "disjoint": false
+        },
+        "bound_malf_unknown": {
+          "bounds_arm": [
+            0.445,
+            0.784
+          ],
+          "bounds_base": [
+            0.684,
+            0.905
+          ],
+          "disjoint": false
+        },
+        "declarable_under_both": false,
+        "bracket_dependent": false
+      }
+    },
+    "v7mc": {
+      "cold": {
+        "diff_arm_minus_base": 0.122,
+        "ci": [
+          0.09099999999999997,
+          0.15300000000000002
+        ],
+        "bound_malf_wrong": {
+          "bounds_arm": [
+            0.383,
+            0.383
+          ],
+          "bounds_base": [
+            0.261,
+            0.261
+          ],
+          "disjoint": true
+        },
+        "bound_malf_unknown": {
+          "bounds_arm": [
+            0.383,
+            0.383
+          ],
+          "bounds_base": [
+            0.261,
+            0.261
+          ],
+          "disjoint": true
+        },
+        "declarable_under_both": true,
+        "bracket_dependent": false
+      },
+      "letter": {
+        "diff_arm_minus_base": 0.04300000000000004,
+        "ci": [
+          0.016000000000000014,
+          0.07
+        ],
+        "bound_malf_wrong": {
+          "bounds_arm": [
+            0.524,
+            0.6990000000000001
+          ],
+          "bounds_base": [
+            0.481,
+            0.877
+          ],
+          "disjoint": false
+        },
+        "bound_malf_unknown": {
+          "bounds_arm": [
+            0.524,
+            0.702
+          ],
+          "bounds_base": [
+            0.481,
+            0.877
+          ],
+          "disjoint": false
+        },
+        "declarable_under_both": false,
+        "bracket_dependent": false
+      },
+      "direct": {
+        "diff_arm_minus_base": 0.262,
+        "ci": [
+          0.233,
+          0.292
+        ],
+        "bound_malf_wrong": {
+          "bounds_arm": [
+            0.394,
+            0.778
+          ],
+          "bounds_base": [
+            0.132,
+            0.976
+          ],
+          "disjoint": false
+        },
+        "bound_malf_unknown": {
+          "bounds_arm": [
+            0.394,
+            0.881
+          ],
+          "bounds_base": [
+            0.132,
+            0.979
+          ],
+          "disjoint": false
+        },
+        "declarable_under_both": false,
+        "bracket_dependent": false
+      },
+      "cot": {
+        "diff_arm_minus_base": -0.08000000000000007,
+        "ci": [
+          -0.1090000000000001,
+          -0.051000000000000045
+        ],
+        "bound_malf_wrong": {
+          "bounds_arm": [
+            0.604,
+            0.845
+          ],
+          "bounds_base": [
+            0.684,
+            0.905
+          ],
+          "disjoint": false
+        },
+        "bound_malf_unknown": {
+          "bounds_arm": [
+            0.604,
+            0.879
+          ],
+          "bounds_base": [
+            0.684,
+            0.905
+          ],
+          "disjoint": false
+        },
+        "declarable_under_both": false,
+        "bracket_dependent": false
+      }
+    }
+  },
+  "method": {
+    "split": "closed | truncated | resolved | malformed; see scripts/answer_parse.py",
+    "truncated": "n_tokens >= cap-2. A REAL unknown: the budget ended, not the reasoning. Decided by token count, never by the parser.",
+    "malformed": "had budget and closed nothing readable -- a DECISION, so both imputations are reported and neither is the headline alone",
+    "point_estimate": "the floor of the bound, NOT an accuracy estimate",
+    "unparsed_FIELD": "DEPRECATED -- the harness parser's fallback rescues truncated traces, so it undercounts ~4-5x on 10-label benches",
+    "bootstrap": "10000 paired resamples over items, seed 0"
+  }
+}

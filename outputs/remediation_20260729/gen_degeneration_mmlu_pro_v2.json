@@ -1,0 +1,203 @@
+{
+  "bench": "mmlu_pro",
+  "channel": "cot",
+  "loop_threshold": 0.35,
+  "max_new": {
+    "base": 640,
+    "align_lora": 640,
+    "ce_s0": 640,
+    "v7mc": 640
+  },
+  "per_arm": {
+    "base": {
+      "n": 1000,
+      "n_loops": 0,
+      "loop_rate": 0.0,
+      "d4_min": 0.7379032258064516,
+      "d4_median": 0.9888527611808928,
+      "d4_median_unparsed": 0.9840909090909091,
+      "d4_median_parsed": 0.9903381642512077,
+      "loop_rate_by_threshold": {
+        "0.2": 0,
+        "0.3": 0,
+        "0.35": 0,
+        "0.45": 0,
+        "0.6": 0
+      },
+      "n_unparsed": 221,
+      "n_unparsed_FIELD_DEPRECATED": 41,
+      "n_unparsed_and_loop": 0,
+      "n_unparsed_not_loop": 221,
+      "tok_median": 467.0,
+      "tok_p90": 640.0,
+      "n_at_cap": 225,
+      "cap_rate": 0.225,
+      "n_unparsed_at_cap": 221,
+      "n_loops_at_cap": 0
+    },
+    "align_lora": {
+      "n": 1000,
+      "n_loops": 10,
+      "loop_rate": 0.01,
+      "d4_min": 0.038461538461538464,
+      "d4_median": 0.9788721916381491,
+      "d4_median_unparsed": 0.9487179487179487,
+      "d4_median_parsed": 0.9852941176470589,
+      "loop_rate_by_threshold": {
+        "0.2": 5,
+        "0.3": 9,
+        "0.35": 10,
+        "0.45": 17,
+        "0.6": 25
+      },
+      "n_unparsed": 197,
+      "n_unparsed_FIELD_DEPRECATED": 102,
+      "n_unparsed_and_loop": 10,
+      "n_unparsed_not_loop": 187,
+      "tok_median": 131.0,
+      "tok_p90": 640.0,
+      "n_at_cap": 122,
+      "cap_rate": 0.122,
+      "n_unparsed_at_cap": 121,
+      "n_loops_at_cap": 10
+    },
+    "ce_s0": {
+      "n": 1000,
+      "n_loops": 298,
+      "loop_rate": 0.298,
+      "d4_min": 0.014164305949008499,
+      "d4_median": 0.9868601855032635,
+      "d4_median_unparsed": 0.165625,
+      "d4_median_parsed": 1.0,
+      "loop_rate_by_threshold": {
+        "0.2": 204,
+        "0.3": 277,
+        "0.35": 298,
+        "0.45": 328,
+        "0.6": 350
+      },
+      "n_unparsed": 339,
+      "n_unparsed_FIELD_DEPRECATED": 190,
+      "n_unparsed_and_loop": 264,
+      "n_unparsed_not_loop": 75,
+      "tok_median": 88.5,
+      "tok_p90": 640.0,
+      "n_at_cap": 373,
+      "cap_rate": 0.373,
+      "n_unparsed_at_cap": 338,
+      "n_loops_at_cap": 298
+    },
+    "v7mc": {
+      "n": 1000,
+      "n_loops": 146,
+      "loop_rate": 0.146,
+      "d4_min": 0.018907563025210083,
+      "d4_median": 0.9625584112149532,
+      "d4_median_unparsed": 0.33153638814016173,
+      "d4_median_parsed": 1.0,
+      "loop_rate_by_threshold": {
+        "0.2": 96,
+        "0.3": 136,
+        "0.35": 146,
+        "0.45": 175,
+        "0.6": 209
+      },
+      "n_unparsed": 275,
+      "n_unparsed_FIELD_DEPRECATED": 162,
+      "n_unparsed_and_loop": 143,
+      "n_unparsed_not_loop": 132,
+      "tok_median": 96.0,
+      "tok_p90": 640.0,
+      "n_at_cap": 243,
+      "cap_rate": 0.243,
+      "n_unparsed_at_cap": 241,
+      "n_loops_at_cap": 144
+    }
+  },
+  "cold_metric_robustness": {
+    "base": {
+      "acc": 0.261,
+      "acc_norm": 0.246,
+      "artifact_cold_correct": 0.261,
+      "argmax_reproduces_cold_pred": "1000/1000"
+    },
+    "align_lora": {
+      "acc": 0.312,
+      "acc_norm": 0.304,
+      "artifact_cold_correct": 0.312,
+      "argmax_reproduces_cold_pred": "1000/1000",
+      "lift_vs_base": {
+        "acc": {
+          "diff": 0.05099999999999999,
+          "ci": [
+            0.024999999999999967,
+            0.07799999999999999
+          ],
+          "ci_excludes_zero": true
+        },
+        "acc_norm": {
+          "diff": 0.057999999999999996,
+          "ci": [
+            0.030999999999999972,
+            0.08499999999999999
+          ],
+          "ci_excludes_zero": true
+        }
+      }
+    },
+    "ce_s0": {
+      "acc": 0.255,
+      "acc_norm": 0.251,
+      "artifact_cold_correct": 0.255,
+      "argmax_reproduces_cold_pred": "1000/1000",
+      "lift_vs_base": {
+        "acc": {
+          "diff": -0.006000000000000005,
+          "ci": [
+            -0.031000000000000028,
+            0.01999999999999999
+          ],
+          "ci_excludes_zero": false
+        },
+        "acc_norm": {
+          "diff": 0.0050000000000000044,
+          "ci": [
+            -0.02099999999999999,
+            0.031
+          ],
+          "ci_excludes_zero": false
+        }
+      }
+    },
+    "v7mc": {
+      "acc": 0.383,
+      "acc_norm": 0.396,
+      "artifact_cold_correct": 0.383,
+      "argmax_reproduces_cold_pred": "1000/1000",
+      "lift_vs_base": {
+        "acc": {
+          "diff": 0.122,
+          "ci": [
+            0.09099999999999997,
+            0.15300000000000002
+          ],
+          "ci_excludes_zero": true
+        },
+        "acc_norm": {
+          "diff": 0.15000000000000002,
+          "ci": [
+            0.11699999999999999,
+            0.182
+          ],
+          "ci_excludes_zero": true
+        }
+      }
+    }
+  },
+  "method": {
+    "loop": "distinct-4 word n-grams < 0.35 over the whole generation",
+    "marginal": "loop rate is scored over ALL items -- nothing is conditioned on",
+    "not_computed": "accuracy among non-looping items: 'did it loop' is post-treatment",
+    "tokens": "real tokenizer counts; word counts understate LaTeX-dense output"
+  }
+}

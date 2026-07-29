@@ -43,7 +43,12 @@ def _sc_stats(path, base_wrong):
     return {"k": k, "n": n, "acc": round(correct / max(n, 1), 4),
             "n_correct": correct, "mean_gen_tokens": round(mean_gen, 1),
             "cost_gen_tokens_per_item": round(k * mean_gen, 1),
-            "n_unparsed": d["summary"].get("n_unparsed")}
+            # From the arbiter summary, whose parser falls back to the last standalone
+            # label and therefore undercounts truncated traces. Audited 2026-07-29: the
+            # ARC arbiter runs this reads are CLEAN (0 of 594 traces lack an explicit
+            # `Answer: X`, 0 reached the 1024 cap), so this number is real HERE -- but it
+            # is not a general instrument, hence the name.
+            "n_unparsed_ARBITER_FIELD": d["summary"].get("n_unparsed")}
 
 
 def main():

@@ -1,0 +1,72 @@
+{
+  "C:/Users/seba_/AppData/Local/Temp/claude/C--Projects-MSAP/02a2ae44-1e55-4a92-a7c5-063f24bd1ab0/scratchpad/e2dl/runs/v7_lofit_seed1/eval/gsm8k_scale.json": {
+    "cap": 512,
+    "cells": {
+      "0.0": {
+        "n": 200,
+        "acc_reported": 0.97,
+        "n_truncated": 1,
+        "trunc_rate": 0.005,
+        "n_unparsed_FIELD": 0,
+        "bound": [
+          0.97,
+          0.975
+        ],
+        "acc_given_truncated": 0.0,
+        "acc_given_closed": 0.9748743718592965,
+        "n_rescued_by_fallback": 1
+      },
+      "1.0": {
+        "n": 200,
+        "acc_reported": 0.66,
+        "n_truncated": 18,
+        "trunc_rate": 0.09,
+        "n_unparsed_FIELD": 0,
+        "bound": [
+          0.66,
+          0.75
+        ],
+        "acc_given_truncated": 0.1111111111111111,
+        "acc_given_closed": 0.7142857142857143,
+        "n_rescued_by_fallback": 18,
+        "bounds_disjoint_vs_ref": true
+      }
+    },
+    "reference_cell": "0.0"
+  },
+  "C:/Users/seba_/AppData/Local/Temp/claude/C--Projects-MSAP/02a2ae44-1e55-4a92-a7c5-063f24bd1ab0/scratchpad/e2dl/runs/v7_lofit_seed2/eval/gsm8k_scale.json": {
+    "cap": 512,
+    "cells": {
+      "0.0": {
+        "n": 200,
+        "acc_reported": 0.97,
+        "n_truncated": 1,
+        "trunc_rate": 0.005,
+        "n_unparsed_FIELD": 0,
+        "bound": [
+          0.97,
+          0.975
+        ],
+        "acc_given_truncated": 0.0,
+        "acc_given_closed": 0.9748743718592965,
+        "n_rescued_by_fallback": 1
+      },
+      "1.0": {
+        "n": 200,
+        "acc_reported": 0.805,
+        "n_truncated": 11,
+        "trunc_rate": 0.055,
+        "n_unparsed_FIELD": 0,
+        "bound": [
+          0.805,
+          0.8600000000000001
+        ],
+        "acc_given_truncated": 0.18181818181818182,
+        "acc_given_closed": 0.8412698412698413,
+        "n_rescued_by_fallback": 11,
+        "bounds_disjoint_vs_ref": true
+      }
+    },
+    "reference_cell": "0.0"
+  }
+}
