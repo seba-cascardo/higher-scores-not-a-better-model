@@ -48,6 +48,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import time
 from collections import Counter
@@ -193,9 +194,22 @@ def main():
         if vote is None:
             n_unparsed += 1
         n_correct += ok
+        # `parse_answer` ends with "lone X in the last 100 chars", the same shape of
+        # fallback that made MMLU-Pro's unparsed count 4-5x too low: a trace that ran
+        # out of budget mid-sentence gets whatever letter its prose happened to contain.
+        # So `n_unparsed` here is a floor, not a truncation count -- and this run's 31
+        # of 198 (cap 8192) has never been auditable, because the traces were not kept.
+        # They are kept now: with the text, a later pass can tokenise and separate
+        # truncated from malformed exactly as the paired harness does.
         results.append({"doc_id": it["doc_id"], "base_cot_correct": ok,
                         "pred_letter": vote, "gold_letter": it["gold"],
-                        "votes": letters, "k": args.k})
+                        "votes": letters, "k": args.k,
+                        "parse_rule": (None if vote is None else
+                                       "answer_colon" if re.search(
+                                           r"answer\s*(?:is|:)\s*\(?[ABCD]\)?",
+                                           traces[0], re.IGNORECASE)
+                                       else "fallback_tail_letter"),
+                        "gen_text": traces[0][-4000:] if traces else ""})
     n = len(results)
     summary = {"task": args.task, "n": n, "k": args.k,
                "base_cot_acc_all": n_correct / max(n, 1),

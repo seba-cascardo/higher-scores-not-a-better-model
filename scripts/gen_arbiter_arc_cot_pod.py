@@ -178,10 +178,23 @@ def main():
             # for the greedy k=1 arbiter; per-sample truncated list when k>1).
             gen_text = (decoded_texts[0][-4000:] if k == 1
                         else [t[-2000:] for t in decoded_texts])
+            # `parse_letter` above falls back to the last standalone label, which on a
+            # truncated trace invents an answer and keeps n_unparsed at 0. Recording the
+            # rule makes that visible without changing any score. (Audited 2026-07-29:
+            # this run is clean -- 0 of 594 traces lack an explicit `Answer: X` and 0
+            # reached the 1024 cap -- so the fallback never fired here. Now it is
+            # checkable from the artefact instead of by a bespoke pass.)
             results.append({"doc_id": did, "arc_id": it.get("arc_id"),
                             "base_cot_correct": ok, "pred_letter": pl, "gold_letter": gl,
                             "votes": (letters if k > 1 else None),
                             "in_mc_only": did in mc_only, "gen_len": glen,
+                            "parse_rule": (
+                                None if pl is None
+                                else "answer_colon" if re.search(
+                                    r"[Aa]nswer\s*[:\-]?\s*\(?" + re.escape(pl) + r"\)?",
+                                    decoded_texts[0], re.IGNORECASE)
+                                else "fallback_last_label"),
+                            "hit_cap": int(glen >= args.max_new_tokens - 2),
                             "gen_text": gen_text})
         done = bi + len(batch)
         print(f"[arb] [{done}/{len(items)}] acc_so_far={n_correct/done:.3f} "
