@@ -11,10 +11,22 @@ The generation face already says -theta_anti is not theta_mc (442 tokens vs 90).
 This closes the 2x2 on the scoring face, where the paper's headline lives.
 
 The pre-registered discriminator is quantitative, not qualitative. Geometry gives
-cos(theta_anti, -theta_mc) = -0.129, hence cos(-theta_anti, theta_mc) = +0.129.
-If the lift were a function of alignment with theta_mc, -theta_anti should buy
-about 0.129 * lift(theta_mc+1) ~= +4.5pp. The paired CI decides between that and
-zero.
+cos(theta_anti, -theta_mc) = -0.129, hence cos(theta_anti, theta_mc) = +0.129 and
+cos(-theta_anti, theta_mc) = -0.129 -- negating EITHER argument flips the cosine
+exactly once, so cos(-a,b) == cos(a,-b). If the lift were a function of alignment
+with theta_mc, the cell at scale s should buy about s * 0.129 * lift(theta_mc+1),
+i.e. -4.7pp at s=-1 and +4.7pp at s=+1.
+
+That signed, per-scale form is the whole point: a projection model is ANTISYMMETRIC
+in the scale, so testing one cell against one number cannot refute it -- a single
+cell can agree by coincidence. The refutation lives in the pair.
+
+  history: the first version of this block negated the cosine a second time and
+  predicted +4.68pp at s=-1, then read the measured -3.41pp as "wrong sign". With
+  the sign right the prediction is -4.68pp, which sits INSIDE that cell's CI. The
+  cell alone excludes nothing; what excludes the projection model is s=+1
+  (predicted +4.7, measured -28.1) plus the fact that both signs lose accuracy,
+  which no antisymmetric model can do.
 
 Everything here is CPU and runs LOCAL (repo rule: the pod is GPU-only). Cells are
 paired by doc_hash, so the CI is the one the shared-item design earns -- the
@@ -121,8 +133,12 @@ def main():
                     help="cell that defines the full lift, for the projection prediction")
     ap.add_argument("--cos-anti-neg-mc", type=float, default=-0.129,
                     help="cos(theta_anti, -theta_mc) from anti_axis_analysis.json")
-    ap.add_argument("--predict-label", default="anti-1",
-                    help="cell the projection prediction is tested against")
+    ap.add_argument("--projection-cell", action="append", default=None,
+                    metavar="LABEL=SCALE",
+                    help="repeatable; cell and the offset scale it was run at. The "
+                         "projection prediction is signed by that scale, so passing "
+                         "both signs is what makes the test refutable. "
+                         "Default: anti-1=-1 and anti+1=1 when present.")
     ap.add_argument("--channel", default="acc_norm", choices=["acc", "acc_norm"])
     ap.add_argument("--n-boot", type=int, default=20000)
     ap.add_argument("--seed", type=int, default=0)
@@ -201,28 +217,54 @@ def main():
         out["cells"][label]["rank_chi2_p"] = float(p)
 
     # --- the pre-registered discriminator --------------------------------------
-    if args.lift_label in out["cells"] and args.predict_label in out["cells"]:
+    # cos(theta_anti, theta_mc) = -cos(theta_anti, -theta_mc). The cell run at offset
+    # scale s injects s*theta_anti, whose projection on theta_mc carries the sign of s.
+    cos_anti_mc = -args.cos_anti_neg_mc
+    specs = args.projection_cell
+    if specs is None:
+        specs = [f"{lbl}={s}" for lbl, s in (("anti-1", -1.0), ("anti+1", 1.0))
+                 if lbl in out["cells"]]
+    if args.lift_label in out["cells"] and specs:
         full_lift = out["cells"][args.lift_label]["delta_pp"]
-        predicted = args.cos_anti_neg_mc * -1.0 * full_lift  # cos(-anti, mc) = -cos(anti,-mc)
-        got = out["cells"][args.predict_label]
-        lo, hi = got["ci95"]
-        verdict = ("LINEAR-IN-PROJECTION not excluded" if lo <= predicted <= hi
-                   else "LINEAR-IN-PROJECTION excluded")
-        zero = "zero excluded" if not (lo <= 0 <= hi) else "zero not excluded"
-        print(f"\n=== projection prediction ===")
-        print(f"  cos(-theta_anti, theta_mc) = {-args.cos_anti_neg_mc:+.3f}")
-        print(f"  full lift ({args.lift_label})  = {full_lift:+.2f} pp")
-        print(f"  predicted if lift ~ alignment = {predicted:+.2f} pp")
-        print(f"  observed ({args.predict_label})        = {got['delta_pp']:+.2f} pp "
-              f"[{lo:+.2f}, {hi:+.2f}]")
-        print(f"  -> {verdict}; {zero}")
-        out["projection_test"] = {"cos_neg_anti_vs_mc": -args.cos_anti_neg_mc,
+        print(f"\n=== projection prediction (lift ~ alignment with theta_mc) ===")
+        print(f"  cos(theta_anti, theta_mc) = {cos_anti_mc:+.3f}   "
+              f"full lift ({args.lift_label}) = {full_lift:+.2f} pp")
+        print(f"  {'cell':<10s} {'scale':>6s} {'predicted':>10s} {'observed':>10s} "
+              f"{'95% CI (paired)':>20s}  verdict")
+        tests, excluded_any, signs = {}, False, set()
+        for spec in specs:
+            if "=" not in spec:
+                sys.exit(f"ABORT: --projection-cell wants LABEL=SCALE, got {spec!r}")
+            label, raw = spec.split("=", 1)
+            if label not in out["cells"]:
+                sys.exit(f"ABORT: --projection-cell names {label!r}, which is not a loaded cell")
+            scale = float(raw)
+            predicted = scale * cos_anti_mc * full_lift
+            got = out["cells"][label]
+            lo, hi = got["ci95"]
+            excluded = not (lo <= predicted <= hi)
+            excluded_any |= excluded
+            signs.add(np.sign(got["delta_pp"]))
+            print(f"  {label:<10s} {scale:>+6.2f} {predicted:>+10.2f} "
+                  f"{got['delta_pp']:>+10.2f} {f'[{lo:+.2f}, {hi:+.2f}]':>20s}  "
+                  f"{'EXCLUDED' if excluded else 'not excluded'}"
+                  f"{'' if (lo <= 0 <= hi) else ' (zero excluded)'}")
+            tests[label] = {"scale": scale, "predicted_pp": predicted,
+                            "observed_pp": got["delta_pp"], "observed_ci95": got["ci95"],
+                            "linear_excluded": excluded,
+                            "zero_excluded": not (lo <= 0 <= hi)}
+        # A projection model is antisymmetric in the scale: opposite scales must give
+        # opposite-signed deltas. Same sign on both is a refutation no single cell gives.
+        one_sided = len(signs) == 1 and len([s for s in specs]) > 1
+        print(f"  -> LINEAR-IN-PROJECTION {'EXCLUDED' if (excluded_any or one_sided) else 'not excluded'}"
+              f"{'; one-sided: every scale moves the same way, which no antisymmetric model can do' if one_sided else ''}")
+        out["projection_test"] = {"cos_anti_vs_mc": cos_anti_mc,
+                                  "cos_neg_anti_vs_mc": args.cos_anti_neg_mc,
                                   "full_lift_pp": full_lift,
-                                  "predicted_pp": predicted,
-                                  "observed_pp": got["delta_pp"],
-                                  "observed_ci95": got["ci95"],
-                                  "linear_excluded": not (lo <= predicted <= hi),
-                                  "zero_excluded": not (lo <= 0 <= hi)}
+                                  "cells": tests,
+                                  "linear_excluded_any_cell": excluded_any,
+                                  "one_sided_response": bool(one_sided),
+                                  "linear_excluded": bool(excluded_any or one_sided)}
 
     if args.out:
         with open(args.out, "w", encoding="utf-8") as fh:
