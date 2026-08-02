@@ -282,9 +282,19 @@ def main():
           flush=True)
 
     # --- load arbiter mc_only (committed strata) ----------------------------------
-    arb = json.load(arbiter_path.open(encoding="utf-8"))
-    mc_only_committed = sorted(int(x) for x in arb["sets"]["mc_only"])
-    print(f"  committed mc_only: {len(mc_only_committed)} doc_ids", flush=True)
+    # Optional: a committed arbiter exists only for ARC (it is a CoT artifact). For any
+    # other task pass --arbiter none. Do NOT point a task at another task's arbiter:
+    # doc_ids are 0..N-1 in every task, so the "reconciliation" below would intersect
+    # unrelated items and silently pass.
+    if str(arbiter_path).lower() == "none":
+        mc_only_committed = None
+        print("  committed mc_only: NONE (--arbiter none) -> mc_only is taken from the "
+              "cold-scoring recomputation, which is its definition; no reconciliation.",
+              flush=True)
+    else:
+        arb = json.load(arbiter_path.open(encoding="utf-8"))
+        mc_only_committed = sorted(int(x) for x in arb["sets"]["mc_only"])
+        print(f"  committed mc_only: {len(mc_only_committed)} doc_ids", flush=True)
 
     # --- optional: pooled PMI summary cross-check ---------------------------------
     pmi_summary = None
@@ -387,29 +397,39 @@ def main():
     mc_only_recomputed = sorted(
         did for did in scored_ids
         if rec[did]["base"] == 0 and rec[did]["offset"] == 1 and rec[did]["vinf"] == 0)
-    set_committed = set(mc_only_committed)
     set_recomputed = set(mc_only_recomputed)
-    only_committed = sorted(set_committed - set_recomputed)
-    only_recomputed = sorted(set_recomputed - set_committed)
-    print(f"\n  --- mc_only reconciliation (recomputed acc_norm vs committed arbiter) ---",
-          flush=True)
-    print(f"    committed={len(set_committed)}  recomputed={len(set_recomputed)}  "
-          f"intersection={len(set_committed & set_recomputed)}", flush=True)
-    if only_committed or only_recomputed:
-        print(f"    [WARN] drift: in_committed_not_recomputed={len(only_committed)} "
-              f"{only_committed[:10]}{'...' if len(only_committed) > 10 else ''}  |  "
-              f"in_recomputed_not_committed={len(only_recomputed)} "
-              f"{only_recomputed[:10]}{'...' if len(only_recomputed) > 10 else ''}",
-              flush=True)
-        print(f"    [WARN] proceeding on the RECOMPUTED-and-also-scored mc_only "
-              f"(self-consistent with the per-item PMI argmaxes).", flush=True)
-    else:
-        print(f"    OK: recomputed mc_only matches committed arbiter exactly.", flush=True)
 
-    # Analysis base = mc_only items that we actually scored per-item (intersection of
-    # committed and recomputed keeps us self-consistent AND faithful to the canonical
-    # 124; fall back to recomputed if committed items were dropped for mismatch).
-    mc_only_ids = sorted((set_committed & set_recomputed) or set_recomputed)
+    if mc_only_committed is None:
+        # No committed arbiter for this task. mc_only IS the cold-scoring stratum, so
+        # the recomputation is the definition, not a substitute for it. Nothing to
+        # reconcile -- and we say so rather than printing a vacuous "matches exactly".
+        print(f"\n  --- mc_only from recomputation: {len(set_recomputed)} doc_ids "
+              f"(no committed arbiter exists for task '{args.task}'; not reconciled) ---",
+              flush=True)
+        mc_only_ids = sorted(set_recomputed)
+    else:
+        set_committed = set(mc_only_committed)
+        only_committed = sorted(set_committed - set_recomputed)
+        only_recomputed = sorted(set_recomputed - set_committed)
+        print(f"\n  --- mc_only reconciliation (recomputed acc_norm vs committed arbiter) ---",
+              flush=True)
+        print(f"    committed={len(set_committed)}  recomputed={len(set_recomputed)}  "
+              f"intersection={len(set_committed & set_recomputed)}", flush=True)
+        if only_committed or only_recomputed:
+            print(f"    [WARN] drift: in_committed_not_recomputed={len(only_committed)} "
+                  f"{only_committed[:10]}{'...' if len(only_committed) > 10 else ''}  |  "
+                  f"in_recomputed_not_committed={len(only_recomputed)} "
+                  f"{only_recomputed[:10]}{'...' if len(only_recomputed) > 10 else ''}",
+                  flush=True)
+            print(f"    [WARN] proceeding on the RECOMPUTED-and-also-scored mc_only "
+                  f"(self-consistent with the per-item PMI argmaxes).", flush=True)
+        else:
+            print(f"    OK: recomputed mc_only matches committed arbiter exactly.", flush=True)
+
+        # Analysis base = mc_only items that we actually scored per-item (intersection of
+        # committed and recomputed keeps us self-consistent AND faithful to the canonical
+        # 124; fall back to recomputed if committed items were dropped for mismatch).
+        mc_only_ids = sorted((set_committed & set_recomputed) or set_recomputed)
     S = len(mc_only_ids)
     print(f"\n  --- HEAD-TO-HEAD on mc_only (S={S}) ---", flush=True)
     if S == 0:
@@ -565,7 +585,10 @@ def main():
         ) if pmi_summary else None),
         verdict=dict(label=verdict, alive=alive, detail=detail),
     )
-    out = args.out or (args.dir / "dcpmi_headtohead_arc.json")
+    # Task-derived, never hardcoded: the original default wrote every task to
+    # "dcpmi_headtohead_arc.json", so the TQA run landed under an ARC name and its
+    # numbers looked artifact-less for months (see B62-TRAZA).
+    out = args.out or (args.dir / f"dcpmi_headtohead_{args.task}.json")
     out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print(f"\n  saved: {out}", flush=True)
 
