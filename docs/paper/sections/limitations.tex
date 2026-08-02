@@ -165,21 +165,32 @@ the final one, harmful in $3/3$ seeds throughout), where the in-domain
 non-contrastive control was merely inert.
 
 \paragraph{The headline anchors are knowledge benchmarks with low chain-of-thought
-headroom --- by design, and stated as scope.}
+headroom --- by design, and stated as scope.}\label{lim:anchors}
 All four headline tasks sit at or near the base's CoT ceiling (ARC 0.98, HellaSwag
 0.83, Winogrande 0.9425). That is not an oversight but the condition that makes the
 per-item arbiter informative --- there must be a latent, reachable answer for cold
 scoring to misrank --- and it is what the mechanism predicts the exploit needs: on
 GPQA, the one hard anchor, with genuine reasoning load and ${\sim}23\pp$ of
 cold-scoring headroom, the same adapter recovers approximately nothing
-(\cref{results:arbiter}). What we have not run is the converse arm: an adapter
-trained \emph{in-distribution} on a hard, non-saturated benchmark (e.g.\ MMLU-Pro),
-asking whether contrastive-correctness PEFT produces a large off-axis lift where
-the base has few buried-but-reachable answers. The mechanism predicts it does not
---- the exploit amplifies latent misranked knowledge, and where there is none there
-is nothing to amplify --- and the out-of-task GPQA result is consistent with that
-prediction, but the in-distribution version is future work, not a result here.
-Claims in this paper are accordingly scoped to the anchors measured.
+(\cref{results:arbiter}).
+
+Saturation and difficulty are nonetheless separable, and we since separated them.
+Evaluated on MMLU-Pro --- ten options, chance $0.100$, base cold $0.2610$ --- the
+adapter still lifts scoring by $+12.20\pp$ and still fails to transfer
+(\cref{results:mmlupro}). So the effect is \emph{not} confined to saturated
+four-option benchmarks, and the GPQA null is not a difficulty result: both
+benchmarks are hard, both leave the base large cold-to-CoT headroom, and the exploit
+fires on one and not the other. What separates them is distance from the adapter's
+training distribution, not how hard they are.
+
+What remains unrun is the narrower converse arm: an adapter trained
+\emph{in-distribution} on a hard, non-saturated benchmark, rather than one trained
+elsewhere and evaluated on it. That arm would test whether contrastive-correctness
+PEFT \emph{produces} a large off-axis lift where the base has few
+buried-but-reachable answers to amplify --- a question our MMLU-Pro evaluation
+cannot answer, because there the base has many ($0.2610$ cold against $0.7060$ under
+CoT). Claims about the training-time behaviour of the objective are accordingly
+scoped to the corpora measured.
 
 \paragraph{Pretraining contamination is not audited --- and the claims are robust
 to it by construction.}

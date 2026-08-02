@@ -837,3 +837,66 @@ recovery fraction to mean anything, and the shuffle floor on HellaSwag comes out
 HellaSwag $114.9\% >$ ARC $27.2\% >$ TruthfulQA $-58.3\%$, the same ordering Gemma
 gives \emph{under acc\_norm} --- a caveat that matters, because under raw accuracy the
 ordering does not survive in either family (\cref{lim:metric}).
+
+\subsection{The lift is not an artifact of saturated benchmarks: MMLU-Pro}
+\label{results:mmlupro}
+
+Every anchor above sits near the base's chain-of-thought ceiling, which invites the
+obvious objection: perhaps the exploit only exists on easy four-option benchmarks the
+model has effectively already solved. We tested it on MMLU-Pro --- ten options,
+chance $0.100$, and a base that scores $\mathbf{0.2610}$ cold, barely $2.6\times$
+chance. It is not saturated by any reading. Four arms, $1{,}000$ items, paired on
+every \code{doc\_id}.
+
+\textbf{The lift appears anyway.} The adapter scores $0.3830$ against the base's
+$0.2610$: $\mathbf{+12.20\pp}$, CI $[+9.10, +15.30]$, with disjoint Manski bounds
+(the cold channel has no unparsed items, so the bounds are the point estimates).
+Because the metric ordering burned us once before (\cref{lim:metric}), we recomputed
+under both defensible definitions: raw argmax reproduces the scored prediction
+$1000/1000$ in every arm, and the lift is $+12.20$ under \code{acc} and
+$\mathbf{+15.00}$ CI $[+11.70, +18.20]$ under \code{acc\_norm}. The two
+non-contrastive arms separate as the inducibility spectrum predicts: the
+higher-capacity LoRA moves $+5.10$ CI $[+2.50, +7.80]$, while the
+\emph{same-parameterization} plain-CE arm --- the one that recovers $36.2\%$ on ARC
+--- is null under both definitions here ($-0.60$ CI $[-3.10, +2.00]$ and $+0.50$ CI
+$[-2.10, +3.10]$), the same collapse it shows on TruthfulQA-mc1 and further evidence
+that inducibility is task-dependent rather than a constant of the objective.
+
+\textbf{And it still does not transfer.} Under chain-of-thought the paired difference
+is $-8.00\pp$, CI $[-10.90, -5.10]$: the interval excludes zero on the wrong side of
+zero, which is not transfer. We do not declare even that much --- the three-way
+Manski bounds \emph{overlap} ($[0.604, 0.845]$ against the base's
+$[0.684, 0.905]$), so the honest statement is that the scoring lift buys nothing
+generative here, not that it costs something.\footnote{These bounds were recomputed
+after we found that the harness's \code{unparsed} field does not count truncated
+traces; the real denominator was ${\sim}5\times$ larger (base 41 against 221). The
+conclusion did not change and now holds a fortiori, since widening the unknown set
+can only widen both brackets.}
+
+What this widens, and what it bounds, are different things. It widens the
+\emph{scope}: the phenomenon is not a property of saturated four-option benchmarks.
+It bounds the \emph{magnitude}: $+12.20$ here against $+35.83$ on ARC is roughly a
+quarter, consistent with the task heterogeneity already on record (Winogrande $79.5$
+/ HellaSwag $69.5$ / ARC $36.2$ / TruthfulQA $0.9$; \cref{results:generic}).
+
+The result also sharpens what the GPQA null in \cref{results:arbiter} does and does
+not show. Both benchmarks are hard and unsaturated, and both leave the base
+substantial cold-to-CoT headroom --- GPQA ${\sim}23\pp$ ($0.4747 \rightarrow
+0.7071$), MMLU-Pro ${\sim}44\pp$ ($0.2610 \rightarrow 0.7060$) --- yet the adapter
+recovers approximately nothing on the first and $+12.20\pp$ on the second. Difficulty
+therefore does not govern whether the exploit fires; distance from the distribution
+the adapter was trained on does. That is the same conclusion \cref{disc:arbiter}
+reaches with its within-format controls, arrived at here by varying the benchmark
+instead of the format, and it is what ``an in-distribution exploit of a lossy
+readout'' predicts.
+
+Finally, the generative pathology reproduces in its now-familiar form: degeneration
+rather than degraded reasoning. Repetition loops (distinct-4 $< 0.35$) run
+\textbf{0/1000} for the base against $146$ for the adapter and $298$ for plain CE ---
+an ordering that replicates on a second benchmark (\cref{disc:pathologies}).
+
+Two caveats bind this section. It is one run per cell. And it is not the converse arm
+of \cref{lim:anchors}: the adapter here was trained on the same corpus as everywhere
+else and \emph{evaluated} on MMLU-Pro, so it answers whether the effect survives an
+unsaturated benchmark, not whether contrastive PEFT trained in-distribution on one
+would produce it.

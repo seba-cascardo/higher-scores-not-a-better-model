@@ -692,6 +692,66 @@ $\vinf$, swept over $\lambda$, does \emph{not} rescue transfer at matched lift
 only by construction. Together, the $\offperp$/random spectrum (sufficiency) and
 fork (b) (necessity) make the off-axis reading a two-sided causal claim.
 
+\paragraph{The response is not a graded function of projection onto the learned
+direction.} A natural model of everything above is that a push buys lift in
+proportion to how much of it lands along $\thetamc$. That model is testable because
+it is \emph{antisymmetric in scale}, and it fails. Crossing sign against axis on ARC
+(\code{acc\_norm}, $n{=}1172$, paired) gives: $\thetamc$ at $+1$, $+36.26\pp$ CI
+$[+33.28, +39.25]$; and for a separately trained anti-axis, $-0.5 \rightarrow -1.96$,
+$-1 \rightarrow -3.41$ CI $[-6.23, -0.60]$, $-2 \rightarrow -4.35$, $+1 \rightarrow
+\mathbf{-28.07}$ CI $[-31.23, -25.00]$. The proportional prediction for that last
+cell is $+4.68$: it misses by ${\sim}33\pp$ and gets the sign wrong. At $-2$ the
+observed $-4.35$ against a predicted $-9.36$ saturates sublinearly.
+
+The decisive fact, though, is not any single cell --- it is that \emph{all four}
+scales lose accuracy. An antisymmetric model cannot move both directions to the same
+side of zero, so the dial is unilaterally negative and the response is not graded in
+its projection onto $\thetamc$. The rank data say the same thing qualitatively: of
+the four sign-by-axis combinations, three disperse the correct option below base and
+only one concentrates it.
+
+One category caveat, because the arm invites a misreading: the anti-axis is
+$98.3\%$ perpendicular to $\thetamc$ ($|\cos| = 0.129$), at comparable norm. It is a
+small-known-projection control, \emph{not} an on-axis one --- $\Wknow$ remains the
+on-axis arm and the $6.4\%$ rests on it. This corroborates the family's pattern
+without being a member of it. One run per cell.
+
+\paragraph{The learned direction is reproducible, so it is not seed noise.}
+An off-axis direction invites the reading that it is whatever idiosyncratic
+perturbation this training run happened to land on. It is not. Two independently
+trained runs of the contrastive objective over the same 48 heads agree at a median
+per-head cosine of $\mathbf{+0.9985}$ (5th percentile $0.9958$), against an RMS floor
+of $0.0625$ for random directions in $d{=}256$. The objective picks out an almost
+deterministic direction, roughly three orders of magnitude away from chance
+agreement. This also forecloses averaging as a remedy: replicate-averaging can only
+cancel a component that varies across replicates, and this one does not --- three
+independent offsets average to a norm ratio of $0.5875$ against the $1/\sqrt{3} =
+0.5774$ that independence predicts, which validates the measurement and leaves
+nothing to cancel.
+
+\paragraph{The contrastive and generic net effects are neither the same nor
+independent.} \Cref{disc:inducibility} establishes by \emph{outcome} that a generic
+fine-tune recovers much of the lift; the geometric counterpart asks how much
+direction the two methods actually share, which no earlier measurement had
+computed --- both net effects had been compared to $\vinf$, never to each other.
+They share $\mathbf{13.5}$--$\mathbf{18.8\%}$ of their energy (the range spans five
+ranks of the estimator; the spread across ranks exceeds the tolerance we fixed
+beforehand, so we quote the range and never a point) against $0.62\%$ for a matched
+null. The overlap concentrates where the adapter pushes hardest: cosine $+0.4825$ on
+the ten heads carrying most energy against $+0.0773$ on the ten carrying least.
+
+The tempting inference from that --- that the shared part \emph{is} the generic,
+on-axis component, and the contrastive residual is the off-axis remainder --- does
+not hold: subtracting the generic direction leaves the residual's on-axis budget
+essentially unchanged at every rank tested. What the two methods share is not the
+part that points along the correctness axis. We report the concentration finding
+because it survived the control it invited rather than because it is clean: the
+obvious artifact is attenuation by measurement noise on weakly-driven heads, so we
+estimated per-head reliability by split-half within a single forward pass and found
+it at $0.9998$, with reliability and push magnitude correlated at $-0.204$ (CI
+$[-0.558, +0.140]$) --- the artifact route is not open. All of this is measured on
+one benchmark's prompts.
+
 \subsection{No single-layer locus: the lift scales with total offset magnitude}
 \label{disc:locus}
 
@@ -791,6 +851,55 @@ recall).
 it bounds the \emph{collateral} claim, not the no-transfer claim of
 \cref{disc:arbiter}.)
 
+\paragraph{Degeneration, not shorter reasoning --- measured on two benchmarks.}
+The gsm8k loops above were found by reading failures. We then measured the same
+thing systematically, on two multiple-choice benchmarks run generatively, scoring
+every trace by its distinct-4 ratio and calling a trace degenerate below $0.35$. The
+rates order the injection modes consistently and put the base at the floor in both:
+
+\begin{center}\small
+\begin{tabular}{lrrrrrr}
+\toprule
+& base & contrastive & Align-LoRA & \multicolumn{3}{c}{plain CE (3 seeds)} \\
+\cmidrule(lr){5-7}
+& & & & s0 & s1 & s2 \\
+\midrule
+MMLU-Pro ($n{=}1000$) & \textbf{0} & 146 & --- & 298 & --- & --- \\
+ARC ($n{=}1172$)      & \textbf{0} & 33  & 5   & \textbf{323} & 151 & 278 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Three things make this a measurement rather than a threshold artifact. The base's
+\emph{worst} trace on ARC scores $0.803$ --- it never approaches the cutoff, so the
+zero is not a near-miss. Sweeping the cutoff from $0.20$ to $0.60$ moves one arm's
+count from $147$ to $156$: the split is categorical, not a knob. And the degenerate
+traces are what exhausts the generation budget rather than long reasoning ---
+median lengths of $23$--$54$ tokens with $13$--$34\%$ of traces at the cap is a
+bimodal distribution, and $311$ of one arm's $397$ unparsed traces are loops.
+
+The ordering --- plain CE $\gg$ Align-LoRA $>$ contrastive, base at zero --- is the
+same on both benchmarks, and it complicates the clean story of the preceding
+paragraphs in a way we state rather than smooth over: Align-LoRA \emph{preserves}
+gsm8k accuracy while still degenerating five times where the base degenerates none.
+Preserving a score and preserving generation are not the same property.
+
+On ARC the plain-CE arms also lose chain-of-thought accuracy under \emph{both}
+brackets of the three-way split, which the MMLU-Pro run did not establish: $-13.99$
+and $-15.02\pp$ for two seeds, disjoint from base on floor and ceiling alike,
+because the base's floor is $0.97526$ and the arms cannot reach it even if every
+truncated trace is granted a correct answer. Three caveats bind those numbers and
+none of them is optional. The third seed's $-34.04$ rests on a two-item margin and
+is not cited alone. The seeds cannot be \emph{ordered} against each other, because
+the arm that truncates most has both the lowest floor and the highest ceiling ---
+the ranking inverts with the bracket, so the magnitude is not quotable without
+naming the seed. And the arms ran at a generation cap of $512$ against the base's
+$640$: monotonicity of the bound means a smaller budget cannot manufacture the
+disjunction (a truncated trace granted correctness can only lower the ceiling when
+it closes), so the \emph{sign} survives the asymmetry --- but the magnitudes are
+measured against a comparand with more budget and we do not read them as effect
+sizes. One run per cell throughout.
+
 \paragraph{The dissociative triangle.}
 Three facts about the contrastive adapter's generative behaviour dissociate, and we
 state them together because the gsm8k loss could otherwise be read as a blanket
@@ -834,6 +943,50 @@ pre-registered 2pp window) and drops only in the $0.75{\rightarrow}1.0$ band
 ($\rightarrow 0.815$). The scoring-benefit threshold thus lies \emph{below} the
 reasoning-harm threshold, so the $0.75{\rightarrow}1.0$ magnitude is collateral
 damage with no accompanying scoring gain (the lift is already at ceiling).
+
+Two qualifications on that band, from a denser sweep between the anchors
+($s \in \{0.75, 0.80, \ldots, 1.00\}$, $n{=}200$ per cell) that reproduced both
+endpoints digit for digit. First, the quoted accuracies are \emph{floors}: they
+count every truncated trace as wrong. The anchors survive that reading --- base
+$[0.9700, 0.9750]$ against $s{=}0.75$'s $[0.9500, 0.9550]$ and $s{=}1.0$'s
+$[0.8150, 0.8650]$ are disjoint either way --- but the \emph{size} of the drop
+across the band is not one number: $-13.50\pp$ on floors, $-9.69$ among traces that
+closed, $-9.00$ on upper bounds. Roughly a quarter of the floor-to-floor fall is
+exhausted budget rather than degraded reasoning, so we quote the band's magnitude
+only with the definition attached.
+
+Second, the fall is \textbf{progressive, not a cliff}. Under all three definitions
+five sub-intervals are negative, none carries more than a third of the total, and
+the largest single step is $0.85{\rightarrow}0.90$ in each. Against $s{=}0.75$ the
+drop only becomes declarable (disjoint bounds) from $s{=}0.85$ on; $s{=}0.80$ is
+not separable from it. Nothing about the dose separation depends on a sharp edge at
+$0.75$ --- what the data support is an accumulating cost whose onset sits below the
+dose at which scoring stops paying, which is the claim the preceding paragraph
+makes.
+
+Degeneration turns out to sit on the same axis, and to switch off before the lift
+does. Repeating the dose sweep on MMLU-Pro ($n{=}1000$ scored, $n{=}300$ generated),
+the scoring lift is already complete at half dose --- $+11.40\pp$ CI
+$[+8.80, +14.10]$ at $s{=}0.50$ against $+12.20$ at full dose, indistinguishable ---
+while the repetition loops of the preceding paragraphs go $146 \rightarrow 10
+\rightarrow \mathbf{0}$ across $s = 1.00, 0.75, 0.50$. At half dose the worst trace
+scores $0.406$ on the degeneracy metric: not a marginal pass. That the saturation
+point replicates on a ten-option benchmark with a third of the effect size makes it
+unlikely to be a property of ARC.
+
+We flag two things about this rather than sell it. It is a steering result and the
+paper's headline arms are baked, so it bounds what an operating point could look
+like, not what the adapter is. And a companion measurement of ours did not survive
+its own control: an apparent $+9.02\pp$ of the half-dose arm \emph{over} the base
+collapsed to $+2.52$ CI $[-1.86, +7.01]$ once both arms were given a larger
+generation budget, because $100\%$ of the base's improvement came from items that
+had been truncated. The direction that survives is narrower and worth stating
+plainly --- the adapter does not stop early, it degenerates: given a budget of
+$2560$ tokens it generates \emph{more} than the base ($1488$ against $1398$ on the
+hardest items) and hits the cap six times as often, converting the extra budget into
+repetition rather than reasoning. Any intervention that lengthens the intervened
+arm's chain of thought inherits that risk and should report its loop rate beside its
+accuracy.
 
 This does \textbf{not} reopen a transfer window. We are careful with the wording,
 because two interior points of the $\varepsilon$-sweep above do print
