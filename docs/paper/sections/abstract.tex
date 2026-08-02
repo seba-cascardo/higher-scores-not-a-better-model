@@ -57,8 +57,8 @@ geometry and the causal decomposition all replicate cross-family (Qwen 14B:
 same-sign lift on all four tasks, three clearly and Winogrande marginal at
 $n{=}400$; whitened $\cos(\thetamc, \vinf)$ $-0.002$, and the lift again carried by
 the perpendicular component, not by the parallel one). Nor is the effect an artifact
-of saturated four-option benchmarks: on MMLU-Pro --- ten options, chance $0.100$,
-base cold $0.2610$ --- the same adapter lifts scoring $+12.20\pp$ and again fails to
+of saturated four-option benchmarks: on MMLU-Pro --- ten options, base cold
+$0.2610$ --- the same adapter lifts scoring $+12.20\pp$ and again fails to
 transfer, so what governs whether the exploit fires is distance from the training
 distribution rather than benchmark difficulty. Practically, this
 is a caution for the contrastive-PEFT-for-multiple-choice program: a cold-MC lift of

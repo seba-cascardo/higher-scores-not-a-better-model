@@ -853,8 +853,8 @@ $0.2610$: $\mathbf{+12.20\pp}$, CI $[+9.10, +15.30]$, with disjoint Manski bound
 (the cold channel has no unparsed items, so the bounds are the point estimates).
 Because the metric ordering burned us once before (\cref{lim:metric}), we recomputed
 under both defensible definitions: raw argmax reproduces the scored prediction
-$1{,}000/1{,}000$ in every arm, and the lift is $+12.20$ under \code{acc} and
-$\mathbf{+15.00}$ CI $[+11.70, +18.20]$ under \code{acc\_norm}. The two
+$1{,}000/1{,}000$ in every arm, and the lift is $+12.20$ under plain acc and
+$\mathbf{+15.00}$ CI $[+11.70, +18.20]$ under acc\_norm. The two
 non-contrastive arms separate as the inducibility spectrum predicts: the
 higher-capacity LoRA moves $+5.10$ CI $[+2.50, +7.80]$, while the
 \emph{same-parameterization} plain-CE arm --- the one that recovers $36.2\%$ on ARC
@@ -897,7 +897,7 @@ rather than degraded reasoning. Repetition loops (distinct-4 $< 0.35$) run
 \textbf{0/1{,}000} for the base against $146$ for the adapter and $298$ for plain CE ---
 an ordering that replicates on a second benchmark (\cref{disc:pathologies}).
 
-Two caveats bind this section. It is one run per cell. And it is not the converse arm
+Two caveats bind this section. None of the four arms is replicated. And it is not the converse arm
 we flag in the limitations (\cref{lim:anchors}): the adapter here was trained on the same corpus as everywhere
 else and \emph{evaluated} on MMLU-Pro, so it answers whether the effect survives an
 unsaturated benchmark, not whether contrastive PEFT trained in-distribution on one
