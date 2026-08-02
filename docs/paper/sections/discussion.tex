@@ -692,7 +692,7 @@ $\vinf$, swept over $\lambda$, does \emph{not} rescue transfer at matched lift
 only by construction. Together, the $\offperp$/random spectrum (sufficiency) and
 fork (b) (necessity) make the off-axis reading a two-sided causal claim.
 
-\paragraph{The response is not a graded function of projection onto the learned
+\paragraph{The response is not proportional to projection onto the learned
 direction.} A natural model of everything above is that a push buys lift in
 proportion to how much of it lands along $\thetamc$. That model is testable because
 it is \emph{antisymmetric in scale}, and it fails. Crossing sign against axis on ARC
@@ -705,8 +705,9 @@ observed $-4.35$ against a predicted $-9.36$ saturates sublinearly.
 
 The decisive fact, though, is not any single cell --- it is that \emph{all four}
 scales lose accuracy. An antisymmetric model cannot move both directions to the same
-side of zero, so the dial is unilaterally negative and the response is not graded in
-its projection onto $\thetamc$. The rank data say the same thing qualitatively: of
+side of zero, so the dial is unilaterally negative and the response is not
+proportional to its projection onto $\thetamc$. The rank data say the same thing
+qualitatively: of
 the four sign-by-axis combinations, three disperse the correct option below base and
 only one concentrates it.
 
@@ -872,11 +873,11 @@ ARC ($n{=}1172$)      & \textbf{0} & 33  & 5   & \textbf{323} & 151 & 278 \\
 
 Three things make this a measurement rather than a threshold artifact. The base's
 \emph{worst} trace on ARC scores $0.803$ --- it never approaches the cutoff, so the
-zero is not a near-miss. Sweeping the cutoff from $0.20$ to $0.60$ moves one arm's
-count from $147$ to $156$: the split is categorical, not a knob. And the degenerate
-traces are what exhausts the generation budget rather than long reasoning ---
-median lengths of $23$--$54$ tokens with $13$--$34\%$ of traces at the cap is a
-bimodal distribution, and $311$ of one arm's $397$ unparsed traces are loops.
+zero is not a near-miss. Sweeping the cutoff from $0.20$ to $0.60$ moves the s1
+arm's count from $147$ to $156$: the split is categorical, not a knob. And the
+degenerate traces are what exhausts the generation budget rather than long reasoning
+--- median lengths of $23$--$54$ tokens with $13$--$34\%$ of traces at the cap is a
+bimodal distribution, and $311$ of the s0 arm's $397$ unparsed traces are loops.
 
 The ordering --- plain CE $\gg$ Align-LoRA $>$ contrastive, base at zero --- is the
 same on both benchmarks, and it complicates the clean story of the preceding
@@ -982,7 +983,7 @@ collapsed to $+2.52$ CI $[-1.86, +7.01]$ once both arms were given a larger
 generation budget, because $100\%$ of the base's improvement came from items that
 had been truncated. The direction that survives is narrower and worth stating
 plainly --- the adapter does not stop early, it degenerates: given a budget of
-$2560$ tokens it generates \emph{more} than the base ($1488$ against $1398$ on the
+$2{,}560$ tokens it generates \emph{more} than the base ($1{,}488$ against $1{,}398$ on the
 hardest items) and hits the cap six times as often, converting the extra budget into
 repetition rather than reasoning. Any intervention that lengthens the intervened
 arm's chain of thought inherits that risk and should report its loop rate beside its

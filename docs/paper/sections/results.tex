@@ -853,7 +853,7 @@ $0.2610$: $\mathbf{+12.20\pp}$, CI $[+9.10, +15.30]$, with disjoint Manski bound
 (the cold channel has no unparsed items, so the bounds are the point estimates).
 Because the metric ordering burned us once before (\cref{lim:metric}), we recomputed
 under both defensible definitions: raw argmax reproduces the scored prediction
-$1000/1000$ in every arm, and the lift is $+12.20$ under \code{acc} and
+$1{,}000/1{,}000$ in every arm, and the lift is $+12.20$ under \code{acc} and
 $\mathbf{+15.00}$ CI $[+11.70, +18.20]$ under \code{acc\_norm}. The two
 non-contrastive arms separate as the inducibility spectrum predicts: the
 higher-capacity LoRA moves $+5.10$ CI $[+2.50, +7.80]$, while the
@@ -876,8 +876,10 @@ can only widen both brackets.}
 What this widens, and what it bounds, are different things. It widens the
 \emph{scope}: the phenomenon is not a property of saturated four-option benchmarks.
 It bounds the \emph{magnitude}: $+12.20$ here against $+35.83$ on ARC is roughly a
-quarter, consistent with the task heterogeneity already on record (Winogrande $79.5$
-/ HellaSwag $69.5$ / ARC $36.2$ / TruthfulQA $0.9$; \cref{results:generic}).
+third. Task-to-task variation of that size is already on record for this objective,
+albeit as a different quantity --- the fraction of the lift a generic control
+recovers, which runs Winogrande $79.5\%$ / HellaSwag $69.5\%$ / ARC $36.2\%$ /
+TruthfulQA $0.9\%$ (\cref{results:generic}).
 
 The result also sharpens what the GPQA null in \cref{results:arbiter} does and does
 not show. Both benchmarks are hard and unsaturated, and both leave the base
@@ -892,11 +894,11 @@ readout'' predicts.
 
 Finally, the generative pathology reproduces in its now-familiar form: degeneration
 rather than degraded reasoning. Repetition loops (distinct-4 $< 0.35$) run
-\textbf{0/1000} for the base against $146$ for the adapter and $298$ for plain CE ---
+\textbf{0/1{,}000} for the base against $146$ for the adapter and $298$ for plain CE ---
 an ordering that replicates on a second benchmark (\cref{disc:pathologies}).
 
 Two caveats bind this section. It is one run per cell. And it is not the converse arm
-of \cref{lim:anchors}: the adapter here was trained on the same corpus as everywhere
+we flag in the limitations (\cref{lim:anchors}): the adapter here was trained on the same corpus as everywhere
 else and \emph{evaluated} on MMLU-Pro, so it answers whether the effect survives an
 unsaturated benchmark, not whether contrastive PEFT trained in-distribution on one
 would produce it.
