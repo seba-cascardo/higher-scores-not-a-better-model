@@ -727,11 +727,14 @@ trained runs of the contrastive objective over the same 48 heads agree at a medi
 per-head cosine of $\mathbf{+0.9985}$ (5th percentile $0.9958$), against an RMS floor
 of $0.0625$ for random directions in $d{=}256$. The objective picks out an almost
 deterministic direction, roughly three orders of magnitude away from chance
-agreement. This also forecloses averaging as a remedy: replicate-averaging can only
-cancel a component that varies across replicates, and this one does not --- three
-independent offsets average to a norm ratio of $0.5875$ against the $1/\sqrt{3} =
-0.5774$ that independence predicts, which validates the measurement and leaves
-nothing to cancel.
+agreement. This also forecloses averaging as a remedy. Replicate-averaging can only
+cancel a component that \emph{varies} across replicates, and the test separates the
+two cases cleanly. Averaging three norm-matched \emph{random} offsets collapses their
+norm to a ratio of $\mathbf{0.5875}$, right at the $1/\sqrt{3} = 0.5774$ that
+independence predicts --- which is the instrument working, not the finding. Averaging
+three independently \emph{trained} offsets leaves a ratio of $\mathbf{0.9209}$: almost
+nothing cancels, because there is almost nothing that differs. Averaging is a remedy
+for noise, and this direction is not noise.
 
 \paragraph{The contrastive and generic net effects are neither the same nor
 independent.} \Cref{disc:inducibility} establishes by \emph{outcome} that a generic

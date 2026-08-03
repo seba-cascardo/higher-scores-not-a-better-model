@@ -1,0 +1,30 @@
+{
+  "source": {
+    "cot": "arbiter_arc_cot_fullsplit.json",
+    "sets": "arbiter_arc_sets_fullsplit.json"
+  },
+  "note": "Fisher exact, two-sided, on base CoT correctness: items the adapter fixes vs items neither arm fixes, on the full ARC-Challenge test split (outside the shared n=400 draw). Recomputed from the raw arbiter files.",
+  "fixed_items": {
+    "n": 444,
+    "base_cot_correct": 442,
+    "acc": 0.9954954954954955
+  },
+  "negative_control": {
+    "n": 150,
+    "base_cot_correct": 134,
+    "acc": 0.8933333333333333
+  },
+  "contingency_table": [
+    [
+      442,
+      2
+    ],
+    [
+      134,
+      16
+    ]
+  ],
+  "odds_ratio": 26.388059701492537,
+  "p_value": 1.368150913893354e-08,
+  "n_unparsed_in_cot_run": 0
+}

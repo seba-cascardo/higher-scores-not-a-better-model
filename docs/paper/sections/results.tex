@@ -477,6 +477,16 @@ at matched capacity; ${\sim}\mathbf{38\%}$ against the higher-capacity arm & der
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[flushleft]\footnotesize
+\item \textbf{Two r256 series, and which one the interval uses.} The rank-sweep row
+above reports r256 at fraction $0.65$ (accuracy $0.7325$), taken from the
+de-risking rank sweep; the paired-bootstrap interval $[51\%, 73\%]$ is computed on
+the per-item canonical arm, where r256 reads accuracy $0.7225$ and fraction
+$\mathbf{0.6214}$. These are different runs of the same configuration, not a
+discrepancy in one: the sweep establishes flatness across ranks, the canonical arm
+supplies the point and the interval, and the pre-specified zone binning is applied to
+the canonical $0.6214$. Per-item files for r8/r32/r64 are not released, so the
+\emph{slope} across ranks rests on the parametric sweep rather than on a per-item
+re-derivation.
 \item \textbf{The objective is non-contrastive; the selection rule is not.} The
 same-parameterization arm's loss carries no term against the incorrect option, but
 the checkpoint rule we inherited from the adapter validates on whether the correct

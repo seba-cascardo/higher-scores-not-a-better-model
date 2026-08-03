@@ -48,7 +48,12 @@ GPQA out at CoT $0.70$ --- single-run, directional, and a floor, since $31/198$ 
 did not parse and are counted wrong). A per-item arbiter bounds it: the base
 already solves $124/124$ of the fixed ARC items under chain-of-thought, against
 $41/47$ on the items the adapter fails to fix ($p=1.4\times10^{-4}$) --- the arbiter
-discriminates rather than restating a ceiling.
+discriminates rather than restating a ceiling. Re-run on the \emph{entire}
+ARC-Challenge test split, outside the $n{=}400$ draw the other diagnostics share, it
+replicates with far more power: the adapter fixes $444$ items and the base already
+answers $442/444 = 0.9955$ of them under chain-of-thought, against $134/150 = 0.8933$
+on the items neither arm fixes (Fisher $\mathrm{OR}\,26.4$,
+$p=1.4\times10^{-8}$).
 
 A \emph{read-only} linear selector recovers the lift (ARC selector $0.943$ across
 the full $n{=}400$ evaluation set, not only base-wrong items) without touching

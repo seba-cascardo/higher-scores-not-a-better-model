@@ -28,6 +28,18 @@ tasks but marginal on Winogrande at $n{=}400$, and the causal spine that carries
 the attribution (the arbiter, the inducibility control, the recovery spectrum)
 remains single-model.
 
+One finding points the other way, and we state it as a candidate rather than a
+claim. The scoring lift and the generative damage are separable by \emph{dose}: at
+three quarters of the activation scale ARC is already at $0.855$, identical to full
+scale, and on MMLU-Pro the lift is complete at half dose while the repetition loops
+that mark the degeneration fall $146 \rightarrow 10 \rightarrow 0$. There is, on
+these two benchmarks, an operating point with the whole benefit and none of the
+pathology. It is a steering result and the arms this paper leads on are baked, so it
+bounds what an operating point could look like rather than telling us what the
+adapter is --- but it is the first thing a practitioner would want to know, and the
+lift being cheaply separable from its collateral is itself evidence about what kind
+of thing the lift is.
+
 The practical consequence is a caution for the contrastive-PEFT-for-multiple-choice
 program. A cold multiple-choice gain of this size can be an off-axis,
 non-transferring edit to a lossy readout --- obtainable read-only, without touching
