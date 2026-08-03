@@ -1,0 +1,87 @@
+{
+  "_what": "Local provenance record for the R4 FULL-SPLIT pair (base vs contrastive adapter). Derived 2026-08-03 by reading both artifacts; no re-evaluation was run.",
+  "_why": "The adapter arm of the full split (HellaSwag +19.2, Winogrande +20.1) had no local backing: the 66 MB blob lives only on HF and its filename collides case-insensitively with the n=400 run on Windows (see R4_README.txt). Downloading it by glob reproduces the collision.",
+  "generated_by": "read runs/eval_bulletproof/R4_v7mc_FULLSPLIT.json + R4_base_full/*/results_*.json; audit 2026-08-03",
+  "arms": {
+    "base": {
+      "local_path": "runs/eval_bulletproof/R4_base_full/__workspace__models__gemma4-31b-it/results_2026-06-27T21-41-43.217790.json",
+      "model": "hf",
+      "model_args": {
+        "pretrained": "/workspace/models/gemma4-31b-it",
+        "dtype": "bfloat16",
+        "max_length": 4096
+      },
+      "limit": null,
+      "date_utc": "2026-06-27T21:19:30Z",
+      "git_hash": "ea33276",
+      "model_sha": "",
+      "model_revision": "main"
+    },
+    "adapter": {
+      "local_path": "runs/eval_bulletproof/R4_v7mc_FULLSPLIT.json",
+      "local_path_note": "gitignored (66 MB); renamed from R4_v7mc_FULL.json to avoid the Windows case collision",
+      "hf_dataset": "sebacascardo87/msap-eval-bulletproof-lean-20260627",
+      "hf_path": "eval_bulletproof/R4_v7mc_FULL.json",
+      "sha256": "775166741c5061882d6aa31380bd6faa56cac6d3814033064c6da6c493d30f8f",
+      "size_bytes": 66156333,
+      "model": "v7hf",
+      "model_args": "base=/workspace/models/gemma4-31b-it,offsets=runs/v7_lofit_gemma4_31b_chat/offsets_mc.pt,dtype=bfloat16,max_length=4096",
+      "limit": 100000,
+      "git_hash": "ea33276",
+      "model_sha": "",
+      "model_revision": "main"
+    }
+  },
+  "matched_pair_checks": {
+    "same_git_hash": true,
+    "same_max_length_4096": true,
+    "same_batch_size": true,
+    "same_n_per_task": {
+      "arc_challenge": true,
+      "hellaswag": true,
+      "winogrande": true,
+      "truthfulqa_mc1": true
+    }
+  },
+  "tasks": {
+    "arc_challenge": {
+      "headline_metric": "acc_norm",
+      "n": 1172,
+      "base": 0.494,
+      "adapter": 0.8558,
+      "lift_pp": 36.18,
+      "base_acc": 0.5128,
+      "adapter_acc": 0.8532
+    },
+    "hellaswag": {
+      "headline_metric": "acc_norm",
+      "n": 10042,
+      "base": 0.6266,
+      "adapter": 0.8186,
+      "lift_pp": 19.2,
+      "base_acc": 0.5237,
+      "adapter_acc": 0.7611
+    },
+    "winogrande": {
+      "headline_metric": "acc",
+      "n": 1267,
+      "base": 0.648,
+      "adapter": 0.8485,
+      "lift_pp": 20.05,
+      "base_acc": 0.648,
+      "adapter_acc": 0.8485
+    },
+    "truthfulqa_mc1": {
+      "headline_metric": "acc",
+      "n": 817,
+      "base": 0.4725,
+      "adapter": 0.8433,
+      "lift_pp": 37.09,
+      "base_acc": 0.4725,
+      "adapter_acc": 0.8433
+    }
+  },
+  "caveat": "Neither arm stamps a model SHA (both model_sha='', model_revision='main') \u2014 the reproducibility limitation recorded in the roadmap item O0-09 applies here too.",
+  "not_in_ledger": false,
+  "ledger_note": "Reproduces already-published quantities (+19.2 / +20.1); introduces no new number."
+}

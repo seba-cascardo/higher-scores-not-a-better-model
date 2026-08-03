@@ -1,0 +1,172 @@
+nohup: ignoring input
+============================================================
+V7 LoFiT step 2 — train per-head offsets
+============================================================
+  base: /workspace/models/gemma-4-31b-it
+  heads_file: runs/v7_lofit_gemma4_31b_chat/head_probe_mc.json
+  top-k: 48
+  datasets: tqa,arc
+  n_train: 1500, n_val: 200
+  steps: 800, batch=1, grad_accum=4
+  lr: 0.01, loss: plain_ce
+
+  Loaded top-48 heads from file (will filter to compatible layers)
+
+Phase 1: building train + val pairs (CLEAN: split='train', test reserved; val = per-dataset tail of the seed-0 train pairs, interleaved)
+  TQA: loading split=train (target n=1600, wrong_mode=first)...
+    WARNING (audit B-3): TQA gold is dataset-position-0, so wrong_mode='first' always pairs choices[0] vs choices[1]. Prefer wrong_mode='random' for new runs.
+    TQA total valid=817, train=653, test=164, returning 653
+  ARC: loading train split (target n=1600)...
+    ARC train: returning 1119 pairs
+  train: 1572, val: 200 (100/dataset, interleaved)
+  NOTE: TQA test split (~140 items) and ARC test split reserved for final eval.
+
+Phase 2: load model + freeze
+Loading weights:   0%|          | 0/1188 [00:00<?, ?it/s]Loading weights:   0%|          | 2/1188 [00:00<02:09,  9.19it/s]Loading weights:   1%|          | 13/1188 [00:00<00:24, 48.62it/s]Loading weights:   2%|▏         | 21/1188 [00:00<00:20, 57.60it/s]Loading weights:   3%|▎         | 34/1188 [00:00<00:16, 71.72it/s]Loading weights:   4%|▍         | 48/1188 [00:00<00:13, 82.58it/s]Loading weights:   5%|▌         | 62/1188 [00:00<00:11, 96.72it/s]Loading weights:   6%|▋         | 75/1188 [00:00<00:10, 105.08it/s]Loading weights:   7%|▋         | 86/1188 [00:01<00:10, 104.87it/s]Loading weights:   8%|▊         | 97/1188 [00:01<00:10, 101.90it/s]Loading weights:   9%|▉         | 109/1188 [00:01<00:10, 106.97it/s]Loading weights:  10%|█         | 120/1188 [00:01<00:10, 103.14it/s]Loading weights:  11%|█         | 132/1188 [00:01<00:10, 101.79it/s]Loading weights:  12%|█▏        | 145/1188 [00:01<00:10, 100.25it/s]Loading weights:  13%|█▎        | 160/1188 [00:01<00:09, 105.19it/s]Loading weights:  14%|█▍        | 172/1188 [00:01<00:10, 97.26it/s] Loading weights:  16%|█▌        | 186/1188 [00:01<00:09, 106.01it/s]Loading weights:  17%|█▋        | 199/1188 [00:02<00:08, 110.71it/s]Loading weights:  18%|█▊        | 211/1188 [00:02<00:08, 110.32it/s]Loading weights:  19%|█▉        | 223/1188 [00:02<00:09, 103.00it/s]Loading weights:  20%|█▉        | 234/1188 [00:02<00:09, 102.14it/s]Loading weights:  21%|██        | 245/1188 [00:02<00:09, 98.34it/s] Loading weights:  21%|██▏       | 255/1188 [00:02<00:10, 86.52it/s]Loading weights:  23%|██▎       | 269/1188 [00:02<00:09, 97.24it/s]Loading weights:  24%|██▎       | 282/1188 [00:02<00:09, 94.72it/s]Loading weights:  25%|██▍       | 296/1188 [00:03<00:08, 103.45it/s]Loading weights:  26%|██▌       | 310/1188 [00:03<00:08, 107.28it/s]Loading weights:  27%|██▋       | 321/1188 [00:03<00:08, 107.53it/s]Loading weights:  28%|██▊       | 332/1188 [00:03<00:08, 99.01it/s] Loading weights:  29%|██▉       | 343/1188 [00:03<00:08, 99.74it/s]Loading weights:  30%|██▉       | 354/1188 [00:03<00:08, 94.49it/s]Loading weights:  31%|███       | 366/1188 [00:03<00:08, 99.09it/s]Loading weights:  32%|███▏      | 379/1188 [00:03<00:07, 105.34it/s]Loading weights:  33%|███▎      | 390/1188 [00:04<00:07, 105.09it/s]Loading weights:  34%|███▍      | 401/1188 [00:04<00:07, 102.28it/s]Loading weights:  35%|███▍      | 412/1188 [00:04<00:07, 103.83it/s]Loading weights:  36%|███▌      | 423/1188 [00:04<00:08, 92.36it/s] Loading weights:  37%|███▋      | 435/1188 [00:04<00:07, 99.04it/s]Loading weights:  38%|███▊      | 448/1188 [00:04<00:06, 105.91it/s]Loading weights:  39%|███▊      | 459/1188 [00:04<00:06, 104.88it/s]Loading weights:  40%|███▉      | 470/1188 [00:04<00:07, 101.22it/s]Loading weights:  41%|████      | 483/1188 [00:04<00:06, 107.69it/s]Loading weights:  42%|████▏     | 494/1188 [00:05<00:06, 102.94it/s]Loading weights:  43%|████▎     | 505/1188 [00:05<00:07, 93.44it/s] Loading weights:  44%|████▎     | 518/1188 [00:05<00:06, 102.15it/s]Loading weights:  45%|████▍     | 532/1188 [00:05<00:06, 105.88it/s]Loading weights:  46%|████▌     | 545/1188 [00:05<00:05, 111.30it/s]Loading weights:  47%|████▋     | 557/1188 [00:05<00:05, 111.14it/s]Loading weights:  48%|████▊     | 569/1188 [00:05<00:05, 105.67it/s]Loading weights:  49%|████▉     | 580/1188 [00:05<00:06, 101.24it/s]Loading weights:  50%|████▉     | 591/1188 [00:05<00:05, 100.44it/s]Loading weights:  51%|█████     | 602/1188 [00:06<00:05, 97.81it/s] Loading weights:  52%|█████▏    | 616/1188 [00:06<00:05, 108.03it/s]Loading weights:  53%|█████▎    | 630/1188 [00:06<00:04, 114.45it/s]Loading weights:  55%|█████▍    | 648/1188 [00:06<00:04, 128.85it/s]Loading weights:  56%|█████▌    | 663/1188 [00:06<00:04, 129.25it/s]Loading weights:  57%|█████▋    | 683/1188 [00:06<00:03, 142.89it/s]Loading weights:  59%|█████▉    | 698/1188 [00:06<00:03, 125.15it/s]Loading weights:  60%|██████    | 713/1188 [00:06<00:03, 127.70it/s]Loading weights:  61%|██████    | 727/1188 [00:07<00:03, 127.30it/s]Loading weights:  62%|██████▏   | 741/1188 [00:07<00:03, 124.54it/s]Loading weights:  63%|██████▎   | 754/1188 [00:07<00:03, 119.16it/s]Loading weights:  65%|██████▍   | 768/1188 [00:07<00:03, 120.13it/s]Loading weights:  66%|██████▋   | 790/1188 [00:07<00:02, 144.44it/s]Loading weights:  68%|██████▊   | 808/1188 [00:07<00:02, 147.38it/s]Loading weights:  69%|██████▉   | 823/1188 [00:07<00:02, 139.16it/s]Loading weights:  75%|███████▍  | 888/1188 [00:07<00:01, 275.07it/s]Loading weights:  93%|█████████▎| 1108/1188 [00:07<00:00, 803.94it/s]Loading weights: 100%|██████████| 1188/1188 [00:07<00:00, 149.01it/s]
+  attn_implementation: sdpa
+  layers=60 num_q_heads=32 head_dim=256
+  Compatible heads to train: 48
+  First 10 trainable:
+     1. L38 H 9  acc=0.901
+     2. L38 H12  acc=0.897
+     3. L38 H15  acc=0.897
+     4. L39 H 8  acc=0.895
+     5. L39 H21  acc=0.893
+     6. L38 H16  acc=0.893
+     7. L38 H17  acc=0.891
+     8. L37 H22  acc=0.889
+     9. L38 H 2  acc=0.888
+    10. L37 H11  acc=0.886
+
+  trainable params (offsets): 12336
+
+Phase 3: training
+
+ step       loss   val_loss   val_acc    time
+-----------------------------------------------
+    1    56.0000    30.2700     0.480       5s  *
+  200     3.0312     8.6731     0.640      55s  *
+  400     6.9062     6.8641     0.600     106s
+  600     8.3750     6.0312     0.720     156s  *
+  800    28.2500     5.3050     0.640     207s
+
+Training complete. Total time: 207s
+Best val_acc: 0.720 at step 600 -> runs/e1_plain_ce/offsets_seed0.pt
+
+Saved best offsets:  runs/e1_plain_ce/offsets_seed0.pt (val_acc=0.720 @ step 600)
+Saved final offsets: runs/e1_plain_ce/offsets_seed0.final.pt (val_acc=0.640 @ step 800)
+Saved log:           runs/e1_plain_ce/offsets_seed0.log.json
+============================================================
+V7 LoFiT step 2 — train per-head offsets
+============================================================
+  base: /workspace/models/gemma-4-31b-it
+  heads_file: runs/v7_lofit_gemma4_31b_chat/head_probe_mc.json
+  top-k: 48
+  datasets: tqa,arc
+  n_train: 1500, n_val: 200
+  steps: 800, batch=1, grad_accum=4
+  lr: 0.01, loss: plain_ce
+
+  Loaded top-48 heads from file (will filter to compatible layers)
+
+Phase 1: building train + val pairs (CLEAN: split='train', test reserved; val = per-dataset tail of the seed-0 train pairs, interleaved)
+  TQA: loading split=train (target n=1600, wrong_mode=first)...
+    WARNING (audit B-3): TQA gold is dataset-position-0, so wrong_mode='first' always pairs choices[0] vs choices[1]. Prefer wrong_mode='random' for new runs.
+    TQA total valid=817, train=653, test=164, returning 653
+  ARC: loading train split (target n=1600)...
+    ARC train: returning 1119 pairs
+  train: 1572, val: 200 (100/dataset, interleaved)
+  NOTE: TQA test split (~140 items) and ARC test split reserved for final eval.
+
+Phase 2: load model + freeze
+Loading weights:   0%|          | 0/1188 [00:00<?, ?it/s]Loading weights:   0%|          | 1/1188 [00:00<04:19,  4.57it/s]Loading weights:   1%|          | 12/1188 [00:00<00:26, 44.73it/s]Loading weights:   2%|▏         | 20/1188 [00:00<00:21, 54.11it/s]Loading weights:   3%|▎         | 34/1188 [00:00<00:14, 79.77it/s]Loading weights:   4%|▍         | 47/1188 [00:00<00:12, 92.86it/s]Loading weights:   5%|▍         | 58/1188 [00:00<00:11, 96.43it/s]Loading weights:   6%|▌         | 69/1188 [00:00<00:11, 94.20it/s]Loading weights:   7%|▋         | 79/1188 [00:00<00:11, 93.92it/s]Loading weights:   7%|▋         | 89/1188 [00:01<00:11, 93.91it/s]Loading weights:   9%|▊         | 103/1188 [00:01<00:10, 100.54it/s]Loading weights:  10%|▉         | 117/1188 [00:01<00:11, 96.98it/s] Loading weights:  11%|█         | 132/1188 [00:01<00:10, 104.66it/s]Loading weights:  12%|█▏        | 145/1188 [00:01<00:09, 110.73it/s]Loading weights:  13%|█▎        | 158/1188 [00:01<00:09, 113.48it/s]Loading weights:  14%|█▍        | 170/1188 [00:01<00:09, 112.20it/s]Loading weights:  15%|█▌        | 182/1188 [00:01<00:09, 104.14it/s]Loading weights:  16%|█▌        | 193/1188 [00:02<00:10, 96.60it/s] Loading weights:  17%|█▋        | 203/1188 [00:02<00:10, 94.50it/s]Loading weights:  18%|█▊        | 214/1188 [00:02<00:10, 97.20it/s]Loading weights:  19%|█▉        | 228/1188 [00:02<00:09, 98.12it/s]Loading weights:  21%|██        | 247/1188 [00:02<00:07, 118.74it/s]Loading weights:  22%|██▏       | 261/1188 [00:02<00:07, 124.11it/s]Loading weights:  23%|██▎       | 274/1188 [00:02<00:07, 118.55it/s]Loading weights:  24%|██▍       | 288/1188 [00:02<00:07, 119.69it/s]Loading weights:  25%|██▌       | 301/1188 [00:03<00:07, 117.03it/s]Loading weights:  26%|██▋       | 313/1188 [00:03<00:07, 111.87it/s]Loading weights:  27%|██▋       | 326/1188 [00:03<00:07, 111.11it/s]Loading weights:  28%|██▊       | 338/1188 [00:03<00:07, 111.76it/s]Loading weights:  30%|██▉       | 352/1188 [00:03<00:07, 118.00it/s]Loading weights:  31%|███       | 366/1188 [00:03<00:06, 123.46it/s]Loading weights:  32%|███▏      | 380/1188 [00:03<00:06, 119.42it/s]Loading weights:  34%|███▎      | 400/1188 [00:03<00:05, 138.35it/s]Loading weights:  35%|███▌      | 417/1188 [00:03<00:05, 145.10it/s]Loading weights:  36%|███▋      | 432/1188 [00:04<00:05, 142.34it/s]Loading weights:  38%|███▊      | 447/1188 [00:04<00:05, 139.00it/s]Loading weights:  39%|███▉      | 461/1188 [00:04<00:05, 138.13it/s]Loading weights:  40%|███▉      | 475/1188 [00:04<00:05, 138.03it/s]Loading weights:  41%|████      | 490/1188 [00:04<00:05, 136.34it/s]Loading weights:  42%|████▏     | 504/1188 [00:04<00:06, 107.75it/s]Loading weights:  44%|████▍     | 524/1188 [00:04<00:05, 128.63it/s]Loading weights:  45%|████▌     | 538/1188 [00:04<00:05, 129.03it/s]Loading weights:  47%|████▋     | 553/1188 [00:04<00:04, 134.44it/s]Loading weights:  48%|████▊     | 569/1188 [00:05<00:04, 138.38it/s]Loading weights:  49%|████▉     | 585/1188 [00:05<00:04, 138.81it/s]Loading weights:  51%|█████     | 601/1188 [00:05<00:04, 138.71it/s]Loading weights:  52%|█████▏    | 616/1188 [00:05<00:04, 134.47it/s]Loading weights:  54%|█████▎    | 636/1188 [00:05<00:03, 148.84it/s]Loading weights:  55%|█████▍    | 652/1188 [00:05<00:03, 147.28it/s]Loading weights:  56%|█████▌    | 667/1188 [00:05<00:03, 139.86it/s]Loading weights:  57%|█████▋    | 682/1188 [00:05<00:03, 135.38it/s]Loading weights:  59%|█████▊    | 696/1188 [00:06<00:03, 125.96it/s]Loading weights:  60%|█████▉    | 709/1188 [00:06<00:04, 117.81it/s]Loading weights:  61%|██████    | 721/1188 [00:06<00:04, 111.02it/s]Loading weights:  62%|██████▏   | 733/1188 [00:06<00:04, 112.55it/s]Loading weights:  63%|██████▎   | 747/1188 [00:06<00:04, 108.86it/s]Loading weights:  64%|██████▍   | 759/1188 [00:06<00:03, 107.33it/s]Loading weights:  65%|██████▌   | 776/1188 [00:06<00:03, 121.90it/s]Loading weights:  66%|██████▋   | 789/1188 [00:06<00:03, 124.03it/s]Loading weights:  68%|██████▊   | 802/1188 [00:06<00:03, 113.99it/s]Loading weights:  69%|██████▊   | 816/1188 [00:07<00:03, 117.42it/s]Loading weights:  70%|██████▉   | 828/1188 [00:07<00:03, 117.69it/s]Loading weights:  78%|███████▊  | 926/1188 [00:07<00:00, 355.29it/s]Loading weights:  95%|█████████▍| 1123/1188 [00:07<00:00, 809.14it/s]Loading weights: 100%|██████████| 1188/1188 [00:07<00:00, 160.43it/s]
+  attn_implementation: sdpa
+  layers=60 num_q_heads=32 head_dim=256
+  Compatible heads to train: 48
+  First 10 trainable:
+     1. L38 H 9  acc=0.901
+     2. L38 H12  acc=0.897
+     3. L38 H15  acc=0.897
+     4. L39 H 8  acc=0.895
+     5. L39 H21  acc=0.893
+     6. L38 H16  acc=0.893
+     7. L38 H17  acc=0.891
+     8. L37 H22  acc=0.889
+     9. L38 H 2  acc=0.888
+    10. L37 H11  acc=0.886
+
+  trainable params (offsets): 12336
+
+Phase 3: training
+
+ step       loss   val_loss   val_acc    time
+-----------------------------------------------
+    1    53.0000    30.2700     0.480       5s  *
+  200    22.3750     8.4541     0.640      56s  *
+  400    11.6875     6.8142     0.600     107s
+  600    22.1250     5.7923     0.640     157s  *
+  800     2.8281     5.2473     0.640     208s  *
+
+Training complete. Total time: 208s
+Best val_acc: 0.640 at step 800 -> runs/e1_plain_ce/offsets_seed1.pt
+
+Saved best offsets:  runs/e1_plain_ce/offsets_seed1.pt (val_acc=0.640 @ step 800)
+Saved final offsets: runs/e1_plain_ce/offsets_seed1.final.pt (val_acc=0.640 @ step 800)
+Saved log:           runs/e1_plain_ce/offsets_seed1.log.json
+============================================================
+V7 LoFiT step 2 — train per-head offsets
+============================================================
+  base: /workspace/models/gemma-4-31b-it
+  heads_file: runs/v7_lofit_gemma4_31b_chat/head_probe_mc.json
+  top-k: 48
+  datasets: tqa,arc
+  n_train: 1500, n_val: 200
+  steps: 800, batch=1, grad_accum=4
+  lr: 0.01, loss: plain_ce
+
+  Loaded top-48 heads from file (will filter to compatible layers)
+
+Phase 1: building train + val pairs (CLEAN: split='train', test reserved; val = per-dataset tail of the seed-0 train pairs, interleaved)
+  TQA: loading split=train (target n=1600, wrong_mode=first)...
+    WARNING (audit B-3): TQA gold is dataset-position-0, so wrong_mode='first' always pairs choices[0] vs choices[1]. Prefer wrong_mode='random' for new runs.
+    TQA total valid=817, train=653, test=164, returning 653
+  ARC: loading train split (target n=1600)...
+    ARC train: returning 1119 pairs
+  train: 1572, val: 200 (100/dataset, interleaved)
+  NOTE: TQA test split (~140 items) and ARC test split reserved for final eval.
+
+Phase 2: load model + freeze
+Loading weights:   0%|          | 0/1188 [00:00<?, ?it/s]Loading weights:   0%|          | 2/1188 [00:00<01:36, 12.30it/s]Loading weights:   2%|▏         | 19/1188 [00:00<00:14, 79.83it/s]Loading weights:   3%|▎         | 34/1188 [00:00<00:11, 99.78it/s]Loading weights:   4%|▍         | 48/1188 [00:00<00:10, 108.05it/s]Loading weights:   5%|▌         | 62/1188 [00:00<00:10, 107.97it/s]Loading weights:   6%|▋         | 77/1188 [00:00<00:09, 112.79it/s]Loading weights:   7%|▋         | 89/1188 [00:00<00:09, 114.06it/s]Loading weights:   9%|▊         | 103/1188 [00:00<00:09, 113.76it/s]Loading weights:  10%|▉         | 116/1188 [00:01<00:09, 117.20it/s]Loading weights:  11%|█         | 130/1188 [00:01<00:09, 115.07it/s]Loading weights:  12%|█▏        | 142/1188 [00:01<00:09, 115.40it/s]Loading weights:  13%|█▎        | 154/1188 [00:01<00:08, 116.01it/s]Loading weights:  14%|█▍        | 166/1188 [00:01<00:09, 109.38it/s]Loading weights:  15%|█▍        | 178/1188 [00:01<00:09, 109.81it/s]Loading weights:  16%|█▌        | 190/1188 [00:01<00:09, 104.31it/s]Loading weights:  17%|█▋        | 201/1188 [00:01<00:10, 94.85it/s] Loading weights:  18%|█▊        | 214/1188 [00:02<00:10, 93.05it/s]Loading weights:  19%|█▉        | 228/1188 [00:02<00:09, 97.55it/s]Loading weights:  20%|██        | 242/1188 [00:02<00:09, 99.06it/s]Loading weights:  21%|██▏       | 254/1188 [00:02<00:09, 98.60it/s]Loading weights:  23%|██▎       | 268/1188 [00:02<00:08, 108.43it/s]Loading weights:  24%|██▎       | 282/1188 [00:02<00:08, 102.67it/s]Loading weights:  25%|██▍       | 296/1188 [00:02<00:08, 111.43it/s]Loading weights:  26%|██▌       | 310/1188 [00:02<00:07, 115.70it/s]Loading weights:  27%|██▋       | 322/1188 [00:03<00:07, 116.26it/s]Loading weights:  28%|██▊       | 334/1188 [00:03<00:08, 100.53it/s]Loading weights:  29%|██▉       | 345/1188 [00:03<00:08, 97.77it/s] Loading weights:  30%|███       | 359/1188 [00:03<00:07, 105.40it/s]Loading weights:  31%|███       | 370/1188 [00:03<00:07, 103.23it/s]Loading weights:  32%|███▏      | 381/1188 [00:03<00:08, 98.53it/s] Loading weights:  33%|███▎      | 394/1188 [00:03<00:07, 105.97it/s]Loading weights:  34%|███▍      | 407/1188 [00:03<00:06, 112.38it/s]Loading weights:  35%|███▌      | 419/1188 [00:04<00:07, 101.12it/s]Loading weights:  37%|███▋      | 434/1188 [00:04<00:06, 108.11it/s]Loading weights:  38%|███▊      | 448/1188 [00:04<00:06, 110.97it/s]Loading weights:  39%|███▉      | 462/1188 [00:04<00:06, 112.86it/s]Loading weights:  40%|████      | 476/1188 [00:04<00:06, 112.91it/s]Loading weights:  41%|████      | 490/1188 [00:04<00:06, 112.97it/s]Loading weights:  42%|████▏     | 502/1188 [00:04<00:06, 108.09it/s]Loading weights:  43%|████▎     | 513/1188 [00:04<00:06, 105.59it/s]Loading weights:  44%|████▍     | 524/1188 [00:04<00:06, 101.43it/s]Loading weights:  45%|████▌     | 538/1188 [00:05<00:05, 111.39it/s]Loading weights:  46%|████▋     | 552/1188 [00:05<00:05, 116.31it/s]Loading weights:  47%|████▋     | 564/1188 [00:05<00:05, 114.21it/s]Loading weights:  48%|████▊     | 576/1188 [00:05<00:05, 104.24it/s]Loading weights:  49%|████▉     | 588/1188 [00:05<00:06, 99.60it/s] Loading weights:  51%|█████     | 601/1188 [00:05<00:05, 99.26it/s]Loading weights:  52%|█████▏    | 615/1188 [00:05<00:05, 103.29it/s]Loading weights:  53%|█████▎    | 628/1188 [00:05<00:05, 106.34it/s]Loading weights:  54%|█████▍    | 639/1188 [00:06<00:05, 105.59it/s]Loading weights:  55%|█████▍    | 650/1188 [00:06<00:05, 98.77it/s] Loading weights:  56%|█████▌    | 660/1188 [00:06<00:05, 97.63it/s]Loading weights:  56%|█████▋    | 670/1188 [00:06<00:06, 84.76it/s]Loading weights:  58%|█████▊    | 684/1188 [00:06<00:05, 88.78it/s]Loading weights:  59%|█████▉    | 698/1188 [00:06<00:04, 98.51it/s]Loading weights:  60%|█████▉    | 711/1188 [00:06<00:04, 104.31it/s]Loading weights:  61%|██████    | 722/1188 [00:06<00:04, 104.19it/s]Loading weights:  62%|██████▏   | 733/1188 [00:07<00:04, 105.41it/s]Loading weights:  63%|██████▎   | 746/1188 [00:07<00:04, 107.39it/s]Loading weights:  64%|██████▎   | 757/1188 [00:07<00:04, 106.25it/s]Loading weights:  65%|██████▍   | 768/1188 [00:07<00:04, 104.96it/s]Loading weights:  66%|██████▌   | 782/1188 [00:07<00:03, 107.74it/s]Loading weights:  67%|██████▋   | 795/1188 [00:07<00:03, 103.41it/s]Loading weights:  68%|██████▊   | 809/1188 [00:07<00:03, 102.21it/s]Loading weights:  69%|██████▉   | 823/1188 [00:07<00:03, 100.56it/s]Loading weights:  76%|███████▋  | 908/1188 [00:07<00:00, 283.71it/s]Loading weights:  93%|█████████▎| 1099/1188 [00:08<00:00, 704.12it/s]Loading weights: 100%|██████████| 1188/1188 [00:08<00:00, 146.01it/s]
+  attn_implementation: sdpa
+  layers=60 num_q_heads=32 head_dim=256
+  Compatible heads to train: 48
+  First 10 trainable:
+     1. L38 H 9  acc=0.901
+     2. L38 H12  acc=0.897
+     3. L38 H15  acc=0.897
+     4. L39 H 8  acc=0.895
+     5. L39 H21  acc=0.893
+     6. L38 H16  acc=0.893
+     7. L38 H17  acc=0.891
+     8. L37 H22  acc=0.889
+     9. L38 H 2  acc=0.888
+    10. L37 H11  acc=0.886
+
+  trainable params (offsets): 12336
+
+Phase 3: training
+
+ step       loss   val_loss   val_acc    time
+-----------------------------------------------
+    1    59.0000    30.2700     0.480       5s  *
+  200    25.7500     8.6794     0.600      56s  *
+  400    27.3750     7.4202     0.600     106s  *
+  600    10.8125     6.4805     0.640     158s  *
+  800    13.3750     5.4891     0.720     209s  *
+
+Training complete. Total time: 209s
+Best val_acc: 0.720 at step 800 -> runs/e1_plain_ce/offsets_seed2.pt
+
+Saved best offsets:  runs/e1_plain_ce/offsets_seed2.pt (val_acc=0.720 @ step 800)
+Saved final offsets: runs/e1_plain_ce/offsets_seed2.final.pt (val_acc=0.720 @ step 800)
+Saved log:           runs/e1_plain_ce/offsets_seed2.log.json
