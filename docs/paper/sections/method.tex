@@ -10,14 +10,18 @@ All results are on Gemma~4 31B IT, run in bf16 --- the Hugging Face checkpoint
 
 \paragraph{Which snapshot, and why it is two.} Our harness resolves the model by
 \code{revision=main} and lm-eval leaves \code{model\_sha} empty, so no result file
-carries an explicit pin. The snapshot is nonetheless recoverable, because the harness
-records the model path verbatim and on our machines that path is a Hugging Face cache
-directory containing the snapshot hash; we extract it from every artifact and release
-the resulting map (\code{scripts/\allowbreak model\_\allowbreak provenance.\allowbreak py},
-\code{runs/\allowbreak provenance/}). Upstream published a revised checkpoint on
-2026-07-20, so \code{main} moved mid-project and our runs straddle it. The June and
-early-July campaigns --- the headline lifts, the arbiter, the inducibility control,
-the recovery spectrum, the on-axis reference --- ran on
+carries an explicit pin. The snapshot is nonetheless recoverable for most runs,
+because the harness records the model path verbatim and on our machines that path is a
+Hugging Face cache directory containing the snapshot hash; we extract it from every
+artifact and release the resulting map (\code{scripts/\allowbreak model\_\allowbreak provenance.\allowbreak py},
+\code{runs/\allowbreak provenance/}). The exception is the rented-GPU campaigns, which
+read a pre-staged copy under a flat path (\code{/workspace/\allowbreak models/}) that
+carries no hash --- the canonical June trio among them. Those we date rather than
+resolve, which is weaker evidence and we mark it as such. Upstream published a revised
+checkpoint on 2026-07-20, so \code{main} moved mid-project and our runs straddle it.
+The June and early-July campaigns --- the arbiter, the inducibility control, the
+recovery spectrum, the on-axis reference, and, by date rather than by hash, the
+headline trio (run 2026-06-10, four weeks before the newer template existed) --- ran on
 \code{3548789868c5356dbf307c98e6f609007b82b3eb}; the late-July campaigns --- the
 full-split scoring replication of \cref{disc:status}, the anti-axis arms and the
 dense scale sweep --- ran on \code{842da3794eaa0b77d5f08bae87a17459d91ff475}, which
