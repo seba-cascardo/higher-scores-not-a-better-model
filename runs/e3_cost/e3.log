@@ -1,0 +1,211 @@
+nohup: ignoring input
+==============================================================================
+E3 COST BENCHMARK — 4 MC-reading routes on the base-wrong ARC subset
+==============================================================================
+[pop] gen(base-wrong)=10  coldmc(subset)=10 (base-wrong within: 10)
+[model] loading base (bf16, device_map=cuda)...
+Loading weights:   0%|          | 0/1188 [00:00<?, ?it/s]Loading weights:   0%|          | 2/1188 [00:00<02:06,  9.38it/s]Loading weights:   1%|▏         | 16/1188 [00:00<00:19, 60.54it/s]Loading weights:   2%|▏         | 25/1188 [00:00<00:16, 70.71it/s]Loading weights:   3%|▎         | 34/1188 [00:00<00:16, 70.92it/s]Loading weights:   4%|▍         | 49/1188 [00:00<00:13, 87.51it/s]Loading weights:   5%|▌         | 63/1188 [00:00<00:11, 97.24it/s]Loading weights:   6%|▋         | 77/1188 [00:00<00:10, 106.27it/s]Loading weights:   8%|▊         | 90/1188 [00:01<00:10, 106.23it/s]Loading weights:   9%|▊         | 103/1188 [00:01<00:10, 106.56it/s]Loading weights:  10%|▉         | 117/1188 [00:01<00:09, 109.76it/s]Loading weights:  11%|█         | 131/1188 [00:01<00:09, 111.56it/s]Loading weights:  12%|█▏        | 145/1188 [00:01<00:09, 114.69it/s]Loading weights:  13%|█▎        | 159/1188 [00:01<00:08, 114.93it/s]Loading weights:  14%|█▍        | 172/1188 [00:01<00:09, 109.66it/s]Loading weights:  16%|█▌        | 187/1188 [00:01<00:08, 114.12it/s]Loading weights:  17%|█▋        | 200/1188 [00:02<00:09, 108.17it/s]Loading weights:  18%|█▊        | 214/1188 [00:02<00:08, 114.85it/s]Loading weights:  19%|█▉        | 227/1188 [00:02<00:08, 118.46it/s]Loading weights:  20%|██        | 239/1188 [00:02<00:08, 117.63it/s]Loading weights:  21%|██        | 251/1188 [00:02<00:08, 104.48it/s]Loading weights:  22%|██▏       | 262/1188 [00:02<00:09, 96.44it/s] Loading weights:  23%|██▎       | 272/1188 [00:02<00:09, 95.06it/s]Loading weights:  24%|██▍       | 283/1188 [00:02<00:10, 89.12it/s]Loading weights:  25%|██▍       | 296/1188 [00:02<00:09, 91.61it/s]Loading weights:  26%|██▌       | 311/1188 [00:03<00:08, 102.55it/s]Loading weights:  27%|██▋       | 324/1188 [00:03<00:07, 108.34it/s]Loading weights:  28%|██▊       | 336/1188 [00:03<00:08, 105.08it/s]Loading weights:  29%|██▉       | 347/1188 [00:03<00:08, 97.59it/s] Loading weights:  30%|███       | 357/1188 [00:03<00:08, 96.96it/s]Loading weights:  31%|███       | 367/1188 [00:03<00:09, 89.63it/s]Loading weights:  32%|███▏      | 380/1188 [00:03<00:08, 91.76it/s]Loading weights:  33%|███▎      | 395/1188 [00:03<00:08, 98.57it/s]Loading weights:  34%|███▍      | 409/1188 [00:04<00:07, 102.41it/s]Loading weights:  36%|███▌      | 422/1188 [00:04<00:07, 101.44it/s]Loading weights:  37%|███▋      | 436/1188 [00:04<00:07, 105.81it/s]Loading weights:  38%|███▊      | 450/1188 [00:04<00:06, 108.45it/s]Loading weights:  39%|███▉      | 463/1188 [00:04<00:06, 111.33it/s]Loading weights:  40%|████      | 478/1188 [00:04<00:05, 118.97it/s]Loading weights:  41%|████▏     | 491/1188 [00:04<00:05, 116.36it/s]Loading weights:  43%|████▎     | 505/1188 [00:04<00:05, 115.80it/s]Loading weights:  44%|████▎     | 518/1188 [00:05<00:05, 116.10it/s]Loading weights:  45%|████▍     | 532/1188 [00:05<00:05, 120.01it/s]Loading weights:  46%|████▌     | 547/1188 [00:05<00:05, 124.39it/s]Loading weights:  47%|████▋     | 561/1188 [00:05<00:04, 128.56it/s]Loading weights:  49%|████▉     | 580/1188 [00:05<00:04, 140.25it/s]Loading weights:  50%|█████     | 595/1188 [00:05<00:04, 141.03it/s]Loading weights:  52%|█████▏    | 614/1188 [00:05<00:03, 151.01it/s]Loading weights:  53%|█████▎    | 630/1188 [00:05<00:04, 127.02it/s]Loading weights:  54%|█████▍    | 644/1188 [00:05<00:04, 124.47it/s]Loading weights:  55%|█████▌    | 658/1188 [00:06<00:04, 124.45it/s]Loading weights:  56%|█████▋    | 671/1188 [00:06<00:04, 121.56it/s]Loading weights:  58%|█████▊    | 685/1188 [00:06<00:03, 126.22it/s]Loading weights:  59%|█████▉    | 703/1188 [00:06<00:03, 138.36it/s]Loading weights:  60%|██████    | 718/1188 [00:06<00:03, 135.71it/s]Loading weights:  62%|██████▏   | 732/1188 [00:06<00:03, 132.66it/s]Loading weights:  63%|██████▎   | 746/1188 [00:06<00:03, 122.13it/s]Loading weights:  64%|██████▍   | 766/1188 [00:06<00:03, 136.79it/s]Loading weights:  66%|██████▌   | 781/1188 [00:07<00:03, 131.19it/s]Loading weights:  68%|██████▊   | 802/1188 [00:07<00:02, 148.88it/s]Loading weights:  69%|██████▉   | 822/1188 [00:07<00:02, 161.83it/s]Loading weights:  79%|███████▉  | 939/1188 [00:07<00:00, 439.71it/s]Loading weights: 100%|██████████| 1188/1188 [00:07<00:00, 159.97it/s]
+[model] loaded; layers=60 device=cuda:0
+  WARNING: layers have varying o_proj input dims: {0: 8192, 1: 8192, 2: 8192, 3: 8192, 4: 8192, 5: 16384, 6: 8192, 7: 8192, 8: 8192, 9: 8192, 10: 8192, 11: 16384, 12: 8192, 13: 8192, 14: 8192, 15: 8192, 16: 8192, 17: 16384, 18: 8192, 19: 8192, 20: 8192, 21: 8192, 22: 8192, 23: 16384, 24: 8192, 25: 8192, 26: 8192, 27: 8192, 28: 8192, 29: 16384, 30: 8192, 31: 8192, 32: 8192, 33: 8192, 34: 8192, 35: 16384, 36: 8192, 37: 8192, 38: 8192, 39: 8192, 40: 8192, 41: 16384, 42: 8192, 43: 8192, 44: 8192, 45: 8192, 46: 8192, 47: 16384, 48: 8192, 49: 8192, 50: 8192, 51: 8192, 52: 8192, 53: 16384, 54: 8192, 55: 8192, 56: 8192, 57: 8192, 58: 8192, 59: 16384}
+  Using dominant dim 8192; layers with different dim will be skipped.
+[model] num_q_heads=32 head_dim=256 captured_layers=50
+
+[stage1] base cold-MC sweep (route 3 forward + per-head capture)
+[base_coldmc] [10/10] acc_base_wrong_so_far=0.000 (4s)
+
+[stage1] adapter cold-MC sweep (route 4, LoFiT offsets)
+[adapter_coldmc] [10/10] acc_base_wrong_so_far=0.600 (4s)
+[guard:base_vs_d_null] 10 items, mismatch 0 (0.000); acc recomputed=0.0000 ref=0.0000
+[guard:adapter_vs_d_mc] 10 items, mismatch 0 (0.000); acc recomputed=0.6000 ref=0.6000
+[guard] PASSED — cold-MC reproduces d_null/d_mc. Proceeding to generation.
+
+[stage2] base SC-CoT k=3 sweep (route 1)
+[base_sc_cot_k3] [10/10] acc_so_far=1.000 gen_tok_last=862 (302s)
+
+[stage2] base letter-emit sweep (route 2)
+[base_letter_emit] [10/10] acc_so_far=1.000 gen_tok_last=2 (2s)
+
+==============================================================================
+E3 COST BENCHMARK — summary
+==============================================================================
+  base_sc_cot_k3       acc_bw=   1.0  lat_p50=28362ms  lat_p95=30886ms  gen/scored_tok= 951.7  thru=   Nonetok/s  vram=65.1GB
+  base_letter_emit     acc_bw=   1.0  lat_p50=188ms  lat_p95=254ms  gen/scored_tok=   2.0  thru=   Nonetok/s  vram=62.8GB
+  read_only_selector   acc_bw=  None  lat_p50=378ms  lat_p95=473ms  gen/scored_tok=  27.0  thru=   Nonetok/s  vram=65.9GB
+  adapter_cold_mc      acc_bw=   0.6  lat_p50=355ms  lat_p95=467ms  gen/scored_tok=  27.0  thru=   Nonetok/s  vram=65.9GB
+
+[e3] wrote runs/e3_cost/e3_cost_benchmark_smoke.json
+=== SMOKE OK -> FULL ===
+==============================================================================
+E3 COST BENCHMARK — 4 MC-reading routes on the base-wrong ARC subset
+==============================================================================
+[pop] gen(base-wrong)=198  coldmc(full)=400 (base-wrong within: 198)
+[model] loading base (bf16, device_map=cuda)...
+Loading weights:   0%|          | 0/1188 [00:00<?, ?it/s]Loading weights:   0%|          | 2/1188 [00:00<02:07,  9.27it/s]Loading weights:   1%|          | 11/1188 [00:00<00:28, 41.10it/s]Loading weights:   2%|▏         | 26/1188 [00:00<00:14, 79.74it/s]Loading weights:   3%|▎         | 36/1188 [00:00<00:13, 86.11it/s]Loading weights:   4%|▍         | 48/1188 [00:00<00:12, 93.45it/s]Loading weights:   5%|▌         | 63/1188 [00:00<00:10, 108.08it/s]Loading weights:   6%|▋         | 77/1188 [00:00<00:09, 116.16it/s]Loading weights:   8%|▊         | 90/1188 [00:00<00:09, 114.32it/s]Loading weights:   9%|▊         | 103/1188 [00:01<00:09, 116.43it/s]Loading weights:  10%|█         | 123/1188 [00:01<00:07, 137.78it/s]Loading weights:  12%|█▏        | 137/1188 [00:01<00:07, 137.46it/s]Loading weights:  13%|█▎        | 153/1188 [00:01<00:07, 140.67it/s]Loading weights:  14%|█▍        | 168/1188 [00:01<00:07, 135.79it/s]Loading weights:  15%|█▌        | 182/1188 [00:01<00:07, 133.40it/s]Loading weights:  16%|█▋        | 196/1188 [00:01<00:07, 128.62it/s]Loading weights:  18%|█▊        | 209/1188 [00:01<00:07, 124.07it/s]Loading weights:  19%|█▊        | 222/1188 [00:01<00:07, 124.92it/s]Loading weights:  20%|█▉        | 235/1188 [00:02<00:07, 124.70it/s]Loading weights:  21%|██        | 249/1188 [00:02<00:08, 116.94it/s]Loading weights:  22%|██▏       | 261/1188 [00:02<00:08, 114.87it/s]Loading weights:  23%|██▎       | 273/1188 [00:02<00:08, 105.32it/s]Loading weights:  24%|██▍       | 284/1188 [00:02<00:09, 95.45it/s] Loading weights:  25%|██▌       | 297/1188 [00:02<00:08, 101.91it/s]Loading weights:  26%|██▌       | 310/1188 [00:02<00:08, 108.64it/s]Loading weights:  27%|██▋       | 322/1188 [00:02<00:07, 108.41it/s]Loading weights:  28%|██▊       | 334/1188 [00:03<00:08, 102.73it/s]Loading weights:  29%|██▉       | 345/1188 [00:03<00:08, 103.36it/s]Loading weights:  30%|██▉       | 356/1188 [00:03<00:08, 102.45it/s]Loading weights:  31%|███       | 367/1188 [00:03<00:08, 99.56it/s] Loading weights:  32%|███▏      | 381/1188 [00:03<00:07, 103.94it/s]Loading weights:  33%|███▎      | 395/1188 [00:03<00:07, 108.29it/s]Loading weights:  34%|███▍      | 409/1188 [00:03<00:06, 114.37it/s]Loading weights:  35%|███▌      | 421/1188 [00:03<00:07, 108.10it/s]Loading weights:  37%|███▋      | 436/1188 [00:03<00:06, 112.21it/s]Loading weights:  38%|███▊      | 450/1188 [00:04<00:06, 116.76it/s]Loading weights:  39%|███▉      | 463/1188 [00:04<00:06, 114.67it/s]Loading weights:  40%|████      | 478/1188 [00:04<00:05, 121.67it/s]Loading weights:  42%|████▏     | 498/1188 [00:04<00:05, 130.66it/s]Loading weights:  43%|████▎     | 513/1188 [00:04<00:05, 134.08it/s]Loading weights:  44%|████▍     | 527/1188 [00:04<00:04, 132.67it/s]Loading weights:  46%|████▌     | 541/1188 [00:04<00:05, 128.62it/s]Loading weights:  47%|████▋     | 554/1188 [00:04<00:05, 126.18it/s]Loading weights:  48%|████▊     | 567/1188 [00:04<00:05, 123.39it/s]Loading weights:  49%|████▉     | 580/1188 [00:05<00:04, 123.31it/s]Loading weights:  50%|████▉     | 593/1188 [00:05<00:04, 124.42it/s]Loading weights:  51%|█████▏    | 610/1188 [00:05<00:04, 134.92it/s]Loading weights:  53%|█████▎    | 624/1188 [00:05<00:04, 130.92it/s]Loading weights:  54%|█████▍    | 640/1188 [00:05<00:03, 139.01it/s]Loading weights:  55%|█████▌    | 656/1188 [00:05<00:03, 137.55it/s]Loading weights:  56%|█████▋    | 670/1188 [00:05<00:04, 123.87it/s]Loading weights:  58%|█████▊    | 684/1188 [00:05<00:04, 121.96it/s]Loading weights:  59%|█████▉    | 698/1188 [00:06<00:04, 121.13it/s]Loading weights:  60%|█████▉    | 712/1188 [00:06<00:03, 119.21it/s]Loading weights:  61%|██████    | 726/1188 [00:06<00:03, 120.72it/s]Loading weights:  62%|██████▏   | 740/1188 [00:06<00:03, 122.41it/s]Loading weights:  63%|██████▎   | 753/1188 [00:06<00:03, 114.21it/s]Loading weights:  65%|██████▍   | 767/1188 [00:06<00:03, 114.58it/s]Loading weights:  66%|██████▌   | 781/1188 [00:06<00:03, 114.98it/s]Loading weights:  67%|██████▋   | 795/1188 [00:06<00:03, 105.39it/s]Loading weights:  68%|██████▊   | 809/1188 [00:07<00:03, 109.93it/s]Loading weights:  69%|██████▉   | 823/1188 [00:07<00:03, 113.59it/s]Loading weights:  79%|███████▉  | 940/1188 [00:07<00:00, 385.58it/s]Loading weights:  98%|█████████▊| 1160/1188 [00:07<00:00, 872.37it/s]Loading weights: 100%|██████████| 1188/1188 [00:07<00:00, 161.77it/s]
+[model] loaded; layers=60 device=cuda:0
+  WARNING: layers have varying o_proj input dims: {0: 8192, 1: 8192, 2: 8192, 3: 8192, 4: 8192, 5: 16384, 6: 8192, 7: 8192, 8: 8192, 9: 8192, 10: 8192, 11: 16384, 12: 8192, 13: 8192, 14: 8192, 15: 8192, 16: 8192, 17: 16384, 18: 8192, 19: 8192, 20: 8192, 21: 8192, 22: 8192, 23: 16384, 24: 8192, 25: 8192, 26: 8192, 27: 8192, 28: 8192, 29: 16384, 30: 8192, 31: 8192, 32: 8192, 33: 8192, 34: 8192, 35: 16384, 36: 8192, 37: 8192, 38: 8192, 39: 8192, 40: 8192, 41: 16384, 42: 8192, 43: 8192, 44: 8192, 45: 8192, 46: 8192, 47: 16384, 48: 8192, 49: 8192, 50: 8192, 51: 8192, 52: 8192, 53: 16384, 54: 8192, 55: 8192, 56: 8192, 57: 8192, 58: 8192, 59: 16384}
+  Using dominant dim 8192; layers with different dim will be skipped.
+[model] num_q_heads=32 head_dim=256 captured_layers=50
+
+[stage1] base cold-MC sweep (route 3 forward + per-head capture)
+[base_coldmc] [25/400] acc_base_wrong_so_far=0.000 (10s)
+[base_coldmc] [50/400] acc_base_wrong_so_far=0.000 (20s)
+[base_coldmc] [75/400] acc_base_wrong_so_far=0.000 (30s)
+[base_coldmc] [100/400] acc_base_wrong_so_far=0.000 (40s)
+[base_coldmc] [125/400] acc_base_wrong_so_far=0.000 (50s)
+[base_coldmc] [150/400] acc_base_wrong_so_far=0.000 (59s)
+[base_coldmc] [175/400] acc_base_wrong_so_far=0.000 (68s)
+[base_coldmc] [200/400] acc_base_wrong_so_far=0.000 (78s)
+[base_coldmc] [225/400] acc_base_wrong_so_far=0.000 (88s)
+[base_coldmc] [250/400] acc_base_wrong_so_far=0.000 (98s)
+[base_coldmc] [275/400] acc_base_wrong_so_far=0.000 (108s)
+[base_coldmc] [300/400] acc_base_wrong_so_far=0.000 (118s)
+[base_coldmc] [325/400] acc_base_wrong_so_far=0.000 (128s)
+[base_coldmc] [350/400] acc_base_wrong_so_far=0.000 (138s)
+[base_coldmc] [375/400] acc_base_wrong_so_far=0.000 (148s)
+[base_coldmc] [400/400] acc_base_wrong_so_far=0.000 (158s)
+
+[stage1] adapter cold-MC sweep (route 4, LoFiT offsets)
+[adapter_coldmc] [25/400] acc_base_wrong_so_far=0.667 (10s)
+[adapter_coldmc] [50/400] acc_base_wrong_so_far=0.636 (19s)
+[adapter_coldmc] [75/400] acc_base_wrong_so_far=0.629 (29s)
+[adapter_coldmc] [100/400] acc_base_wrong_so_far=0.711 (38s)
+[adapter_coldmc] [125/400] acc_base_wrong_so_far=0.745 (47s)
+[adapter_coldmc] [150/400] acc_base_wrong_so_far=0.746 (56s)
+[adapter_coldmc] [175/400] acc_base_wrong_so_far=0.747 (66s)
+[adapter_coldmc] [200/400] acc_base_wrong_so_far=0.763 (75s)
+[adapter_coldmc] [225/400] acc_base_wrong_so_far=0.769 (84s)
+[adapter_coldmc] [250/400] acc_base_wrong_so_far=0.763 (94s)
+[adapter_coldmc] [275/400] acc_base_wrong_so_far=0.739 (104s)
+[adapter_coldmc] [300/400] acc_base_wrong_so_far=0.740 (114s)
+[adapter_coldmc] [325/400] acc_base_wrong_so_far=0.735 (123s)
+[adapter_coldmc] [350/400] acc_base_wrong_so_far=0.743 (133s)
+[adapter_coldmc] [375/400] acc_base_wrong_so_far=0.755 (142s)
+[adapter_coldmc] [400/400] acc_base_wrong_so_far=0.758 (152s)
+[guard:base_vs_d_null] 400 items, mismatch 1 (0.003); acc recomputed=0.5025 ref=0.5050
+[guard:adapter_vs_d_mc] 400 items, mismatch 1 (0.003); acc recomputed=0.8525 ref=0.8550
+[guard] PASSED — cold-MC reproduces d_null/d_mc. Proceeding to generation.
+
+[stage1] fitting held-out probe selector (route 3 accuracy, CPU)
+  adapter offsets: 48 pairs -> aligned 48 to captured grid (skipped 0 layer-not-captured, 0 head_dim-mismatch).
+  [probe] seed 0: selector acc(base-wrong)=0.9141
+  [probe] seed 1: selector acc(base-wrong)=0.9091
+  [probe] seed 2: selector acc(base-wrong)=0.9091
+  [probe] seed 3: selector acc(base-wrong)=0.9141
+  [probe] seed 4: selector acc(base-wrong)=0.9091
+  [probe] selector acc(base-wrong) = 0.9111 (target ~0.914)
+
+[stage2] base SC-CoT k=3 sweep (route 1)
+[base_sc_cot_k3] [10/198] acc_so_far=1.000 gen_tok_last=903 (317s)
+[base_sc_cot_k3] [20/198] acc_so_far=1.000 gen_tok_last=571 (569s)
+[base_sc_cot_k3] [30/198] acc_so_far=0.967 gen_tok_last=754 (829s)
+[base_sc_cot_k3] [40/198] acc_so_far=0.975 gen_tok_last=683 (1132s)
+[base_sc_cot_k3] [50/198] acc_so_far=0.980 gen_tok_last=907 (1397s)
+[base_sc_cot_k3] [60/198] acc_so_far=0.983 gen_tok_last=1125 (1674s)
+[base_sc_cot_k3] [70/198] acc_so_far=0.986 gen_tok_last=850 (1954s)
+[base_sc_cot_k3] [80/198] acc_so_far=0.988 gen_tok_last=861 (2207s)
+[base_sc_cot_k3] [90/198] acc_so_far=0.989 gen_tok_last=898 (2507s)
+[base_sc_cot_k3] [100/198] acc_so_far=0.980 gen_tok_last=822 (2769s)
+[base_sc_cot_k3] [110/198] acc_so_far=0.982 gen_tok_last=942 (3037s)
+[base_sc_cot_k3] [120/198] acc_so_far=0.983 gen_tok_last=1026 (3299s)
+[base_sc_cot_k3] [130/198] acc_so_far=0.985 gen_tok_last=786 (3574s)
+[base_sc_cot_k3] [140/198] acc_so_far=0.979 gen_tok_last=1017 (3850s)
+[base_sc_cot_k3] [150/198] acc_so_far=0.980 gen_tok_last=755 (4112s)
+[base_sc_cot_k3] [160/198] acc_so_far=0.975 gen_tok_last=968 (4360s)
+[base_sc_cot_k3] [170/198] acc_so_far=0.971 gen_tok_last=823 (4627s)
+[base_sc_cot_k3] [180/198] acc_so_far=0.972 gen_tok_last=926 (4882s)
+[base_sc_cot_k3] [190/198] acc_so_far=0.974 gen_tok_last=817 (5135s)
+[base_sc_cot_k3] [198/198] acc_so_far=0.970 gen_tok_last=978 (5381s)
+
+[stage2] base letter-emit sweep (route 2)
+[base_letter_emit] [10/198] acc_so_far=1.000 gen_tok_last=2 (2s)
+[base_letter_emit] [20/198] acc_so_far=1.000 gen_tok_last=2 (4s)
+[base_letter_emit] [30/198] acc_so_far=0.967 gen_tok_last=2 (6s)
+[base_letter_emit] [40/198] acc_so_far=0.975 gen_tok_last=2 (8s)
+[base_letter_emit] [50/198] acc_so_far=0.980 gen_tok_last=2 (9s)
+[base_letter_emit] [60/198] acc_so_far=0.967 gen_tok_last=2 (11s)
+[base_letter_emit] [70/198] acc_so_far=0.971 gen_tok_last=2 (13s)
+[base_letter_emit] [80/198] acc_so_far=0.975 gen_tok_last=2 (15s)
+[base_letter_emit] [90/198] acc_so_far=0.978 gen_tok_last=2 (17s)
+[base_letter_emit] [100/198] acc_so_far=0.980 gen_tok_last=2 (18s)
+[base_letter_emit] [110/198] acc_so_far=0.973 gen_tok_last=2 (20s)
+[base_letter_emit] [120/198] acc_so_far=0.975 gen_tok_last=2 (22s)
+[base_letter_emit] [130/198] acc_so_far=0.977 gen_tok_last=2 (24s)
+[base_letter_emit] [140/198] acc_so_far=0.971 gen_tok_last=2 (26s)
+[base_letter_emit] [150/198] acc_so_far=0.973 gen_tok_last=2 (28s)
+[base_letter_emit] [160/198] acc_so_far=0.969 gen_tok_last=2 (30s)
+[base_letter_emit] [170/198] acc_so_far=0.965 gen_tok_last=2 (32s)
+[base_letter_emit] [180/198] acc_so_far=0.967 gen_tok_last=2 (33s)
+[base_letter_emit] [190/198] acc_so_far=0.968 gen_tok_last=2 (35s)
+[base_letter_emit] [198/198] acc_so_far=0.970 gen_tok_last=2 (37s)
+
+[stage3] throughput (batched)
+[thru:selector_base] batch 20: tok=16729 wall=16.3s
+[thru:selector_base] batch 40: tok=31188 wall=30.5s
+[thru:selector_base] batch 60: tok=47471 wall=47.4s
+[thru:selector_base] batch 80: tok=63929 wall=65.0s
+[thru:selector_base] batch 100: tok=80055 wall=82.8s
+[thru:adapter] batch 20: tok=16729 wall=16.3s
+[thru:adapter] batch 40: tok=31188 wall=30.4s
+[thru:adapter] batch 60: tok=47471 wall=47.4s
+[thru:adapter] batch 80: tok=63929 wall=65.0s
+[thru:adapter] batch 100: tok=80055 wall=82.8s
+[thru:base_letter_emit] batch 1: tok=16 wall=0.9s
+[thru:base_letter_emit] batch 2: tok=32 wall=1.7s
+[thru:base_letter_emit] batch 3: tok=48 wall=2.4s
+[thru:base_letter_emit] batch 4: tok=64 wall=3.4s
+[thru:base_letter_emit] batch 5: tok=80 wall=4.1s
+[thru:base_letter_emit] batch 6: tok=96 wall=5.0s
+[thru:base_letter_emit] batch 7: tok=112 wall=5.7s
+[thru:base_letter_emit] batch 8: tok=128 wall=6.4s
+[thru:base_letter_emit] batch 9: tok=144 wall=7.2s
+[thru:base_letter_emit] batch 10: tok=160 wall=7.8s
+[thru:base_letter_emit] batch 11: tok=176 wall=8.6s
+[thru:base_letter_emit] batch 12: tok=192 wall=9.4s
+[thru:base_letter_emit] batch 13: tok=208 wall=10.2s
+[thru:base_letter_emit] batch 14: tok=224 wall=11.5s
+[thru:base_letter_emit] batch 15: tok=240 wall=12.2s
+[thru:base_letter_emit] batch 16: tok=256 wall=13.0s
+[thru:base_letter_emit] batch 17: tok=272 wall=14.2s
+[thru:base_letter_emit] batch 18: tok=288 wall=15.1s
+[thru:base_letter_emit] batch 19: tok=304 wall=16.0s
+[thru:base_letter_emit] batch 20: tok=320 wall=16.9s
+[thru:base_letter_emit] batch 21: tok=336 wall=17.8s
+[thru:base_letter_emit] batch 22: tok=352 wall=18.6s
+[thru:base_letter_emit] batch 23: tok=368 wall=19.7s
+[thru:base_letter_emit] batch 24: tok=384 wall=20.5s
+[thru:base_letter_emit] batch 25: tok=396 wall=21.2s
+[thru:base_sc_cot_k3] batch 1: tok=7735 wall=100.6s
+[thru:base_sc_cot_k3] batch 2: tok=14104 wall=150.4s
+[thru:base_sc_cot_k3] batch 3: tok=20506 wall=216.1s
+[thru:base_sc_cot_k3] batch 4: tok=27405 wall=282.5s
+[thru:base_sc_cot_k3] batch 5: tok=34784 wall=375.1s
+[thru:base_sc_cot_k3] batch 6: tok=41444 wall=432.3s
+[thru:base_sc_cot_k3] batch 7: tok=48722 wall=495.3s
+[thru:base_sc_cot_k3] batch 8: tok=55441 wall=553.5s
+[thru:base_sc_cot_k3] batch 9: tok=62270 wall=614.2s
+[thru:base_sc_cot_k3] batch 10: tok=68538 wall=661.9s
+[thru:base_sc_cot_k3] batch 11: tok=75941 wall=727.8s
+[thru:base_sc_cot_k3] batch 12: tok=82903 wall=787.7s
+[thru:base_sc_cot_k3] batch 13: tok=89575 wall=840.5s
+[thru:base_sc_cot_k3] batch 14: tok=96358 wall=903.5s
+[thru:base_sc_cot_k3] batch 15: tok=102668 wall=957.6s
+[thru:base_sc_cot_k3] batch 16: tok=109854 wall=1018.2s
+[thru:base_sc_cot_k3] batch 17: tok=116187 wall=1082.3s
+[thru:base_sc_cot_k3] batch 18: tok=122165 wall=1134.3s
+[thru:base_sc_cot_k3] batch 19: tok=129023 wall=1207.2s
+[thru:base_sc_cot_k3] batch 20: tok=135626 wall=1276.2s
+[thru:base_sc_cot_k3] batch 21: tok=142507 wall=1350.8s
+[thru:base_sc_cot_k3] batch 22: tok=148752 wall=1409.1s
+[thru:base_sc_cot_k3] batch 23: tok=155142 wall=1471.5s
+[thru:base_sc_cot_k3] batch 24: tok=162032 wall=1529.2s
+[thru:base_sc_cot_k3] batch 25: tok=167878 wall=1594.3s
+
+==============================================================================
+E3 COST BENCHMARK — summary
+==============================================================================
+  base_sc_cot_k3       acc_bw=0.9696  lat_p50=26704ms  lat_p95=36562ms  gen/scored_tok=853.93  thru=105.298tok/s  vram=65.1GB
+  base_letter_emit     acc_bw=0.9696  lat_p50=181ms  lat_p95=253ms  gen/scored_tok=   2.0  thru=18.6894tok/s  vram=62.9GB
+  read_only_selector   acc_bw=0.9111  lat_p50=360ms  lat_p95=479ms  gen/scored_tok=24.722  thru=966.876tok/s  vram=69.4GB
+  adapter_cold_mc      acc_bw=0.7575  lat_p50=354ms  lat_p95=471ms  gen/scored_tok=24.722  thru=967.421tok/s  vram=69.4GB
+
+[e3] wrote runs/e3_cost/e3_cost_benchmark.json

@@ -1,0 +1,60 @@
+{
+  "train_log": [
+    {
+      "step": 1,
+      "loss": 53.0,
+      "val_loss": 30.27,
+      "val_acc": 0.48,
+      "time": 4.6152801513671875,
+      "is_best_so_far": true,
+      "onaxis_penalty": null,
+      "frac_perp": null
+    },
+    {
+      "step": 200,
+      "loss": 22.375,
+      "val_loss": 8.4540625,
+      "val_acc": 0.64,
+      "time": 56.38375782966614,
+      "is_best_so_far": true,
+      "onaxis_penalty": null,
+      "frac_perp": null
+    },
+    {
+      "step": 400,
+      "loss": 11.6875,
+      "val_loss": 6.81421875,
+      "val_acc": 0.6,
+      "time": 107.31680536270142,
+      "is_best_so_far": false,
+      "onaxis_penalty": null,
+      "frac_perp": null
+    },
+    {
+      "step": 600,
+      "loss": 22.125,
+      "val_loss": 5.79234375,
+      "val_acc": 0.64,
+      "time": 157.1456422805786,
+      "is_best_so_far": true,
+      "onaxis_penalty": null,
+      "frac_perp": null
+    },
+    {
+      "step": 800,
+      "loss": 2.828125,
+      "val_loss": 5.24734375,
+      "val_acc": 0.64,
+      "time": 208.2197766304016,
+      "is_best_so_far": true,
+      "onaxis_penalty": null,
+      "frac_perp": null
+    }
+  ],
+  "best_val_acc": 0.64,
+  "best_step": 800,
+  "best_downstream_primary": null,
+  "onaxis_lambda": null,
+  "onaxis_penalty_final": null,
+  "frac_perp_final": null
+}

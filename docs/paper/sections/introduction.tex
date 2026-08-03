@@ -54,7 +54,11 @@ without letting us name one number as ``the'' generic fraction: it moves with
 capacity. The task dependence is sharper still. The same three same-parameterization
 seeds recover $79.5\%$ of the Winogrande lift and $69.5\%$ of HellaSwag's but
 $0.9\%$ --- nothing --- of TruthfulQA-mc1's, even though TruthfulQA is in the
-control's own training corpus: raising the correct option's log-probability is enough
+control's own training corpus. These are each task's headline metric, and the caveat
+travels with the ordering: the four lifts are robust to the choice of metric, the
+cross-task \emph{ordering} of inducibility is not, and no mechanistic claim in this
+paper rests on it (\cref{lim:metric}). Read as a mechanism, raising the correct
+option's log-probability is enough
 where the task scores the plausibility of a continuation, and not enough where a
 plausible distractor has to be beaten. The strongest on-axis reference we can build
 (a Fisher-LDA direction $\Wknow$) sits at $6.4\%$,
@@ -135,7 +139,8 @@ no-reasoning scoring misranks.
 
 This is why the lift does not transfer to generation (gsm8k loss in every
 condition), and the no-transfer is not an artifact of ARC being easy: on GPQA, where
-the base must genuinely reason and does (CoT accuracy $0.7071$, well above chance),
+the base must genuinely reason and does (CoT accuracy $0.7071$, well above chance ---
+a floor, since $31/198$ traces did not parse and are counted wrong),
 the cold-MC lift is itself ${\sim}0$ (base $0.4747 \rightarrow$ adapter $0.4697$,
 CI crossing zero), so a scoring shortcut has no generative headroom to add even
 out-of-task.
@@ -262,7 +267,8 @@ that explains it, together with the deployment pathologies the recovery introduc
   \citep{ConfidenceManifold,InsideOut,KAPPA} --- and we confirm it (the fixed items
   are CoT-accessible, $124/124$ on ARC, against $41/47$ on the items the adapter
   does \emph{not} fix, $p=1.4\times10^{-4}$) and show the no-transfer holds
-  \emph{out-of-task} (GPQA cold-MC ${\sim}0$ at base CoT $0.70$, single-run) and on
+  \emph{out-of-task} (GPQA cold-MC ${\sim}0$ at base CoT $0.70$, single-run and a
+  floor at $31/198$ unparsed) and on
   generation (gsm8k $-25\pp$). That generation cost is coupled to \emph{how} the
   offset is injected, not to the lift (a generic SFT recovers the lift but
   preserves gsm8k $0.96{\rightarrow}0.95$); a previously-claimed end-of-turn
@@ -270,7 +276,8 @@ that explains it, together with the deployment pathologies the recovery introduc
 \item \textbf{The read leg of read${\neq}$write (built on established setup, not a
   new method).} A read-only linear selector on the same per-head activations
   recovers the ARC lift (accuracy $0.943$; McNemar $p=3.7\times10^{-47}$) without
-  touching generation --- Pareto-dominating the \emph{adapter}, though a reasoning
+  touching generation --- improving on the \emph{adapter} read-only at the same
+  measured cost, though a reasoning
   test-time-compute baseline dominates both (\cref{disc:selector}). That a
   read-only probe-selector recovers an MC lift is established
   \citep{NoVo,CORAL}; our contribution is its \emph{use} as the read leg of a
@@ -286,9 +293,12 @@ that explains it, together with the deployment pathologies the recovery introduc
 
 \paragraph{Scope at a glance.}
 So the reader carries the boundaries once rather than re-encountering them
-piecewise: the causal spine (arbiter, inducibility control, recovery spectrum) is
-single-model (Gemma~4 31B IT) and single-adapter (one training run, no re-train
-replicates), with the \emph{effect} and its off-axis \emph{geometry} replicated on
+piecewise: everything is single-model (Gemma~4 31B IT), and the re-train replication
+is partial rather than absent --- the fine-grained causal arms (arbiter, inducibility
+control, recovery spectrum) are computed on the canonical adapter, while the headline
+lift, the net-effect geometry and the gsm8k loss are replicated across three
+independently trained adapters (\cref{tab:seeds}). The \emph{effect} and its off-axis
+\emph{geometry} are further replicated on
 Qwen 14B; the mechanism claims are anchored on ARC (TruthfulQA is a separate
 answer-prior mode; HellaSwag/Winogrande corroborate); every claim is protocol-bound
 to cold-MC scoring under a chat template (without the template there is no lift to

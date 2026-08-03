@@ -305,8 +305,10 @@ Base-right control (already-correct-cold items) & $\mathbf{200/202 = 0.990}$
 \addlinespace
 Base GPQA accuracy under CoT (no-transfer is out-of-task, not difficulty-bound) &
 $\mathbf{0.70}$ (139/198; thinking-ON greedy, max\_new=8192; thinking\_rate 1.000)
---- a separate earlier run; the per-item arbiter run scores $140/198 = 0.7071$,
-differing by one item and supporting the same conclusion &
+--- an earlier execution of the \emph{same} protocol; the per-item arbiter run scores
+$140/198 = 0.7071$, differing by one item. The two share \code{build\_prompt},
+\code{parse\_answer} and \code{build\_messages}, so this is the same apparatus
+re-run, not independent corroboration &
 \code{msap-\allowbreak phase1-\allowbreak 20260624} \code{b1\_\allowbreak gpqa\_\allowbreak base\_\allowbreak cot\_\allowbreak 8k.\allowbreak json} \\
 \addlinespace
 GPQA cold-MC scoring lift (adapter, out-of-task) & $\mathbf{-0.5\pp}$ (base 0.4747
@@ -326,6 +328,15 @@ no-headroom result, not an independent test). With 2048 generation tokens the ba
 truncated 96\% of generations $\rightarrow$ a spurious 0.15; max\_new=8192 is
 required. The GPQA figures are single-run (greedy) and directional (CI crosses 0),
 not $n{=}400$-replicated like ARC.
+\item \textbf{$0.7071$ is a floor.} $31/198$ traces ($15.7\%$) did not parse and are
+scored as errors. The generations were not persisted --- the artifact stores only
+\code{doc\_id}, correctness and the parsed letter --- so we cannot separate a
+truncated chain from a malformed one without re-generating, and this project's own
+rule is that truncation is decided by a token count and never by the parser. The
+bias runs \emph{towards} the null we are arguing against: the true base CoT accuracy
+is at least $0.7071$, so the ${\sim}23\pp$ of cold-to-CoT headroom quoted below is
+conservative, and the claim that the base genuinely reasons GPQA out is if anything
+understated. Re-generating with persisted traces is listed as future work.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -466,6 +477,16 @@ at matched capacity; ${\sim}\mathbf{38\%}$ against the higher-capacity arm & der
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[flushleft]\footnotesize
+\item \textbf{The objective is non-contrastive; the selection rule is not.} The
+same-parameterization arm's loss carries no term against the incorrect option, but
+the checkpoint rule we inherited from the adapter validates on whether the correct
+option outscores the incorrect one. It bit in one seed of three (seeds 1--2 select
+the final step; seed 0 selects step 600 over 800), and there it picked the
+\emph{worse} ARC checkpoint --- which is why the fixed-final variant, using no
+validation signal at all, reads $39.7\% \pm 3.1$ against the $36.2\% \pm 5.0$ we
+quote. The contamination deflates this control, so the contrastive-specific residual
+is conservative. Provenance:
+\code{runs/\allowbreak e1\_\allowbreak plain\_\allowbreak ce/\allowbreak offsets\_\allowbreak seed*.\allowbreak log.\allowbreak json}.
 \item \textbf{Note.} We report these as the best observed recovery under the
 generic-SFT family we tested, not as a bound on generic fine-tuning in general. Two
 facts set the limits of the claim. (i) \emph{Capacity moves the fraction}: the same
@@ -886,8 +907,11 @@ not show. Both benchmarks are hard and unsaturated, and both leave the base
 substantial cold-to-CoT headroom --- GPQA ${\sim}23\pp$ ($0.4747 \rightarrow
 0.7071$), MMLU-Pro ${\sim}44\pp$ ($0.2610 \rightarrow 0.7060$) --- yet the adapter
 recovers approximately nothing on the first and $+12.20\pp$ on the second. Difficulty
-therefore does not govern whether the exploit fires; distance from the distribution
-the adapter was trained on does. That is the same conclusion \cref{disc:arbiter}
+therefore does not govern whether the exploit fires. What the two benchmarks
+\emph{do} differ in is whether the adapter's training distribution covers them, and
+only the covered one lifts --- a protocol-bound inference, since we vary benchmark
+identity rather than manipulating distance directly, and benchmark identity carries
+format, domain and option count with it. That is the same conclusion \cref{disc:arbiter}
 reaches with its within-format controls, arrived at here by varying the benchmark
 instead of the format, and it is what ``an in-distribution exploit of a lossy
 readout'' predicts.

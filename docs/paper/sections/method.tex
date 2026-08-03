@@ -2,12 +2,41 @@
 
 \subsection{Model and contrastive-correctness adapter}\label{method:model}
 
-All results are on Gemma~4 31B IT, run in bf16 --- specifically the Hugging Face
-checkpoint \code{google/\allowbreak gemma-\allowbreak 4-\allowbreak 31B-\allowbreak it} at revision
-\code{842da3794eaa0b77d5f08bae87a17459d91ff475}, a
+All results are on Gemma~4 31B IT, run in bf16 --- the Hugging Face checkpoint
+\code{google/\allowbreak gemma-\allowbreak 4-\allowbreak 31B-\allowbreak it}, a
 \code{Gemma4ForConditionalGeneration} with 60 decoder layers, $d_{\mathrm{model}}$
 5376, 32 query heads and head dimension 256, evaluated under
-\code{transformers}~5.8.0 and \code{lm-eval}~0.4.12. The cross-family replication
+\code{transformers}~5.8.0 and \code{lm-eval}~0.4.12.
+
+\paragraph{Which snapshot, and why it is two.} Our harness resolves the model by
+\code{revision=main} and lm-eval leaves \code{model\_sha} empty, so no result file
+carries an explicit pin. The snapshot is nonetheless recoverable, because the harness
+records the model path verbatim and on our machines that path is a Hugging Face cache
+directory containing the snapshot hash; we extract it from every artifact and release
+the resulting map (\code{scripts/\allowbreak model\_\allowbreak provenance.\allowbreak py},
+\code{runs/\allowbreak provenance/}). Upstream published a revised checkpoint on
+2026-07-20, so \code{main} moved mid-project and our runs straddle it. The June and
+early-July campaigns --- the headline lifts, the arbiter, the inducibility control,
+the recovery spectrum, the on-axis reference --- ran on
+\code{3548789868c5356dbf307c98e6f609007b82b3eb}; the late-July campaigns --- the
+full-split scoring replication of \cref{disc:status}, the anti-axis arms and the
+dense scale sweep --- ran on \code{842da3794eaa0b77d5f08bae87a17459d91ff475}, which
+is \code{main} at the time of writing. We diffed the two snapshots file by file:
+\code{config.json} and \code{tokenizer.json} are byte-identical, so the architecture
+and the vocabulary did not change, while \code{chat\_template.jinja} and
+\code{tokenizer\_config.json} differ --- the newer template is dated 2026-07-09 and
+its own header describes fixes to tool-calling loops and turn closures. Because every
+protocol here is template-bound (\cref{results:headline}), we flag this rather than
+bury it. It cuts in the reassuring direction: the headline scoring lift is observed
+under \emph{both} templates --- the $n{=}400$ campaign under the older one and the
+$n{=}1172$ full-split replication ($+36.26\pp$) under the newer --- so the central
+effect survives the change rather than depending on it. The remaining arms were each
+run under one snapshot only, and we do not claim more than that. We accordingly treat
+snapshot-level reproducibility as a limitation of these runs, and the released
+harness now stamps the resolved snapshot and a hash of the applied chat template into
+every result file.
+
+The cross-family replication
 (\cref{sec:limitations}) uses \code{Qwen/\allowbreak Qwen2.5-\allowbreak 14B-\allowbreak Instruct}
 at revision \code{cf98f3b3bbb457ad9e2bb7baf9a0125b6b88caa8}
 (\code{Qwen2ForCausalLM}, 48 layers, $d_{\mathrm{model}}$ 5120); that repository has
@@ -136,6 +165,25 @@ option. Three seeds vary the batch-visit order with the data split held fixed, s
 three runs see the same examples. Because the intervention space is held exactly
 fixed, this control attributes the difference to the \emph{objective} and nothing
 else.
+
+One asymmetry in that control deserves stating, since it touches the arm the
+attribution rests on. The \emph{objective} is genuinely non-contrastive --- the
+gradient carries no term against the incorrect option --- but the
+\emph{checkpoint-selection rule}, which we held identical to the adapter's precisely
+to keep the apparatus fixed, is not: validation tracks whether the correct option
+outscores the incorrect one, so the distractor enters the choice of which step to
+keep even though it never enters the loss. So ``only the loss changed'' is exact for
+the training signal and not for model selection. Two things bound the consequence.
+The rule only bit in one of the three seeds --- in seeds 1 and 2 the selected
+checkpoint \emph{is} the final one, and only in seed 0 does the best-by-validation
+step (600) differ from the last (800). And in that seed the rule selects the
+\emph{worse} ARC checkpoint, which is why the fixed-final variant, which consults no
+validation signal at all, reports a \emph{higher} recovered fraction
+($39.7\% \pm 3.1$) than the best-checkpoint figure we quote ($36.2\% \pm 5.0$). The
+contamination therefore deflates this control rather than inflating it, and the
+residual we attribute to the contrastive objective is, if anything, conservative. We
+quote the best-checkpoint number as the headline and carry the ${\sim}36$--$40\%$
+range throughout.
 
 \textbf{(ii) Higher-capacity control (ordinary SFT at scale).} A non-contrastive
 Align-LoRA: ordinary supervised fine-tuning on a data- and step-matched corpus,
@@ -345,7 +393,10 @@ Several load-bearing numbers come from runs whose result files (small JSON) are
 synced into \code{runs/\allowbreak } from a Hugging Face dataset backup, while the heavy
 binaries they were derived from (per-head cold-MC activations, J-lens jacobians,
 LoRA adapter weights --- each 2--6 GB) remain on HF as pointers rather than
-versioned in the repo. The pointer for each is given in \cref{tab:hfmap}.
+versioned in the repo. The pointer for each is given in \cref{tab:hfmap}. The sync is
+partial, and we mark which is which: rows tagged \emph{HF-only} have no local copy in
+the released checkout and must be fetched from the dataset backup before the
+corresponding analysis will run.
 
 \begin{table}[tbp]
 \centering
@@ -377,7 +428,17 @@ Align-fairness rank sweep (${\sim}62\%$) &
 \code{eval\_\allowbreak bulletproof/\allowbreak RD\_\allowbreak \{offpar,offperp,wknow\}.\allowbreak json} (+
 \code{rd\_\allowbreak offperp\_\allowbreak frac.\allowbreak csv}) & \code{msap-\allowbreak r5-\allowbreak align-\allowbreak p0-\allowbreak 20260628} \\
 \cref{disc:geometry} perpendicular-shuffle write-side control (3 seeds) &
-\code{RD\_\allowbreak offperp\_\allowbreak shuffle\_\allowbreak seed\{0,1,2\}.\allowbreak json} & same \\
+\code{RD\_\allowbreak offperp\_\allowbreak shuffle\_\allowbreak seed\{0,1,2\}.\allowbreak json} (HF-only) & same \\
+\cref{tab:seeds} adapter replicates (ARC/TQA/HSwag/Wino, gsm8k, net-effect ratio) &
+\code{v7\_\allowbreak lofit\_\allowbreak seed\{1,2\}/\allowbreak eval/} (HF-only) &
+\code{msap-\allowbreak review-\allowbreak remediation-\allowbreak 20260724} \\
+\cref{disc:selector} deployment triangle (latencies $181$/$354$/$360$/$26{,}704$\,ms,
+VRAM, accuracies $0.970$/$0.911$/$0.757$) &
+\code{e3\_\allowbreak cost/\allowbreak e3\_\allowbreak cost\_\allowbreak benchmark.\allowbreak json} & same \\
+Same-parameterization checkpoint-selection provenance (best step per seed) &
+\code{e1\_\allowbreak plain\_\allowbreak ce/\allowbreak offsets\_\allowbreak seed*.\allowbreak log.\allowbreak json} & same \\
+\cref{disc:locus} layer-band patching sweep & \code{phase1/\allowbreak derisk/\allowbreak patch\_\allowbreak layers/} (HF-only)
+& \code{msap-\allowbreak phase1-\allowbreak 20260624} \\
 \bottomrule
 \end{tabular}
 \end{table}

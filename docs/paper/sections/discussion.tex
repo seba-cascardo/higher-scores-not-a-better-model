@@ -271,7 +271,8 @@ leaves a sharper question: whether the recovered signal is a simple, interpretab
 re-weighting of the scores the cold readout already produces (length, PMI, an
 answer prior, a calibration temperature). If so, the ``lost'' knowledge would be
 recoverable by post-hoc re-scoring alone, without touching the model's activations.
-It is not. We build the strongest such re-scorer we can --- a supervised, held-out,
+It is not (\cref{tab:readout}). We build the strongest such re-scorer we can --- a
+supervised, held-out,
 AUC-objective combination of the interpretable surface features (conditional
 log-likelihood, answer-only log-likelihood, character length, PMI) --- and ask how
 well it separates gold from distractor on the base-wrong items. It caps at
@@ -758,7 +759,8 @@ one benchmark's prompts.
 \subsection{No single-layer locus: the lift scales with total offset magnitude}
 \label{disc:locus}
 
-The recovery has no causal layer locus. Across a layer-band patching sweep, the
+The recovery has no causal layer locus (\cref{tab:locus}). Across a layer-band
+patching sweep, the
 recovered fraction correlates with the \emph{total magnitude} of the learned offset
 ($\Sigma|r|$) at \textbf{0.985}, far more than with the number of heads patched
 (0.832). (We read this as \emph{no single-layer locus} rather than a strict
@@ -954,9 +956,11 @@ count every truncated trace as wrong. The anchors survive that reading --- base
 $[0.9700, 0.9750]$ against $s{=}0.75$'s $[0.9500, 0.9550]$ and $s{=}1.0$'s
 $[0.8150, 0.8650]$ are disjoint either way --- but the \emph{size} of the drop
 across the band is not one number: $-13.50\pp$ on floors, $-9.69$ among traces that
-closed, $-9.00$ on upper bounds. Roughly a quarter of the floor-to-floor fall is
-exhausted budget rather than degraded reasoning, so we quote the band's magnitude
-only with the definition attached.
+closed, $-9.00$ on upper bounds. Under the bounds reading,
+$(13.50-9.00)/13.50 = 33\%$ of the floor-to-floor fall is exhausted budget rather
+than degraded reasoning; the figure is $28\%$ if one instead conditions on the traces
+that closed, which conditions on a post-treatment variable and is why we quote the
+bounds. We therefore give the band's magnitude only with the definition attached.
 
 Second, the fall is \textbf{progressive, not a cliff}. Under all three definitions
 five sub-intervals are negative, none carries more than a third of the total, and

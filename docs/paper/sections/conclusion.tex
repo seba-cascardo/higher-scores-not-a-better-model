@@ -5,10 +5,11 @@ is, on a frontier 31B instruction model, and the answer is that it is not a
 capability gain. Non-contrastive controls attribute much of the lift to ordinary
 fine-tuning rather than to the contrastive objective, and locate what the objective
 does contribute: at the adapter's own capacity --- the identical $12{,}336$
-parameters, only the loss changed --- a generic objective recovers
+parameters, only the training objective changed --- a generic objective recovers
 $36.2\% \pm 5.0$ of the ARC gain, rising to ${\sim}62\%$ when the control is given
 three-to-five orders of magnitude more parameters, and ranging from $79.5\%$ on
-Winogrande to nothing at all on TruthfulQA. The recovery lives in a learned direction
+Winogrande to nothing at all on TruthfulQA (headline metric per task; the ordering
+across tasks is metric-dependent, the lifts are not). The recovery lives in a learned direction
 that is off-axis of degree to the model's own correctness geometry --- and with the
 parameterization held fixed, it is the contrastive objective, not the apparatus, that
 goes furthest off-axis --- a geometry that is causal and identifiable on both the
@@ -17,7 +18,11 @@ fixes already sit at the base's chain-of-thought ceiling, a read-only selector o
 same activations recovers it without the deployment costs, and --- most plainly ---
 the base asked to emit the answer letter in a single forward recovers more of the
 base-wrong items ($0.970$) than the adapter ($0.757$) for \emph{half} the measured
-cost, while tying a reasoning baseline some $150\times$ more expensive. The effect and its off-axis geometry replicate on a second
+cost --- $0.980$ against $0.855$ across all $400$ items --- while tying a reasoning
+baseline some $150\times$ more expensive. That last contrast reads the base in a
+lettered-MCQ format rather than in cold-MC option scoring, so it compares two readouts
+of the same base rather than two models like for like.
+The effect and its off-axis geometry replicate on a second
 model family --- though only partly: the cross-family lift is same-sign on all four
 tasks but marginal on Winogrande at $n{=}400$, and the causal spine that carries
 the attribution (the arbiter, the inducibility control, the recovery spectrum)
@@ -25,6 +30,6 @@ remains single-model.
 
 The practical consequence is a caution for the contrastive-PEFT-for-multiple-choice
 program. A cold multiple-choice gain of this size can be an off-axis,
-non-transferring edit to a lossy readout --- cheaper to obtain with a read-only
-selector, and beaten by a reasoning baseline --- so a benchmark improvement of this
+non-transferring edit to a lossy readout --- obtainable read-only, without touching
+weights or generation, and beaten by a reasoning baseline --- so a benchmark improvement of this
 kind is not, on its own, evidence of a better model.
