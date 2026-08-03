@@ -119,8 +119,9 @@ We apply a caution to ourselves here --- a zero-cost weight-space preview report
 knows --- established setup we build on.}
 That cold multiple-choice scoring under a chat template is a lossy readout of a
 model's knowledge is, by now, documented across model families with causal
-validation: internal probes recover correctness at 0.80--0.97 AUC where output-based
-methods reach only 0.44--0.64 \citep{ConfidenceManifold}, the internal-vs-external
+validation: a correctness probe reaches 0.80--0.97 AUC across eleven models, and on
+the subset where output-based methods are measured against it they reach only
+0.44--0.64 \citep{ConfidenceManifold}, the internal-vs-external
 knowledge gap averages 40\% \citep{InsideOut}, and the residual stream carries
 distinct knowledge and prediction subspaces \citep{KAPPA}. We take this as setup,
 not as our contribution, and confirm it holds in our channel with a per-item
@@ -163,7 +164,7 @@ read-only selector as setup, not as a new method.
 
 Our use of it is as the \emph{read leg} of a read${\neq}$write dissociation: a
 read-only linear selector on the same per-head activations the adapter writes to
-recovers the ARC lift (selector accuracy \textbf{0.943}, three seeds; fixes 181
+recovers the ARC lift (selector accuracy \textbf{0.943}, three PCA/fit seeds; fixes 181
 base-wrong, breaks 5 base-right, exact McNemar $p=3.7\times10^{-47}$)
 \emph{without touching generation}, so it carries none of the adapter's deployment
 costs (no generation loss, no retrieval spillover) and Pareto-dominates the

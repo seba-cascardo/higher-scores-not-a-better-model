@@ -15,6 +15,14 @@
 %   build maps [CITE: <name> <arXivId>] -> the entry whose eprint == <arXivId>. The 2 non-arXiv
 %   markers map by name: "Format-First Wiegreffe 2025.gem-1.46" -> FormatFirst; "Global-Workspace
 %   ... transformer-circuits.pub/2026/workspace" -> GlobalWorkspace. 44 keys, all unique.
+%
+% B67 (2026-08-03) — the file now holds 47 keys / 47 \bibitem (the "44" above is the PR8-era
+%   count and is left as written). Eight entries were promoted from @misc to @inproceedings after
+%   a venue acceptance was corroborated by a SECOND primary registry -- Crossref (DOI) for the
+%   three ACL-family venues, DBLP (formal proceedings entry) for NeurIPS/ICML/ICLR. Semantic
+%   Scholar alone was NOT treated as sufficient; its `year` is the arXiv year and was wrong for
+%   four of the eight. TwoStageMCQA and FrenchQASFT deliberately stay preprint: sources conflict
+%   (arXiv says "Under review" for the first; the second has no primary declaration at all).
 
 % ---- Methods this work sits in (LoFiT/ITI/ReFT family) ----
 
@@ -43,10 +51,11 @@
 }
 
 % [CITE: ReFT 2404.03592]
-@misc{ReFT,
+@inproceedings{ReFT,
   title  = {{ReFT}: Representation Finetuning for Language Models},
   author = {Wu, Zhengxuan and Arora, Aryaman and Wang, Zheng and Geiger, Atticus and Jurafsky, Dan and Manning, Christopher D. and Potts, Christopher},
-  year   = {2024},
+  year      = {2024},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
   eprint = {2404.03592},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
@@ -54,10 +63,11 @@
 }
 
 % [CITE: AxBench 2501.17148]
-@misc{AxBench,
+@inproceedings{AxBench,
   title  = {{AxBench}: Steering {LLMs}? Even Simple Baselines Outperform Sparse Autoencoders},
   author = {Wu, Zhengxuan and Arora, Aryaman and Geiger, Atticus and Wang, Zheng and Huang, Jing and Jurafsky, Dan and Manning, Christopher D. and Potts, Christopher},
-  year   = {2025},
+  year      = {2025},
+  booktitle = {Proceedings of the 42nd International Conference on Machine Learning (ICML)},
   eprint = {2501.17148},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
@@ -67,10 +77,11 @@
 % ---- Hidden knowledge / internal-vs-external ----
 
 % [CITE: Generative AI Paradox 2311.00059]
-@misc{GenerativeAIParadox,
+@inproceedings{GenerativeAIParadox,
   title  = {The Generative {AI} Paradox: ``What It Can Create, It May Not Understand''},
   author = {West, Peter and Lu, Ximing and Dziri, Nouha and Brahman, Faeze and Li, Linjie and Hwang, Jena D. and Jiang, Liwei and Fisher, Jillian and Ravichander, Abhilasha and Chandu, Khyathi and Newman, Benjamin and Koh, Pang Wei and Ettinger, Allyson and Choi, Yejin},
-  year   = {2023},
+  year      = {2024},
+  booktitle = {International Conference on Learning Representations (ICLR)},
   eprint = {2311.00059},
   archivePrefix = {arXiv},
   primaryClass  = {cs.AI},
@@ -78,10 +89,11 @@
 }
 
 % [CITE: LLMs-Know-More 2410.02707]
-@misc{LLMsKnowMore,
+@inproceedings{LLMsKnowMore,
   title  = {{LLMs} Know More Than They Show: On the Intrinsic Representation of {LLM} Hallucinations},
   author = {Orgad, Hadas and Toker, Michael and Gekhman, Zorik and Reichart, Roi and Szpektor, Idan and Kotek, Hadas and Belinkov, Yonatan},
-  year   = {2024},
+  year      = {2025},
+  booktitle = {International Conference on Learning Representations (ICLR)},
   eprint = {2410.02707},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
@@ -148,10 +160,11 @@
 }
 
 % [CITE: NoVo 2410.08970]  -- read-only selector scoop
-@misc{NoVo,
+@inproceedings{NoVo,
   title  = {{NoVo}: Norm Voting off Hallucinations with Attention Heads in Large Language Models},
   author = {Ho, Zheng Yi and Liang, Siyuan and Zhang, Sen and Zhan, Yibing and Tao, Dacheng},
-  year   = {2024},
+  year      = {2025},
+  booktitle = {International Conference on Learning Representations (ICLR)},
   eprint = {2410.08970},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
@@ -263,10 +276,13 @@
 % ---- Truth / correctness probing (causal linear structure) ----
 
 % [CITE: probing-correctness Azaria-Mitchell 2304.13734]
-@misc{AzariaMitchell,
+@inproceedings{AzariaMitchell,
   title  = {The Internal State of an {LLM} Knows When It's Lying},
   author = {Azaria, Amos and Mitchell, Tom},
-  year   = {2023},
+  year      = {2023},
+  booktitle = {Findings of the Association for Computational Linguistics: {EMNLP} 2023},
+  pages     = {967--976},
+  doi       = {10.18653/v1/2023.findings-emnlp.68},
   eprint = {2304.13734},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
@@ -335,10 +351,13 @@
 }
 
 % [CITE: Order-Sensitivity 2308.11483]
-@misc{OrderSensitivity,
+@inproceedings{OrderSensitivity,
   title  = {Large Language Models Sensitivity to The Order of Options in Multiple-Choice Questions},
   author = {Pezeshkpour, Pouya and Hruschka, Estevam},
-  year   = {2023},
+  year      = {2024},
+  booktitle = {Findings of the Association for Computational Linguistics: {NAACL} 2024},
+  pages     = {2006--2017},
+  doi       = {10.18653/v1/2024.findings-naacl.130},
   eprint = {2308.11483},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
@@ -393,10 +412,13 @@
 }
 
 % [CITE: Surface-Form-Competition / Holtzman PMI 2104.08315]
-@misc{SurfaceFormCompetition,
+@inproceedings{SurfaceFormCompetition,
   title  = {Surface Form Competition: Why the Highest Probability Answer Isn't Always Right},
   author = {Holtzman, Ari and West, Peter and Shwartz, Vered and Choi, Yejin and Zettlemoyer, Luke},
-  year   = {2021},
+  year      = {2021},
+  booktitle = {Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing ({EMNLP})},
+  pages     = {7038--7051},
+  doi       = {10.18653/v1/2021.emnlp-main.564},
   eprint = {2104.08315},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},

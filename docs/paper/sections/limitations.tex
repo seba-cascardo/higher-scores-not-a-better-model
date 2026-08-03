@@ -45,7 +45,12 @@ that it is on-axis --- the on-axis recovery ceiling is 6.4\% ($\Wknow$,
 \cref{disc:geometry}). The full-set $\Delta$ is now confirmed (the v7mc full-set
 run R4 closed 2026-06-27: ARC acc\_norm $+36.2$, HellaSwag acc\_norm $+19.2$,
 Winogrande acc $+20.1$, TruthfulQA acc $+37.1$, every delta within the $n{=}400$ CI
---- so the $n{=}400$ headline values are conservative, not inflated). The gen-face
+--- so the $n{=}400$ headline values are conservative, not inflated). All four
+deltas are differences within a \emph{matched pair}: base and adapter arms share the
+same commit, the same context window, the same batch size and the same $n$ per task,
+so no full-split delta here is assembled from runs of different campaigns. What the
+pair does \emph{not} carry is a pinned model snapshot --- neither arm stamps a model
+SHA, the reproducibility limitation recorded in \cref{method:model}. The gen-face
 canonical gsm8k kill-rule (R6) has now run --- $-25\pp$, flat across the generation
 budget, so the loss is mechanistic and not truncation --- and the EOS re-measure
 has run too, with a consequential result: the earlier end-of-turn ``collapse''
@@ -215,7 +220,7 @@ more, varying both the data split and the optimization order, and re-ran the cor
 spine on each (\cref{tab:seeds}). The headline effect is stable: across three
 independently trained adapters the ARC lift is $\mathbf{+35.83 \pm 0.63}\pp$
 (TruthfulQA $+34.92 \pm 1.13$, HellaSwag $+18.92 \pm 1.38$, Winogrande
-$+19.08 \pm 0.88$), the off-axis net-effect ratio is $\mathbf{1.85 \pm 0.13}$ against
+$+19.08 \pm 0.88$), the off-axis net-effect ratio is $\mathbf{1.85 \pm 0.14}$ against
 the on-axis reference's $3.93$, and natural termination is preserved in every seed
 (\cref{disc:pathologies}). The replicates also happen to bracket the released
 artifact: they were trained with a corrected validation-split construction and recover

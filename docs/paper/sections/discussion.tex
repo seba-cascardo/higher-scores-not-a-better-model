@@ -358,7 +358,10 @@ We deploy the same-space probe of \cref{disc:channel} as a \textbf{read-only
 selector}: for each cold-MC item it reads the per-head activations and picks the
 option the probe scores highest, with no offset injected and no change to
 generation. On ARC it reaches selector accuracy \textbf{0.943} ($\pm$ 0.002 over
-three seeds), against the base's 0.505 and the adapter's 0.853, and the gain is not
+three PCA/fit seeds; the outer grouped-CV split is deterministic and identical across
+the three, so this dispersion measures algorithmic sensitivity and \emph{not}
+sampling uncertainty --- a repeated-partition estimate is future work),
+against the base's 0.505 and the adapter's 0.853, and the gain is not
 a correct-for-wrong trade: relative to the base it fixes \textbf{181} of the 198
 base-wrong items and breaks only \textbf{5} of the 202 base-right ones (exact
 McNemar $p = 3.7\times10^{-47}$; an accuracy-space permutation null sits at 0.255).
@@ -508,7 +511,7 @@ a deployment win (dominated by letter emission at half its measured cost).
 \emph{Population note (do not conflate):} the four figures here (letter-emission
 0.970, SC-CoT 0.970, selector 0.911, adapter 0.757) are all on the \textbf{198
 base-wrong}
-subset; the selector's all-items accuracy (\textbf{0.943}, three seeds, across all
+subset; the selector's all-items accuracy (\textbf{0.943}, three PCA/fit seeds, across all
 $n{=}400$ evaluation items) and the adapter's all-items accuracy
 (\textbf{0.853/0.855}; \cref{tab:headline}) are computed on a \emph{different}
 population and are not directly comparable to the 0.911 / 0.757 here. The 0.943 and
@@ -662,9 +665,10 @@ lift across three seeds (ARC fraction $-0.04$ / $-0.01$ / $-0.01$; the lone
 non-zero, Winogrande ${\sim}12\%$, is a small lift in noise) against $\offperp$'s
 ${\sim}100\%$. Same harness, same norm, same subspace --- the only variable is
 \emph{learnedness} --- so it is the learned structure \emph{inside} the off-axis
-complement that lifts, not orthogonality-plus-norm. Following the recommended
-rebuttal template of comparing a learned direction against a random one
-\citep{ConfidenceManifold}, both orthogonal controls (the on-axis reference and the
+complement that lifts, not orthogonality-plus-norm. This mirrors the control pair
+that work runs on its own steering result, where the learned direction moves
+behavior and neither the norm-matched random nor the orthogonal direction does
+\citep{ConfidenceManifold}: here both orthogonal controls (the on-axis reference and the
 shuffled perpendicular) have an effect on the lift indistinguishable from zero
 while the learned off-axis push does not; and reported specificity failures of
 activation directions are \emph{cross-model}, whereas within-model --- our setting

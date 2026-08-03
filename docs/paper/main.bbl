@@ -20,7 +20,10 @@ Georgii Aparin and Tatiana Gaintseva.
 
 \bibitem[Azaria and Mitchell(2023)]{AzariaMitchell}
 Amos Azaria and Tom Mitchell.
-\newblock The internal state of an {LLM} knows when it's lying, 2023.
+\newblock The internal state of an {LLM} knows when it's lying.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  {EMNLP} 2023}, pages 967--976, 2023.
+\newblock \doi{10.18653/v1/2023.findings-emnlp.68}.
 \newblock URL \url{https://arxiv.org/abs/2304.13734}.
 
 \bibitem[Balepur and Rudinger(2024)]{ChoicesOnlyCheater}
@@ -157,17 +160,22 @@ Anna Hedstr{\"o}m, Salim~I. Amoukou, Tom Bewley, Saumitra Mishra, and Manuela
 \newblock In \emph{International Conference on Machine Learning (ICML)}, 2025.
 \newblock URL \url{https://arxiv.org/abs/2510.13290}.
 
-\bibitem[Ho et~al.(2024)Ho, Liang, Zhang, Zhan, and Tao]{NoVo}
+\bibitem[Ho et~al.(2025)Ho, Liang, Zhang, Zhan, and Tao]{NoVo}
 Zheng~Yi Ho, Siyuan Liang, Sen Zhang, Yibing Zhan, and Dacheng Tao.
 \newblock {NoVo}: Norm voting off hallucinations with attention heads in large
-  language models, 2024.
+  language models.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2025.
 \newblock URL \url{https://arxiv.org/abs/2410.08970}.
 
 \bibitem[Holtzman et~al.(2021)Holtzman, West, Shwartz, Choi, and
   Zettlemoyer]{SurfaceFormCompetition}
 Ari Holtzman, Peter West, Vered Shwartz, Yejin Choi, and Luke Zettlemoyer.
 \newblock Surface form competition: Why the highest probability answer isn't
-  always right, 2021.
+  always right.
+\newblock In \emph{Proceedings of the 2021 Conference on Empirical Methods in
+  Natural Language Processing ({EMNLP})}, pages 7038--7051, 2021.
+\newblock \doi{10.18653/v1/2021.emnlp-main.564}.
 \newblock URL \url{https://arxiv.org/abs/2104.08315}.
 
 \bibitem[Korznikov et~al.(2025)Korznikov, Galichin, Dontsov, Rogov, Oseledets,
@@ -222,12 +230,14 @@ Miranda~Muqing Miao, Young-Min Cho, and Lyle Ungar.
   Transferrable and calibration-aware inference-time steering, 2026.
 \newblock URL \url{https://arxiv.org/abs/2602.06022}.
 
-\bibitem[Orgad et~al.(2024)Orgad, Toker, Gekhman, Reichart, Szpektor, Kotek,
+\bibitem[Orgad et~al.(2025)Orgad, Toker, Gekhman, Reichart, Szpektor, Kotek,
   and Belinkov]{LLMsKnowMore}
 Hadas Orgad, Michael Toker, Zorik Gekhman, Roi Reichart, Idan Szpektor, Hadas
   Kotek, and Yonatan Belinkov.
 \newblock {LLMs} know more than they show: On the intrinsic representation of
-  {LLM} hallucinations, 2024.
+  {LLM} hallucinations.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2025.
 \newblock URL \url{https://arxiv.org/abs/2410.02707}.
 
 \bibitem[Park et~al.(2026)Park, Pyun, and Jo]{KAPPA}
@@ -237,10 +247,13 @@ Yoonah Park, Haesung Pyun, and Yohan Jo.
 \newblock In \emph{International Conference on Machine Learning (ICML)}, 2026.
 \newblock URL \url{https://arxiv.org/abs/2509.23782}.
 
-\bibitem[Pezeshkpour and Hruschka(2023)]{OrderSensitivity}
+\bibitem[Pezeshkpour and Hruschka(2024)]{OrderSensitivity}
 Pouya Pezeshkpour and Estevam Hruschka.
 \newblock Large language models sensitivity to the order of options in
-  multiple-choice questions, 2023.
+  multiple-choice questions.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  {NAACL} 2024}, pages 2006--2017, 2024.
+\newblock \doi{10.18653/v1/2024.findings-naacl.130}.
 \newblock URL \url{https://arxiv.org/abs/2308.11483}.
 
 \bibitem[Sanz-Guerrero et~al.(2026)Sanz-Guerrero, Mager, and von~der
@@ -296,13 +309,15 @@ Rui Wen, Lu~Sun, Jiayang Liu, Zesheng Xu, Tianshuo Cong, and Zheng Li.
   fail to answer, 2026.
 \newblock URL \url{https://arxiv.org/abs/2606.17609}.
 
-\bibitem[West et~al.(2023)West, Lu, Dziri, Brahman, Li, Hwang, Jiang, Fisher,
+\bibitem[West et~al.(2024)West, Lu, Dziri, Brahman, Li, Hwang, Jiang, Fisher,
   Ravichander, Chandu, Newman, Koh, Ettinger, and Choi]{GenerativeAIParadox}
 Peter West, Ximing Lu, Nouha Dziri, Faeze Brahman, Linjie Li, Jena~D. Hwang,
   Liwei Jiang, Jillian Fisher, Abhilasha Ravichander, Khyathi Chandu, Benjamin
   Newman, Pang~Wei Koh, Allyson Ettinger, and Yejin Choi.
 \newblock The generative {AI} paradox: ``what it can create, it may not
-  understand'', 2023.
+  understand''.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2024.
 \newblock URL \url{https://arxiv.org/abs/2311.00059}.
 
 \bibitem[Wong et~al.(2026)Wong, Nouwen, and Gatt]{TwoStageMCQA}
@@ -315,7 +330,9 @@ Hugh~Mee Wong, Rick Nouwen, and Albert Gatt.
   Potts]{ReFT}
 Zhengxuan Wu, Aryaman Arora, Zheng Wang, Atticus Geiger, Dan Jurafsky,
   Christopher~D. Manning, and Christopher Potts.
-\newblock {ReFT}: Representation finetuning for language models, 2024.
+\newblock {ReFT}: Representation finetuning for language models.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2024.
 \newblock URL \url{https://arxiv.org/abs/2404.03592}.
 
 \bibitem[Wu et~al.(2025)Wu, Arora, Geiger, Wang, Huang, Jurafsky, Manning, and
@@ -323,7 +340,9 @@ Zhengxuan Wu, Aryaman Arora, Zheng Wang, Atticus Geiger, Dan Jurafsky,
 Zhengxuan Wu, Aryaman Arora, Atticus Geiger, Zheng Wang, Jing Huang, Dan
   Jurafsky, Christopher~D. Manning, and Christopher Potts.
 \newblock {AxBench}: Steering {LLMs}? even simple baselines outperform sparse
-  autoencoders, 2025.
+  autoencoders.
+\newblock In \emph{Proceedings of the 42nd International Conference on Machine
+  Learning (ICML)}, 2025.
 \newblock URL \url{https://arxiv.org/abs/2501.17148}.
 
 \bibitem[Xue et~al.(2024)Xue, Hu, Liu, Liao, Li, Han, Zhao, and

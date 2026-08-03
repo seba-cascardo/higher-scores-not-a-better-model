@@ -81,7 +81,8 @@ We distinguish two protocols and report absolutes only with their protocol attac
 \textbf{Scoring-face} is cold multiple-choice scoring: log-likelihood ranking of
 options with the chat template applied and no generation (lm-eval canonical,
 \code{-\allowbreak -\allowbreak apply-\allowbreak chat-\allowbreak template}, $n{=}400$, acc\_norm), with identical flags across
-arms. The $n{=}400$ sample is the first 400 items of each task's evaluation split in
+arms (one documented exception, the random-offset control, in
+\cref{method:controls}). The $n{=}400$ sample is the first 400 items of each task's evaluation split in
 native order (lm-eval \code{-\allowbreak -\allowbreak limit 400}), not a random draw --- identical across
 arms by construction, and not doing selection work: the R4 full-split run confirms
 every headline delta within the $n{=}400$ confidence interval
@@ -135,7 +136,8 @@ a single global axis: the geometry is a family of per-head linear correctness ax
 at each intervened head. Everything we call off-axis is therefore off the measured
 linear correctness axis at each intervened head, which is the strongest such direction
 we can build there but not the whole geometry of correctness: correctness information has been reported to occupy a
-low-dimensional manifold of roughly three to eight directions rather than one
+low-dimensional subspace of two to eight directions rather than one, with a causal
+rank bounded at five under distributed alignment search
 \citep{ConfidenceManifold}. Our negative arms show that the learned offset is not
 carried by the best 1-D discriminant; they do not show that it lies outside every
 correctness-bearing subspace. Testing $k$-dimensional subspaces with norm-matched
@@ -168,7 +170,17 @@ continuation, $-\log p(\text{correct})$, with no term pushing down the incorrect
 option. Three seeds vary the batch-visit order with the data split held fixed, so the
 three runs see the same examples. Because the intervention space is held exactly
 fixed, this control attributes the difference to the \emph{objective} and nothing
-else.
+else. That equality is recorded inside the released checkpoints rather than inferred:
+each offset file carries the training \code{config}, whose \code{loss\_type} reads
+\code{direct} for the adapter and \code{plain\_ce} for the three control seeds, with
+the same head-selection file, the same $48$ (layer, head) pairs in the same order, and
+the same \code{top\_k}, step count, learning rate and corpus; the $12{,}336$ is counted
+on the tensors themselves ($\theta \in \mathbb{R}^{48 \times 256}$ plus
+$\alpha \in \mathbb{R}^{48}$), not inferred from file size, and the released training
+log states it independently. One scope note: the adapter's \code{config} predates the
+field that records the training seed, so the equality is verified over the fields both
+sides record --- which are all of those that fix the parameterization --- and not over
+that one.
 
 One asymmetry in that control deserves stating, since it touches the arm the
 attribution rests on. The \emph{objective} is genuinely non-contrastive --- the
@@ -208,7 +220,13 @@ Both recovery fractions, the matched corpus, and the gate are defined in
 \subsection{Additional controls}\label{method:controls}
 
 We further run: a norm-matched random offset (three seeds) to test whether any
-perturbation of the right size reproduces the lift; a same-scaffold PMI /
+perturbation of the right size reproduces the lift --- this arm is the one exception
+to the identical-flags statement of \cref{method:protocol}, having been scored with a
+2048-token context window against 4096 for the canonical trio and the other spectrum
+arms; task and \code{-\allowbreak -\allowbreak limit} match, and no truncation is
+reachable at either setting because the longest prompt in this protocol is
+${\approx}228$ tokens (\cref{sec:limitations}), but we state it rather than let
+``identical flags'' cover it; a same-scaffold PMI /
 decision-conditional decomposition and a choices-only (question-removed) control to
 separate question-conditional gains from answer priors
 \citep{SurfaceFormCompetition}; layer-band patching (restricting the offset to layer
@@ -441,6 +459,15 @@ VRAM, accuracies $0.970$/$0.911$/$0.757$) &
 \code{e3\_\allowbreak cost/\allowbreak e3\_\allowbreak cost\_\allowbreak benchmark.\allowbreak json} & same \\
 Same-parameterization checkpoint-selection provenance (best step per seed) &
 \code{e1\_\allowbreak plain\_\allowbreak ce/\allowbreak offsets\_\allowbreak seed*.\allowbreak log.\allowbreak json} & same \\
+Same-parameterization objective provenance (\code{loss\_type}, head set, $12{,}336$) &
+\code{v7\_\allowbreak lofit\_\allowbreak gemma4\_\allowbreak 31b\_\allowbreak chat/\allowbreak offsets\_\allowbreak mc.\allowbreak pt} and
+\code{e1\_\allowbreak plain\_\allowbreak ce/\allowbreak offsets\_\allowbreak seed*.\allowbreak pt} (embedded \code{config}),
+\code{e1\_\allowbreak plain\_\allowbreak ce/\allowbreak train.\allowbreak log} & same \\
+Full-split ($n{=}1172$/$10042$/$1267$/$817$) matched pair, adapter and base arms &
+\code{eval\_\allowbreak bulletproof/\allowbreak R4\_\allowbreak v7mc\_\allowbreak FULLSPLIT.\allowbreak json} (HF-restored, unversioned by
+size) and \code{eval\_\allowbreak bulletproof/\allowbreak R4\_\allowbreak base\_\allowbreak full/\allowbreak }; pairing checks and
+digest in \code{eval\_\allowbreak bulletproof/\allowbreak R4\_\allowbreak fullsplit\_\allowbreak provenance.\allowbreak json} &
+\code{msap-\allowbreak eval-\allowbreak bulletproof-\allowbreak lean-\allowbreak 20260627} \\
 \cref{disc:locus} layer-band patching sweep & \code{phase1/\allowbreak derisk/\allowbreak patch\_\allowbreak layers/} (HF-only)
 & \code{msap-\allowbreak phase1-\allowbreak 20260624} \\
 \bottomrule

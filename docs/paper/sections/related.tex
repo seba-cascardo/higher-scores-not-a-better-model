@@ -5,24 +5,38 @@
 A robust body of work establishes that what a model can \emph{recognize} (rank
 correctly among options, or encode in its hidden states) outruns what it can
 \emph{produce} (generate correctly), and that this gap is real rather than an
-evaluation artifact. The generative-AI paradox documents systems that can judge
-outputs they cannot themselves generate \citep{GenerativeAIParadox}; probing work
+evaluation artifact. Probing work
 shows models often encode the correct answer in their representations while
 generating an incorrect one \citep{LLMsKnowMore}; the original
 inference-time-intervention work reports a large gap between a truthfulness probe's
 accuracy and the model's generation accuracy \citep{ITI}; and recent evaluation work
 argues that answer-matching on free generation is a stricter, more faithful test
 than multiple-choice scoring \citep{AnswerMatching}. Two recent results establish
-the specific, causal-and-geometric form of the gap that we take as setup: the
-correctness signal is recoverable by internal probes at 0.80--0.97 AUC while
-output-based readouts reach only 0.44--0.64, validated causally by activation
-steering (a learned direction moves error rates $10.9\pp$ where random directions do
-not) \citep{ConfidenceManifold}, and a formal internal-vs-external knowledge measure
-finds an average 40\% hidden-knowledge gap across open-weight models
-\citep{InsideOut}. We take this lossy-readout fact as \emph{established setup and
+the specific, causal-and-geometric form of the gap that we take as setup: a correctness
+probe reaches 0.80--0.97 AUC across eleven models, and on the subset where
+output-based readouts are measured against it those readouts (P(True), token entropy,
+semantic entropy) reach only 0.44--0.64, with the direction validated causally by
+activation steering --- it shifts hallucination rates by $9.1\pp$ on Qwen2-7B, while
+norm-matched random and orthogonal directions move them by $0.8$ and $0.3$ points and
+neither reaches significance \citep{ConfidenceManifold}; and a formal
+internal-vs-external knowledge measure finds an average 40\% hidden-knowledge gap
+across open-weight models \citep{InsideOut}. Two scope conditions travel with the
+first of these and we state them because our own setup inherits them: its probes are
+teacher-forced rather than read off cold multiple-choice scoring, and its authors
+report the internal advantage as regime-specific --- large on adversarial
+misconceptions, closing on standard QA --- so what it establishes for us is that
+correctness is linearly decodable where an output-level readout is not, not a general
+ranking of internal over external estimators. We take this lossy-readout fact as \emph{established setup and
 claim no priority on it} --- it is the backdrop, not our contribution. Our per-item
 arbiter (the base solves under chain-of-thought $124/124$ of the items the adapter
-fixes in cold scoring) confirms the gap in our channel, but our contribution is the
+fixes in cold scoring) confirms the gap in our channel. It also shows that between
+\emph{faces} the asymmetry runs the other way --- generation succeeds precisely where
+the cold discriminative readout fails --- which is the direction the generative-AI
+paradox reports: generative capability is not contingent upon, and can therefore
+exceed, the ability to understand the same kind of output, with models outperforming
+humans at generation while falling short of them on measures of understanding
+\citep{GenerativeAIParadox}. Which capacity outruns which is thus a question about the
+pair of channels being compared, not a fact about models in general. Our contribution is the
 \emph{converse} direction and a \emph{quantified causal attribution}: we show that a
 cheap fine-tune recovers most of the cold-scoring deficit along a learned, off-axis
 direction, and that the recovery does not transfer back to generation --- a property
@@ -63,11 +77,20 @@ more robust quantity when the two disagree \citep{LookAtTheText}. Cold MC scorin
 further sensitive to option ordering and symbol identity
 \citep{PriDe,OrderSensitivity}, is poorly calibrated without correction
 \citep{CalibrateBeforeUse}, and instruction tuning polarizes the answer distribution
-\citep{folktexts}. Two recent results are especially close to our framing:
-instruction-tuned models can struggle to emit the correct option symbol even when
-they know the answer \citep{FormatFirst}, and the chat template itself inflates a
-model's confidence in ``its own'' answer in a way removable by a parameter-free
-reframing \citep{OwnershipBias}. Selection bias is moreover introduced by supervised
+\citep{folktexts}. One recent result is especially close to our framing: the chat
+template itself inflates a model's confidence in ``its own'' answer in a way
+removable by a parameter-free reframing \citep{OwnershipBias}. A second is close in
+mechanism but sits on the opposite population, and we flag the mismatch rather than
+borrow the conclusion: on \emph{intermediate pretraining checkpoints} --- small,
+\emph{not} instruction-tuned models --- emitting the option symbol is a skill
+separable from knowing the answer, and fine-tuning on multiple-choice format first
+disentangles the evaluation of knowledge from the emerging ability to follow the
+format \citep{FormatFirst}. Our model is instruction-tuned, i.e.\ the population that
+work treats as already past the difficulty, so it does not license the claim that our
+base cannot emit the symbol --- and indeed ours can, which is why the one-forward
+letter-emission baseline is so strong (\cref{disc:selector}). What transfers is the
+weaker and still useful point: symbol emission and knowledge are separable enough
+that a protocol can score one while intending the other. Selection bias is moreover introduced by supervised
 fine-tuning itself, tracing to weak multiple-choice symbol binding --- the A/B/C/D
 symbol--content association --- which strengthening during SFT both reduces and turns
 into an accuracy gain \citep{SymbolBinding}; this bears directly on our matched-SFT
@@ -161,8 +184,10 @@ These motivate our deployment-pathology results, but they also raise the sharpes
 reviewer objection to an off-axis claim: that \emph{any} norm-matched perturbation
 works, so an off-axis direction is not identifiable \citep{NonIdentifiability}, and
 even random directions can move behavior \citep{RogueScalpel}. We answer this
-directly and within the recommended template of comparing a learned direction
-against a random one \citep{ConfidenceManifold}: a norm-matched random offset
+directly, and with the same pair of controls that work runs on its own steering
+result --- the learned direction against a norm-matched random one and against an
+orthogonal one, neither of which reaches significance there
+\citep{ConfidenceManifold}: a norm-matched random offset
 recovers ${\approx}0\%$ of our lift (so the direction is learned, not arbitrary),
 the strongest on-axis reference recovers $6.4\%$, and the trained offset has an
 optimal magnitude (an inverted-U strength sweep), which a generic perturbation would
