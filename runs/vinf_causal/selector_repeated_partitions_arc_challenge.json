@@ -1,0 +1,431 @@
+{
+  "item": "O3-06",
+  "task": "arc_challenge",
+  "feature_dim": 12288,
+  "n_items": 400,
+  "prereg": "docs/superpowers/specs/2026-08-04-o3-01-onaxis-power-and-o3-06-selector-partitions-results.md#02-o3-06",
+  "published": {
+    "source": "runs\\vinf_causal\\probe_as_selector_arc_challenge.json",
+    "acc_mean": 0.9433333333333332,
+    "acc_sd": 0.0023570226039551605,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "note": "SD over PCA/fit seeds; outer GroupKFold(5) split identical across them"
+  },
+  "config": {
+    "Cs": [
+      0.003,
+      0.01,
+      0.03,
+      0.1,
+      0.3
+    ],
+    "pca": 200,
+    "max_iter": 1000,
+    "n_splits": 5,
+    "alg_seed_armP": 0,
+    "repro_seeds": [
+      0,
+      1,
+      2
+    ],
+    "partition_seeds": [
+      1000,
+      1001,
+      1002,
+      1003,
+      1004,
+      1005,
+      1006,
+      1007,
+      1008,
+      1009,
+      1010,
+      1011,
+      1012,
+      1013,
+      1014,
+      1015,
+      1016,
+      1017,
+      1018,
+      1019
+    ]
+  },
+  "arm_S": {
+    "accs": [
+      0.945,
+      0.94,
+      0.945
+    ],
+    "mean": 0.9433333333333332,
+    "sd_ddof0": 0.0023570226039551605,
+    "sd_ddof1": 0.0028867513459481316,
+    "reproduces_published": true
+  },
+  "arm_P": {
+    "accs": [
+      0.94,
+      0.945,
+      0.955,
+      0.94,
+      0.94,
+      0.9525,
+      0.9475,
+      0.9475,
+      0.9475,
+      0.945,
+      0.945,
+      0.945,
+      0.945,
+      0.945,
+      0.94,
+      0.9425,
+      0.95,
+      0.9475,
+      0.9425,
+      0.9475
+    ],
+    "mean": 0.9455,
+    "sd_ddof0": 0.0040000000000000105,
+    "sd_ddof1": 0.004103913408340628,
+    "min": 0.94,
+    "max": 0.955,
+    "range": 0.015000000000000013,
+    "recovery_fraction": 1.2658045977011496
+  },
+  "sd_ratio_P_over_S": 1.697056274847717,
+  "mean_shift_vs_published": 0.002166666666666761,
+  "per_run": [
+    {
+      "arm": "S",
+      "alg_seed": 0,
+      "partition_seed": null,
+      "acc": 0.945,
+      "n_items": 400,
+      "flip": {
+        "kept": 197,
+        "broken": 5,
+        "fixed": 181,
+        "still": 17
+      },
+      "seconds": 414.4823908805847
+    },
+    {
+      "arm": "S",
+      "alg_seed": 1,
+      "partition_seed": null,
+      "acc": 0.94,
+      "n_items": 400,
+      "flip": {
+        "kept": 198,
+        "broken": 4,
+        "fixed": 178,
+        "still": 20
+      },
+      "seconds": 412.07148027420044
+    },
+    {
+      "arm": "S",
+      "alg_seed": 2,
+      "partition_seed": null,
+      "acc": 0.945,
+      "n_items": 400,
+      "flip": {
+        "kept": 197,
+        "broken": 5,
+        "fixed": 181,
+        "still": 17
+      },
+      "seconds": 414.8166196346283
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1000,
+      "acc": 0.94,
+      "n_items": 400,
+      "flip": {
+        "kept": 196,
+        "broken": 6,
+        "fixed": 180,
+        "still": 18
+      },
+      "seconds": 419.30700612068176
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1001,
+      "acc": 0.945,
+      "n_items": 400,
+      "flip": {
+        "kept": 197,
+        "broken": 5,
+        "fixed": 181,
+        "still": 17
+      },
+      "seconds": 414.9733016490936
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1002,
+      "acc": 0.955,
+      "n_items": 400,
+      "flip": {
+        "kept": 197,
+        "broken": 5,
+        "fixed": 185,
+        "still": 13
+      },
+      "seconds": 414.7483205795288
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1003,
+      "acc": 0.94,
+      "n_items": 400,
+      "flip": {
+        "kept": 196,
+        "broken": 6,
+        "fixed": 180,
+        "still": 18
+      },
+      "seconds": 413.490336894989
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1004,
+      "acc": 0.94,
+      "n_items": 400,
+      "flip": {
+        "kept": 197,
+        "broken": 5,
+        "fixed": 179,
+        "still": 19
+      },
+      "seconds": 414.5246126651764
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1005,
+      "acc": 0.9525,
+      "n_items": 400,
+      "flip": {
+        "kept": 197,
+        "broken": 5,
+        "fixed": 184,
+        "still": 14
+      },
+      "seconds": 403.63965916633606
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1006,
+      "acc": 0.9475,
+      "n_items": 400,
+      "flip": {
+        "kept": 197,
+        "broken": 5,
+        "fixed": 182,
+        "still": 16
+      },
+      "seconds": 403.17463636398315
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1007,
+      "acc": 0.9475,
+      "n_items": 400,
+      "flip": {
+        "kept": 197,
+        "broken": 5,
+        "fixed": 182,
+        "still": 16
+      },
+      "seconds": 396.8088753223419
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1008,
+      "acc": 0.9475,
+      "n_items": 400,
+      "flip": {
+        "kept": 196,
+        "broken": 6,
+        "fixed": 183,
+        "still": 15
+      },
+      "seconds": 398.5284569263458
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1009,
+      "acc": 0.945,
+      "n_items": 400,
+      "flip": {
+        "kept": 196,
+        "broken": 6,
+        "fixed": 182,
+        "still": 16
+      },
+      "seconds": 396.64119052886963
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1010,
+      "acc": 0.945,
+      "n_items": 400,
+      "flip": {
+        "kept": 197,
+        "broken": 5,
+        "fixed": 181,
+        "still": 17
+      },
+      "seconds": 396.53085923194885
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1011,
+      "acc": 0.945,
+      "n_items": 400,
+      "flip": {
+        "kept": 197,
+        "broken": 5,
+        "fixed": 181,
+        "still": 17
+      },
+      "seconds": 397.54882550239563
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1012,
+      "acc": 0.945,
+      "n_items": 400,
+      "flip": {
+        "kept": 196,
+        "broken": 6,
+        "fixed": 182,
+        "still": 16
+      },
+      "seconds": 398.49895691871643
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1013,
+      "acc": 0.945,
+      "n_items": 400,
+      "flip": {
+        "kept": 197,
+        "broken": 5,
+        "fixed": 181,
+        "still": 17
+      },
+      "seconds": 338.1070737838745
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1014,
+      "acc": 0.94,
+      "n_items": 400,
+      "flip": {
+        "kept": 196,
+        "broken": 6,
+        "fixed": 180,
+        "still": 18
+      },
+      "seconds": 338.1595313549042
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1015,
+      "acc": 0.9425,
+      "n_items": 400,
+      "flip": {
+        "kept": 198,
+        "broken": 4,
+        "fixed": 179,
+        "still": 19
+      },
+      "seconds": 338.2842471599579
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1016,
+      "acc": 0.95,
+      "n_items": 400,
+      "flip": {
+        "kept": 196,
+        "broken": 6,
+        "fixed": 184,
+        "still": 14
+      },
+      "seconds": 336.81555461883545
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1017,
+      "acc": 0.9475,
+      "n_items": 400,
+      "flip": {
+        "kept": 196,
+        "broken": 6,
+        "fixed": 183,
+        "still": 15
+      },
+      "seconds": 338.08714723587036
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1018,
+      "acc": 0.9425,
+      "n_items": 400,
+      "flip": {
+        "kept": 195,
+        "broken": 7,
+        "fixed": 182,
+        "still": 16
+      },
+      "seconds": 335.7623872756958
+    },
+    {
+      "arm": "P",
+      "alg_seed": 0,
+      "partition_seed": 1019,
+      "acc": 0.9475,
+      "n_items": 400,
+      "flip": {
+        "kept": 197,
+        "broken": 5,
+        "fixed": 182,
+        "still": 16
+      },
+      "seconds": 334.74367785453796
+    }
+  ],
+  "reading": [
+    "sd_P (0.0040) < 2 x sd_S (0.0024): the published dispersion is not materially smaller than the partition dispersion.",
+    "sd_P (0.0040) <= 0.01: the point estimate is stable to ~1 accuracy point.",
+    "mean over partitions moves by 0.0022 <= 1 sd_P: the deterministic split was a neutral draw."
+  ]
+}

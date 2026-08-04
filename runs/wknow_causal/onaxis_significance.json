@@ -1,0 +1,41 @@
+{
+  "task": "arc_challenge",
+  "arms": {
+    "wknow": {
+      "method": "paired_mcnemar_and_bootstrap",
+      "n": 400,
+      "acc_null": 0.5,
+      "acc_arm": 0.5225,
+      "acc_mc": 0.8525,
+      "frac_recovery": 0.06382978723404245,
+      "frac_CI95_boot": [
+        -0.008849557522123703,
+        0.13636363636363646
+      ],
+      "mcnemar_b_nullright_armwrong": 10,
+      "mcnemar_c_nullwrong_armright": 19,
+      "mcnemar_discordant": 29,
+      "p_mcnemar": 0.13604594767093658,
+      "acc_arm_wilson_CI95": [
+        0.4735685130017636,
+        0.5710034181712508
+      ],
+      "acc_arm_wilson_includes_null_0.5": true
+    },
+    "vinf": {
+      "method": "unpaired_wilson",
+      "n": 400,
+      "acc_null": 0.505,
+      "acc_arm": 0.545,
+      "acc_mc": 0.855,
+      "frac_recovery": 0.1142857142857144,
+      "acc_arm_wilson_CI95": [
+        0.4960015667969213,
+        0.5931422955491075
+      ],
+      "acc_arm_wilson_includes_null_0.5": true,
+      "paired_test_requires": "re-run v_inf arm with --log_samples (add-on to any future pod run)"
+    }
+  },
+  "gate_verdict": "INDISTINGUISHABLE_FROM_ZERO: W_know recovers 6.4%, statistically indistinguishable from zero (strengthens on-axis-fails)"
+}

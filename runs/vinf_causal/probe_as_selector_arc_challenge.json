@@ -1,0 +1,26 @@
+{
+  "task": "arc_challenge",
+  "feature_dim": 12288,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "base_acc": 0.505,
+  "surface_ceiling": 0.57,
+  "adapter_acc": 0.853,
+  "probe_selector_acc_mean": 0.9433333333333332,
+  "probe_selector_acc_sd": 0.0023570226039551605,
+  "recovery_fraction": 1.2595785440613025,
+  "flip_matrix": {
+    "kept": 197,
+    "broken": 5,
+    "fixed": 181,
+    "still": 17
+  },
+  "mcnemar_p": 3.684025878509273e-47,
+  "null_acc_mean": 0.2547916666666667,
+  "null_acc_max": 0.295,
+  "null_clean": true,
+  "verdict": "PASS (corollary lives): read-only probe-selector beats the surface ceiling in accuracy, McNemar-significant over base, null clean"
+}
