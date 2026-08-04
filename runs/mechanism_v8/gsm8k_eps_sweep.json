@@ -1,0 +1,2879 @@
+{
+  "config": {
+    "base": "/workspace/models/gemma4-31b-it",
+    "offsets": "runs/v7_lofit_gemma4_31b_chat/offsets_mc.pt",
+    "n": 100,
+    "k_shot": 4,
+    "max_new_tokens": 512,
+    "eps_grid": [
+      0.0,
+      0.2,
+      0.5,
+      1.0
+    ],
+    "batch_size": 8
+  },
+  "results": [
+    {
+      "eps": 0.0,
+      "acc": 0.97,
+      "eos_rate": 1.0,
+      "mean_gen_len": 142.44,
+      "n_correct": 97,
+      "n_eos": 100,
+      "n_unparsed": 0,
+      "n": 100,
+      "per_item": [
+        {
+          "pred": 18.0,
+          "gold": 18.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 91
+        },
+        {
+          "pred": 3.0,
+          "gold": 3.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 65
+        },
+        {
+          "pred": 70000.0,
+          "gold": 70000.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 241
+        },
+        {
+          "pred": 540.0,
+          "gold": 540.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 67
+        },
+        {
+          "pred": 20.0,
+          "gold": 20.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 205
+        },
+        {
+          "pred": 64.0,
+          "gold": 64.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 185
+        },
+        {
+          "pred": 260.0,
+          "gold": 260.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 125
+        },
+        {
+          "pred": 160.0,
+          "gold": 160.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 279
+        },
+        {
+          "pred": 45.0,
+          "gold": 45.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 282
+        },
+        {
+          "pred": 460.0,
+          "gold": 460.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 158
+        },
+        {
+          "pred": 366.0,
+          "gold": 366.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 151
+        },
+        {
+          "pred": 694.0,
+          "gold": 694.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 148
+        },
+        {
+          "pred": 12.0,
+          "gold": 13.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 260
+        },
+        {
+          "pred": 18.0,
+          "gold": 18.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 247
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 159
+        },
+        {
+          "pred": 125.0,
+          "gold": 125.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 221
+        },
+        {
+          "pred": 230.0,
+          "gold": 230.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 72
+        },
+        {
+          "pred": 57500.0,
+          "gold": 57500.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 155
+        },
+        {
+          "pred": 7.0,
+          "gold": 7.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 109
+        },
+        {
+          "pred": 6.0,
+          "gold": 6.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 250
+        },
+        {
+          "pred": 15.0,
+          "gold": 15.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 145
+        },
+        {
+          "pred": 14.0,
+          "gold": 14.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 87
+        },
+        {
+          "pred": 7.0,
+          "gold": 7.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 123
+        },
+        {
+          "pred": 8.0,
+          "gold": 8.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 71
+        },
+        {
+          "pred": 26.0,
+          "gold": 26.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 109
+        },
+        {
+          "pred": 2.0,
+          "gold": 2.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 165
+        },
+        {
+          "pred": 243.0,
+          "gold": 243.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 159
+        },
+        {
+          "pred": 16.0,
+          "gold": 16.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 95
+        },
+        {
+          "pred": 25.0,
+          "gold": 25.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 110
+        },
+        {
+          "pred": 104.0,
+          "gold": 104.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 113
+        },
+        {
+          "pred": 109.0,
+          "gold": 109.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 155
+        },
+        {
+          "pred": 80.0,
+          "gold": 80.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 180
+        },
+        {
+          "pred": 35.0,
+          "gold": 35.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 87
+        },
+        {
+          "pred": 70.0,
+          "gold": 70.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 177
+        },
+        {
+          "pred": 23.0,
+          "gold": 23.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 58
+        },
+        {
+          "pred": 9.0,
+          "gold": 9.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 127
+        },
+        {
+          "pred": 75.0,
+          "gold": 75.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 114
+        },
+        {
+          "pred": 2.0,
+          "gold": 2.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 186
+        },
+        {
+          "pred": 10.0,
+          "gold": 10.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 129
+        },
+        {
+          "pred": 18.0,
+          "gold": 18.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 228
+        },
+        {
+          "pred": 8.0,
+          "gold": 8.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 85
+        },
+        {
+          "pred": 200.0,
+          "gold": 200.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 118
+        },
+        {
+          "pred": 26.0,
+          "gold": 26.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 97
+        },
+        {
+          "pred": 48.0,
+          "gold": 48.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 174
+        },
+        {
+          "pred": 20.0,
+          "gold": 20.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 207
+        },
+        {
+          "pred": 104.0,
+          "gold": 104.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 197
+        },
+        {
+          "pred": 163.0,
+          "gold": 163.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 143
+        },
+        {
+          "pred": 800.0,
+          "gold": 800.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 197
+        },
+        {
+          "pred": 8.0,
+          "gold": 8.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 91
+        },
+        {
+          "pred": 30.0,
+          "gold": 30.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 107
+        },
+        {
+          "pred": 294.0,
+          "gold": 294.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 130
+        },
+        {
+          "pred": 5.0,
+          "gold": 5.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 106
+        },
+        {
+          "pred": 15.0,
+          "gold": 15.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 139
+        },
+        {
+          "pred": 40.0,
+          "gold": 40.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 128
+        },
+        {
+          "pred": 40.0,
+          "gold": 40.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 112
+        },
+        {
+          "pred": 14.0,
+          "gold": 14.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 67
+        },
+        {
+          "pred": 3.0,
+          "gold": 3.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 74
+        },
+        {
+          "pred": 83.0,
+          "gold": 83.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 110
+        },
+        {
+          "pred": 57.0,
+          "gold": 57.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 130
+        },
+        {
+          "pred": 187.0,
+          "gold": 187.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 85
+        },
+        {
+          "pred": 17.0,
+          "gold": 17.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 133
+        },
+        {
+          "pred": 1430.0,
+          "gold": 1430.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 133
+        },
+        {
+          "pred": 25000.0,
+          "gold": 25000.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 243
+        },
+        {
+          "pred": 1596.0,
+          "gold": 1596.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 190
+        },
+        {
+          "pred": 300.0,
+          "gold": 300.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 99
+        },
+        {
+          "pred": 36.0,
+          "gold": 36.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 111
+        },
+        {
+          "pred": 48.0,
+          "gold": 48.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 145
+        },
+        {
+          "pred": 595.0,
+          "gold": 595.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 136
+        },
+        {
+          "pred": 36.0,
+          "gold": 36.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 100
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 76
+        },
+        {
+          "pred": 7425.0,
+          "gold": 7425.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 153
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 63
+        },
+        {
+          "pred": 221.0,
+          "gold": 221.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 93
+        },
+        {
+          "pred": 255.0,
+          "gold": 255.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 181
+        },
+        {
+          "pred": 88.0,
+          "gold": 88.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 198
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 227
+        },
+        {
+          "pred": 5.0,
+          "gold": 5.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 224
+        },
+        {
+          "pred": 100.0,
+          "gold": 100.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 132
+        },
+        {
+          "pred": 6.0,
+          "gold": 6.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 176
+        },
+        {
+          "pred": 70.0,
+          "gold": 70.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 89
+        },
+        {
+          "pred": 10.0,
+          "gold": 10.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 130
+        },
+        {
+          "pred": 17.0,
+          "gold": 17.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 132
+        },
+        {
+          "pred": 623.0,
+          "gold": 623.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 78
+        },
+        {
+          "pred": 600.0,
+          "gold": 600.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 82
+        },
+        {
+          "pred": 15.0,
+          "gold": 15.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 218
+        },
+        {
+          "pred": 48.0,
+          "gold": 44.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 119
+        },
+        {
+          "pred": 22.0,
+          "gold": 22.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 140
+        },
+        {
+          "pred": 10080.0,
+          "gold": 9360.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 253
+        },
+        {
+          "pred": 8000.0,
+          "gold": 8000.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 157
+        },
+        {
+          "pred": 24.0,
+          "gold": 24.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 87
+        },
+        {
+          "pred": 225.0,
+          "gold": 225.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 133
+        },
+        {
+          "pred": 28.0,
+          "gold": 28.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 87
+        },
+        {
+          "pred": 4.0,
+          "gold": 4.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 105
+        },
+        {
+          "pred": 36.0,
+          "gold": 36.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 152
+        },
+        {
+          "pred": 348.0,
+          "gold": 348.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 182
+        },
+        {
+          "pred": 40.0,
+          "gold": 40.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 140
+        },
+        {
+          "pred": 3.0,
+          "gold": 3.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 49
+        },
+        {
+          "pred": 12.0,
+          "gold": 12.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 208
+        },
+        {
+          "pred": 5.0,
+          "gold": 5.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 169
+        },
+        {
+          "pred": 58.0,
+          "gold": 58.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 136
+        }
+      ]
+    },
+    {
+      "eps": 0.2,
+      "acc": 0.98,
+      "eos_rate": 1.0,
+      "mean_gen_len": 135.2,
+      "n_correct": 98,
+      "n_eos": 100,
+      "n_unparsed": 0,
+      "n": 100,
+      "per_item": [
+        {
+          "pred": 18.0,
+          "gold": 18.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 97
+        },
+        {
+          "pred": 3.0,
+          "gold": 3.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 49
+        },
+        {
+          "pred": 70000.0,
+          "gold": 70000.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 238
+        },
+        {
+          "pred": 540.0,
+          "gold": 540.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 67
+        },
+        {
+          "pred": 20.0,
+          "gold": 20.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 149
+        },
+        {
+          "pred": 64.0,
+          "gold": 64.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 186
+        },
+        {
+          "pred": 260.0,
+          "gold": 260.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 117
+        },
+        {
+          "pred": 160.0,
+          "gold": 160.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 276
+        },
+        {
+          "pred": 45.0,
+          "gold": 45.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 266
+        },
+        {
+          "pred": 460.0,
+          "gold": 460.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 158
+        },
+        {
+          "pred": 366.0,
+          "gold": 366.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 144
+        },
+        {
+          "pred": 694.0,
+          "gold": 694.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 148
+        },
+        {
+          "pred": 12.0,
+          "gold": 13.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 132
+        },
+        {
+          "pred": 18.0,
+          "gold": 18.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 247
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 156
+        },
+        {
+          "pred": 125.0,
+          "gold": 125.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 142
+        },
+        {
+          "pred": 230.0,
+          "gold": 230.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 71
+        },
+        {
+          "pred": 57500.0,
+          "gold": 57500.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 155
+        },
+        {
+          "pred": 7.0,
+          "gold": 7.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 88
+        },
+        {
+          "pred": 6.0,
+          "gold": 6.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 230
+        },
+        {
+          "pred": 15.0,
+          "gold": 15.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 169
+        },
+        {
+          "pred": 14.0,
+          "gold": 14.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 81
+        },
+        {
+          "pred": 7.0,
+          "gold": 7.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 104
+        },
+        {
+          "pred": 8.0,
+          "gold": 8.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 75
+        },
+        {
+          "pred": 26.0,
+          "gold": 26.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 138
+        },
+        {
+          "pred": 2.0,
+          "gold": 2.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 163
+        },
+        {
+          "pred": 243.0,
+          "gold": 243.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 159
+        },
+        {
+          "pred": 16.0,
+          "gold": 16.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 88
+        },
+        {
+          "pred": 25.0,
+          "gold": 25.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 116
+        },
+        {
+          "pred": 104.0,
+          "gold": 104.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 110
+        },
+        {
+          "pred": 109.0,
+          "gold": 109.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 155
+        },
+        {
+          "pred": 80.0,
+          "gold": 80.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 180
+        },
+        {
+          "pred": 35.0,
+          "gold": 35.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 87
+        },
+        {
+          "pred": 70.0,
+          "gold": 70.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 134
+        },
+        {
+          "pred": 23.0,
+          "gold": 23.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 58
+        },
+        {
+          "pred": 9.0,
+          "gold": 9.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 105
+        },
+        {
+          "pred": 75.0,
+          "gold": 75.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 112
+        },
+        {
+          "pred": 2.0,
+          "gold": 2.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 235
+        },
+        {
+          "pred": 10.0,
+          "gold": 10.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 129
+        },
+        {
+          "pred": 18.0,
+          "gold": 18.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 230
+        },
+        {
+          "pred": 8.0,
+          "gold": 8.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 76
+        },
+        {
+          "pred": 200.0,
+          "gold": 200.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 109
+        },
+        {
+          "pred": 26.0,
+          "gold": 26.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 96
+        },
+        {
+          "pred": 48.0,
+          "gold": 48.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 236
+        },
+        {
+          "pred": 20.0,
+          "gold": 20.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 216
+        },
+        {
+          "pred": 104.0,
+          "gold": 104.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 200
+        },
+        {
+          "pred": 163.0,
+          "gold": 163.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 175
+        },
+        {
+          "pred": 800.0,
+          "gold": 800.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 175
+        },
+        {
+          "pred": 8.0,
+          "gold": 8.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 108
+        },
+        {
+          "pred": 30.0,
+          "gold": 30.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 104
+        },
+        {
+          "pred": 294.0,
+          "gold": 294.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 136
+        },
+        {
+          "pred": 5.0,
+          "gold": 5.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 94
+        },
+        {
+          "pred": 15.0,
+          "gold": 15.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 132
+        },
+        {
+          "pred": 40.0,
+          "gold": 40.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 128
+        },
+        {
+          "pred": 40.0,
+          "gold": 40.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 94
+        },
+        {
+          "pred": 14.0,
+          "gold": 14.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 67
+        },
+        {
+          "pred": 3.0,
+          "gold": 3.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 63
+        },
+        {
+          "pred": 83.0,
+          "gold": 83.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 103
+        },
+        {
+          "pred": 57.0,
+          "gold": 57.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 149
+        },
+        {
+          "pred": 187.0,
+          "gold": 187.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 81
+        },
+        {
+          "pred": 17.0,
+          "gold": 17.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 112
+        },
+        {
+          "pred": 1430.0,
+          "gold": 1430.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 137
+        },
+        {
+          "pred": 25000.0,
+          "gold": 25000.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 182
+        },
+        {
+          "pred": 1596.0,
+          "gold": 1596.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 190
+        },
+        {
+          "pred": 300.0,
+          "gold": 300.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 101
+        },
+        {
+          "pred": 36.0,
+          "gold": 36.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 116
+        },
+        {
+          "pred": 48.0,
+          "gold": 48.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 111
+        },
+        {
+          "pred": 595.0,
+          "gold": 595.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 111
+        },
+        {
+          "pred": 36.0,
+          "gold": 36.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 98
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 76
+        },
+        {
+          "pred": 7425.0,
+          "gold": 7425.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 149
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 63
+        },
+        {
+          "pred": 221.0,
+          "gold": 221.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 92
+        },
+        {
+          "pred": 255.0,
+          "gold": 255.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 172
+        },
+        {
+          "pred": 88.0,
+          "gold": 88.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 198
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 232
+        },
+        {
+          "pred": 5.0,
+          "gold": 5.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 224
+        },
+        {
+          "pred": 100.0,
+          "gold": 100.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 136
+        },
+        {
+          "pred": 6.0,
+          "gold": 6.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 169
+        },
+        {
+          "pred": 70.0,
+          "gold": 70.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 82
+        },
+        {
+          "pred": 10.0,
+          "gold": 10.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 129
+        },
+        {
+          "pred": 17.0,
+          "gold": 17.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 101
+        },
+        {
+          "pred": 623.0,
+          "gold": 623.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 71
+        },
+        {
+          "pred": 600.0,
+          "gold": 600.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 82
+        },
+        {
+          "pred": 15.0,
+          "gold": 15.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 172
+        },
+        {
+          "pred": 44.0,
+          "gold": 44.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 136
+        },
+        {
+          "pred": 22.0,
+          "gold": 22.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 119
+        },
+        {
+          "pred": 10080.0,
+          "gold": 9360.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 253
+        },
+        {
+          "pred": 8000.0,
+          "gold": 8000.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 155
+        },
+        {
+          "pred": 24.0,
+          "gold": 24.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 87
+        },
+        {
+          "pred": 225.0,
+          "gold": 225.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 133
+        },
+        {
+          "pred": 28.0,
+          "gold": 28.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 80
+        },
+        {
+          "pred": 4.0,
+          "gold": 4.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 105
+        },
+        {
+          "pred": 36.0,
+          "gold": 36.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 142
+        },
+        {
+          "pred": 348.0,
+          "gold": 348.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 177
+        },
+        {
+          "pred": 40.0,
+          "gold": 40.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 136
+        },
+        {
+          "pred": 3.0,
+          "gold": 3.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 49
+        },
+        {
+          "pred": 12.0,
+          "gold": 12.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 113
+        },
+        {
+          "pred": 5.0,
+          "gold": 5.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 109
+        },
+        {
+          "pred": 58.0,
+          "gold": 58.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 134
+        }
+      ]
+    },
+    {
+      "eps": 0.5,
+      "acc": 0.99,
+      "eos_rate": 1.0,
+      "mean_gen_len": 121.43,
+      "n_correct": 99,
+      "n_eos": 100,
+      "n_unparsed": 0,
+      "n": 100,
+      "per_item": [
+        {
+          "pred": 18.0,
+          "gold": 18.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 97
+        },
+        {
+          "pred": 3.0,
+          "gold": 3.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 49
+        },
+        {
+          "pred": 70000.0,
+          "gold": 70000.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 251
+        },
+        {
+          "pred": 540.0,
+          "gold": 540.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 68
+        },
+        {
+          "pred": 20.0,
+          "gold": 20.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 102
+        },
+        {
+          "pred": 64.0,
+          "gold": 64.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 123
+        },
+        {
+          "pred": 260.0,
+          "gold": 260.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 95
+        },
+        {
+          "pred": 160.0,
+          "gold": 160.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 249
+        },
+        {
+          "pred": 45.0,
+          "gold": 45.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 285
+        },
+        {
+          "pred": 460.0,
+          "gold": 460.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 158
+        },
+        {
+          "pred": 366.0,
+          "gold": 366.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 133
+        },
+        {
+          "pred": 694.0,
+          "gold": 694.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 148
+        },
+        {
+          "pred": 12.0,
+          "gold": 13.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 178
+        },
+        {
+          "pred": 18.0,
+          "gold": 18.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 211
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 158
+        },
+        {
+          "pred": 125.0,
+          "gold": 125.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 117
+        },
+        {
+          "pred": 230.0,
+          "gold": 230.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 59
+        },
+        {
+          "pred": 57500.0,
+          "gold": 57500.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 145
+        },
+        {
+          "pred": 7.0,
+          "gold": 7.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 88
+        },
+        {
+          "pred": 6.0,
+          "gold": 6.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 156
+        },
+        {
+          "pred": 15.0,
+          "gold": 15.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 137
+        },
+        {
+          "pred": 14.0,
+          "gold": 14.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 86
+        },
+        {
+          "pred": 7.0,
+          "gold": 7.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 99
+        },
+        {
+          "pred": 8.0,
+          "gold": 8.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 73
+        },
+        {
+          "pred": 26.0,
+          "gold": 26.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 71
+        },
+        {
+          "pred": 2.0,
+          "gold": 2.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 155
+        },
+        {
+          "pred": 243.0,
+          "gold": 243.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 164
+        },
+        {
+          "pred": 16.0,
+          "gold": 16.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 88
+        },
+        {
+          "pred": 25.0,
+          "gold": 25.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 69
+        },
+        {
+          "pred": 104.0,
+          "gold": 104.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 113
+        },
+        {
+          "pred": 109.0,
+          "gold": 109.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 123
+        },
+        {
+          "pred": 80.0,
+          "gold": 80.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 159
+        },
+        {
+          "pred": 35.0,
+          "gold": 35.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 87
+        },
+        {
+          "pred": 70.0,
+          "gold": 70.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 143
+        },
+        {
+          "pred": 23.0,
+          "gold": 23.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 58
+        },
+        {
+          "pred": 9.0,
+          "gold": 9.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 77
+        },
+        {
+          "pred": 75.0,
+          "gold": 75.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 100
+        },
+        {
+          "pred": 2.0,
+          "gold": 2.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 197
+        },
+        {
+          "pred": 10.0,
+          "gold": 10.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 112
+        },
+        {
+          "pred": 18.0,
+          "gold": 18.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 242
+        },
+        {
+          "pred": 8.0,
+          "gold": 8.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 76
+        },
+        {
+          "pred": 200.0,
+          "gold": 200.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 131
+        },
+        {
+          "pred": 26.0,
+          "gold": 26.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 96
+        },
+        {
+          "pred": 48.0,
+          "gold": 48.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 144
+        },
+        {
+          "pred": 20.0,
+          "gold": 20.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 127
+        },
+        {
+          "pred": 104.0,
+          "gold": 104.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 157
+        },
+        {
+          "pred": 163.0,
+          "gold": 163.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 145
+        },
+        {
+          "pred": 800.0,
+          "gold": 800.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 185
+        },
+        {
+          "pred": 8.0,
+          "gold": 8.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 85
+        },
+        {
+          "pred": 30.0,
+          "gold": 30.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 93
+        },
+        {
+          "pred": 294.0,
+          "gold": 294.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 90
+        },
+        {
+          "pred": 5.0,
+          "gold": 5.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 101
+        },
+        {
+          "pred": 15.0,
+          "gold": 15.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 115
+        },
+        {
+          "pred": 40.0,
+          "gold": 40.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 126
+        },
+        {
+          "pred": 40.0,
+          "gold": 40.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 94
+        },
+        {
+          "pred": 14.0,
+          "gold": 14.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 54
+        },
+        {
+          "pred": 3.0,
+          "gold": 3.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 63
+        },
+        {
+          "pred": 83.0,
+          "gold": 83.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 88
+        },
+        {
+          "pred": 57.0,
+          "gold": 57.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 153
+        },
+        {
+          "pred": 187.0,
+          "gold": 187.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 83
+        },
+        {
+          "pred": 17.0,
+          "gold": 17.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 99
+        },
+        {
+          "pred": 1430.0,
+          "gold": 1430.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 134
+        },
+        {
+          "pred": 25000.0,
+          "gold": 25000.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 187
+        },
+        {
+          "pred": 1596.0,
+          "gold": 1596.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 181
+        },
+        {
+          "pred": 300.0,
+          "gold": 300.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 99
+        },
+        {
+          "pred": 36.0,
+          "gold": 36.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 113
+        },
+        {
+          "pred": 48.0,
+          "gold": 48.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 109
+        },
+        {
+          "pred": 595.0,
+          "gold": 595.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 107
+        },
+        {
+          "pred": 36.0,
+          "gold": 36.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 97
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 74
+        },
+        {
+          "pred": 7425.0,
+          "gold": 7425.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 154
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 64
+        },
+        {
+          "pred": 221.0,
+          "gold": 221.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 116
+        },
+        {
+          "pred": 255.0,
+          "gold": 255.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 173
+        },
+        {
+          "pred": 88.0,
+          "gold": 88.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 193
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 216
+        },
+        {
+          "pred": 5.0,
+          "gold": 5.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 189
+        },
+        {
+          "pred": 100.0,
+          "gold": 100.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 127
+        },
+        {
+          "pred": 6.0,
+          "gold": 6.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 146
+        },
+        {
+          "pred": 70.0,
+          "gold": 70.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 80
+        },
+        {
+          "pred": 10.0,
+          "gold": 10.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 117
+        },
+        {
+          "pred": 17.0,
+          "gold": 17.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 89
+        },
+        {
+          "pred": 623.0,
+          "gold": 623.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 71
+        },
+        {
+          "pred": 600.0,
+          "gold": 600.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 80
+        },
+        {
+          "pred": 15.0,
+          "gold": 15.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 107
+        },
+        {
+          "pred": 44.0,
+          "gold": 44.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 87
+        },
+        {
+          "pred": 22.0,
+          "gold": 22.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 86
+        },
+        {
+          "pred": 9360.0,
+          "gold": 9360.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 187
+        },
+        {
+          "pred": 8000.0,
+          "gold": 8000.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 127
+        },
+        {
+          "pred": 24.0,
+          "gold": 24.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 67
+        },
+        {
+          "pred": 225.0,
+          "gold": 225.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 133
+        },
+        {
+          "pred": 28.0,
+          "gold": 28.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 77
+        },
+        {
+          "pred": 4.0,
+          "gold": 4.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 71
+        },
+        {
+          "pred": 36.0,
+          "gold": 36.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 121
+        },
+        {
+          "pred": 348.0,
+          "gold": 348.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 132
+        },
+        {
+          "pred": 40.0,
+          "gold": 40.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 122
+        },
+        {
+          "pred": 3.0,
+          "gold": 3.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 49
+        },
+        {
+          "pred": 12.0,
+          "gold": 12.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 112
+        },
+        {
+          "pred": 5.0,
+          "gold": 5.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 73
+        },
+        {
+          "pred": 58.0,
+          "gold": 58.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 148
+        }
+      ]
+    },
+    {
+      "eps": 1.0,
+      "acc": 0.87,
+      "eos_rate": 0.97,
+      "mean_gen_len": 92.24,
+      "n_correct": 87,
+      "n_eos": 97,
+      "n_unparsed": 0,
+      "n": 100,
+      "per_item": [
+        {
+          "pred": 18.0,
+          "gold": 18.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 62
+        },
+        {
+          "pred": 3.0,
+          "gold": 3.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 38
+        },
+        {
+          "pred": 70000.0,
+          "gold": 70000.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 141
+        },
+        {
+          "pred": 540.0,
+          "gold": 540.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 53
+        },
+        {
+          "pred": 20.0,
+          "gold": 20.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 69
+        },
+        {
+          "pred": 64.0,
+          "gold": 64.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 56
+        },
+        {
+          "pred": 260.0,
+          "gold": 260.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 94
+        },
+        {
+          "pred": 120.0,
+          "gold": 160.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 105
+        },
+        {
+          "pred": 45.0,
+          "gold": 45.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 109
+        },
+        {
+          "pred": 460.0,
+          "gold": 460.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 112
+        },
+        {
+          "pred": 306.0,
+          "gold": 366.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 123
+        },
+        {
+          "pred": 694.0,
+          "gold": 694.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 86
+        },
+        {
+          "pred": 12.0,
+          "gold": 13.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 58
+        },
+        {
+          "pred": 10.0,
+          "gold": 18.0,
+          "correct": 0,
+          "eos": 0,
+          "gen_len": 512
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 90
+        },
+        {
+          "pred": 125.0,
+          "gold": 125.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 63
+        },
+        {
+          "pred": 230.0,
+          "gold": 230.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 46
+        },
+        {
+          "pred": 57500.0,
+          "gold": 57500.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 140
+        },
+        {
+          "pred": 7.0,
+          "gold": 7.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 56
+        },
+        {
+          "pred": 6.0,
+          "gold": 6.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 74
+        },
+        {
+          "pred": 15.0,
+          "gold": 15.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 104
+        },
+        {
+          "pred": 14.0,
+          "gold": 14.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 60
+        },
+        {
+          "pred": 7.0,
+          "gold": 7.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 44
+        },
+        {
+          "pred": 8.0,
+          "gold": 8.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 45
+        },
+        {
+          "pred": 26.0,
+          "gold": 26.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 80
+        },
+        {
+          "pred": 2.0,
+          "gold": 2.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 85
+        },
+        {
+          "pred": 243.0,
+          "gold": 243.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 41
+        },
+        {
+          "pred": 16.0,
+          "gold": 16.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 48
+        },
+        {
+          "pred": 25.0,
+          "gold": 25.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 28
+        },
+        {
+          "pred": 104.0,
+          "gold": 104.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 61
+        },
+        {
+          "pred": 109.0,
+          "gold": 109.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 77
+        },
+        {
+          "pred": 80.0,
+          "gold": 80.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 110
+        },
+        {
+          "pred": 35.0,
+          "gold": 35.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 59
+        },
+        {
+          "pred": 70.0,
+          "gold": 70.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 45
+        },
+        {
+          "pred": 23.0,
+          "gold": 23.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 50
+        },
+        {
+          "pred": 9.0,
+          "gold": 9.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 42
+        },
+        {
+          "pred": 75.0,
+          "gold": 75.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 82
+        },
+        {
+          "pred": 2.0,
+          "gold": 2.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 102
+        },
+        {
+          "pred": 10.0,
+          "gold": 10.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 63
+        },
+        {
+          "pred": 18.0,
+          "gold": 18.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 137
+        },
+        {
+          "pred": 8.0,
+          "gold": 8.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 50
+        },
+        {
+          "pred": 200.0,
+          "gold": 200.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 100
+        },
+        {
+          "pred": 26.0,
+          "gold": 26.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 54
+        },
+        {
+          "pred": 48.0,
+          "gold": 48.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 105
+        },
+        {
+          "pred": 20.0,
+          "gold": 20.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 81
+        },
+        {
+          "pred": 104.0,
+          "gold": 104.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 144
+        },
+        {
+          "pred": 163.0,
+          "gold": 163.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 144
+        },
+        {
+          "pred": 800.0,
+          "gold": 800.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 143
+        },
+        {
+          "pred": 8.0,
+          "gold": 8.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 46
+        },
+        {
+          "pred": 30.0,
+          "gold": 30.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 66
+        },
+        {
+          "pred": 294.0,
+          "gold": 294.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 71
+        },
+        {
+          "pred": 5.0,
+          "gold": 5.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 58
+        },
+        {
+          "pred": 15.0,
+          "gold": 15.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 58
+        },
+        {
+          "pred": 40.0,
+          "gold": 40.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 65
+        },
+        {
+          "pred": 40.0,
+          "gold": 40.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 61
+        },
+        {
+          "pred": 14.0,
+          "gold": 14.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 24
+        },
+        {
+          "pred": 3.0,
+          "gold": 3.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 31
+        },
+        {
+          "pred": 83.0,
+          "gold": 83.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 51
+        },
+        {
+          "pred": 57.0,
+          "gold": 57.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 63
+        },
+        {
+          "pred": 187.0,
+          "gold": 187.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 57
+        },
+        {
+          "pred": 17.0,
+          "gold": 17.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 76
+        },
+        {
+          "pred": 1430.0,
+          "gold": 1430.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 67
+        },
+        {
+          "pred": 15000.0,
+          "gold": 25000.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 240
+        },
+        {
+          "pred": 1596.0,
+          "gold": 1596.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 119
+        },
+        {
+          "pred": 300.0,
+          "gold": 300.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 60
+        },
+        {
+          "pred": 36.0,
+          "gold": 36.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 87
+        },
+        {
+          "pred": 48.0,
+          "gold": 48.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 46
+        },
+        {
+          "pred": 495.0,
+          "gold": 595.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 119
+        },
+        {
+          "pred": 36.0,
+          "gold": 36.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 86
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 40
+        },
+        {
+          "pred": 7425.0,
+          "gold": 7425.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 118
+        },
+        {
+          "pred": 60.0,
+          "gold": 60.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 64
+        },
+        {
+          "pred": 221.0,
+          "gold": 221.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 90
+        },
+        {
+          "pred": 255.0,
+          "gold": 255.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 120
+        },
+        {
+          "pred": 72.0,
+          "gold": 88.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 103
+        },
+        {
+          "pred": 56.0,
+          "gold": 60.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 119
+        },
+        {
+          "pred": 5.0,
+          "gold": 5.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 116
+        },
+        {
+          "pred": 100.0,
+          "gold": 100.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 98
+        },
+        {
+          "pred": 6.0,
+          "gold": 6.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 89
+        },
+        {
+          "pred": 70.0,
+          "gold": 70.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 28
+        },
+        {
+          "pred": 10.0,
+          "gold": 10.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 58
+        },
+        {
+          "pred": 7.0,
+          "gold": 17.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 86
+        },
+        {
+          "pred": 623.0,
+          "gold": 623.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 71
+        },
+        {
+          "pred": 600.0,
+          "gold": 600.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 51
+        },
+        {
+          "pred": 16.0,
+          "gold": 15.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 229
+        },
+        {
+          "pred": 44.0,
+          "gold": 44.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 34
+        },
+        {
+          "pred": 22.0,
+          "gold": 22.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 86
+        },
+        {
+          "pred": 756.0,
+          "gold": 9360.0,
+          "correct": 0,
+          "eos": 0,
+          "gen_len": 512
+        },
+        {
+          "pred": 8000.0,
+          "gold": 8000.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 95
+        },
+        {
+          "pred": 24.0,
+          "gold": 24.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 40
+        },
+        {
+          "pred": 225.0,
+          "gold": 225.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 91
+        },
+        {
+          "pred": 28.0,
+          "gold": 28.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 75
+        },
+        {
+          "pred": 4.0,
+          "gold": 4.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 77
+        },
+        {
+          "pred": 36.0,
+          "gold": 36.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 58
+        },
+        {
+          "pred": 288.0,
+          "gold": 348.0,
+          "correct": 0,
+          "eos": 1,
+          "gen_len": 112
+        },
+        {
+          "pred": 40.0,
+          "gold": 40.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 59
+        },
+        {
+          "pred": 3.0,
+          "gold": 3.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 39
+        },
+        {
+          "pred": 12.0,
+          "gold": 12.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 87
+        },
+        {
+          "pred": 20.0,
+          "gold": 5.0,
+          "correct": 0,
+          "eos": 0,
+          "gen_len": 512
+        },
+        {
+          "pred": 58.0,
+          "gold": 58.0,
+          "correct": 1,
+          "eos": 1,
+          "gen_len": 45
+        }
+      ]
+    }
+  ],
+  "verdict": {
+    "acc_eps0_base": 0.97,
+    "acc_eps1_adapter": 0.87,
+    "best_eps": 0.5,
+    "best_acc": 0.99,
+    "best_interior_eps": 0.5,
+    "best_interior_acc": 0.99,
+    "transfer_window_exists": false,
+    "gates": {
+      "base_solves_gate": true,
+      "collapse_reproduced_gate": true
+    }
+  }
+}

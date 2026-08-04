@@ -1,0 +1,297 @@
+{
+  "question": "which published quantities are length-normalisation effects?",
+  "metric_policy": "paper uses acc_norm for ARC/HellaSwag, acc for TQA/Winogrande (which define no acc_norm) -- method.tex:170-172",
+  "cells": {
+    "Align-LoRA r256 (R1, published spectrum anchor)": {
+      "control": "generic SFT, 1800x+ params",
+      "n_seeds": 1,
+      "rows": {
+        "arc_challenge/acc_norm,none": {
+          "base": 0.505,
+          "contrastive": 0.855,
+          "control": 0.7225,
+          "lift_pp": 35.0,
+          "control_pp": 21.750000000000004,
+          "inducibility": 0.6214285714285716,
+          "readable": true
+        },
+        "arc_challenge/acc,none": {
+          "base": 0.495,
+          "contrastive": 0.8475,
+          "control": 0.71,
+          "lift_pp": 35.25,
+          "control_pp": 21.499999999999996,
+          "inducibility": 0.6099290780141843,
+          "readable": true
+        },
+        "hellaswag/acc_norm,none": {
+          "base": 0.54,
+          "contrastive": 0.71,
+          "control": 0.6975,
+          "lift_pp": 16.999999999999993,
+          "control_pp": 15.749999999999996,
+          "inducibility": 0.9264705882352943,
+          "readable": true
+        },
+        "hellaswag/acc,none": {
+          "base": 0.49,
+          "contrastive": 0.7125,
+          "control": 0.5325,
+          "lift_pp": 22.250000000000004,
+          "control_pp": 4.249999999999998,
+          "inducibility": 0.19101123595505606,
+          "readable": true
+        },
+        "truthfulqa_mc1/acc,none": {
+          "base": 0.4375,
+          "contrastive": 0.81,
+          "control": 0.7775,
+          "lift_pp": 37.25000000000001,
+          "control_pp": 34.0,
+          "inducibility": 0.9127516778523488,
+          "readable": true
+        },
+        "winogrande/acc,none": {
+          "base": 0.6575,
+          "contrastive": 0.8475,
+          "control": 0.775,
+          "lift_pp": 19.000000000000007,
+          "control_pp": 11.750000000000005,
+          "inducibility": 0.618421052631579,
+          "readable": true
+        }
+      }
+    },
+    "same-param plain-CE, Gemma (E1)": {
+      "control": "12,336 params, CE-plain",
+      "n_seeds": 3,
+      "rows": {
+        "arc_challenge/acc_norm,none": {
+          "base": 0.5025,
+          "contrastive": 0.855,
+          "control": 0.63,
+          "lift_pp": 35.25,
+          "control_pp": 12.750000000000005,
+          "inducibility": 0.3617021276595746,
+          "readable": true
+        },
+        "arc_challenge/acc,none": {
+          "base": 0.4975,
+          "contrastive": 0.8475,
+          "control": 0.5916666666666667,
+          "lift_pp": 35.0,
+          "control_pp": 9.416666666666668,
+          "inducibility": 0.2690476190476191,
+          "readable": true
+        },
+        "hellaswag/acc_norm,none": {
+          "base": 0.5375,
+          "contrastive": 0.7125,
+          "control": 0.6591666666666667,
+          "lift_pp": 17.500000000000004,
+          "control_pp": 12.16666666666667,
+          "inducibility": 0.6952380952380953,
+          "readable": true
+        },
+        "hellaswag/acc,none": {
+          "base": 0.49,
+          "contrastive": 0.715,
+          "control": 0.5099999999999999,
+          "lift_pp": 22.499999999999996,
+          "control_pp": 1.9999999999999907,
+          "inducibility": 0.08888888888888849,
+          "readable": true
+        },
+        "truthfulqa_mc1/acc,none": {
+          "base": 0.4425,
+          "contrastive": 0.8025,
+          "control": 0.44583333333333336,
+          "lift_pp": 36.0,
+          "control_pp": 0.3333333333333355,
+          "inducibility": 0.00925925925925932,
+          "readable": true
+        },
+        "winogrande/acc,none": {
+          "base": 0.6675,
+          "contrastive": 0.85,
+          "control": 0.8125,
+          "lift_pp": 18.25,
+          "control_pp": 14.500000000000002,
+          "inducibility": 0.7945205479452055,
+          "readable": true
+        }
+      }
+    },
+    "same-param plain-CE, Qwen (E6)": {
+      "control": "6,192 params, CE-plain",
+      "n_seeds": 3,
+      "rows": {
+        "arc_challenge/acc_norm,none": {
+          "base": 0.4975,
+          "contrastive": 0.66,
+          "control": 0.5416666666666666,
+          "lift_pp": 16.250000000000004,
+          "control_pp": 4.416666666666663,
+          "inducibility": 0.27179487179487155,
+          "readable": true
+        },
+        "arc_challenge/acc,none": {
+          "base": 0.53,
+          "contrastive": 0.685,
+          "control": 0.6225,
+          "lift_pp": 15.500000000000004,
+          "control_pp": 9.250000000000004,
+          "inducibility": 0.5967741935483872,
+          "readable": true
+        },
+        "hellaswag/acc_norm,none": {
+          "base": 0.62,
+          "contrastive": 0.6925,
+          "control": 0.7033333333333333,
+          "lift_pp": 7.250000000000001,
+          "control_pp": 8.333333333333325,
+          "inducibility": 1.1494252873563207,
+          "readable": true
+        },
+        "hellaswag/acc,none": {
+          "base": 0.5825,
+          "contrastive": 0.5775,
+          "control": 0.5308333333333334,
+          "lift_pp": -0.5000000000000004,
+          "control_pp": -5.166666666666664,
+          "inducibility": null,
+          "readable": false
+        },
+        "truthfulqa_mc1/acc,none": {
+          "base": 0.5325,
+          "contrastive": 0.6825,
+          "control": 0.445,
+          "lift_pp": 15.000000000000002,
+          "control_pp": -8.749999999999996,
+          "inducibility": -0.583333333333333,
+          "readable": true
+        },
+        "winogrande/acc,none": {
+          "base": 0.6825,
+          "contrastive": 0.715,
+          "control": 0.7600000000000001,
+          "lift_pp": 3.2499999999999973,
+          "control_pp": 7.750000000000012,
+          "inducibility": 2.3846153846153904,
+          "readable": true
+        }
+      }
+    }
+  },
+  "verdict_inducibility": {
+    "Align-LoRA r256 (R1, published spectrum anchor) | arc_challenge": {
+      "acc_norm": 0.6214285714285716,
+      "acc": 0.6099290780141843,
+      "delta_pp": -1.1499493414387274
+    },
+    "Align-LoRA r256 (R1, published spectrum anchor) | hellaswag": {
+      "acc_norm": 0.9264705882352943,
+      "acc": 0.19101123595505606,
+      "delta_pp": -73.54593522802382
+    },
+    "same-param plain-CE, Gemma (E1) | arc_challenge": {
+      "acc_norm": 0.3617021276595746,
+      "acc": 0.2690476190476191,
+      "delta_pp": -9.265450861195552
+    },
+    "same-param plain-CE, Gemma (E1) | hellaswag": {
+      "acc_norm": 0.6952380952380953,
+      "acc": 0.08888888888888849,
+      "delta_pp": -60.63492063492069
+    },
+    "same-param plain-CE, Qwen (E6) | arc_challenge": {
+      "acc_norm": 0.27179487179487155,
+      "acc": 0.5967741935483872,
+      "delta_pp": 32.497932175351565
+    },
+    "same-param plain-CE, Qwen (E6) | hellaswag": {
+      "acc_norm": 1.1494252873563207,
+      "acc": null,
+      "delta": null,
+      "note": "unreadable under one metric (lift < 2pp)"
+    }
+  },
+  "l1_paired_both_metrics": {
+    "arc_challenge": {
+      "acc_norm": {
+        "point": 0.6214285714285716,
+        "ci": [
+          0.5103448275862069,
+          0.7323943661971831
+        ],
+        "p_gt_half": 0.982465
+      },
+      "acc": {
+        "point": 0.6099290780141843,
+        "ci": [
+          0.49618320610687017,
+          0.72781158714703
+        ],
+        "p_gt_half": 0.96931
+      },
+      "identical": false
+    },
+    "hellaswag": {
+      "acc_norm": {
+        "point": 0.9264705882352944,
+        "ci": [
+          0.6521739130434779,
+          1.3174603174603179
+        ],
+        "p_gt_half": 0.99904
+      },
+      "acc": {
+        "point": 0.19101123595505606,
+        "ci": [
+          0.03157894736842084,
+          0.34374999999999994
+        ],
+        "p_gt_half": 8e-05
+      },
+      "identical": false
+    },
+    "winogrande": {
+      "acc_norm": {
+        "point": 0.618421052631579,
+        "ci": [
+          0.38888888888888873,
+          0.8507462686567163
+        ],
+        "p_gt_half": 0.845055
+      },
+      "acc": {
+        "point": 0.618421052631579,
+        "ci": [
+          0.38888888888888873,
+          0.8507462686567163
+        ],
+        "p_gt_half": 0.845055
+      },
+      "identical": true
+    },
+    "truthfulqa_mc1": {
+      "acc_norm": {
+        "point": 0.9127516778523488,
+        "ci": [
+          0.79375,
+          1.0460526315789473
+        ],
+        "p_gt_half": 1.0
+      },
+      "acc": {
+        "point": 0.9127516778523488,
+        "ci": [
+          0.79375,
+          1.0460526315789473
+        ],
+        "p_gt_half": 1.0
+      },
+      "identical": true
+    }
+  }
+}

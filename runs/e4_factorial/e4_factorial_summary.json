@@ -1,0 +1,469 @@
+{
+  "base": {
+    "arc_challenge": 0.5025,
+    "truthfulqa_mc1": 0.4425,
+    "hellaswag": 0.5375,
+    "winogrande": 0.6675
+  },
+  "v7mc_contrastive_indomain": {
+    "arc_challenge": 0.855,
+    "truthfulqa_mc1": 0.8025,
+    "hellaswag": 0.7125,
+    "winogrande": 0.85
+  },
+  "lift": {
+    "arc_challenge": 0.35250000000000004,
+    "truthfulqa_mc1": 0.36,
+    "hellaswag": 0.17500000000000004,
+    "winogrande": 0.1825
+  },
+  "gates": {
+    "setup_min_effect": 0.01,
+    "convergence_min_effect": 0.01
+  },
+  "checkpoints": {
+    "best": {
+      "B_plainCE_indomain": {
+        "status": "ok",
+        "n_seeds_found": 3,
+        "missing": [],
+        "per_task": {
+          "arc_challenge": {
+            "arm_mean": 0.63,
+            "arm_sd": 0.01749999999999996,
+            "effect_mean_pp": 12.750000000000005,
+            "frac_mean": 0.3617021276595746,
+            "frac_sd": 0.04964539007092186,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          },
+          "truthfulqa_mc1": {
+            "arm_mean": 0.44583333333333336,
+            "arm_sd": 0.01181453906563153,
+            "effect_mean_pp": 0.3333333333333336,
+            "frac_mean": 0.009259259259259267,
+            "frac_sd": 0.032818164071198704,
+            "n_seeds": 3,
+            "n_seeds_noop": 2,
+            "n_seeds_harmful": 1,
+            "status": "mixed",
+            "converged": false
+          },
+          "hellaswag": {
+            "arm_mean": 0.6591666666666667,
+            "arm_sd": 0.011273124382057274,
+            "effect_mean_pp": 12.16666666666667,
+            "frac_mean": 0.6952380952380953,
+            "frac_sd": 0.06441785361175585,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          },
+          "winogrande": {
+            "arm_mean": 0.8125,
+            "arm_sd": 0.0024999999999999467,
+            "effect_mean_pp": 14.500000000000002,
+            "frac_mean": 0.7945205479452055,
+            "frac_sd": 0.013698630136985968,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          }
+        }
+      },
+      "C_contrastive_OOD": {
+        "status": "ok",
+        "n_seeds_found": 3,
+        "missing": [],
+        "per_task": {
+          "arc_challenge": {
+            "arm_mean": 0.6833333333333332,
+            "arm_sd": 0.026259918760981212,
+            "effect_mean_pp": 18.083333333333336,
+            "frac_mean": 0.5130023640661939,
+            "frac_sd": 0.07449622343540767,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          },
+          "truthfulqa_mc1": {
+            "arm_mean": 0.39999999999999997,
+            "arm_sd": 0.03031088913245535,
+            "effect_mean_pp": -4.25,
+            "frac_mean": -0.11805555555555557,
+            "frac_sd": 0.08419691425682042,
+            "n_seeds": 3,
+            "n_seeds_noop": 3,
+            "n_seeds_harmful": 3,
+            "status": "harmful",
+            "converged": false
+          },
+          "hellaswag": {
+            "arm_mean": 0.6416666666666666,
+            "arm_sd": 0.021262251370288445,
+            "effect_mean_pp": 10.416666666666668,
+            "frac_mean": 0.595238095238095,
+            "frac_sd": 0.12149857925879107,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          },
+          "winogrande": {
+            "arm_mean": 0.8008333333333333,
+            "arm_sd": 0.02809952550014558,
+            "effect_mean_pp": 13.333333333333334,
+            "frac_mean": 0.7305936073059361,
+            "frac_sd": 0.15397000274052372,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          }
+        }
+      },
+      "D_plainCE_OOD": {
+        "status": "ok",
+        "n_seeds_found": 3,
+        "missing": [],
+        "per_task": {
+          "arc_challenge": {
+            "arm_mean": 0.6216666666666667,
+            "arm_sd": 0.019418633662885057,
+            "effect_mean_pp": 11.916666666666668,
+            "frac_mean": 0.3380614657210402,
+            "frac_sd": 0.055088322447900864,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          },
+          "truthfulqa_mc1": {
+            "arm_mean": 0.34166666666666673,
+            "arm_sd": 0.020052015692526598,
+            "effect_mean_pp": -10.083333333333332,
+            "frac_mean": -0.28009259259259256,
+            "frac_sd": 0.055700043590351654,
+            "n_seeds": 3,
+            "n_seeds_noop": 3,
+            "n_seeds_harmful": 3,
+            "status": "harmful",
+            "converged": false
+          },
+          "hellaswag": {
+            "arm_mean": 0.6291666666666665,
+            "arm_sd": 0.01527525231651942,
+            "effect_mean_pp": 9.166666666666668,
+            "frac_mean": 0.5238095238095237,
+            "frac_sd": 0.08728715609439669,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          },
+          "winogrande": {
+            "arm_mean": 0.7925,
+            "arm_sd": 0.024109126902482396,
+            "effect_mean_pp": 12.500000000000004,
+            "frac_mean": 0.6849315068493153,
+            "frac_sd": 0.13210480494510907,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          }
+        }
+      },
+      "arc_killrule": {
+        "rec_B_indomain": 0.3617021276595746,
+        "rec_D_ood": 0.3380614657210402,
+        "ratio_D_over_B": 0.9346405228758167,
+        "verdict": "ANY FINE-TUNING: rec(D) >= 2/3 rec(B) -> domain is not what matters; Limitations paragraph is replaced by this result"
+      }
+    },
+    "final": {
+      "B_plainCE_indomain": {
+        "status": "ok",
+        "n_seeds_found": 3,
+        "missing": [],
+        "per_task": {
+          "arc_challenge": {
+            "arm_mean": 0.6425,
+            "arm_sd": 0.010897247358851682,
+            "effect_mean_pp": 14.000000000000004,
+            "frac_mean": 0.39716312056737596,
+            "frac_sd": 0.03091417690454376,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          },
+          "truthfulqa_mc1": {
+            "arm_mean": 0.45916666666666667,
+            "arm_sd": 0.011814539065631501,
+            "effect_mean_pp": 1.6666666666666663,
+            "frac_mean": 0.04629629629629629,
+            "frac_sd": 0.03281816407119861,
+            "n_seeds": 3,
+            "n_seeds_noop": 1,
+            "n_seeds_harmful": 0,
+            "status": "mixed",
+            "converged": false
+          },
+          "hellaswag": {
+            "arm_mean": 0.6583333333333333,
+            "arm_sd": 0.012583057392117928,
+            "effect_mean_pp": 12.08333333333334,
+            "frac_mean": 0.6904761904761907,
+            "frac_sd": 0.07190318509781675,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          },
+          "winogrande": {
+            "arm_mean": 0.8158333333333333,
+            "arm_sd": 0.008036375634160752,
+            "effect_mean_pp": 14.833333333333334,
+            "frac_mean": 0.8127853881278541,
+            "frac_sd": 0.04403493498170275,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          }
+        }
+      },
+      "C_contrastive_OOD": {
+        "status": "ok",
+        "n_seeds_found": 3,
+        "missing": [],
+        "per_task": {
+          "arc_challenge": {
+            "arm_mean": 0.7174999999999999,
+            "arm_sd": 0.010897247358851682,
+            "effect_mean_pp": 21.500000000000004,
+            "frac_mean": 0.6099290780141845,
+            "frac_sd": 0.030914176904543778,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          },
+          "truthfulqa_mc1": {
+            "arm_mean": 0.43250000000000005,
+            "arm_sd": 0.007500000000000007,
+            "effect_mean_pp": -1.0000000000000009,
+            "frac_mean": -0.0277777777777778,
+            "frac_sd": 0.02083333333333335,
+            "n_seeds": 3,
+            "n_seeds_noop": 3,
+            "n_seeds_harmful": 3,
+            "status": "harmful",
+            "converged": false
+          },
+          "hellaswag": {
+            "arm_mean": 0.665,
+            "arm_sd": 0.006614378277661461,
+            "effect_mean_pp": 12.750000000000004,
+            "frac_mean": 0.7285714285714285,
+            "frac_sd": 0.03779644730092259,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          },
+          "winogrande": {
+            "arm_mean": 0.7933333333333333,
+            "arm_sd": 0.015069284433354287,
+            "effect_mean_pp": 12.583333333333336,
+            "frac_mean": 0.6894977168949774,
+            "frac_sd": 0.08257142155262621,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          }
+        }
+      },
+      "D_plainCE_OOD": {
+        "status": "ok",
+        "n_seeds_found": 3,
+        "missing": [],
+        "per_task": {
+          "arc_challenge": {
+            "arm_mean": 0.6425,
+            "arm_sd": 0.0050000000000000044,
+            "effect_mean_pp": 14.000000000000002,
+            "frac_mean": 0.39716312056737585,
+            "frac_sd": 0.01418439716312056,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          },
+          "truthfulqa_mc1": {
+            "arm_mean": 0.3441666666666667,
+            "arm_sd": 0.014215601757693298,
+            "effect_mean_pp": -9.833333333333332,
+            "frac_mean": -0.27314814814814814,
+            "frac_sd": 0.039487782660259166,
+            "n_seeds": 3,
+            "n_seeds_noop": 3,
+            "n_seeds_harmful": 3,
+            "status": "harmful",
+            "converged": false
+          },
+          "hellaswag": {
+            "arm_mean": 0.6349999999999999,
+            "arm_sd": 0.0025000000000000022,
+            "effect_mean_pp": 9.749999999999998,
+            "frac_mean": 0.5571428571428569,
+            "frac_sd": 0.01428571428571429,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          },
+          "winogrande": {
+            "arm_mean": 0.8016666666666667,
+            "arm_sd": 0.014433756729740658,
+            "effect_mean_pp": 13.416666666666673,
+            "frac_mean": 0.7351598173515986,
+            "frac_sd": 0.07908907797118174,
+            "n_seeds": 3,
+            "n_seeds_noop": 0,
+            "n_seeds_harmful": 0,
+            "status": "converged",
+            "converged": true
+          }
+        }
+      },
+      "arc_killrule": {
+        "rec_B_indomain": 0.39716312056737596,
+        "rec_D_ood": 0.39716312056737585,
+        "ratio_D_over_B": 0.9999999999999997,
+        "verdict": "ANY FINE-TUNING: rec(D) >= 2/3 rec(B) -> domain is not what matters; Limitations paragraph is replaced by this result"
+      }
+    }
+  },
+  "net_effect": {
+    "C_contrastive_OOD": {
+      "ratio_mean": 2.749067578441308,
+      "ratio_sd": 0.258615122101159,
+      "abs_cos_vinf_mean": 0.1402246928256419,
+      "n_seeds": 3,
+      "ratios": [
+        2.470956380299055,
+        2.7939297463173243,
+        2.982316608707544
+      ]
+    },
+    "D_plainCE_OOD": {
+      "ratio_mean": 2.980826852554246,
+      "ratio_sd": 0.10214931034803387,
+      "abs_cos_vinf_mean": 0.15240424557123333,
+      "n_seeds": 3,
+      "ratios": [
+        3.098775430159299,
+        2.921090077497739,
+        2.9226150500057
+      ]
+    },
+    "axis_shifts": {
+      "objective_shift_indomain": {
+        "shift": 0.8300000000000001,
+        "se": 0.2101586702153082,
+        "sigma": 3.9493968968763578
+      },
+      "objective_shift_ood": {
+        "shift": 0.23175927411293795,
+        "se": 0.1605368732139923,
+        "sigma": 1.443651352322078
+      },
+      "domain_shift_contrastive": {
+        "shift": 0.8990675784413078,
+        "se": 0.1671145130136791,
+        "sigma": 5.379949127265296
+      },
+      "domain_shift_plainCE": {
+        "shift": 0.3008268525542457,
+        "se": 0.20496705556794484,
+        "sigma": 1.4676839247199125
+      }
+    },
+    "shift_difference": {
+      "shift": 0.06906757844130773,
+      "se": 0.24663183180562712,
+      "sigma": 0.2800432447655035
+    },
+    "sigma_gate": 2.0,
+    "t_critical_2df_for_reference": 4.3,
+    "axis_ordering_resolved": false,
+    "verdict": "NOT ORDERABLE: domain is a real axis (domain shift +0.90 = 5.4\u03c3) but the two shifts differ by only +0.07 \u00b1 0.25 (0.28\u03c3 < 2.0\u03c3) -> which axis weighs more is NOT decided by these data; claim the domain axis, not the ordering",
+    "spectrum": [
+      [
+        "contrastive in-domain (canonical, E2)",
+        1.85,
+        0.13,
+        3,
+        "in",
+        "contrastive"
+      ],
+      [
+        "same-param plain-CE in-domain (E1)",
+        2.68,
+        0.34,
+        3,
+        "in",
+        "plain-CE"
+      ],
+      [
+        "Align-LoRA (higher capacity)",
+        3.93,
+        null,
+        1,
+        "in",
+        "plain SFT"
+      ],
+      [
+        "contrastive OOD (E4-C, NEW)",
+        2.749067578441308,
+        0.258615122101159,
+        3,
+        "OOD",
+        "contrastive"
+      ],
+      [
+        "plain-CE OOD (E4-D, NEW)",
+        2.980826852554246,
+        0.10214931034803387,
+        3,
+        "OOD",
+        "plain-CE"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "method": "d_freq = argmin_r ||M r - f||, M = W_U * (1+norm), f = unigram log-freq (wikitext-103 train, +1 smoothed); reuses logit_lens_theta_mc.fetch_tensors and the B12 aggregate-write construction.",
+  "vocab": 262144,
+  "d_model": 5376,
+  "wikitext_tokens_seen": 40000194,
+  "vocab_seen": 96057,
+  "ridge": 0.001,
+  "cos_agg_dfreq": 0.015428745187819004,
+  "cos_agg_dfreq_ranking_only": 0.012285073287785053,
+  "ident_corr_M_dfreq_vs_f": 0.8969176196371381,
+  "ident_corr_ranking": 0.8969176209062175,
+  "null_1_over_sqrt_d": 0.013638618139749524,
+  "gate_threshold_3x_null": 0.040915854419248575,
+  "b12_reference_cos_agg_dstar": 0.0231,
+  "gate_verdict": "IDENTIFICATION FAIL: r(M d_freq, f)=0.897 < 0.9 \u2014 d_freq is not the frequency direction; cos is meaningless. Escalate to P8c (better basis)."
+}

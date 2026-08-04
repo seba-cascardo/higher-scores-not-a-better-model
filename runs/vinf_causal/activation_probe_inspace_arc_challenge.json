@@ -1,0 +1,20 @@
+{
+  "task": "arc_challenge",
+  "feature_dim": 12288,
+  "n_items": 400,
+  "n_base_wrong": 198,
+  "auc_all": 0.9732888146911519,
+  "auc_base_wrong": 0.9545454545454546,
+  "auc_base_wrong_ci": [
+    0.9343434343434344,
+    0.9730639730639731
+  ],
+  "null_perm_mean": 0.494388327721661,
+  "null_perm_max": 0.5084175084175084,
+  "null_clean": true,
+  "anchor_adapter": 0.8300653594771242,
+  "anchor_surface": 0.5016339869281046,
+  "probe": "L2-logistic + PCA200 (held-out GroupKFold by item, AUC-tuned C)",
+  "cells": 48,
+  "verdict": "PURE MISCALIBRATION: same-space linear probe recovers 0.955 ~ adapter 0.830 -> the correctness signal is present in the adapter's own subspace and ANY same-space reader extracts it. \u00a75 leads with 'lossy readout, signal intact upstream' (strongest form)."
+}

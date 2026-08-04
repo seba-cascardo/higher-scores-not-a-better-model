@@ -1,0 +1,386 @@
+{
+  "config": {
+    "base": "/workspace/hf_cache/models--google--gemma-4-31b-it/snapshots/3548789868c5356dbf307c98e6f609007b82b3eb",
+    "offsets": "runs/v7_lofit_gemma4_31b_chat/offsets_mc.pt",
+    "r6probe": "runs/eval_bulletproof/R6probe_v7mc_cap512.json",
+    "n_loops": 26,
+    "n_cleanwrong": 24,
+    "max_new_tokens": 512,
+    "offset_scale": 1.0,
+    "quartiles": 4,
+    "topk": 30
+  },
+  "sanity_equivalence": {
+    "nnsight_vs_hooks_cos_mean": 1.018069903055827,
+    "per_item": [
+      1.0397869348526,
+      1.0024943351745605,
+      1.0119284391403198
+    ]
+  },
+  "n_items": 50,
+  "gen_len_mean": {
+    "loop": 201.0,
+    "clean_wrong": 109.8
+  },
+  "structure_suppression_trajectory": {
+    "loop": [
+      0.3707,
+      0.3886,
+      0.4115,
+      0.4165
+    ],
+    "clean_wrong": [
+      0.3938,
+      0.4107,
+      0.4198,
+      0.4214
+    ],
+    "all": [
+      0.3785,
+      0.396,
+      0.4143,
+      0.4181
+    ]
+  },
+  "slope_last_minus_first": {
+    "loop": 0.0458,
+    "clean_wrong": 0.0276,
+    "all": 0.0396
+  },
+  "coherence_structure_share": 0.355,
+  "topk_suppressed_structure_frac": 0.9147,
+  "topk_suppressed_category_mix": {
+    "loop": {
+      "punct/symbol": 690,
+      "mixed/subword": 62,
+      "whitespace": 26,
+      "single_letter": 1,
+      "Capitalized_word": 1
+    },
+    "clean_wrong": {
+      "punct/symbol": 635,
+      "mixed/subword": 63,
+      "whitespace": 18,
+      "word": 3,
+      "single_letter": 1
+    }
+  },
+  "loop_minus_clean_final_quartile": -0.0049,
+  "gate": {
+    "coherent_topk_thr": 0.66,
+    "grow_thr": 0.05,
+    "base_rate_struct": 0.2983,
+    "enrichment_topk": 3.066,
+    "enrichment_mass": 1.19,
+    "coherent": true,
+    "growing": false,
+    "flattening": false,
+    "verdict": "MIXED",
+    "note": "coherent uses top-k structure enrichment over vocab base-rate (B25-comparable), NOT raw mass share (base-rate dominated). enrichment_topk>=~2 = real structure signature; ~1 = flattening."
+  },
+  "per_item": [
+    {
+      "doc_id": 13,
+      "kind": "loop",
+      "gen_len": 512,
+      "struct_frac_mean": 0.3795
+    },
+    {
+      "doc_id": 37,
+      "kind": "loop",
+      "gen_len": 102,
+      "struct_frac_mean": 0.369
+    },
+    {
+      "doc_id": 62,
+      "kind": "loop",
+      "gen_len": 223,
+      "struct_frac_mean": 0.3656
+    },
+    {
+      "doc_id": 74,
+      "kind": "loop",
+      "gen_len": 103,
+      "struct_frac_mean": 0.472
+    },
+    {
+      "doc_id": 76,
+      "kind": "loop",
+      "gen_len": 116,
+      "struct_frac_mean": 0.3864
+    },
+    {
+      "doc_id": 88,
+      "kind": "loop",
+      "gen_len": 89,
+      "struct_frac_mean": 0.4225
+    },
+    {
+      "doc_id": 95,
+      "kind": "loop",
+      "gen_len": 59,
+      "struct_frac_mean": 0.3984
+    },
+    {
+      "doc_id": 116,
+      "kind": "loop",
+      "gen_len": 46,
+      "struct_frac_mean": 0.4181
+    },
+    {
+      "doc_id": 119,
+      "kind": "loop",
+      "gen_len": 512,
+      "struct_frac_mean": 0.4285
+    },
+    {
+      "doc_id": 129,
+      "kind": "loop",
+      "gen_len": 512,
+      "struct_frac_mean": 0.3955
+    },
+    {
+      "doc_id": 132,
+      "kind": "loop",
+      "gen_len": 60,
+      "struct_frac_mean": 0.4273
+    },
+    {
+      "doc_id": 135,
+      "kind": "loop",
+      "gen_len": 40,
+      "struct_frac_mean": 0.3559
+    },
+    {
+      "doc_id": 153,
+      "kind": "loop",
+      "gen_len": 512,
+      "struct_frac_mean": 0.3705
+    },
+    {
+      "doc_id": 161,
+      "kind": "loop",
+      "gen_len": 512,
+      "struct_frac_mean": 0.4163
+    },
+    {
+      "doc_id": 186,
+      "kind": "loop",
+      "gen_len": 115,
+      "struct_frac_mean": 0.359
+    },
+    {
+      "doc_id": 205,
+      "kind": "loop",
+      "gen_len": 512,
+      "struct_frac_mean": 0.4043
+    },
+    {
+      "doc_id": 234,
+      "kind": "loop",
+      "gen_len": 43,
+      "struct_frac_mean": 0.5028
+    },
+    {
+      "doc_id": 243,
+      "kind": "loop",
+      "gen_len": 97,
+      "struct_frac_mean": 0.4755
+    },
+    {
+      "doc_id": 256,
+      "kind": "loop",
+      "gen_len": 512,
+      "struct_frac_mean": 0.3652
+    },
+    {
+      "doc_id": 267,
+      "kind": "loop",
+      "gen_len": 83,
+      "struct_frac_mean": 0.3595
+    },
+    {
+      "doc_id": 303,
+      "kind": "loop",
+      "gen_len": 72,
+      "struct_frac_mean": 0.3715
+    },
+    {
+      "doc_id": 322,
+      "kind": "loop",
+      "gen_len": 63,
+      "struct_frac_mean": 0.3703
+    },
+    {
+      "doc_id": 338,
+      "kind": "loop",
+      "gen_len": 88,
+      "struct_frac_mean": 0.4608
+    },
+    {
+      "doc_id": 359,
+      "kind": "loop",
+      "gen_len": 72,
+      "struct_frac_mean": 0.4012
+    },
+    {
+      "doc_id": 369,
+      "kind": "loop",
+      "gen_len": 124,
+      "struct_frac_mean": 0.4248
+    },
+    {
+      "doc_id": 386,
+      "kind": "loop",
+      "gen_len": 46,
+      "struct_frac_mean": 0.3536
+    },
+    {
+      "doc_id": 5,
+      "kind": "clean_wrong",
+      "gen_len": 56,
+      "struct_frac_mean": 0.4113
+    },
+    {
+      "doc_id": 7,
+      "kind": "clean_wrong",
+      "gen_len": 105,
+      "struct_frac_mean": 0.4204
+    },
+    {
+      "doc_id": 11,
+      "kind": "clean_wrong",
+      "gen_len": 86,
+      "struct_frac_mean": 0.4703
+    },
+    {
+      "doc_id": 12,
+      "kind": "clean_wrong",
+      "gen_len": 70,
+      "struct_frac_mean": 0.4299
+    },
+    {
+      "doc_id": 14,
+      "kind": "clean_wrong",
+      "gen_len": 90,
+      "struct_frac_mean": 0.3769
+    },
+    {
+      "doc_id": 26,
+      "kind": "clean_wrong",
+      "gen_len": 41,
+      "struct_frac_mean": 0.4049
+    },
+    {
+      "doc_id": 43,
+      "kind": "clean_wrong",
+      "gen_len": 105,
+      "struct_frac_mean": 0.4374
+    },
+    {
+      "doc_id": 45,
+      "kind": "clean_wrong",
+      "gen_len": 144,
+      "struct_frac_mean": 0.4898
+    },
+    {
+      "doc_id": 70,
+      "kind": "clean_wrong",
+      "gen_len": 118,
+      "struct_frac_mean": 0.4429
+    },
+    {
+      "doc_id": 78,
+      "kind": "clean_wrong",
+      "gen_len": 89,
+      "struct_frac_mean": 0.4251
+    },
+    {
+      "doc_id": 81,
+      "kind": "clean_wrong",
+      "gen_len": 166,
+      "struct_frac_mean": 0.4349
+    },
+    {
+      "doc_id": 84,
+      "kind": "clean_wrong",
+      "gen_len": 194,
+      "struct_frac_mean": 0.3703
+    },
+    {
+      "doc_id": 93,
+      "kind": "clean_wrong",
+      "gen_len": 58,
+      "struct_frac_mean": 0.3821
+    },
+    {
+      "doc_id": 98,
+      "kind": "clean_wrong",
+      "gen_len": 512,
+      "struct_frac_mean": 0.4029
+    },
+    {
+      "doc_id": 100,
+      "kind": "clean_wrong",
+      "gen_len": 164,
+      "struct_frac_mean": 0.3708
+    },
+    {
+      "doc_id": 101,
+      "kind": "clean_wrong",
+      "gen_len": 76,
+      "struct_frac_mean": 0.4071
+    },
+    {
+      "doc_id": 107,
+      "kind": "clean_wrong",
+      "gen_len": 75,
+      "struct_frac_mean": 0.379
+    },
+    {
+      "doc_id": 125,
+      "kind": "clean_wrong",
+      "gen_len": 36,
+      "struct_frac_mean": 0.425
+    },
+    {
+      "doc_id": 133,
+      "kind": "clean_wrong",
+      "gen_len": 82,
+      "struct_frac_mean": 0.4795
+    },
+    {
+      "doc_id": 137,
+      "kind": "clean_wrong",
+      "gen_len": 93,
+      "struct_frac_mean": 0.4231
+    },
+    {
+      "doc_id": 139,
+      "kind": "clean_wrong",
+      "gen_len": 35,
+      "struct_frac_mean": 0.3989
+    },
+    {
+      "doc_id": 143,
+      "kind": "clean_wrong",
+      "gen_len": 120,
+      "struct_frac_mean": 0.3564
+    },
+    {
+      "doc_id": 146,
+      "kind": "clean_wrong",
+      "gen_len": 67,
+      "struct_frac_mean": 0.4127
+    },
+    {
+      "doc_id": 147,
+      "kind": "clean_wrong",
+      "gen_len": 54,
+      "struct_frac_mean": 0.3419
+    }
+  ],
+  "read": "verdict COMMITMENT_SUPPORTED => structure-suppression is coherent (top-k structure enrichment >=~2x the vocab base-rate, i.e. struct_topk_frac>=0.66) AND grows along the generation (Q_last-Q_first>=0.05) => B17 commitment frame earns its number (enters via ledger). FLATTENING_NO_STRUCTURE => top-k near base-rate (no structure signature) => B17 refuted. MIXED => structure signature present in the tail but not decisively coherent-AND-growing => stays out of the draft. NOTE: mass_share is base-rate dominated (~70% of vocab is content) \u2014 do NOT gate on it. loop_minus_clean_final_quartile>0 => loops de-structure more than clean-wrong at the end (consistent with 'never commits to a close').",
+  "method": "nnsight real-forward output-patch (r_layer @ o_proj.output == install_lofit_hooks) over REAL adapter generation positions; structure/content via logit_lens categorize."
+}

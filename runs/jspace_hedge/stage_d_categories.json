@@ -1,0 +1,181 @@
+{
+  "30": {
+    "recovery": 0.0,
+    "structure_fraction": 0.8,
+    "counts": {
+      "single_char_latin": 4,
+      "punct_markup": 2,
+      "non_latin_script": 2,
+      "latin_multichar": 2
+    },
+    "latin_multichar": [
+      "<span>",
+      "<em>"
+    ]
+  },
+  "31": {
+    "recovery": 0.0,
+    "structure_fraction": 0.8,
+    "counts": {
+      "single_char_latin": 6,
+      "punct_markup": 2,
+      "non_latin_script": 0,
+      "latin_multichar": 2
+    },
+    "latin_multichar": [
+      " own",
+      " la"
+    ]
+  },
+  "32": {
+    "recovery": 0.0,
+    "structure_fraction": 0.5,
+    "counts": {
+      "single_char_latin": 1,
+      "punct_markup": 3,
+      "non_latin_script": 1,
+      "latin_multichar": 5
+    },
+    "latin_multichar": [
+      " own",
+      "laden",
+      "oung",
+      " tác",
+      " presidency"
+    ]
+  },
+  "33": {
+    "recovery": 0.0,
+    "structure_fraction": 0.6,
+    "counts": {
+      "single_char_latin": 4,
+      "punct_markup": 2,
+      "non_latin_script": 0,
+      "latin_multichar": 4
+    },
+    "latin_multichar": [
+      " la",
+      "alas",
+      "ness",
+      "eper"
+    ]
+  },
+  "34": {
+    "recovery": 0.0,
+    "structure_fraction": 0.5,
+    "counts": {
+      "single_char_latin": 1,
+      "punct_markup": 1,
+      "non_latin_script": 3,
+      "latin_multichar": 5
+    },
+    "latin_multichar": [
+      " la",
+      " ambi",
+      "appers",
+      "ctions",
+      "abit"
+    ]
+  },
+  "36": {
+    "recovery": 0.0,
+    "structure_fraction": 0.7,
+    "counts": {
+      "single_char_latin": 5,
+      "punct_markup": 1,
+      "non_latin_script": 1,
+      "latin_multichar": 3
+    },
+    "latin_multichar": [
+      " que",
+      " la",
+      " de"
+    ]
+  },
+  "37": {
+    "recovery": 0.0,
+    "structure_fraction": 0.7,
+    "counts": {
+      "single_char_latin": 2,
+      "punct_markup": 4,
+      "non_latin_script": 1,
+      "latin_multichar": 3
+    },
+    "latin_multichar": [
+      " de",
+      " la",
+      " own"
+    ]
+  },
+  "38": {
+    "recovery": 0.0,
+    "structure_fraction": 0.6,
+    "counts": {
+      "single_char_latin": 3,
+      "punct_markup": 2,
+      "non_latin_script": 1,
+      "latin_multichar": 4
+    },
+    "latin_multichar": [
+      "ing",
+      "reate",
+      " nhàng",
+      "etable"
+    ]
+  },
+  "39": {
+    "recovery": 0.0,
+    "structure_fraction": 0.9,
+    "counts": {
+      "single_char_latin": 1,
+      "punct_markup": 2,
+      "non_latin_script": 6,
+      "latin_multichar": 1
+    },
+    "latin_multichar": [
+      " nhàng"
+    ]
+  },
+  "40": {
+    "recovery": 0.0,
+    "structure_fraction": 0.9,
+    "counts": {
+      "single_char_latin": 2,
+      "punct_markup": 6,
+      "non_latin_script": 1,
+      "latin_multichar": 1
+    },
+    "latin_multichar": [
+      " Whilst"
+    ]
+  },
+  "49": {
+    "recovery": 0.0,
+    "structure_fraction": 0.6,
+    "counts": {
+      "single_char_latin": 2,
+      "punct_markup": 3,
+      "non_latin_script": 1,
+      "latin_multichar": 4
+    },
+    "latin_multichar": [
+      " de",
+      " own",
+      "ing",
+      "igual"
+    ]
+  },
+  "55": {
+    "recovery": 0.5,
+    "structure_fraction": 0.9,
+    "counts": {
+      "single_char_latin": 4,
+      "punct_markup": 1,
+      "non_latin_script": 4,
+      "latin_multichar": 1
+    },
+    "latin_multichar": [
+      "oit"
+    ]
+  }
+}

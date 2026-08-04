@@ -1,0 +1,48 @@
+{
+  "C": 0.03,
+  "pca": 200,
+  "n_cells": 48,
+  "null_band": 0.0625,
+  "null_ci": [
+    0.03990871947279914,
+    0.06061871553640484
+  ],
+  "check_cos_whit_theta_v": 0.0009862263334039268,
+  "check_ok": true,
+  "raw_cos_probe_vinf_signed": {
+    "mean": 0.21931263431373824,
+    "median": 0.20342826241031006,
+    "min": -0.04370563123762581,
+    "max": 0.4818650266087086,
+    "absmean": 0.2213383505026716
+  },
+  "raw_cos_probe_theta_abs": {
+    "mean": 0.06562420807840694,
+    "median": 0.04546273867057966,
+    "min": 0.0066453399345562415,
+    "max": 0.2094768517968557,
+    "absmean": 0.06562420807840694
+  },
+  "whit_cos_probe_vinf_signed": {
+    "mean": 0.10931096887838243,
+    "median": 0.1105920481241865,
+    "min": 0.05294807878747901,
+    "max": 0.1743471408595044,
+    "absmean": 0.10931096887838243
+  },
+  "whit_cos_probe_theta_abs": {
+    "mean": 0.054817980617628416,
+    "median": 0.0487473449950366,
+    "min": 0.002475804044116532,
+    "max": 0.2138545093930052,
+    "absmean": 0.054817980617628416
+  },
+  "pooled_raw_vinf": 0.2090099802530175,
+  "pooled_raw_theta_abs": 0.008276454316742947,
+  "pc_baseline": {
+    "cos_pc1_vinf": 0.5501199937205885,
+    "cos_probe_pc1": 0.13435230231410436
+  },
+  "fold_stability": 0.8868704652735561,
+  "verdict": "DOES NOT CLEANLY CLOSE: check the per-head vs pooled, the PC-baseline, and fold-stability"
+}

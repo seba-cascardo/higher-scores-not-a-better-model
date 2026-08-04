@@ -1,0 +1,106 @@
+{
+  "bootstrap_reps": 200000,
+  "seed": 0,
+  "resampling": "paired by doc_id (items resampled together across arms)",
+  "supersedes": "runs/oq1_functional_axis/frac_ci_bootstrap.json (C-5, independent binomial per arm)",
+  "per_task": [
+    {
+      "task": "arc_challenge",
+      "metric": "acc",
+      "n": 400,
+      "base": 0.495,
+      "v7mc": 0.8475,
+      "align_r256": 0.71,
+      "null_adapter": 0.495,
+      "frac_point": 0.6099290780141843,
+      "frac_ci95_paired": [
+        0.49618320610687017,
+        0.72781158714703
+      ],
+      "frac_median": 0.610062893081761,
+      "p_frac_gt_0.5": 0.96931,
+      "item_corr_base_align": 0.4564294320800344,
+      "item_corr_base_v7mc": 0.3087038844098915,
+      "degenerate_replicates": 0,
+      "sources": {
+        "base": "runs/eval_bulletproof/R1_base\\__workspace__hf_cache__models--google--gemma-4-31b-it__snapshots__3548789868c5356dbf307c98e6f609007b82b3eb\\samples_arc_challenge_2026-06-29T14-22-43.106096.jsonl",
+        "align": "runs/eval_bulletproof/R1_align/runs__align_lora_control__r256\\samples_arc_challenge_2026-06-29T15-07-22.946259.jsonl",
+        "v7mc": "runs/eval_bulletproof/R1_v7mc.json"
+      }
+    },
+    {
+      "task": "hellaswag",
+      "metric": "acc",
+      "n": 400,
+      "base": 0.49,
+      "v7mc": 0.7125,
+      "align_r256": 0.5325,
+      "null_adapter": 0.49,
+      "frac_point": 0.19101123595505606,
+      "frac_ci95_paired": [
+        0.03157894736842084,
+        0.34374999999999994
+      ],
+      "frac_median": 0.19047619047619058,
+      "p_frac_gt_0.5": 8e-05,
+      "item_corr_base_align": 0.7279847992945729,
+      "item_corr_base_v7mc": 0.4568998712169398,
+      "degenerate_replicates": 0,
+      "sources": {
+        "base": "runs/eval_bulletproof/R1_base\\__workspace__hf_cache__models--google--gemma-4-31b-it__snapshots__3548789868c5356dbf307c98e6f609007b82b3eb\\samples_hellaswag_2026-06-29T14-22-43.106096.jsonl",
+        "align": "runs/eval_bulletproof/R1_align/runs__align_lora_control__r256\\samples_hellaswag_2026-06-29T15-07-22.946259.jsonl",
+        "v7mc": "runs/eval_bulletproof/R1_v7mc.json"
+      }
+    },
+    {
+      "task": "winogrande",
+      "metric": "acc",
+      "n": 400,
+      "base": 0.6575,
+      "v7mc": 0.8475,
+      "align_r256": 0.775,
+      "null_adapter": 0.6575,
+      "frac_point": 0.618421052631579,
+      "frac_ci95_paired": [
+        0.38888888888888873,
+        0.8507462686567163
+      ],
+      "frac_median": 0.618421052631579,
+      "p_frac_gt_0.5": 0.845055,
+      "item_corr_base_align": 0.3049904316639798,
+      "item_corr_base_v7mc": 0.2506938127979849,
+      "degenerate_replicates": 0,
+      "sources": {
+        "base": "runs/eval_bulletproof/R1_base\\__workspace__hf_cache__models--google--gemma-4-31b-it__snapshots__3548789868c5356dbf307c98e6f609007b82b3eb\\samples_winogrande_2026-06-29T14-22-43.106096.jsonl",
+        "align": "runs/eval_bulletproof/R1_align/runs__align_lora_control__r256\\samples_winogrande_2026-06-29T15-07-22.946259.jsonl",
+        "v7mc": "runs/eval_bulletproof/R1_v7mc.json"
+      }
+    },
+    {
+      "task": "truthfulqa_mc1",
+      "metric": "acc",
+      "n": 400,
+      "base": 0.4375,
+      "v7mc": 0.81,
+      "align_r256": 0.7775,
+      "null_adapter": 0.4375,
+      "frac_point": 0.9127516778523488,
+      "frac_ci95_paired": [
+        0.79375,
+        1.0460526315789473
+      ],
+      "frac_median": 0.9127516778523491,
+      "p_frac_gt_0.5": 1.0,
+      "item_corr_base_align": 0.386968333861388,
+      "item_corr_base_v7mc": 0.3500555062152927,
+      "degenerate_replicates": 0,
+      "sources": {
+        "base": "runs/eval_bulletproof/R1_base\\__workspace__hf_cache__models--google--gemma-4-31b-it__snapshots__3548789868c5356dbf307c98e6f609007b82b3eb\\samples_truthfulqa_mc1_2026-06-29T14-22-43.106096.jsonl",
+        "align": "runs/eval_bulletproof/R1_align/runs__align_lora_control__r256\\samples_truthfulqa_mc1_2026-06-29T15-07-22.946259.jsonl",
+        "v7mc": "runs/eval_bulletproof/R1_v7mc.json"
+      }
+    }
+  ],
+  "metric_override": "acc",
+  "note": "robustness arm: identical paired bootstrap on plain accuracy. Winogrande/TruthfulQA define no acc_norm and are unchanged by construction; ARC and HellaSwag are the informative rows."
+}

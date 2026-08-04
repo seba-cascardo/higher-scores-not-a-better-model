@@ -1,0 +1,105 @@
+{
+  "task": "winogrande",
+  "metric": "acc",
+  "n": 400,
+  "base_acc": 0.66,
+  "mc_acc": 0.8575,
+  "lift": 0.1975,
+  "n_base_wrong": 136,
+  "fix_rate_overall": 0.7279411764705882,
+  "fix_by_gold_rank": {
+    "1": {
+      "n": 136,
+      "fix_rate": 0.7279411764705882,
+      "ci": [
+        0.6544117647058824,
+        0.8014705882352942
+      ]
+    },
+    "2": {
+      "n": 0,
+      "fix_rate": NaN,
+      "ci": [
+        NaN,
+        NaN
+      ]
+    },
+    "3+": {
+      "n": 0,
+      "fix_rate": NaN,
+      "ci": [
+        NaN,
+        NaN
+      ]
+    }
+  },
+  "fix_by_zgap_tercile": {
+    "low(<q33)": {
+      "n": 136,
+      "fix_rate": 0.7279411764705882,
+      "ci": [
+        0.6544117647058824,
+        0.8014705882352942
+      ]
+    },
+    "mid": {
+      "n": 0,
+      "fix_rate": NaN,
+      "ci": [
+        NaN,
+        NaN
+      ]
+    },
+    "high(>q67)": {
+      "n": 0,
+      "fix_rate": NaN,
+      "ci": [
+        NaN,
+        NaN
+      ]
+    }
+  },
+  "corr_fix_zgap": -0.07468714586375766,
+  "corr_fix_rank": NaN,
+  "q2_cot": {
+    "cot_right": {
+      "n": 124,
+      "fix_rate": [
+        0.7580645161290323,
+        0.6854838709677419,
+        0.8306451612903226
+      ]
+    },
+    "cot_wrong": {
+      "n": 12,
+      "fix_rate": [
+        0.4166666666666667,
+        0.16666666666666666,
+        0.6666666666666666
+      ]
+    }
+  },
+  "q2_burial_matched": {
+    "zgap_band": [
+      2.0,
+      2.0
+    ],
+    "cot_right": {
+      "n": 122,
+      "fix_rate": 0.7540983606557377,
+      "ci": [
+        0.680327868852459,
+        0.8278688524590164
+      ]
+    },
+    "cot_wrong": {
+      "n": 12,
+      "fix_rate": 0.4166666666666667,
+      "ci": [
+        0.16666666666666666,
+        0.6666666666666666
+      ]
+    }
+  },
+  "power_note": "ARC base CoT acc ~0.97 -> only 12 base-wrong CoT-wrong items; the 'hard' cell is underpowered. Test 'does not replicate on hard' on GPQA cold-MC (options-present), stratified by arbiter, on the pod."
+}

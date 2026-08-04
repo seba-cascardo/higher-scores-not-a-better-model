@@ -1,0 +1,72 @@
+{
+  "task": "arc_challenge",
+  "arm": "mc",
+  "neutral_premise": "Answer:",
+  "results": {
+    "all_naive": {
+      "auc": 0.9056761268781303,
+      "ci": [
+        0.8823038397328882,
+        0.9266070336391438
+      ],
+      "n": 400
+    },
+    "all_pmi": {
+      "auc": 0.8722871452420701,
+      "ci": [
+        0.8448707256046706,
+        0.896580483736447
+      ],
+      "n": 400
+    },
+    "all_ans": {
+      "auc": 0.5851419031719532,
+      "ci": [
+        0.5496246872393661,
+        0.6198859649122807
+      ],
+      "n": 400
+    },
+    "bw_naive": {
+      "auc": 0.4840182648401826,
+      "ci": [
+        0.4292237442922374,
+        0.54337899543379
+      ],
+      "n": 73
+    },
+    "bw_pmi": {
+      "auc": 0.6666666666666666,
+      "ci": [
+        0.5844748858447488,
+        0.7442922374429224
+      ],
+      "n": 73
+    },
+    "bw_ans": {
+      "auc": 0.45662100456621,
+      "ci": [
+        0.3835616438356164,
+        0.5343607305936067
+      ],
+      "n": 73
+    },
+    "br_naive": {
+      "auc": 1.0,
+      "ci": [
+        1.0,
+        1.0
+      ],
+      "n": 327
+    },
+    "br_pmi": {
+      "auc": 0.9182839632277835,
+      "ci": [
+        0.8950024183985521,
+        0.9387770704612121
+      ],
+      "n": 327
+    },
+    "verdict": "PRESENT-BUT-SWAMPED: residual AUC=0.667 (CI_lo 0.584 > 0.55) >> chance -> the gold-tracking signal IS on the channel, merely out-ranked by fluency/length. The cold-MC failure is miscalibration/surface-form, not an empty readout. (Weaker claim for the paper.)"
+  }
+}

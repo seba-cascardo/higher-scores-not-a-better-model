@@ -1,0 +1,57 @@
+{
+  "population": "198 base-wrong ARC (arbiter_arc_sc_k3 subset)",
+  "N": 198,
+  "letter_emit": {
+    "acc": 0.9697,
+    "n_fail": 6,
+    "fail_doc_ids": [
+      54,
+      128,
+      222,
+      290,
+      319,
+      330
+    ]
+  },
+  "sc_cot_k3": {
+    "acc": 0.9697,
+    "n_fail": 6,
+    "fail_doc_ids": [
+      54,
+      189,
+      222,
+      290,
+      319,
+      330
+    ]
+  },
+  "overlap": {
+    "both_fail": [
+      54,
+      222,
+      290,
+      319,
+      330
+    ],
+    "n_both_fail": 5,
+    "letter_only_fail_cot_rescues": [
+      128
+    ],
+    "n_letter_only": 1,
+    "cot_only_fail_letter_rescues": [
+      189
+    ],
+    "n_cot_only": 1,
+    "either_fail": 7
+  },
+  "oracle_cascade": {
+    "acc": 0.9747,
+    "beats_0.97": true,
+    "gain_over_letter_pp": 0.51
+  },
+  "mcnemar_exact_2sided": {
+    "b_letterwrong_cotright": 1,
+    "c_letterright_cotwrong": 1,
+    "p_value": 1.0
+  }
+}

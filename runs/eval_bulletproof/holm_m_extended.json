@@ -1,0 +1,96 @@
+{
+  "family_m": 6,
+  "family_note": "McNemar-Holm family = 6 MC tasks; gsm8k and lambada (the other 2 pre-registered tests) are generative (exact-match/perplexity), not paired-MC, so they carry no McNemar p and are excluded from this family.",
+  "counts": {
+    "arc_challenge": {
+      "b": 11,
+      "c": 151,
+      "n_discordant": 162,
+      "sign": "lift(+)"
+    },
+    "truthfulqa_mc1": {
+      "b": 6,
+      "c": 155,
+      "n_discordant": 161,
+      "sign": "lift(+)"
+    },
+    "winogrande": {
+      "b": 23,
+      "c": 99,
+      "n_discordant": 122,
+      "sign": "lift(+)"
+    },
+    "hellaswag": {
+      "b": 39,
+      "c": 107,
+      "n_discordant": 146,
+      "sign": "lift(+)"
+    },
+    "mmlu": {
+      "b": 204,
+      "c": 120,
+      "n": 1995,
+      "n_discordant": 324,
+      "sign": "spillover(-)"
+    },
+    "gpqa_cold": {
+      "b": 22,
+      "c": 21,
+      "n": 198,
+      "n_discordant": 43,
+      "sign": "spillover(-)"
+    }
+  },
+  "pvals_raw": {
+    "arc_challenge": 1.316177885315771e-32,
+    "truthfulqa_mc1": 1.5660589055377066e-38,
+    "winogrande": 1.9904987027435397e-12,
+    "hellaswag": 1.6312842830886965e-08,
+    "mmlu": 3.556774876395799e-06,
+    "gpqa_cold": 1.0
+  },
+  "holm_m6": {
+    "truthfulqa_mc1": {
+      "p_raw": 1.5660589055377066e-38,
+      "holm_factor": 6,
+      "p_holm": 9.39635343322624e-38,
+      "reject_0.05": true
+    },
+    "arc_challenge": {
+      "p_raw": 1.316177885315771e-32,
+      "holm_factor": 5,
+      "p_holm": 6.580889426578855e-32,
+      "reject_0.05": true
+    },
+    "winogrande": {
+      "p_raw": 1.9904987027435397e-12,
+      "holm_factor": 4,
+      "p_holm": 7.961994810974159e-12,
+      "reject_0.05": true
+    },
+    "hellaswag": {
+      "p_raw": 1.6312842830886965e-08,
+      "holm_factor": 3,
+      "p_holm": 4.893852849266089e-08,
+      "reject_0.05": true
+    },
+    "mmlu": {
+      "p_raw": 3.556774876395799e-06,
+      "holm_factor": 2,
+      "p_holm": 7.113549752791598e-06,
+      "reject_0.05": true
+    },
+    "gpqa_cold": {
+      "p_raw": 1.0,
+      "holm_factor": 1,
+      "p_holm": 1.0,
+      "reject_0.05": false
+    }
+  },
+  "headline_max_raw_p": 1.6312842830886965e-08,
+  "sensitivity_m8": {
+    "note": "Holm multiplies the smallest p by m and the k-th smallest by m-k+1; the 4 headline lifts are the smallest p's, so even at m=8 the largest headline corrected p <= headline_max_raw_p * 8.",
+    "headline_corrected_p_upper_bound_at_m8": 1.3050274264709572e-07,
+    "all_headline_reject_at_m8": true
+  }
+}

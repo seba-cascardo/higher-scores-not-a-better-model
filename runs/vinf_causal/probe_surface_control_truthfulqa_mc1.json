@@ -1,0 +1,14 @@
+{
+  "task": "truthfulqa_mc1",
+  "n_base_wrong": 197,
+  "surface_dims": 8,
+  "surface_auc_base_wrong": 1.0,
+  "surface_auc_ci": [
+    1.0,
+    1.0
+  ],
+  "surface_null": 0.5191397849462366,
+  "anchor_activation": 0.955,
+  "gap": -0.04500000000000004,
+  "verdict": "CONTAMINATED: surface features alone reach 1.000, close to the activation probe 0.955 (gap -0.045) -> much of the 0.955 may be surface-form read richer from activations. Discount the channel claim / report the surface-matched probe."
+}

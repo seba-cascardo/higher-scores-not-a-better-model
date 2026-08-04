@@ -1,0 +1,54 @@
+{
+  "task": "truthfulqa_mc1",
+  "metric": "acc_norm",
+  "n": 400,
+  "neutral_premise": "A:",
+  "chance": 0.22933360389610388,
+  "thresholds": {
+    "pmi_surface_frac": 0.3,
+    "answer_prior_margin": 0.05
+  },
+  "naive": {
+    "base": 0.4925,
+    "mc": 0.85,
+    "lift": 0.3575,
+    "ci": [
+      0.3075,
+      0.40750000000000003
+    ]
+  },
+  "pmi": {
+    "base": 0.41,
+    "mc": 0.6525,
+    "lift": 0.2425,
+    "ci": [
+      0.18750000000000006,
+      0.3025
+    ],
+    "pmi_frac_of_naive": 0.6783216783216783
+  },
+  "choices_only": {
+    "base": 0.35,
+    "base_ci": [
+      0.305,
+      0.4
+    ],
+    "mc": 0.5725,
+    "mc_ci": [
+      0.525,
+      0.62
+    ],
+    "lift": 0.22250000000000003,
+    "lift_ci": [
+      0.16750000000000004,
+      0.2725
+    ]
+  },
+  "verdicts": {
+    "surface_form": false,
+    "answer_prior": true,
+    "A": "NOT surface-form  (PMI retains 68% of the naive lift, >= 30% threshold)",
+    "B": "ANSWER-PRIOR  (mc lifts choices-only acc by +0.2225 >= 0.05 and CI_lo +0.1675 > 0 -> the adapter sharpens which option 'looks like an answer', question-independent)",
+    "overall": "LIFT IS (PARTLY) SURFACE-FORM / ANSWER-PRIOR, not question-conditional knowledge"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "checkpoint": "checkpoints/v7_5_lofit_baked",
+  "tasks": {
+    "gsm8k": {
+      "accuracy": 0.17,
+      "n": 200
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "config": {
+    "n_struct_tokens": 88,
+    "d_model": 5376,
+    "subspace_rank_r": 78,
+    "kept_energy_cover": 0.9991117119789124,
+    "energy_cover_target": 0.999,
+    "k_null": 200,
+    "seed": 0,
+    "n_heads_used": 48,
+    "head_dim": 256
+  },
+  "E3_struct_subspace_energy": {
+    "E_struct_aggregate_R": 0.023028358817100525,
+    "null_mean": 0.014245986327972386,
+    "null_std": 0.0021023944966051078,
+    "null_expectation_r_over_d": 0.014508928571428572,
+    "z_R": 4.177319006166392,
+    "per_head_E_struct_write": {
+      "mean": 0.01568900788940179,
+      "med": 0.01308768056333065,
+      "min": 0.005871519446372986,
+      "max": 0.058825843036174774,
+      "n": 48
+    },
+    "per_head_E_struct_v_inf_write": {
+      "mean": 0.017984933093733464,
+      "med": 0.013177631888538599,
+      "min": 0.003755345940589905,
+      "max": 0.0763418972492218,
+      "n": 48
+    },
+    "per_head_E_struct_v_ret_write": {
+      "mean": 0.0213070680523136,
+      "med": 0.012255250010639429,
+      "min": 0.004347406327724457,
+      "max": 0.10695996135473251,
+      "n": 48
+    }
+  },
+  "harness_viability_readout": {
+    "frac_nonstructural_R": 0.9769716411828995,
+    "cos_rperp_v_inf": 0.08369474112987518,
+    "cos_rperp_v_ret": 0.0596788227558136,
+    "cos_R_v_inf_reference": 0.08466573059558868,
+    "cos_R_v_ret_reference": 0.05893326550722122
+  }
+}

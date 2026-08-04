@@ -1,0 +1,1942 @@
+{
+  "predictions_fixed_before_running": {
+    "P1": "TQA, plain-CE arms: d_distractor > 0 and margin ~0 or <0",
+    "P2": "TQA, contrastive arm: margin clearly greater than plain-CE",
+    "P3": "HSwag, plain-CE arms: margin positive"
+  },
+  "distractor_identity": "fixed by the BASE (highest-ranked non-gold option)",
+  "metric": "raw log-prob (not length-normalised); acc_* here are raw, not acc_norm",
+  "arms": {
+    "Gemma contrastive canonical": {
+      "family": "Gemma",
+      "objective": "contrastive",
+      "n_seeds": 1,
+      "base": "runs/e1_plain_ce/eval_base.json",
+      "arms": [
+        "runs/e1_plain_ce/eval_contrastive_canonical.json"
+      ],
+      "per_task": {
+        "truthfulqa_mc1": {
+          "d_correct": {
+            "mean": 3.438070678114891,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.4622289434046125,
+            "per_seed": [
+              3.438070678114891
+            ]
+          },
+          "d_distractor": {
+            "mean": -63.22511423587799,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.6469819743602403,
+            "per_seed": [
+              -63.22511423587799
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": -45.91961626529694,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.6962425809398969,
+            "per_seed": [
+              -45.91961626529694
+            ]
+          },
+          "margin": {
+            "mean": 66.66318491399288,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 2.2630391530102956,
+            "per_seed": [
+              66.66318491399288
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": 49.35768694341183,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 2.3068221832702624,
+            "per_seed": [
+              49.35768694341183
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": 63.67241051025429,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 2.0666817876035166,
+            "per_seed": [
+              63.67241051025429
+            ]
+          },
+          "margin_base_right": {
+            "mean": 71.5821191392626,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 2.8141460402252148,
+            "per_seed": [
+              71.5821191392626
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 62.837347183227536,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 3.359105609543568,
+            "per_seed": [
+              62.837347183227536
+            ]
+          },
+          "sign_flips_across_base_correctness": false,
+          "n_items": 400,
+          "n_seeds": 1,
+          "frac_distractor_up": 0.065,
+          "frac_correct_up": 0.6225,
+          "frac_margin_up": 0.92,
+          "acc_base_raw": 0.4375,
+          "acc_arm_raw": 0.8025
+        },
+        "hellaswag": {
+          "d_correct": {
+            "mean": -0.3878125,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.7853910307452676,
+            "per_seed": [
+              -0.3878125
+            ]
+          },
+          "d_distractor": {
+            "mean": -34.10296875,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.4750414106923455,
+            "per_seed": [
+              -34.10296875
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": -19.40546875,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.5378567475727,
+            "per_seed": [
+              -19.40546875
+            ]
+          },
+          "margin": {
+            "mean": 33.71515625,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 2.0521986724463055,
+            "per_seed": [
+              33.71515625
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": 19.01765625,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 2.0521387798010116,
+            "per_seed": [
+              19.01765625
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": 38.82890625,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.807588690969829,
+            "per_seed": [
+              38.82890625
+            ]
+          },
+          "margin_base_right": {
+            "mean": 33.51955128205128,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 2.7325173685623243,
+            "per_seed": [
+              33.51955128205128
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 33.90121951219512,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 3.052546831751153,
+            "per_seed": [
+              33.90121951219512
+            ]
+          },
+          "sign_flips_across_base_correctness": false,
+          "n_items": 400,
+          "n_seeds": 1,
+          "frac_distractor_up": 0.1375,
+          "frac_correct_up": 0.57,
+          "frac_margin_up": 0.8275,
+          "acc_base_raw": 0.4875,
+          "acc_arm_raw": 0.715
+        },
+        "arc_challenge": {
+          "d_correct": {
+            "mean": 17.467580851316452,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.0098775059764231,
+            "per_seed": [
+              17.467580851316452
+            ]
+          },
+          "d_distractor": {
+            "mean": -19.16455078125,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.532438000497669,
+            "per_seed": [
+              -19.16455078125
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": -7.36162109375,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.4034555943578706,
+            "per_seed": [
+              -7.36162109375
+            ]
+          },
+          "margin": {
+            "mean": 36.632131632566455,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.5834346244913828,
+            "per_seed": [
+              36.632131632566455
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": 24.82920194506645,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.3744171222253074,
+            "per_seed": [
+              24.82920194506645
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": 32.753147257566454,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.4149155796819384,
+            "per_seed": [
+              32.753147257566454
+            ]
+          },
+          "margin_base_right": {
+            "mean": 31.83995892806929,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 2.0650010411835584,
+            "per_seed": [
+              31.83995892806929
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 41.23637599571079,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 2.348238003985838,
+            "per_seed": [
+              41.23637599571079
+            ]
+          },
+          "sign_flips_across_base_correctness": false,
+          "n_items": 400,
+          "n_seeds": 1,
+          "frac_distractor_up": 0.3375,
+          "frac_correct_up": 0.8675,
+          "frac_margin_up": 0.9175,
+          "acc_base_raw": 0.49,
+          "acc_arm_raw": 0.845
+        }
+      }
+    },
+    "Gemma plain-CE in-domain": {
+      "family": "Gemma",
+      "objective": "plain-CE",
+      "n_seeds": 3,
+      "base": "runs/e1_plain_ce/eval_base.json",
+      "arms": [
+        "runs/e1_plain_ce/eval_lifts_seed0.json",
+        "runs/e1_plain_ce/eval_lifts_seed1.json",
+        "runs/e1_plain_ce/eval_lifts_seed2.json"
+      ],
+      "per_task": {
+        "truthfulqa_mc1": {
+          "d_correct": {
+            "mean": 26.01629374126593,
+            "sd": 0.4135627355867702,
+            "n_seeds": 3,
+            "item_se": 0.8886885700531288,
+            "per_seed": [
+              26.06372253358364,
+              26.404097289443015,
+              25.58106140077114
+            ]
+          },
+          "d_distractor": {
+            "mean": 22.370886740684508,
+            "sd": 0.9123457906876269,
+            "n_seeds": 3,
+            "item_se": 0.5911456358225303,
+            "per_seed": [
+              22.645701193809508,
+              23.11423635005951,
+              21.35272267818451
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 25.439473497072854,
+            "sd": 0.7313237386150916,
+            "n_seeds": 3,
+            "item_se": 0.632260041198457,
+            "per_seed": [
+              25.716274847984312,
+              25.991992621421815,
+              24.61015302181244
+            ]
+          },
+          "margin": {
+            "mean": 3.6454070005814234,
+            "sd": 0.5088843841650469,
+            "n_seeds": 3,
+            "item_se": 1.0131884754920524,
+            "per_seed": [
+              3.418021339774132,
+              3.289860939383507,
+              4.228338722586631
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": 0.5768202441930771,
+            "sd": 0.3428180637251525,
+            "n_seeds": 3,
+            "item_se": 1.0287430182533484,
+            "per_seed": [
+              0.3474476855993271,
+              0.4121046680212021,
+              0.9709083789587021
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": -4.450551160959339,
+            "sd": 0.5791151859815458,
+            "n_seeds": 3,
+            "item_se": 0.961661223616387,
+            "per_seed": [
+              -4.79383077043768,
+              -4.775895994737034,
+              -3.7819267177033042
+            ]
+          },
+          "margin_base_right": {
+            "mean": -13.635316686630247,
+            "sd": 0.5045361358980585,
+            "n_seeds": 3,
+            "item_se": 0.8712316936530184,
+            "per_seed": [
+              -14.019750280380249,
+              -13.822197266987391,
+              -13.064002512523107
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 17.08596986841272,
+            "sd": 0.5469949367856896,
+            "n_seeds": 3,
+            "item_se": 0.9740199949148888,
+            "per_seed": [
+              16.980732599894207,
+              16.59923954433865,
+              17.677937461005317
+            ]
+          },
+          "sign_flips_across_base_correctness": true,
+          "n_items": 400,
+          "n_seeds": 3,
+          "frac_distractor_up": 0.9516666666666667,
+          "frac_correct_up": 0.8983333333333333,
+          "frac_margin_up": 0.5533333333333333,
+          "acc_base_raw": 0.4375,
+          "acc_arm_raw": 0.44583333333333336
+        },
+        "hellaswag": {
+          "d_correct": {
+            "mean": 49.463580729166665,
+            "sd": 0.6126996101485662,
+            "n_seeds": 3,
+            "item_se": 0.9149499002045055,
+            "per_seed": [
+              50.061015625,
+              48.8366796875,
+              49.493046875
+            ]
+          },
+          "d_distractor": {
+            "mean": 45.794999999999995,
+            "sd": 0.887493714216298,
+            "n_seeds": 3,
+            "item_se": 0.7410972188188046,
+            "per_seed": [
+              46.78421875,
+              45.06859375,
+              45.5321875
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 49.2003125,
+            "sd": 0.8025151654768334,
+            "n_seeds": 3,
+            "item_se": 0.83392176976357,
+            "per_seed": [
+              50.10828125,
+              48.5859375,
+              48.90671875
+            ]
+          },
+          "margin": {
+            "mean": 3.668580729166667,
+            "sd": 0.35271991840645683,
+            "n_seeds": 3,
+            "item_se": 0.9246504738751887,
+            "per_seed": [
+              3.276796875,
+              3.7680859375,
+              3.960859375
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": 0.26326822916666665,
+            "sd": 0.3169825488881713,
+            "n_seeds": 3,
+            "item_se": 0.977738650423731,
+            "per_seed": [
+              -0.047265625,
+              0.2507421875,
+              0.586328125
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": -6.282651909722222,
+            "sd": 0.8289869495007631,
+            "n_seeds": 3,
+            "item_se": 0.8699811968329542,
+            "per_seed": [
+              -7.228307291666666,
+              -5.6812890625,
+              -5.938359375
+            ]
+          },
+          "margin_base_right": {
+            "mean": -8.626095085470086,
+            "sd": 0.7864815972455154,
+            "n_seeds": 3,
+            "item_se": 0.947612521852184,
+            "per_seed": [
+              -9.521314102564103,
+              -8.046233974358975,
+              -8.31073717948718
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 15.363516260162603,
+            "sd": 0.32280731023007175,
+            "n_seeds": 3,
+            "item_se": 1.0364634685866438,
+            "per_seed": [
+              15.450609756097561,
+              15.00609756097561,
+              15.633841463414635
+            ]
+          },
+          "sign_flips_across_base_correctness": true,
+          "n_items": 400,
+          "n_seeds": 3,
+          "frac_distractor_up": 1.0,
+          "frac_correct_up": 1.0,
+          "frac_margin_up": 0.565,
+          "acc_base_raw": 0.4875,
+          "acc_arm_raw": 0.5091666666666667
+        },
+        "arc_challenge": {
+          "d_correct": {
+            "mean": 32.52838267008463,
+            "sd": 0.0492767969343173,
+            "n_seeds": 3,
+            "item_se": 0.7283015409085937,
+            "per_seed": [
+              32.477728271484374,
+              32.57615539550781,
+              32.53126434326172
+            ]
+          },
+          "d_distractor": {
+            "mean": 29.381321818033854,
+            "sd": 0.30001851153899284,
+            "n_seeds": 3,
+            "item_se": 0.5908317309542165,
+            "per_seed": [
+              29.67545959472656,
+              29.39275634765625,
+              29.07574951171875
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 32.98915384928385,
+            "sd": 0.2893282147647635,
+            "n_seeds": 3,
+            "item_se": 0.6625614201769746,
+            "per_seed": [
+              33.31811584472656,
+              32.87515869140625,
+              32.77418701171875
+            ]
+          },
+          "margin": {
+            "mean": 3.1470608520507812,
+            "sd": 0.32813561684300585,
+            "n_seeds": 3,
+            "item_se": 0.5808793652502068,
+            "per_seed": [
+              2.8022686767578127,
+              3.1833990478515624,
+              3.4555148315429687
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": -0.4607711791992187,
+            "sd": 0.3299510784392064,
+            "n_seeds": 3,
+            "item_se": 0.5556697052025469,
+            "per_seed": [
+              -0.8403875732421875,
+              -0.2990032958984375,
+              -0.24292266845703125
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": -2.396582675509983,
+            "sd": 0.35250031456942477,
+            "n_seeds": 3,
+            "item_se": 0.5035441006257325,
+            "per_seed": [
+              -2.7893259684244796,
+              -2.292790730794271,
+              -2.107631327311198
+            ]
+          },
+          "margin_base_right": {
+            "mean": -5.0353412238919,
+            "sd": 0.4201800253491613,
+            "n_seeds": 3,
+            "item_se": 0.4846272464971854,
+            "per_seed": [
+              -5.51298678651148,
+              -4.8702903280452805,
+              -4.722746557118941
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 11.008584415211397,
+            "sd": 0.2715557026576964,
+            "n_seeds": 3,
+            "item_se": 0.6796555400455028,
+            "per_seed": [
+              10.791435690487132,
+              10.921257467830882,
+              11.313060087316176
+            ]
+          },
+          "sign_flips_across_base_correctness": true,
+          "n_items": 400,
+          "n_seeds": 3,
+          "frac_distractor_up": 1.0,
+          "frac_correct_up": 0.9941666666666668,
+          "frac_margin_up": 0.5741666666666667,
+          "acc_base_raw": 0.49,
+          "acc_arm_raw": 0.5866666666666667
+        }
+      }
+    },
+    "Gemma contrastive OOD": {
+      "family": "Gemma",
+      "objective": "contrastive",
+      "n_seeds": 3,
+      "base": "runs/e1_plain_ce/eval_base.json",
+      "arms": [
+        "runs/e4_factorial/eval_ood_direct_seed0.json",
+        "runs/e4_factorial/eval_ood_direct_seed1.json",
+        "runs/e4_factorial/eval_ood_direct_seed2.json"
+      ],
+      "per_task": {
+        "truthfulqa_mc1": {
+          "d_correct": {
+            "mean": 16.102085163791973,
+            "sd": 1.54188858598626,
+            "n_seeds": 3,
+            "item_se": 0.779431906150653,
+            "per_seed": [
+              14.485934447646141,
+              16.26327331483364,
+              17.55704772889614
+            ]
+          },
+          "d_distractor": {
+            "mean": 14.089125672976175,
+            "sd": 2.5046793915888443,
+            "n_seeds": 3,
+            "item_se": 0.6157645118330628,
+            "per_seed": [
+              11.203767600059509,
+              15.360193381309509,
+              15.70341603755951
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 18.912943142255145,
+            "sd": 2.2189281732361597,
+            "n_seeds": 3,
+            "item_se": 0.6434144390075679,
+            "per_seed": [
+              16.413105902671813,
+              19.676289496421813,
+              20.649434027671813
+            ]
+          },
+          "margin": {
+            "mean": 2.012959490815798,
+            "sd": 1.197519372257089,
+            "n_seeds": 3,
+            "item_se": 0.8188281844535087,
+            "per_seed": [
+              3.2821668475866317,
+              0.9030799335241317,
+              1.8536316913366317
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": -2.8108579784631726,
+            "sd": 0.7819061863272861,
+            "n_seeds": 3,
+            "item_se": 0.8522437379190385,
+            "per_seed": [
+              -1.9271714550256729,
+              -3.4130161815881728,
+              -3.092386298775673
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": -4.4162266580244856,
+            "sd": 1.5291909773287293,
+            "n_seeds": 3,
+            "item_se": 0.7847703841619346,
+            "per_seed": [
+              -2.6505056758816283,
+              -5.308941339014068,
+              -5.28923295917776
+            ]
+          },
+          "margin_base_right": {
+            "mean": -10.445829149427869,
+            "sd": 2.40638289818645,
+            "n_seeds": 3,
+            "item_se": 0.8122159685796655,
+            "per_seed": [
+              -7.673578405380249,
+              -11.995196708951678,
+              -11.668712333951678
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 11.703128433227539,
+            "sd": 0.7231909777153214,
+            "n_seeds": 3,
+            "item_se": 0.8726628350204045,
+            "per_seed": [
+              11.80330204433865,
+              10.935072877671983,
+              12.371010377671983
+            ]
+          },
+          "sign_flips_across_base_correctness": true,
+          "n_items": 400,
+          "n_seeds": 3,
+          "frac_distractor_up": 0.8700000000000001,
+          "frac_correct_up": 0.8208333333333334,
+          "frac_margin_up": 0.5358333333333333,
+          "acc_base_raw": 0.4375,
+          "acc_arm_raw": 0.39916666666666667
+        },
+        "hellaswag": {
+          "d_correct": {
+            "mean": 39.862187500000005,
+            "sd": 1.8369110832810778,
+            "n_seeds": 3,
+            "item_se": 0.9057260982182372,
+            "per_seed": [
+              38.43859375,
+              39.212265625,
+              41.935703125
+            ]
+          },
+          "d_distractor": {
+            "mean": 34.63942708333333,
+            "sd": 2.2383395843910887,
+            "n_seeds": 3,
+            "item_se": 0.7714837566729194,
+            "per_seed": [
+              32.27421875,
+              34.91953125,
+              36.72453125
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 37.83755208333334,
+            "sd": 2.3198754919557834,
+            "n_seeds": 3,
+            "item_se": 0.8270328309396904,
+            "per_seed": [
+              35.54109375,
+              37.79140625,
+              40.18015625
+            ]
+          },
+          "margin": {
+            "mean": 5.222760416666667,
+            "sd": 0.9358741250889819,
+            "n_seeds": 3,
+            "item_se": 0.9122840621804618,
+            "per_seed": [
+              6.164375,
+              4.292734375,
+              5.211171875
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": 2.024635416666667,
+            "sd": 0.7742243643107065,
+            "n_seeds": 3,
+            "item_se": 0.9497390434440924,
+            "per_seed": [
+              2.8975,
+              1.420859375,
+              1.755546875
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": -3.726197916666667,
+            "sd": 1.1994224466773717,
+            "n_seeds": 3,
+            "item_se": 0.8459808018886427,
+            "per_seed": [
+              -2.3465625,
+              -4.310807291666666,
+              -4.521223958333334
+            ]
+          },
+          "margin_base_right": {
+            "mean": -5.8247863247863245,
+            "sd": 1.1270351999356718,
+            "n_seeds": 3,
+            "item_se": 1.0095231402857192,
+            "per_seed": [
+              -4.524679487179487,
+              -6.424839743589744,
+              -6.524839743589744
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 15.731402439024391,
+            "sd": 1.077462489564624,
+            "n_seeds": 3,
+            "item_se": 1.0690405656718192,
+            "per_seed": [
+              16.33201219512195,
+              14.4875,
+              16.37469512195122
+            ]
+          },
+          "sign_flips_across_base_correctness": true,
+          "n_items": 400,
+          "n_seeds": 3,
+          "frac_distractor_up": 0.9991666666666666,
+          "frac_correct_up": 0.9975,
+          "frac_margin_up": 0.6133333333333333,
+          "acc_base_raw": 0.4875,
+          "acc_arm_raw": 0.5391666666666667
+        },
+        "arc_challenge": {
+          "d_correct": {
+            "mean": 24.209660034179688,
+            "sd": 1.7824280832463841,
+            "n_seeds": 3,
+            "item_se": 0.6840777341491083,
+            "per_seed": [
+              22.46528015136719,
+              24.135856323242187,
+              26.027843627929688
+            ]
+          },
+          "d_distractor": {
+            "mean": 17.064973958333336,
+            "sd": 3.525928859175499,
+            "n_seeds": 3,
+            "item_se": 0.6231923674926912,
+            "per_seed": [
+              13.0122265625,
+              18.754296875,
+              19.4283984375
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 21.42109375,
+            "sd": 3.264110667456277,
+            "n_seeds": 3,
+            "item_se": 0.679604377890541,
+            "per_seed": [
+              17.7056640625,
+              22.730078125,
+              23.8275390625
+            ]
+          },
+          "margin": {
+            "mean": 7.144686075846354,
+            "sd": 2.0897922986826676,
+            "n_seeds": 3,
+            "item_se": 0.5553715929997223,
+            "per_seed": [
+              9.453053588867187,
+              5.381559448242188,
+              6.599445190429687
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": 2.7885662841796877,
+            "sd": 1.7525969406734727,
+            "n_seeds": 3,
+            "item_se": 0.5540933817467271,
+            "per_seed": [
+              4.759616088867188,
+              1.4057781982421875,
+              2.2003045654296876
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": 2.671456909179687,
+            "sd": 2.4388604248264847,
+            "n_seeds": 3,
+            "item_se": 0.48918650740679864,
+            "per_seed": [
+              5.45349629720052,
+              0.9019761149088542,
+              1.6588983154296875
+            ]
+          },
+          "margin_base_right": {
+            "mean": 0.9966488792782737,
+            "sd": 2.816984711292829,
+            "n_seeds": 3,
+            "item_se": 0.583448325608413,
+            "per_seed": [
+              4.218683982382015,
+              -1.0007237025669642,
+              -0.22801364198022958
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 13.051623774509805,
+            "sd": 1.4872171588029233,
+            "n_seeds": 3,
+            "item_se": 0.7197816598205223,
+            "per_seed": [
+              14.482153799019608,
+              11.513556985294118,
+              13.159160539215685
+            ]
+          },
+          "sign_flips_across_base_correctness": false,
+          "n_items": 400,
+          "n_seeds": 3,
+          "frac_distractor_up": 0.9375,
+          "frac_correct_up": 0.9775,
+          "frac_margin_up": 0.7241666666666666,
+          "acc_base_raw": 0.49,
+          "acc_arm_raw": 0.6716666666666667
+        }
+      }
+    },
+    "Gemma plain-CE OOD": {
+      "family": "Gemma",
+      "objective": "plain-CE",
+      "n_seeds": 3,
+      "base": "runs/e1_plain_ce/eval_base.json",
+      "arms": [
+        "runs/e4_factorial/eval_ood_plain_ce_seed0.json",
+        "runs/e4_factorial/eval_ood_plain_ce_seed1.json",
+        "runs/e4_factorial/eval_ood_plain_ce_seed2.json"
+      ],
+      "per_task": {
+        "truthfulqa_mc1": {
+          "d_correct": {
+            "mean": 16.885315958062808,
+            "sd": 2.3476083012936155,
+            "n_seeds": 3,
+            "item_se": 0.8276544261122113,
+            "per_seed": [
+              18.85786804139614,
+              17.50933288514614,
+              14.28874694764614
+            ]
+          },
+          "d_distractor": {
+            "mean": 16.454073589642842,
+            "sd": 2.4980012439432495,
+            "n_seeds": 3,
+            "item_se": 0.608986714016304,
+            "per_seed": [
+              18.629919943809508,
+              17.006052756309508,
+              13.72624806880951
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 20.68786501725515,
+            "sd": 2.1479894082905187,
+            "n_seeds": 3,
+            "item_se": 0.6387432480810133,
+            "per_seed": [
+              22.710312933921813,
+              20.920078558921816,
+              18.433203558921814
+            ]
+          },
+          "margin": {
+            "mean": 0.4312423684199651,
+            "sd": 0.17853048900155158,
+            "n_seeds": 3,
+            "item_se": 0.9405637903631044,
+            "per_seed": [
+              0.2279480975866318,
+              0.5032801288366318,
+              0.5624988788366317
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": -3.8025490591923394,
+            "sd": 0.36939156810869817,
+            "n_seeds": 3,
+            "item_se": 0.9737661579408572,
+            "per_seed": [
+              -3.852444892525673,
+              -3.410745673775673,
+              -4.144456611275673
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": -7.546257161393367,
+            "sd": 0.2745071365731907,
+            "n_seeds": 3,
+            "item_se": 0.906845506790764,
+            "per_seed": [
+              -7.83155231061625,
+              -7.523230556523989,
+              -7.283988617039861
+            ]
+          },
+          "margin_base_right": {
+            "mean": -15.165825429189773,
+            "sd": 0.713907883236511,
+            "n_seeds": 3,
+            "item_se": 0.868209721599872,
+            "per_seed": [
+              -15.83969447680882,
+              -15.240096262523107,
+              -14.417685548237392
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 12.562295099894206,
+            "sd": 0.3020673127935774,
+            "n_seeds": 3,
+            "item_se": 0.9185120524928401,
+            "per_seed": [
+              12.725003433227538,
+              12.748128433227539,
+              12.21375343322754
+            ]
+          },
+          "sign_flips_across_base_correctness": true,
+          "n_items": 400,
+          "n_seeds": 3,
+          "frac_distractor_up": 0.8908333333333333,
+          "frac_correct_up": 0.815,
+          "frac_margin_up": 0.5108333333333334,
+          "acc_base_raw": 0.4375,
+          "acc_arm_raw": 0.3383333333333334
+        },
+        "hellaswag": {
+          "d_correct": {
+            "mean": 43.748333333333335,
+            "sd": 0.8195979489560358,
+            "n_seeds": 3,
+            "item_se": 0.9753269432813069,
+            "per_seed": [
+              44.684140625,
+              43.158203125,
+              43.40265625
+            ]
+          },
+          "d_distractor": {
+            "mean": 40.30484375,
+            "sd": 1.51328195179385,
+            "n_seeds": 3,
+            "item_se": 0.7976360172533327,
+            "per_seed": [
+              42.02484375,
+              39.71171875,
+              39.17796875
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 43.35328125,
+            "sd": 1.72934044056542,
+            "n_seeds": 3,
+            "item_se": 0.8746931157702317,
+            "per_seed": [
+              45.34015625,
+              42.53265625,
+              42.18703125
+            ]
+          },
+          "margin": {
+            "mean": 3.443489583333333,
+            "sd": 0.782699609551658,
+            "n_seeds": 3,
+            "item_se": 0.9680508667246052,
+            "per_seed": [
+              2.659296875,
+              3.446484375,
+              4.2246875
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": 0.3950520833333333,
+            "sd": 0.9568727940675775,
+            "n_seeds": 3,
+            "item_se": 1.026828095217237,
+            "per_seed": [
+              -0.656015625,
+              0.625546875,
+              1.215625
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": -7.344461805555556,
+            "sd": 1.0365342767970527,
+            "n_seeds": 3,
+            "item_se": 0.9132611111678545,
+            "per_seed": [
+              -8.447786458333335,
+              -7.194557291666666,
+              -6.391041666666667
+            ]
+          },
+          "margin_base_right": {
+            "mean": -9.543803418803419,
+            "sd": 0.9279453991944517,
+            "n_seeds": 3,
+            "item_se": 0.997100703261733,
+            "per_seed": [
+              -10.485096153846154,
+              -9.51650641025641,
+              -8.629807692307692
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 15.797256097560975,
+            "sd": 0.6450524998348041,
+            "n_seeds": 3,
+            "item_se": 1.0687629390530466,
+            "per_seed": [
+              15.1625,
+              15.777134146341464,
+              16.452134146341464
+            ]
+          },
+          "sign_flips_across_base_correctness": true,
+          "n_items": 400,
+          "n_seeds": 3,
+          "frac_distractor_up": 1.0,
+          "frac_correct_up": 1.0,
+          "frac_margin_up": 0.5658333333333333,
+          "acc_base_raw": 0.4875,
+          "acc_arm_raw": 0.5108333333333334
+        },
+        "arc_challenge": {
+          "d_correct": {
+            "mean": 24.872015177408855,
+            "sd": 1.4117418833619133,
+            "n_seeds": 3,
+            "item_se": 0.7196593360405381,
+            "per_seed": [
+              26.14441101074219,
+              25.118297729492188,
+              23.353336791992188
+            ]
+          },
+          "d_distractor": {
+            "mean": 21.249947916666667,
+            "sd": 2.17975271146477,
+            "n_seeds": 3,
+            "item_se": 0.6197415381126196,
+            "per_seed": [
+              23.46234375,
+              21.183125,
+              19.104375
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 26.037838541666662,
+            "sd": 1.7995345150979027,
+            "n_seeds": 3,
+            "item_se": 0.6545054532126386,
+            "per_seed": [
+              27.835390625,
+              26.041796875,
+              24.236328125
+            ]
+          },
+          "margin": {
+            "mean": 3.6220672607421878,
+            "sd": 0.8290451700216084,
+            "n_seeds": 3,
+            "item_se": 0.6077694586160717,
+            "per_seed": [
+              2.6820672607421874,
+              3.9351727294921877,
+              4.248961791992188
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": -1.1658233642578124,
+            "sd": 0.45524942164041304,
+            "n_seeds": 3,
+            "item_se": 0.5907016502434095,
+            "per_seed": [
+              -1.6909796142578124,
+              -0.9234991455078125,
+              -0.8829913330078125
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": -2.04090582953559,
+            "sd": 0.8740431801175869,
+            "n_seeds": 3,
+            "item_se": 0.5369217055933372,
+            "per_seed": [
+              -3.0257322184244786,
+              -1.7396449788411457,
+              -1.3573402913411459
+            ]
+          },
+          "margin_base_right": {
+            "mean": -4.615280462771046,
+            "sd": 1.0392642139276447,
+            "n_seeds": 3,
+            "item_se": 0.5313629486553871,
+            "per_seed": [
+              -5.764834034199617,
+              -4.338773766342475,
+              -3.7422335877710458
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 11.536381740196079,
+            "sd": 0.6400486484401618,
+            "n_seeds": 3,
+            "item_se": 0.729732059345416,
+            "per_seed": [
+              10.797717524509803,
+              11.884650735294118,
+              11.926776960784315
+            ]
+          },
+          "sign_flips_across_base_correctness": true,
+          "n_items": 400,
+          "n_seeds": 3,
+          "frac_distractor_up": 0.985,
+          "frac_correct_up": 0.9725000000000001,
+          "frac_margin_up": 0.5841666666666666,
+          "acc_base_raw": 0.49,
+          "acc_arm_raw": 0.5850000000000001
+        }
+      }
+    },
+    "Qwen contrastive": {
+      "family": "Qwen",
+      "objective": "contrastive",
+      "n_seeds": 1,
+      "base": "runs/e6_qwen_spine/eval_base.json",
+      "arms": [
+        "runs/e6_qwen_spine/eval_mc.json"
+      ],
+      "per_task": {
+        "truthfulqa_mc1": {
+          "d_correct": {
+            "mean": -7.633125,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.449063132798837,
+            "per_seed": [
+              -7.633125
+            ]
+          },
+          "d_distractor": {
+            "mean": -36.59125,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.256564172861876,
+            "per_seed": [
+              -36.59125
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": -26.3346875,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.2275015296274394,
+            "per_seed": [
+              -26.3346875
+            ]
+          },
+          "margin": {
+            "mean": 28.958125,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.8370415825778106,
+            "per_seed": [
+              28.958125
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": 18.7015625,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.8178203808032418,
+            "per_seed": [
+              18.7015625
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": 28.0235091765873,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.7417466281943237,
+            "per_seed": [
+              28.0235091765873
+            ]
+          },
+          "margin_base_right": {
+            "mean": 33.526238207547166,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 2.385965025323785,
+            "per_seed": [
+              33.526238207547166
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 23.80684840425532,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 2.794500099471928,
+            "per_seed": [
+              23.80684840425532
+            ]
+          },
+          "sign_flips_across_base_correctness": false,
+          "n_items": 400,
+          "n_seeds": 1,
+          "frac_distractor_up": 0.0775,
+          "frac_correct_up": 0.4175,
+          "frac_margin_up": 0.775,
+          "acc_base_raw": 0.53,
+          "acc_arm_raw": 0.6825
+        },
+        "hellaswag": {
+          "d_correct": {
+            "mean": -31.3675,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.3861133485363317,
+            "per_seed": [
+              -31.3675
+            ]
+          },
+          "d_distractor": {
+            "mean": -37.3159375,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.2537827981637861,
+            "per_seed": [
+              -37.3159375
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": -30.451875,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.1391016392083082,
+            "per_seed": [
+              -30.451875
+            ]
+          },
+          "margin": {
+            "mean": 5.9484375,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.4657269199583483,
+            "per_seed": [
+              5.9484375
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": -0.915625,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.4513850849537238,
+            "per_seed": [
+              -0.915625
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": 16.843125,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.383879734807014,
+            "per_seed": [
+              16.843125
+            ]
+          },
+          "margin_base_right": {
+            "mean": 15.040584415584416,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.6693173517423914,
+            "per_seed": [
+              15.040584415584416
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": -6.479289940828402,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 2.2956530430999185,
+            "per_seed": [
+              -6.479289940828402
+            ]
+          },
+          "sign_flips_across_base_correctness": true,
+          "n_items": 400,
+          "n_seeds": 1,
+          "frac_distractor_up": 0.03,
+          "frac_correct_up": 0.105,
+          "frac_margin_up": 0.5975,
+          "acc_base_raw": 0.5775,
+          "acc_arm_raw": 0.5775
+        },
+        "arc_challenge": {
+          "d_correct": {
+            "mean": 20.67171875,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.0829408585195615,
+            "per_seed": [
+              20.67171875
+            ]
+          },
+          "d_distractor": {
+            "mean": 7.87296875,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.1465744133614089,
+            "per_seed": [
+              7.87296875
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 15.95078125,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.071323849052917,
+            "per_seed": [
+              15.95078125
+            ]
+          },
+          "margin": {
+            "mean": 12.79875,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 0.9132458753461415,
+            "per_seed": [
+              12.79875
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": 4.7209375,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 0.8546419400619859,
+            "per_seed": [
+              4.7209375
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": 11.57578125,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 0.7994398455319073,
+            "per_seed": [
+              11.57578125
+            ]
+          },
+          "margin_base_right": {
+            "mean": 11.622383373205741,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.1553982702143157,
+            "per_seed": [
+              11.622383373205741
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 14.085978403141361,
+            "sd": 0.0,
+            "n_seeds": 1,
+            "item_se": 1.4325165329826297,
+            "per_seed": [
+              14.085978403141361
+            ]
+          },
+          "sign_flips_across_base_correctness": false,
+          "n_items": 400,
+          "n_seeds": 1,
+          "frac_distractor_up": 0.685,
+          "frac_correct_up": 0.8575,
+          "frac_margin_up": 0.79,
+          "acc_base_raw": 0.5225,
+          "acc_arm_raw": 0.685
+        }
+      }
+    },
+    "Qwen plain-CE": {
+      "family": "Qwen",
+      "objective": "plain-CE",
+      "n_seeds": 3,
+      "base": "runs/e6_qwen_spine/eval_base.json",
+      "arms": [
+        "runs/e6_qwen_spine/eval_plain_ce_seed0.final.json",
+        "runs/e6_qwen_spine/eval_plain_ce_seed1.final.json",
+        "runs/e6_qwen_spine/eval_plain_ce_seed2.final.json"
+      ],
+      "per_task": {
+        "truthfulqa_mc1": {
+          "d_correct": {
+            "mean": 32.420859375,
+            "sd": 2.9491674943807644,
+            "n_seeds": 3,
+            "item_se": 0.855570513931012,
+            "per_seed": [
+              35.82109375,
+              30.883203125,
+              30.55828125
+            ]
+          },
+          "d_distractor": {
+            "mean": 35.27893229166667,
+            "sd": 3.207396871604122,
+            "n_seeds": 3,
+            "item_se": 0.7108870233642425,
+            "per_seed": [
+              38.969453125,
+              33.7028125,
+              33.16453125
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 39.615520833333335,
+            "sd": 3.2953539157445624,
+            "n_seeds": 3,
+            "item_se": 0.7717495650740531,
+            "per_seed": [
+              43.420625,
+              37.72859375,
+              37.69734375
+            ]
+          },
+          "margin": {
+            "mean": -2.8580729166666665,
+            "sd": 0.2730938055758134,
+            "n_seeds": 3,
+            "item_se": 1.0222144014766585,
+            "per_seed": [
+              -3.148359375,
+              -2.819609375,
+              -2.60625
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": -7.194661458333333,
+            "sd": 0.380132152934557,
+            "n_seeds": 3,
+            "item_se": 1.0545503903555988,
+            "per_seed": [
+              -7.59953125,
+              -6.845390625,
+              -7.1390625
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": -11.665103525958992,
+            "sd": 0.35674573142210725,
+            "n_seeds": 3,
+            "item_se": 1.0187236290073343,
+            "per_seed": [
+              -12.051957527281747,
+              -11.594255084325395,
+              -11.349097966269841
+            ]
+          },
+          "margin_base_right": {
+            "mean": -16.819673742138367,
+            "sd": 0.44069042559535526,
+            "n_seeds": 3,
+            "item_se": 0.9285611582997276,
+            "per_seed": [
+              -17.31530070754717,
+              -16.67172759433962,
+              -16.4719929245283
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 12.885859929078014,
+            "sd": 0.12516272817541654,
+            "n_seeds": 3,
+            "item_se": 1.070277864271264,
+            "per_seed": [
+              12.827127659574469,
+              12.800864361702128,
+              13.029587765957446
+            ]
+          },
+          "sign_flips_across_base_correctness": true,
+          "n_items": 400,
+          "n_seeds": 3,
+          "frac_distractor_up": 0.9975,
+          "frac_correct_up": 0.9891666666666666,
+          "frac_margin_up": 0.42250000000000004,
+          "acc_base_raw": 0.53,
+          "acc_arm_raw": 0.4366666666666667
+        },
+        "hellaswag": {
+          "d_correct": {
+            "mean": 32.021601562499995,
+            "sd": 1.4749773800941985,
+            "n_seeds": 3,
+            "item_se": 0.7703180939266558,
+            "per_seed": [
+              33.2534375,
+              32.4242578125,
+              30.387109375
+            ]
+          },
+          "d_distractor": {
+            "mean": 35.22877604166667,
+            "sd": 1.556194523855379,
+            "n_seeds": 3,
+            "item_se": 0.6982401423418771,
+            "per_seed": [
+              36.8290625,
+              35.136484375,
+              33.72078125
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 38.120078125,
+            "sd": 1.4377558217508675,
+            "n_seeds": 3,
+            "item_se": 0.7445476968190348,
+            "per_seed": [
+              39.5871875,
+              38.059453125,
+              36.71359375
+            ]
+          },
+          "margin": {
+            "mean": -3.207174479166667,
+            "sd": 0.44538231760345126,
+            "n_seeds": 3,
+            "item_se": 0.6865859624869787,
+            "per_seed": [
+              -3.575625,
+              -2.7122265625,
+              -3.333671875
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": -6.0984765625,
+            "sd": 0.40122977802978704,
+            "n_seeds": 3,
+            "item_se": 0.7299021210426301,
+            "per_seed": [
+              -6.33375,
+              -5.6351953125,
+              -6.326484375
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": -11.318875868055557,
+            "sd": 0.749690610729489,
+            "n_seeds": 3,
+            "item_se": 0.6752593298084576,
+            "per_seed": [
+              -12.166614583333335,
+              -10.743216145833335,
+              -11.046796875
+            ]
+          },
+          "margin_base_right": {
+            "mean": -10.457454004329003,
+            "sd": 0.6736849893549521,
+            "n_seeds": 3,
+            "item_se": 0.6670419672492063,
+            "per_seed": [
+              -11.1875,
+              -9.859780844155845,
+              -10.325081168831169
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 6.702970907297831,
+            "sd": 0.43142001526951584,
+            "n_seeds": 3,
+            "item_se": 0.8966414520782879,
+            "per_seed": [
+              6.828772189349112,
+              7.057507396449704,
+              6.222633136094674
+            ]
+          },
+          "sign_flips_across_base_correctness": true,
+          "n_items": 400,
+          "n_seeds": 3,
+          "frac_distractor_up": 1.0,
+          "frac_correct_up": 0.9958333333333335,
+          "frac_margin_up": 0.3958333333333333,
+          "acc_base_raw": 0.5775,
+          "acc_arm_raw": 0.5275
+        },
+        "arc_challenge": {
+          "d_correct": {
+            "mean": 46.489423828125005,
+            "sd": 2.1844951300161846,
+            "n_seeds": 3,
+            "item_se": 0.7879315342201295,
+            "per_seed": [
+              48.83765625,
+              46.113037109375,
+              44.517578125
+            ]
+          },
+          "d_distractor": {
+            "mean": 45.108111979166665,
+            "sd": 2.2890396037721867,
+            "n_seeds": 3,
+            "item_se": 0.7812135476071234,
+            "per_seed": [
+              47.571328125,
+              44.706640625,
+              43.0463671875
+            ]
+          },
+          "d_distractor_arm_top": {
+            "mean": 48.77165364583333,
+            "sd": 2.361988050210406,
+            "n_seeds": 3,
+            "item_se": 0.8623383740830985,
+            "per_seed": [
+              51.397578125,
+              48.096953125,
+              46.8204296875
+            ]
+          },
+          "margin": {
+            "mean": 1.3813118489583331,
+            "sd": 0.10471948679671732,
+            "n_seeds": 3,
+            "item_se": 0.5362724150252193,
+            "per_seed": [
+              1.266328125,
+              1.406396484375,
+              1.4712109375
+            ]
+          },
+          "margin_def_B_arm_top": {
+            "mean": -2.2822298177083336,
+            "sd": 0.2885561120081718,
+            "n_seeds": 3,
+            "item_se": 0.5863337267584964,
+            "per_seed": [
+              -2.559921875,
+              -1.983916015625,
+              -2.3028515625
+            ]
+          },
+          "margin_def_C_all_distractors": {
+            "mean": -5.072316623263888,
+            "sd": 0.2104181676712463,
+            "n_seeds": 3,
+            "item_se": 0.5228600640707756,
+            "per_seed": [
+              -5.315286458333333,
+              -4.950608723958333,
+              -4.9510546875
+            ]
+          },
+          "margin_base_right": {
+            "mean": -5.5339663078149925,
+            "sd": 0.22667940405602968,
+            "n_seeds": 3,
+            "item_se": 0.5258219594022426,
+            "per_seed": [
+              -5.77489533492823,
+              -5.502093301435407,
+              -5.32491028708134
+            ]
+          },
+          "margin_base_wrong": {
+            "mean": 8.948291612129145,
+            "sd": 0.03515833990835814,
+            "n_seeds": 3,
+            "item_se": 0.5971776526953294,
+            "per_seed": [
+              8.971122382198953,
+              8.965948134816754,
+              8.907804319371728
+            ]
+          },
+          "sign_flips_across_base_correctness": true,
+          "n_items": 400,
+          "n_seeds": 3,
+          "frac_distractor_up": 1.0,
+          "frac_correct_up": 1.0,
+          "frac_margin_up": 0.5408333333333334,
+          "acc_base_raw": 0.5225,
+          "acc_arm_raw": 0.6141666666666667
+        }
+      }
+    }
+  },
+  "verdicts": {
+    "P1_plainCE_raises_distractor_in_TQA": {
+      "holds": true,
+      "rows": [
+        {
+          "arm": "Gemma plain-CE in-domain",
+          "d_distractor": 22.370886740684508,
+          "margin": 3.6454070005814234,
+          "distractor_raised": true
+        },
+        {
+          "arm": "Gemma plain-CE OOD",
+          "d_distractor": 16.454073589642842,
+          "margin": 0.4312423684199651,
+          "distractor_raised": true
+        },
+        {
+          "arm": "Qwen plain-CE",
+          "d_distractor": 35.27893229166667,
+          "margin": -2.8580729166666665,
+          "distractor_raised": true
+        }
+      ]
+    },
+    "P2_contrastive_margin_beats_plainCE_in_TQA": {
+      "Gemma contrastive canonical vs Gemma plain-CE in-domain": {
+        "diff": 63.01777791341146,
+        "se": 2.3195494227337763,
+        "sigma": 27.168111744366247
+      },
+      "Gemma contrastive canonical vs Gemma plain-CE OOD": {
+        "diff": 66.23194254557292,
+        "se": 2.27007033890157,
+        "sigma": 29.176163139341707
+      },
+      "Gemma contrastive OOD vs Gemma plain-CE in-domain": {
+        "diff": -1.6324475097656252,
+        "se": 1.3011594688500143,
+        "sigma": 1.2546098682342208
+      },
+      "Gemma contrastive OOD vs Gemma plain-CE OOD": {
+        "diff": 1.581717122395833,
+        "se": 1.2107542204899167,
+        "sigma": 1.3063899308612865
+      },
+      "Qwen contrastive vs Qwen plain-CE": {
+        "diff": 31.816197916666667,
+        "se": 1.8572296580562855,
+        "sigma": 17.130998193279144
+      }
+    },
+    "P3_plainCE_margin_positive_in_HSwag": {
+      "rows": [
+        {
+          "arm": "Gemma plain-CE in-domain",
+          "margin": 3.668580729166667,
+          "sigma": 10.400832325378284,
+          "positive": true
+        },
+        {
+          "arm": "Gemma plain-CE OOD",
+          "margin": 3.443489583333333,
+          "sigma": 4.399503387137009,
+          "positive": true
+        },
+        {
+          "arm": "Qwen plain-CE",
+          "margin": -3.207174479166667,
+          "sigma": 7.200947034503048,
+          "positive": false
+        }
+      ],
+      "holds": false
+    }
+  },
+  "metric_sensitivity": {
+    "Gemma": {
+      "arc_challenge/acc_norm,none": {
+        "base": 0.5025,
+        "contrastive": 0.855,
+        "control_mean": 0.63,
+        "lift_pp": 35.25,
+        "control_pp": 12.750000000000005,
+        "inducibility": 0.3617021276595746,
+        "readable": true
+      },
+      "arc_challenge/acc,none": {
+        "base": 0.4975,
+        "contrastive": 0.8475,
+        "control_mean": 0.5916666666666667,
+        "lift_pp": 35.0,
+        "control_pp": 9.416666666666668,
+        "inducibility": 0.2690476190476191,
+        "readable": true
+      },
+      "hellaswag/acc_norm,none": {
+        "base": 0.5375,
+        "contrastive": 0.7125,
+        "control_mean": 0.6591666666666667,
+        "lift_pp": 17.500000000000004,
+        "control_pp": 12.16666666666667,
+        "inducibility": 0.6952380952380953,
+        "readable": true
+      },
+      "hellaswag/acc,none": {
+        "base": 0.49,
+        "contrastive": 0.715,
+        "control_mean": 0.5099999999999999,
+        "lift_pp": 22.499999999999996,
+        "control_pp": 1.9999999999999907,
+        "inducibility": 0.08888888888888849,
+        "readable": true
+      },
+      "truthfulqa_mc1/acc,none": {
+        "base": 0.4425,
+        "contrastive": 0.8025,
+        "control_mean": 0.44583333333333336,
+        "lift_pp": 36.0,
+        "control_pp": 0.3333333333333355,
+        "inducibility": 0.00925925925925932,
+        "readable": true
+      },
+      "winogrande/acc,none": {
+        "base": 0.6675,
+        "contrastive": 0.85,
+        "control_mean": 0.8125,
+        "lift_pp": 18.25,
+        "control_pp": 14.500000000000002,
+        "inducibility": 0.7945205479452055,
+        "readable": true
+      }
+    },
+    "Qwen": {
+      "arc_challenge/acc_norm,none": {
+        "base": 0.4975,
+        "contrastive": 0.66,
+        "control_mean": 0.5416666666666666,
+        "lift_pp": 16.250000000000004,
+        "control_pp": 4.416666666666663,
+        "inducibility": 0.27179487179487155,
+        "readable": true
+      },
+      "arc_challenge/acc,none": {
+        "base": 0.53,
+        "contrastive": 0.685,
+        "control_mean": 0.6225,
+        "lift_pp": 15.500000000000004,
+        "control_pp": 9.250000000000004,
+        "inducibility": 0.5967741935483872,
+        "readable": true
+      },
+      "hellaswag/acc_norm,none": {
+        "base": 0.62,
+        "contrastive": 0.6925,
+        "control_mean": 0.7033333333333333,
+        "lift_pp": 7.250000000000001,
+        "control_pp": 8.333333333333325,
+        "inducibility": 1.1494252873563207,
+        "readable": true
+      },
+      "hellaswag/acc,none": {
+        "base": 0.5825,
+        "contrastive": 0.5775,
+        "control_mean": 0.5308333333333334,
+        "lift_pp": -0.5000000000000004,
+        "control_pp": -5.166666666666664,
+        "inducibility": null,
+        "readable": false
+      },
+      "truthfulqa_mc1/acc,none": {
+        "base": 0.5325,
+        "contrastive": 0.6825,
+        "control_mean": 0.445,
+        "lift_pp": 15.000000000000002,
+        "control_pp": -8.749999999999996,
+        "inducibility": -0.583333333333333,
+        "readable": true
+      },
+      "winogrande/acc,none": {
+        "base": 0.6825,
+        "contrastive": 0.715,
+        "control_mean": 0.7600000000000001,
+        "lift_pp": 3.2499999999999973,
+        "control_pp": 7.750000000000012,
+        "inducibility": 2.3846153846153904,
+        "readable": true
+      }
+    }
+  }
+}

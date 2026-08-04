@@ -1,0 +1,23 @@
+{
+  "task": "arc_challenge",
+  "features": [
+    "cond_n",
+    "ao_n",
+    "charlen",
+    "pmi",
+    "cond_centered",
+    "ao_centered",
+    "cond_rank",
+    "charlen_centered"
+  ],
+  "folds": 5,
+  "auc_base_wrong": {
+    "logistic": 0.45751633986928103,
+    "gbm": 0.4624183006535948,
+    "pmi": 0.5735294117647058,
+    "cond_naive": 0.3937908496732026,
+    "adapter_reference": 0.83
+  },
+  "ceiling": 0.5735294117647058,
+  "verdict": "SURFACE CEILING IS FUNDAMENTAL: the strongest supervised, held-out, AUC-objective surface re-scoring caps at base-wrong AUC 0.574 (logistic 0.458, GBM 0.462) << adapter 0.830. The critic's 'under-fit baseline' objection is answered: no re-scoring of the collapsed scalars recovers the lift; the signal is upstream of them. (Decisive activation-space probe = POD.)"
+}

@@ -1,0 +1,3613 @@
+{
+"summary": {
+"n": 400,
+"base_cot_acc_all": 0.9675,
+"n_mc_only": 124,
+"mc_only_base_cot_correct": 123,
+"mc_only_base_cot_acc": 0.9919354838709677,
+"n_unparsed": 5,
+"max_new_tokens": 1024
+},
+"results": [
+{
+"doc_id": 0,
+"arc_id": "Mercury_7175875",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 538
+},
+{
+"doc_id": 1,
+"arc_id": "Mercury_SC_409171",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 538
+},
+{
+"doc_id": 2,
+"arc_id": "Mercury_SC_408547",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 538
+},
+{
+"doc_id": 3,
+"arc_id": "Mercury_407327",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 538
+},
+{
+"doc_id": 4,
+"arc_id": "MCAS_2006_9_44",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 538
+},
+{
+"doc_id": 5,
+"arc_id": "Mercury_7270393",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 538
+},
+{
+"doc_id": 6,
+"arc_id": "MCAS_2014_5_7",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 538
+},
+{
+"doc_id": 7,
+"arc_id": "Mercury_7086660",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 538
+},
+{
+"doc_id": 8,
+"arc_id": "Mercury_7168805",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 538
+},
+{
+"doc_id": 9,
+"arc_id": "MCAS_2003_8_11",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 538
+},
+{
+"doc_id": 10,
+"arc_id": "Mercury_7250058",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 538
+},
+{
+"doc_id": 11,
+"arc_id": "Mercury_7012740",
+"base_cot_correct": 0,
+"pred_letter": "C",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 538
+},
+{
+"doc_id": 12,
+"arc_id": "Mercury_LBS10610",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 538
+},
+{
+"doc_id": 13,
+"arc_id": "Mercury_SC_407400",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 538
+},
+{
+"doc_id": 14,
+"arc_id": "Mercury_7212993",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 538
+},
+{
+"doc_id": 15,
+"arc_id": "Mercury_SC_413240",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 538
+},
+{
+"doc_id": 16,
+"arc_id": "Mercury_7186358",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 463
+},
+{
+"doc_id": 17,
+"arc_id": "Mercury_7166425",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 463
+},
+{
+"doc_id": 18,
+"arc_id": "MDSA_2007_8_3",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 463
+},
+{
+"doc_id": 19,
+"arc_id": "Mercury_7094290",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 463
+},
+{
+"doc_id": 20,
+"arc_id": "Mercury_7186568",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 463
+},
+{
+"doc_id": 21,
+"arc_id": "Mercury_402216",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 463
+},
+{
+"doc_id": 22,
+"arc_id": "Mercury_404894",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 463
+},
+{
+"doc_id": 23,
+"arc_id": "MCAS_2002_8_11",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 463
+},
+{
+"doc_id": 24,
+"arc_id": "Mercury_SC_405086",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 463
+},
+{
+"doc_id": 25,
+"arc_id": "Mercury_SC_408324",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 463
+},
+{
+"doc_id": 26,
+"arc_id": "Mercury_7218820",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 463
+},
+{
+"doc_id": 27,
+"arc_id": "Mercury_412202",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 463
+},
+{
+"doc_id": 28,
+"arc_id": "Mercury_SC_409139",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 463
+},
+{
+"doc_id": 29,
+"arc_id": "Mercury_400687",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 463
+},
+{
+"doc_id": 30,
+"arc_id": "Mercury_7171605",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 463
+},
+{
+"doc_id": 31,
+"arc_id": "Mercury_7210245",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 463
+},
+{
+"doc_id": 32,
+"arc_id": "AKDE&ED_2008_4_25",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 425
+},
+{
+"doc_id": 33,
+"arc_id": "AKDE&ED_2008_4_19",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 425
+},
+{
+"doc_id": 34,
+"arc_id": "Mercury_SC_400402",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 425
+},
+{
+"doc_id": 35,
+"arc_id": "Mercury_7234308",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 425
+},
+{
+"doc_id": 36,
+"arc_id": "ACTAAP_2014_5_8",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 425
+},
+{
+"doc_id": 37,
+"arc_id": "Mercury_400407",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 425
+},
+{
+"doc_id": 38,
+"arc_id": "Mercury_7116288",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 425
+},
+{
+"doc_id": 39,
+"arc_id": "MCAS_2004_9_15-v1",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 425
+},
+{
+"doc_id": 40,
+"arc_id": "NYSEDREGENTS_2015_4_26",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 425
+},
+{
+"doc_id": 41,
+"arc_id": "Mercury_SC_401620",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 425
+},
+{
+"doc_id": 42,
+"arc_id": "Mercury_400877",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 425
+},
+{
+"doc_id": 43,
+"arc_id": "Mercury_7174213",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 425
+},
+{
+"doc_id": 44,
+"arc_id": "NYSEDREGENTS_2008_8_34",
+"base_cot_correct": 0,
+"pred_letter": null,
+"gold_letter": "2",
+"in_mc_only": false,
+"gen_len": 425
+},
+{
+"doc_id": 45,
+"arc_id": "Mercury_7212398",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 425
+},
+{
+"doc_id": 46,
+"arc_id": "Mercury_SC_401290",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 425
+},
+{
+"doc_id": 47,
+"arc_id": "Mercury_SC_402120",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 425
+},
+{
+"doc_id": 48,
+"arc_id": "Mercury_184975",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 659
+},
+{
+"doc_id": 49,
+"arc_id": "Mercury_SC_400578",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 659
+},
+{
+"doc_id": 50,
+"arc_id": "MCAS_2001_8_4",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 659
+},
+{
+"doc_id": 51,
+"arc_id": "MCAS_2003_5_33",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 659
+},
+{
+"doc_id": 52,
+"arc_id": "Mercury_7068513",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 659
+},
+{
+"doc_id": 53,
+"arc_id": "AKDE&ED_2008_4_26",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 659
+},
+{
+"doc_id": 54,
+"arc_id": "Mercury_7235638",
+"base_cot_correct": 0,
+"pred_letter": "B",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 659
+},
+{
+"doc_id": 55,
+"arc_id": "MDSA_2009_5_20",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 659
+},
+{
+"doc_id": 56,
+"arc_id": "Mercury_178325",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 659
+},
+{
+"doc_id": 57,
+"arc_id": "Mercury_7212678",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 659
+},
+{
+"doc_id": 58,
+"arc_id": "TAKS_2009_8_32",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 659
+},
+{
+"doc_id": 59,
+"arc_id": "Mercury_412681",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 659
+},
+{
+"doc_id": 60,
+"arc_id": "Mercury_400440",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 659
+},
+{
+"doc_id": 61,
+"arc_id": "Mercury_SC_416529",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 659
+},
+{
+"doc_id": 62,
+"arc_id": "MCAS_2006_8_1",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 659
+},
+{
+"doc_id": 63,
+"arc_id": "TIMSS_2003_8_pg80",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 659
+},
+{
+"doc_id": 64,
+"arc_id": "Mercury_416645",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 760
+},
+{
+"doc_id": 65,
+"arc_id": "Mercury_406777",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 760
+},
+{
+"doc_id": 66,
+"arc_id": "Mercury_LBS11018",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 760
+},
+{
+"doc_id": 67,
+"arc_id": "Mercury_7139878",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 760
+},
+{
+"doc_id": 68,
+"arc_id": "Mercury_417147",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 760
+},
+{
+"doc_id": 69,
+"arc_id": "Mercury_7016765",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 760
+},
+{
+"doc_id": 70,
+"arc_id": "Mercury_415303",
+"base_cot_correct": 0,
+"pred_letter": "D",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 760
+},
+{
+"doc_id": 71,
+"arc_id": "Mercury_7215845",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 760
+},
+{
+"doc_id": 72,
+"arc_id": "Mercury_7136885",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 760
+},
+{
+"doc_id": 73,
+"arc_id": "Mercury_SC_400059",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 760
+},
+{
+"doc_id": 74,
+"arc_id": "Mercury_7044328",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 760
+},
+{
+"doc_id": 75,
+"arc_id": "MEA_2010_8_1",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 760
+},
+{
+"doc_id": 76,
+"arc_id": "Mercury_414099",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 760
+},
+{
+"doc_id": 77,
+"arc_id": "Mercury_410807",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 760
+},
+{
+"doc_id": 78,
+"arc_id": "Mercury_403234",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 760
+},
+{
+"doc_id": 79,
+"arc_id": "Mercury_7011323",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 760
+},
+{
+"doc_id": 80,
+"arc_id": "Mercury_7109463",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 81,
+"arc_id": "Mercury_SC_401277",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 82,
+"arc_id": "MCAS_2005_5_25",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 83,
+"arc_id": "Mercury_SC_401272",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 84,
+"arc_id": "Mercury_7103600",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 85,
+"arc_id": "MDSA_2009_8_2",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 86,
+"arc_id": "Mercury_7127943",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 87,
+"arc_id": "ACTAAP_2009_7_8",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 88,
+"arc_id": "MCAS_2006_9_43",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 89,
+"arc_id": "Mercury_7252088",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 90,
+"arc_id": "Mercury_7084665",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 91,
+"arc_id": "FCAT_2008_5_2",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 92,
+"arc_id": "Mercury_SC_414041",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 93,
+"arc_id": "MCAS_2014_8_20",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 94,
+"arc_id": "Mercury_SC_401116",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 95,
+"arc_id": "Mercury_7064680",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 96,
+"arc_id": "Mercury_7211680",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 412
+},
+{
+"doc_id": 97,
+"arc_id": "Mercury_180373",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 412
+},
+{
+"doc_id": 98,
+"arc_id": "Mercury_7216248",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 412
+},
+{
+"doc_id": 99,
+"arc_id": "Mercury_SC_417677",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 412
+},
+{
+"doc_id": 100,
+"arc_id": "Mercury_7221655",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 412
+},
+{
+"doc_id": 101,
+"arc_id": "MCAS_2006_9_12",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 412
+},
+{
+"doc_id": 102,
+"arc_id": "MCAS_2004_9_2",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 412
+},
+{
+"doc_id": 103,
+"arc_id": "Mercury_180005",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 412
+},
+{
+"doc_id": 104,
+"arc_id": "Mercury_7071523",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 412
+},
+{
+"doc_id": 105,
+"arc_id": "Mercury_7263375",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 412
+},
+{
+"doc_id": 106,
+"arc_id": "TIMSS_2011_8_pg102",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 412
+},
+{
+"doc_id": 107,
+"arc_id": "Mercury_406550",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 412
+},
+{
+"doc_id": 108,
+"arc_id": "Mercury_SC_400057",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 412
+},
+{
+"doc_id": 109,
+"arc_id": "TAKS_2009_5_26",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 412
+},
+{
+"doc_id": 110,
+"arc_id": "LEAP_2007_8_10417",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 412
+},
+{
+"doc_id": 111,
+"arc_id": "Mercury_7027405",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 412
+},
+{
+"doc_id": 112,
+"arc_id": "Mercury_7058415",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 113,
+"arc_id": "Mercury_7215828",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 114,
+"arc_id": "Mercury_7064575",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 115,
+"arc_id": "Mercury_7097493",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 116,
+"arc_id": "AKDE&ED_2008_8_47",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 117,
+"arc_id": "Mercury_405136",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 118,
+"arc_id": "Mercury_415086",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 119,
+"arc_id": "Mercury_7228725",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 120,
+"arc_id": "Mercury_7201740",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 121,
+"arc_id": "NYSEDREGENTS_2010_4_4",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 366
+},
+{
+"doc_id": 122,
+"arc_id": "MEAP_2005_8_21",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 123,
+"arc_id": "Mercury_7026355",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 124,
+"arc_id": "Mercury_7249708",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 125,
+"arc_id": "Mercury_7107170",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 126,
+"arc_id": "Mercury_183820",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 127,
+"arc_id": "Mercury_SC_401357",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 366
+},
+{
+"doc_id": 128,
+"arc_id": "NYSEDREGENTS_2008_8_11",
+"base_cot_correct": 0,
+"pred_letter": null,
+"gold_letter": "4",
+"in_mc_only": true,
+"gen_len": 377
+},
+{
+"doc_id": 129,
+"arc_id": "Mercury_416650",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 377
+},
+{
+"doc_id": 130,
+"arc_id": "NCEOGA_2013_5_20",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 377
+},
+{
+"doc_id": 131,
+"arc_id": "Mercury_400500",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 377
+},
+{
+"doc_id": 132,
+"arc_id": "Mercury_SC_401366",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 377
+},
+{
+"doc_id": 133,
+"arc_id": "Mercury_7141610",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 377
+},
+{
+"doc_id": 134,
+"arc_id": "Mercury_7247013",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 377
+},
+{
+"doc_id": 135,
+"arc_id": "NYSEDREGENTS_2008_8_30",
+"base_cot_correct": 0,
+"pred_letter": null,
+"gold_letter": "2",
+"in_mc_only": false,
+"gen_len": 377
+},
+{
+"doc_id": 136,
+"arc_id": "ACTAAP_2011_5_16",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 377
+},
+{
+"doc_id": 137,
+"arc_id": "Mercury_7093153",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 377
+},
+{
+"doc_id": 138,
+"arc_id": "Mercury_7013965",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 377
+},
+{
+"doc_id": 139,
+"arc_id": "Mercury_7034843",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 377
+},
+{
+"doc_id": 140,
+"arc_id": "Mercury_SC_407610",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 377
+},
+{
+"doc_id": 141,
+"arc_id": "Mercury_405947",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 377
+},
+{
+"doc_id": 142,
+"arc_id": "AKDE&ED_2012_8_6",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 377
+},
+{
+"doc_id": 143,
+"arc_id": "Mercury_7011130",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 377
+},
+{
+"doc_id": 144,
+"arc_id": "Mercury_LBS11022",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 323
+},
+{
+"doc_id": 145,
+"arc_id": "TIMSS_1995_8_J1",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 323
+},
+{
+"doc_id": 146,
+"arc_id": "Mercury_SC_408366",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 323
+},
+{
+"doc_id": 147,
+"arc_id": "Mercury_7009993",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 323
+},
+{
+"doc_id": 148,
+"arc_id": "Mercury_401699",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 323
+},
+{
+"doc_id": 149,
+"arc_id": "Mercury_7056858",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 323
+},
+{
+"doc_id": 150,
+"arc_id": "Mercury_7027160",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 323
+},
+{
+"doc_id": 151,
+"arc_id": "Mercury_400811",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 323
+},
+{
+"doc_id": 152,
+"arc_id": "Mercury_SC_400062",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 323
+},
+{
+"doc_id": 153,
+"arc_id": "Mercury_400699",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 323
+},
+{
+"doc_id": 154,
+"arc_id": "Mercury_7029803",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 323
+},
+{
+"doc_id": 155,
+"arc_id": "Mercury_SC_401372",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 323
+},
+{
+"doc_id": 156,
+"arc_id": "Mercury_7271128",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 323
+},
+{
+"doc_id": 157,
+"arc_id": "Mercury_407260",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 323
+},
+{
+"doc_id": 158,
+"arc_id": "Mercury_SC_416155",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 323
+},
+{
+"doc_id": 159,
+"arc_id": "Mercury_402145",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 323
+},
+{
+"doc_id": 160,
+"arc_id": "AIMS_2009_4_5",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 842
+},
+{
+"doc_id": 161,
+"arc_id": "TIMSS_2003_4_pg7",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 842
+},
+{
+"doc_id": 162,
+"arc_id": "Mercury_7142415",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 842
+},
+{
+"doc_id": 163,
+"arc_id": "Mercury_7212818",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 842
+},
+{
+"doc_id": 164,
+"arc_id": "Mercury_SC_413299",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 842
+},
+{
+"doc_id": 165,
+"arc_id": "Mercury_7132020",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 842
+},
+{
+"doc_id": 166,
+"arc_id": "MEA_2014_8_10",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 842
+},
+{
+"doc_id": 167,
+"arc_id": "TIMSS_1995_8_N2",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 842
+},
+{
+"doc_id": 168,
+"arc_id": "Mercury_7024465",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 842
+},
+{
+"doc_id": 169,
+"arc_id": "Mercury_SC_415762",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 842
+},
+{
+"doc_id": 170,
+"arc_id": "Mercury_415093",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 842
+},
+{
+"doc_id": 171,
+"arc_id": "LEAP_2005_8_10404",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 842
+},
+{
+"doc_id": 172,
+"arc_id": "AIMS_2008_8_6",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 842
+},
+{
+"doc_id": 173,
+"arc_id": "Mercury_7057173",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 842
+},
+{
+"doc_id": 174,
+"arc_id": "TIMSS_2007_8_pg60",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 842
+},
+{
+"doc_id": 175,
+"arc_id": "AIMS_2009_8_14",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 842
+},
+{
+"doc_id": 176,
+"arc_id": "Mercury_185010",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 378
+},
+{
+"doc_id": 177,
+"arc_id": "Mercury_7206938",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 378
+},
+{
+"doc_id": 178,
+"arc_id": "Mercury_402501",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 378
+},
+{
+"doc_id": 179,
+"arc_id": "MCAS_2011_8_15365",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 378
+},
+{
+"doc_id": 180,
+"arc_id": "Mercury_SC_401766",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 378
+},
+{
+"doc_id": 181,
+"arc_id": "Mercury_7162400",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 378
+},
+{
+"doc_id": 182,
+"arc_id": "Mercury_7086695",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 378
+},
+{
+"doc_id": 183,
+"arc_id": "Mercury_SC_402994",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 378
+},
+{
+"doc_id": 184,
+"arc_id": "Mercury_7056298",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 378
+},
+{
+"doc_id": 185,
+"arc_id": "Mercury_409115",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 378
+},
+{
+"doc_id": 186,
+"arc_id": "Mercury_409647",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 378
+},
+{
+"doc_id": 187,
+"arc_id": "Mercury_414352",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 378
+},
+{
+"doc_id": 188,
+"arc_id": "Mercury_185325",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 378
+},
+{
+"doc_id": 189,
+"arc_id": "Mercury_SC_412374",
+"base_cot_correct": 0,
+"pred_letter": "D",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 378
+},
+{
+"doc_id": 190,
+"arc_id": "Mercury_SC_401818",
+"base_cot_correct": 0,
+"pred_letter": "D",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 378
+},
+{
+"doc_id": 191,
+"arc_id": "Mercury_SC_413549",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 378
+},
+{
+"doc_id": 192,
+"arc_id": "Mercury_7093958",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 397
+},
+{
+"doc_id": 193,
+"arc_id": "Mercury_7102323",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 194,
+"arc_id": "Mercury_7222793",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 195,
+"arc_id": "Mercury_SC_400701",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 196,
+"arc_id": "Mercury_409301",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 197,
+"arc_id": "Mercury_SC_400383",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 198,
+"arc_id": "CSZ_2005_5_CSZ10021",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 199,
+"arc_id": "Mercury_SC_407070",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 200,
+"arc_id": "Mercury_SC_400708",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 397
+},
+{
+"doc_id": 201,
+"arc_id": "Mercury_7075040",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 202,
+"arc_id": "Mercury_7137165",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 203,
+"arc_id": "Mercury_SC_400046",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 397
+},
+{
+"doc_id": 204,
+"arc_id": "Mercury_7099330",
+"base_cot_correct": 0,
+"pred_letter": "C",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 205,
+"arc_id": "MDSA_2007_5_2",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 206,
+"arc_id": "Mercury_7271758",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 207,
+"arc_id": "MCAS_2003_8_31",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 208,
+"arc_id": "AKDE&ED_2008_8_53",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 335
+},
+{
+"doc_id": 209,
+"arc_id": "TIMSS_2007_8_pg109",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 335
+},
+{
+"doc_id": 210,
+"arc_id": "Mercury_175385",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 335
+},
+{
+"doc_id": 211,
+"arc_id": "Mercury_410669",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 335
+},
+{
+"doc_id": 212,
+"arc_id": "MEAP_2005_8_39",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 335
+},
+{
+"doc_id": 213,
+"arc_id": "Mercury_SC_408568",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 335
+},
+{
+"doc_id": 214,
+"arc_id": "AKDE&ED_2008_8_7",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 335
+},
+{
+"doc_id": 215,
+"arc_id": "Mercury_7082845",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 335
+},
+{
+"doc_id": 216,
+"arc_id": "Mercury_SC_405726",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 335
+},
+{
+"doc_id": 217,
+"arc_id": "Mercury_SC_415407",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 335
+},
+{
+"doc_id": 218,
+"arc_id": "Mercury_SC_401792",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 335
+},
+{
+"doc_id": 219,
+"arc_id": "LEAP_2000_8_4",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 335
+},
+{
+"doc_id": 220,
+"arc_id": "Mercury_SC_413439",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 335
+},
+{
+"doc_id": 221,
+"arc_id": "ACTAAP_2014_7_13",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 335
+},
+{
+"doc_id": 222,
+"arc_id": "Mercury_SC_402638",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 335
+},
+{
+"doc_id": 223,
+"arc_id": "Mercury_SC_406725",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 335
+},
+{
+"doc_id": 224,
+"arc_id": "NYSEDREGENTS_2015_4_29",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 225,
+"arc_id": "Mercury_406136",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 226,
+"arc_id": "MSA_2012_5_23",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 227,
+"arc_id": "Mercury_405873",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 228,
+"arc_id": "Mercury_7043820",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 229,
+"arc_id": "MCAS_2005_5_34",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 230,
+"arc_id": "Mercury_7182245",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 231,
+"arc_id": "MSA_2012_8_30",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 232,
+"arc_id": "Mercury_7252753",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 233,
+"arc_id": "TAKS_2009_8_36",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 234,
+"arc_id": "Mercury_SC_415473",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 235,
+"arc_id": "Mercury_SC_413624",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 236,
+"arc_id": "Mercury_7016800",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 237,
+"arc_id": "Mercury_SC_407228",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 238,
+"arc_id": "Mercury_414504",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 239,
+"arc_id": "TIMSS_2011_4_pg27",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 340
+},
+{
+"doc_id": 240,
+"arc_id": "Mercury_SC_402029",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 348
+},
+{
+"doc_id": 241,
+"arc_id": "Mercury_7131845",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 348
+},
+{
+"doc_id": 242,
+"arc_id": "Mercury_SC_405533",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 348
+},
+{
+"doc_id": 243,
+"arc_id": "Mercury_7086748",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 348
+},
+{
+"doc_id": 244,
+"arc_id": "MDSA_2007_8_17",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 348
+},
+{
+"doc_id": 245,
+"arc_id": "Mercury_7210473",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 348
+},
+{
+"doc_id": 246,
+"arc_id": "Mercury_7214340",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 348
+},
+{
+"doc_id": 247,
+"arc_id": "MCAS_2005_9_17",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 348
+},
+{
+"doc_id": 248,
+"arc_id": "MEA_2016_8_12",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 348
+},
+{
+"doc_id": 249,
+"arc_id": "Mercury_SC_401278",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 348
+},
+{
+"doc_id": 250,
+"arc_id": "Mercury_SC_407689",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 348
+},
+{
+"doc_id": 251,
+"arc_id": "Mercury_7230405",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 348
+},
+{
+"doc_id": 252,
+"arc_id": "Mercury_SC_405640",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 348
+},
+{
+"doc_id": 253,
+"arc_id": "Mercury_7201775",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 348
+},
+{
+"doc_id": 254,
+"arc_id": "Mercury_7177398",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 348
+},
+{
+"doc_id": 255,
+"arc_id": "Mercury_7041423",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 348
+},
+{
+"doc_id": 256,
+"arc_id": "Mercury_7004743",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 356
+},
+{
+"doc_id": 257,
+"arc_id": "Mercury_7198468",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 356
+},
+{
+"doc_id": 258,
+"arc_id": "MEA_2014_5_11",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 356
+},
+{
+"doc_id": 259,
+"arc_id": "Mercury_410602",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 356
+},
+{
+"doc_id": 260,
+"arc_id": "Mercury_7108868",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 356
+},
+{
+"doc_id": 261,
+"arc_id": "Mercury_7033828",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 356
+},
+{
+"doc_id": 262,
+"arc_id": "TIMSS_2007_4_pg19",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 356
+},
+{
+"doc_id": 263,
+"arc_id": "Mercury_400828",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 356
+},
+{
+"doc_id": 264,
+"arc_id": "VASoL_2008_3_16",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 356
+},
+{
+"doc_id": 265,
+"arc_id": "LEAP__5_10315",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 356
+},
+{
+"doc_id": 266,
+"arc_id": "Mercury_SC_415471",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 356
+},
+{
+"doc_id": 267,
+"arc_id": "Mercury_7247065",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 356
+},
+{
+"doc_id": 268,
+"arc_id": "MDSA_2011_5_3",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 356
+},
+{
+"doc_id": 269,
+"arc_id": "MDSA_2009_5_39",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 356
+},
+{
+"doc_id": 270,
+"arc_id": "Mercury_187198",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 356
+},
+{
+"doc_id": 271,
+"arc_id": "MCAS_2000_4_36",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 356
+},
+{
+"doc_id": 272,
+"arc_id": "Mercury_184100",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 403
+},
+{
+"doc_id": 273,
+"arc_id": "Mercury_LBS10814",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 403
+},
+{
+"doc_id": 274,
+"arc_id": "Mercury_SC_408384",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 403
+},
+{
+"doc_id": 275,
+"arc_id": "Mercury_7043068",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 403
+},
+{
+"doc_id": 276,
+"arc_id": "Mercury_411071",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 403
+},
+{
+"doc_id": 277,
+"arc_id": "NYSEDREGENTS_2010_4_24",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 403
+},
+{
+"doc_id": 278,
+"arc_id": "Mercury_SC_409673",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 403
+},
+{
+"doc_id": 279,
+"arc_id": "Mercury_SC_400374",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 403
+},
+{
+"doc_id": 280,
+"arc_id": "CSZ_2009_8_CSZ20740",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 403
+},
+{
+"doc_id": 281,
+"arc_id": "Mercury_SC_406482",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 403
+},
+{
+"doc_id": 282,
+"arc_id": "OHAT_2007_8_24",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 403
+},
+{
+"doc_id": 283,
+"arc_id": "Mercury_188335",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 403
+},
+{
+"doc_id": 284,
+"arc_id": "Mercury_7128555",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 403
+},
+{
+"doc_id": 285,
+"arc_id": "Mercury_407517",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 403
+},
+{
+"doc_id": 286,
+"arc_id": "Mercury_405950",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 403
+},
+{
+"doc_id": 287,
+"arc_id": "MCAS_2004_9_5",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 403
+},
+{
+"doc_id": 288,
+"arc_id": "NCEOGA_2013_8_28",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 452
+},
+{
+"doc_id": 289,
+"arc_id": "Mercury_SC_406451",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 452
+},
+{
+"doc_id": 290,
+"arc_id": "Mercury_7109323",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 452
+},
+{
+"doc_id": 291,
+"arc_id": "Mercury_404132",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 452
+},
+{
+"doc_id": 292,
+"arc_id": "Mercury_7210210",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 452
+},
+{
+"doc_id": 293,
+"arc_id": "Mercury_SC_408042",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 452
+},
+{
+"doc_id": 294,
+"arc_id": "MCAS_2004_8_14",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 452
+},
+{
+"doc_id": 295,
+"arc_id": "TIMSS_2011_4_pg5",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 452
+},
+{
+"doc_id": 296,
+"arc_id": "Mercury_SC_406833",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 452
+},
+{
+"doc_id": 297,
+"arc_id": "Mercury_7029558",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 452
+},
+{
+"doc_id": 298,
+"arc_id": "Mercury_7138390",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 452
+},
+{
+"doc_id": 299,
+"arc_id": "MEAP_2005_5_12",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 452
+},
+{
+"doc_id": 300,
+"arc_id": "MCAS_2000_4_30",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 452
+},
+{
+"doc_id": 301,
+"arc_id": "MCAS_1998_4_12",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 452
+},
+{
+"doc_id": 302,
+"arc_id": "Mercury_175840",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 452
+},
+{
+"doc_id": 303,
+"arc_id": "Mercury_7099190",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 452
+},
+{
+"doc_id": 304,
+"arc_id": "Mercury_SC_401605",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 537
+},
+{
+"doc_id": 305,
+"arc_id": "TAKS_2009_5_36",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 537
+},
+{
+"doc_id": 306,
+"arc_id": "Mercury_7171570",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 537
+},
+{
+"doc_id": 307,
+"arc_id": "Mercury_SC_402057",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 537
+},
+{
+"doc_id": 308,
+"arc_id": "Mercury_SC_413628",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 537
+},
+{
+"doc_id": 309,
+"arc_id": "Mercury_LBS10131",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 537
+},
+{
+"doc_id": 310,
+"arc_id": "Mercury_7032428",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 537
+},
+{
+"doc_id": 311,
+"arc_id": "Mercury_7025008",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 537
+},
+{
+"doc_id": 312,
+"arc_id": "MEA_2011_8_19",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 537
+},
+{
+"doc_id": 313,
+"arc_id": "NYSEDREGENTS_2008_8_27",
+"base_cot_correct": 0,
+"pred_letter": null,
+"gold_letter": "3",
+"in_mc_only": false,
+"gen_len": 537
+},
+{
+"doc_id": 314,
+"arc_id": "VASoL_2007_5_22",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 537
+},
+{
+"doc_id": 315,
+"arc_id": "NCEOGA_2013_5_19",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 537
+},
+{
+"doc_id": 316,
+"arc_id": "Mercury_7037555",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 537
+},
+{
+"doc_id": 317,
+"arc_id": "Mercury_402132",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 537
+},
+{
+"doc_id": 318,
+"arc_id": "MCAS_2006_8_24",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 537
+},
+{
+"doc_id": 319,
+"arc_id": "Mercury_7128923",
+"base_cot_correct": 0,
+"pred_letter": "D",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 537
+},
+{
+"doc_id": 320,
+"arc_id": "Mercury_416379",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 443
+},
+{
+"doc_id": 321,
+"arc_id": "Mercury_7168053",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 322,
+"arc_id": "AKDE&ED_2008_8_1",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 323,
+"arc_id": "Mercury_SC_415476",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 324,
+"arc_id": "Mercury_7106960",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 325,
+"arc_id": "Mercury_7160563",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 443
+},
+{
+"doc_id": 326,
+"arc_id": "Mercury_7068583",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 443
+},
+{
+"doc_id": 327,
+"arc_id": "Mercury_404638",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 328,
+"arc_id": "Mercury_SC_407138",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 329,
+"arc_id": "MCAS_2000_4_10",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 330,
+"arc_id": "Mercury_177748",
+"base_cot_correct": 0,
+"pred_letter": "B",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 331,
+"arc_id": "MCAS_2004_9_21-v1",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 332,
+"arc_id": "MDSA_2007_5_16",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 333,
+"arc_id": "Mercury_401763",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 334,
+"arc_id": "Mercury_7268118",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 335,
+"arc_id": "Mercury_403232",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 443
+},
+{
+"doc_id": 336,
+"arc_id": "Mercury_415081",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 388
+},
+{
+"doc_id": 337,
+"arc_id": "Mercury_7206378",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 388
+},
+{
+"doc_id": 338,
+"arc_id": "CSZ30169",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 388
+},
+{
+"doc_id": 339,
+"arc_id": "Mercury_7013948",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 388
+},
+{
+"doc_id": 340,
+"arc_id": "Mercury_SC_402164",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 388
+},
+{
+"doc_id": 341,
+"arc_id": "Mercury_400880",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 388
+},
+{
+"doc_id": 342,
+"arc_id": "Mercury_7040793",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 388
+},
+{
+"doc_id": 343,
+"arc_id": "MDSA_2010_5_29",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 388
+},
+{
+"doc_id": 344,
+"arc_id": "LEAP__8_10365",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 388
+},
+{
+"doc_id": 345,
+"arc_id": "Mercury_SC_401295",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 388
+},
+{
+"doc_id": 346,
+"arc_id": "MCAS_2012_5_23625",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 388
+},
+{
+"doc_id": 347,
+"arc_id": "Mercury_7268048",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 388
+},
+{
+"doc_id": 348,
+"arc_id": "Mercury_SC_402629",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 388
+},
+{
+"doc_id": 349,
+"arc_id": "NCEOGA_2013_8_42",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 388
+},
+{
+"doc_id": 350,
+"arc_id": "Mercury_412463",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 388
+},
+{
+"doc_id": 351,
+"arc_id": "Mercury_409295",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 388
+},
+{
+"doc_id": 352,
+"arc_id": "Mercury_404609",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 395
+},
+{
+"doc_id": 353,
+"arc_id": "Mercury_7230090",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 395
+},
+{
+"doc_id": 354,
+"arc_id": "Mercury_7057488",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 395
+},
+{
+"doc_id": 355,
+"arc_id": "MDSA_2009_4_1",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 395
+},
+{
+"doc_id": 356,
+"arc_id": "Mercury_7150728",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 395
+},
+{
+"doc_id": 357,
+"arc_id": "Mercury_402207",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 395
+},
+{
+"doc_id": 358,
+"arc_id": "Mercury_411732",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 395
+},
+{
+"doc_id": 359,
+"arc_id": "Mercury_7270113",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 395
+},
+{
+"doc_id": 360,
+"arc_id": "AKDE&ED_2008_8_3",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 395
+},
+{
+"doc_id": 361,
+"arc_id": "MCAS_1999_8_1",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 395
+},
+{
+"doc_id": 362,
+"arc_id": "NYSEDREGENTS_2015_4_24",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 395
+},
+{
+"doc_id": 363,
+"arc_id": "Mercury_7122640",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 395
+},
+{
+"doc_id": 364,
+"arc_id": "Mercury_402547",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 395
+},
+{
+"doc_id": 365,
+"arc_id": "Mercury_7133945",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 395
+},
+{
+"doc_id": 366,
+"arc_id": "Mercury_7199028",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 395
+},
+{
+"doc_id": 367,
+"arc_id": "Mercury_7217298",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 395
+},
+{
+"doc_id": 368,
+"arc_id": "Mercury_7057680",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 369,
+"arc_id": "Mercury_SC_400404",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 397
+},
+{
+"doc_id": 370,
+"arc_id": "Mercury_SC_408030",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 397
+},
+{
+"doc_id": 371,
+"arc_id": "Mercury_415083",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 372,
+"arc_id": "Mercury_409114",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 373,
+"arc_id": "Mercury_SC_415006",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 374,
+"arc_id": "MSA_2012_5_15",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 375,
+"arc_id": "Mercury_SC_402612",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 376,
+"arc_id": "Mercury_SC_405937",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 377,
+"arc_id": "Mercury_SC_416459",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 378,
+"arc_id": "NAEP_2000_8_S21+4",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 379,
+"arc_id": "Mercury_7072380",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 380,
+"arc_id": "Mercury_SC_401373",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 381,
+"arc_id": "Mercury_SC_400579",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 397
+},
+{
+"doc_id": 382,
+"arc_id": "MCAS_2003_5_14",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 397
+},
+{
+"doc_id": 383,
+"arc_id": "MSA_2015_8_30",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 397
+},
+{
+"doc_id": 384,
+"arc_id": "Mercury_SC_415416",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 470
+},
+{
+"doc_id": 385,
+"arc_id": "NYSEDREGENTS_2012_8_42",
+"base_cot_correct": 0,
+"pred_letter": null,
+"gold_letter": "2",
+"in_mc_only": false,
+"gen_len": 470
+},
+{
+"doc_id": 386,
+"arc_id": "NCEOGA_2013_5_9",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": true,
+"gen_len": 470
+},
+{
+"doc_id": 387,
+"arc_id": "MEAP_2005_8_45",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 470
+},
+{
+"doc_id": 388,
+"arc_id": "Mercury_SC_400594",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": false,
+"gen_len": 470
+},
+{
+"doc_id": 389,
+"arc_id": "NCEOGA_2013_8_43",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": false,
+"gen_len": 470
+},
+{
+"doc_id": 390,
+"arc_id": "MCAS_2006_8_13",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 470
+},
+{
+"doc_id": 391,
+"arc_id": "Mercury_7168823",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 470
+},
+{
+"doc_id": 392,
+"arc_id": "Mercury_7158935",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 470
+},
+{
+"doc_id": 393,
+"arc_id": "Mercury_7172708",
+"base_cot_correct": 1,
+"pred_letter": "B",
+"gold_letter": "B",
+"in_mc_only": false,
+"gen_len": 470
+},
+{
+"doc_id": 394,
+"arc_id": "ACTAAP_2010_5_1",
+"base_cot_correct": 1,
+"pred_letter": "A",
+"gold_letter": "A",
+"in_mc_only": true,
+"gen_len": 470
+},
+{
+"doc_id": 395,
+"arc_id": "Mercury_7093048",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 470
+},
+{
+"doc_id": 396,
+"arc_id": "Mercury_7081603",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 470
+},
+{
+"doc_id": 397,
+"arc_id": "Mercury_SC_LBS11003",
+"base_cot_correct": 1,
+"pred_letter": "D",
+"gold_letter": "D",
+"in_mc_only": true,
+"gen_len": 470
+},
+{
+"doc_id": 398,
+"arc_id": "MCAS_2005_8_2",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": true,
+"gen_len": 470
+},
+{
+"doc_id": 399,
+"arc_id": "ACTAAP_2010_7_14",
+"base_cot_correct": 1,
+"pred_letter": "C",
+"gold_letter": "C",
+"in_mc_only": false,
+"gen_len": 470
+}
+]
+}

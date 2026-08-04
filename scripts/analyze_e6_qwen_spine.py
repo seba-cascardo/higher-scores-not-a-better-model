@@ -26,8 +26,14 @@ Kill-rules, pre-registered in plans/2026-07-25-pod-runbook-E4-E6.md:
 """
 import json
 import os
+import sys
 
 import numpy as np
+
+# The report prints non-ASCII (sigma); a Windows console defaults to cp1252 and
+# would die mid-report instead of writing the summary.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 E6 = "runs/e6_qwen_spine"
 OUT = os.path.join(E6, "e6_spine_summary.json")

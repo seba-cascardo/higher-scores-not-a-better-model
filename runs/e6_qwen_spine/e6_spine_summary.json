@@ -1,0 +1,226 @@
+{
+  "model": "Qwen2.5-14B-Instruct",
+  "base": {
+    "arc_challenge": 0.4975,
+    "truthfulqa_mc1": 0.5325,
+    "hellaswag": 0.62,
+    "winogrande": 0.6825
+  },
+  "mc": {
+    "arc_challenge": 0.66,
+    "truthfulqa_mc1": 0.6825,
+    "hellaswag": 0.6925,
+    "winogrande": 0.715
+  },
+  "lift": {
+    "arc_challenge": 0.16250000000000003,
+    "truthfulqa_mc1": 0.15000000000000002,
+    "hellaswag": 0.07250000000000001,
+    "winogrande": 0.03249999999999997
+  },
+  "weak_lift_tasks": [
+    "winogrande"
+  ],
+  "arms": {
+    "mc_wknow_offset": {
+      "acc": {
+        "arc_challenge": 0.4675,
+        "truthfulqa_mc1": 0.515,
+        "hellaswag": 0.61,
+        "winogrande": 0.6825
+      },
+      "recovery": {
+        "arc_challenge": -0.1846153846153844,
+        "truthfulqa_mc1": -0.11666666666666638,
+        "hellaswag": -0.13793103448275873,
+        "winogrande": 0.0
+      }
+    },
+    "mc_offpar_offset": {
+      "acc": {
+        "arc_challenge": 0.4875,
+        "truthfulqa_mc1": 0.5475,
+        "hellaswag": 0.625,
+        "winogrande": 0.6625
+      },
+      "recovery": {
+        "arc_challenge": -0.061538461538461584,
+        "truthfulqa_mc1": 0.10000000000000007,
+        "hellaswag": 0.06896551724137936,
+        "winogrande": -0.6153846153846164
+      }
+    },
+    "mc_offperp_offset": {
+      "acc": {
+        "arc_challenge": 0.67,
+        "truthfulqa_mc1": 0.7,
+        "hellaswag": 0.6975,
+        "winogrande": 0.7325
+      },
+      "recovery": {
+        "arc_challenge": 1.0615384615384615,
+        "truthfulqa_mc1": 1.1166666666666665,
+        "hellaswag": 1.0689655172413794,
+        "winogrande": 1.538461538461541
+      }
+    },
+    "mc_offperp_shuffle_seed0": {
+      "acc": {
+        "arc_challenge": 0.47,
+        "truthfulqa_mc1": 0.55,
+        "hellaswag": 0.6425,
+        "winogrande": 0.6625
+      },
+      "recovery": {
+        "arc_challenge": -0.16923076923076935,
+        "truthfulqa_mc1": 0.11666666666666713,
+        "hellaswag": 0.31034482758620635,
+        "winogrande": -0.6153846153846164
+      }
+    },
+    "mc_offperp_shuffle_seed1": {
+      "acc": {
+        "arc_challenge": 0.47,
+        "truthfulqa_mc1": 0.4725,
+        "hellaswag": 0.64,
+        "winogrande": 0.73
+      },
+      "recovery": {
+        "arc_challenge": -0.16923076923076935,
+        "truthfulqa_mc1": -0.3999999999999999,
+        "hellaswag": 0.27586206896551746,
+        "winogrande": 1.4615384615384623
+      }
+    },
+    "mc_offperp_shuffle_seed2": {
+      "acc": {
+        "arc_challenge": 0.475,
+        "truthfulqa_mc1": 0.54,
+        "hellaswag": 0.645,
+        "winogrande": 0.7025
+      },
+      "recovery": {
+        "arc_challenge": -0.13846153846153855,
+        "truthfulqa_mc1": 0.050000000000000405,
+        "hellaswag": 0.3448275862068968,
+        "winogrande": 0.6153846153846164
+      }
+    }
+  },
+  "kill_rules": {
+    "universality": {
+      "wknow_arc_recovery": -0.1846153846153844,
+      "gemma_reference": 0.064,
+      "threshold": 0.3333333333333333,
+      "universality_broken": false,
+      "verdict": "ON-AXIS FAILS IN QWEN TOO -> the off-axis/on-axis asymmetry replicates cross-family; universality SURVIVES"
+    },
+    "offperp_transfers": {
+      "offperp_arc_recovery": 1.0615384615384615,
+      "threshold": 0.6666666666666666,
+      "transfers": true,
+      "verdict": "off_perp carries the lift in Qwen too -> the parallel/perp decomposition TRANSFERS cross-family"
+    },
+    "offpar": {
+      "offpar_arc_recovery": -0.061538461538461584
+    },
+    "direction_privileged": {
+      "shuffle_arc_recovery_mean": -0.15897435897435908,
+      "shuffle_arc_sd": 0.01776462366737312,
+      "offperp_arc_recovery": 1.0615384615384615,
+      "learned_direction_privileged": true,
+      "verdict": "shuffle recovers far less than off_perp -> the LEARNED direction inside the complement is what lifts; specificity survives in Qwen"
+    },
+    "onaxis_vs_noise_floor": {
+      "gemma": {
+        "family": "Gemma 4 31B IT",
+        "wknow_arc": 0.064,
+        "wknow_se": 0.03704506817472158,
+        "shuffle_mean": -0.02142866666666667,
+        "shuffle_sd": 0.01889803466853983,
+        "n_shuffle_seeds": 3,
+        "predictive_sd": 0.0218215708060727,
+        "se_total": 0.0429943953151363,
+        "margin": 0.08542866666666667,
+        "sigma": 1.9869721632435953,
+        "t_crit_95_at_df": 4.3,
+        "beats_floor": false,
+        "wknow_se_source": "paired bootstrap CI, runs/wknow_causal/onaxis_significance.json"
+      },
+      "qwen": {
+        "family": "Qwen2.5-14B-Instruct",
+        "wknow_arc": -0.1846153846153844,
+        "wknow_se": 0.15352080983780156,
+        "shuffle_mean": -0.15897435897435908,
+        "shuffle_sd": 0.01776462366737312,
+        "n_shuffle_seeds": 3,
+        "predictive_sd": 0.020512820512820534,
+        "se_total": 0.1548851666837261,
+        "margin": -0.025641025641025328,
+        "sigma": 0.16554862024575948,
+        "t_crit_95_at_df": 4.3,
+        "beats_floor": false,
+        "wknow_se_source": "unpaired binomial on n=400, propagated through the lift (upper bound)"
+      },
+      "verdict": "the on-axis reference does NOT beat same-norm noise in either family: Gemma +8.5 \u00b1 4.3 pp (1.99\u03c3) and Qwen -2.6 \u00b1 15.5 pp (0.17\u03c3), both short of the t critical value at 2 df (4.30) -- against off_perp's +101pp (Gemma) and +122pp (Qwen) over the same floor"
+    }
+  },
+  "matched_control": {
+    "n_seeds": 3,
+    "checkpoint": "final",
+    "best_ckpt_degenerate": "2/3 seeds selected step 1 (null offset); see docstring",
+    "per_task": {
+      "arc_challenge": {
+        "frac_mean": 0.2717948717948718,
+        "frac_sd": 0.04441155916843299,
+        "effect_mean_pp": 4.416666666666667,
+        "n_seeds_harmful": 0,
+        "n_seeds": 3,
+        "gemma_reference": 0.362,
+        "denominator_noisy": false
+      },
+      "truthfulqa_mc1": {
+        "frac_mean": -0.583333333333333,
+        "frac_sd": 0.07264831572567795,
+        "effect_mean_pp": -8.749999999999996,
+        "n_seeds_harmful": 3,
+        "n_seeds": 3,
+        "gemma_reference": 0.009,
+        "denominator_noisy": false
+      },
+      "hellaswag": {
+        "frac_mean": 1.1494252873563218,
+        "frac_sd": 0.09954314986028089,
+        "effect_mean_pp": 8.333333333333332,
+        "n_seeds_harmful": 0,
+        "n_seeds": 3,
+        "gemma_reference": 0.695,
+        "denominator_noisy": false
+      },
+      "winogrande": {
+        "frac_mean": 2.384615384615387,
+        "frac_sd": 1.148706501774468,
+        "effect_mean_pp": 7.750000000000002,
+        "n_seeds_harmful": 0,
+        "n_seeds": 3,
+        "gemma_reference": 0.795,
+        "denominator_noisy": true
+      }
+    }
+  },
+  "gen_transfer": {
+    "base_acc": 0.945,
+    "adapter_acc": 0.455,
+    "damage_pp": -48.99999999999999,
+    "gemma_reference_pp": -24.2,
+    "eos_rate": {
+      "0.0": 1.0,
+      "1.0": 0.985
+    },
+    "mean_gen_len": {
+      "0.0": 190.96,
+      "1.0": 132.88
+    },
+    "note": "stop ids resolved from the model's generation_config; the earlier run used a Gemma literal ([1,50,105,106]) and its eos_rate (0.775) must NOT be cited -- it would have resurrected the B15 EOS-collapse zombie"
+  }
+}

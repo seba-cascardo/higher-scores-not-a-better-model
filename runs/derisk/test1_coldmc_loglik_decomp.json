@@ -1,0 +1,17 @@
+{
+  "n": 400,
+  "n_flip": 149,
+  "acc_base": 0.495,
+  "acc_v7mc": 0.8475,
+  "acc_lift": 0.3525,
+  "acc_norm_base": 0.505,
+  "acc_norm_v7mc": 0.855,
+  "delta_loglik_correct_mean": 17.45142436504364,
+  "delta_loglik_incorrect_mean": -15.287395833333335,
+  "suppression_ratio_incorrect_over_correct": -0.875997025432205,
+  "margin_base_mean": -1.2552935791015625,
+  "margin_v7mc_mean": 28.08761516094208,
+  "flip_delta_correct_mean": 24.90188496224832,
+  "flip_delta_basewinner_mean": -28.550335570469798,
+  "len_corr_pearson_dloglik_vs_optlen": -0.18024442190845089
+}

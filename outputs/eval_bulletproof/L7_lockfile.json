@@ -1,0 +1,185 @@
+{
+  "offsets_mc": {
+    "path": "runs/v7_lofit_gemma4_31b_chat/offsets_mc.pt",
+    "sha256": "fcf74ffc91d7b46960838fda4af068f1e4ebab7a89be20c9b3541f03a6cec8b1",
+    "size_bytes": 51901,
+    "git_tracked": true,
+    "structure": {
+      "n_layer_head_pairs": 48,
+      "alpha_shape": [
+        48
+      ],
+      "alpha_dtype": "torch.float32",
+      "theta_shape": [
+        48,
+        256
+      ],
+      "theta_dtype": "torch.float32",
+      "head_dim": 256,
+      "num_q_heads": 32
+    },
+    "train_config": {
+      "base_path": "google/gemma-4-31B-it",
+      "heads_file": "runs/v7_lofit_gemma4_31b_chat/head_probe_mc.json",
+      "top_k": 48,
+      "datasets": [
+        "tqa",
+        "arc"
+      ],
+      "steps": 800,
+      "loss_type": "direct",
+      "lr": 0.01,
+      "beta": 0.1,
+      "gamma": 0.5
+    }
+  },
+  "R1_base": {
+    "results_json": "runs/eval_bulletproof/R1_base/__workspace__hf_cache__models--google--gemma-4-31b-it__snapshots__3548789868c5356dbf307c98e6f609007b82b3eb/results_2026-06-27T14-15-53.712483.json",
+    "git_hash": "ea33276",
+    "upper_git_hash": null,
+    "transformers_version": "5.8.0",
+    "lm_eval_version": "0.4.12",
+    "model_source": "hf",
+    "model_name": "/workspace/hf_cache/models--google--gemma-4-31b-it/snapshots/3548789868c5356dbf307c98e6f609007b82b3eb",
+    "model_pretrained_path": "/workspace/hf_cache/models--google--gemma-4-31b-it/snapshots/3548789868c5356dbf307c98e6f609007b82b3eb",
+    "model_sha": "",
+    "model_revision": "main",
+    "model_dtype": "torch.bfloat16",
+    "model_num_parameters": 31273086512,
+    "max_length": 4096,
+    "batch_size": "8",
+    "limit": 400.0,
+    "seeds": {
+      "random": 0,
+      "numpy": 1234,
+      "torch": 1234,
+      "fewshot": 1234
+    },
+    "eot_token_id": 1,
+    "tokenizer_pad_token": [
+      "<pad>",
+      "0"
+    ],
+    "tokenizer_eos_token": [
+      "<eos>",
+      "1"
+    ],
+    "tokenizer_bos_token": [
+      "<bos>",
+      "2"
+    ],
+    "chat_template_sha": "36e3a42e5cf14cd0020e72d92e1fdd9970f59b82170e421f0cbe1bb42bead3f0",
+    "chat_template_len": 17466,
+    "system_instruction": null,
+    "system_instruction_sha": null,
+    "fewshot_as_multiturn": true,
+    "task_versions": {
+      "arc_challenge": 1.0,
+      "hellaswag": 1.0,
+      "truthfulqa_mc1": 2.0,
+      "winogrande": 1.0
+    },
+    "n_shot": {
+      "arc_challenge": 0,
+      "hellaswag": 0,
+      "truthfulqa_mc1": 0,
+      "winogrande": 0
+    },
+    "n_samples": {
+      "arc_challenge": {
+        "original": 1172,
+        "effective": 400
+      },
+      "truthfulqa_mc1": {
+        "original": 817,
+        "effective": 400
+      },
+      "hellaswag": {
+        "original": 10042,
+        "effective": 400
+      },
+      "winogrande": {
+        "original": 1267,
+        "effective": 400
+      }
+    },
+    "date_epoch": 1782569562.8228617
+  },
+  "R4_base_full": {
+    "results_json": "runs/eval_bulletproof/R4_base_full/__workspace__models__gemma4-31b-it/results_2026-06-27T21-41-43.217790.json",
+    "git_hash": "ea33276",
+    "upper_git_hash": null,
+    "transformers_version": "5.8.0",
+    "lm_eval_version": "0.4.12",
+    "model_source": "hf",
+    "model_name": "/workspace/models/gemma4-31b-it",
+    "model_pretrained_path": "/workspace/models/gemma4-31b-it",
+    "model_sha": "",
+    "model_revision": "main",
+    "model_dtype": "torch.bfloat16",
+    "model_num_parameters": 31273086512,
+    "max_length": 4096,
+    "batch_size": "8",
+    "limit": null,
+    "seeds": {
+      "random": 0,
+      "numpy": 1234,
+      "torch": 1234,
+      "fewshot": 1234
+    },
+    "eot_token_id": 1,
+    "tokenizer_pad_token": [
+      "<pad>",
+      "0"
+    ],
+    "tokenizer_eos_token": [
+      "<eos>",
+      "1"
+    ],
+    "tokenizer_bos_token": [
+      "<bos>",
+      "2"
+    ],
+    "chat_template_sha": "36e3a42e5cf14cd0020e72d92e1fdd9970f59b82170e421f0cbe1bb42bead3f0",
+    "chat_template_len": 17466,
+    "system_instruction": null,
+    "system_instruction_sha": null,
+    "fewshot_as_multiturn": true,
+    "task_versions": {
+      "arc_challenge": 1.0,
+      "hellaswag": 1.0,
+      "truthfulqa_mc1": 2.0,
+      "winogrande": 1.0
+    },
+    "n_shot": {
+      "arc_challenge": 0,
+      "hellaswag": 0,
+      "truthfulqa_mc1": 0,
+      "winogrande": 0
+    },
+    "n_samples": {
+      "arc_challenge": {
+        "original": 1172,
+        "effective": 1172
+      },
+      "hellaswag": {
+        "original": 10042,
+        "effective": 10042
+      },
+      "winogrande": {
+        "original": 1267,
+        "effective": 1267
+      },
+      "truthfulqa_mc1": {
+        "original": 817,
+        "effective": 817
+      }
+    },
+    "date_epoch": 1782595170.4897547
+  },
+  "hf_model_snapshot_revision_from_path": "3548789868c5356dbf307c98e6f609007b82b3eb",
+  "local_git_head": "3bb5e038469c95755065529a88eb19f20f1de9d6",
+  "NOT_FEASIBLE_LOCAL": {
+    "model_safetensors_sha256": "lm-eval recorded config.model_sha='' (model loaded from a local FS path, not a pinned HF revision id), so no per-shard safetensors hash exists in these artefacts. The 62GB BF16 weights live ONLY on the pod (/workspace/{hf_cache,models}/gemma4-31b-it); hashing them requires the pod. The HF snapshot revision 3548789868c5356dbf307c98e6f609007b82b3eb (in R1's cache path) is the closest available model pin and is recorded above."
+  }
+}

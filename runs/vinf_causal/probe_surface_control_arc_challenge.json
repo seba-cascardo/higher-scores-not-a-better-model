@@ -1,0 +1,14 @@
+{
+  "task": "arc_challenge",
+  "n_base_wrong": 198,
+  "surface_dims": 5,
+  "surface_auc_base_wrong": 0.44191919191919193,
+  "surface_auc_ci": [
+    0.3930976430976431,
+    0.4898989898989899
+  ],
+  "surface_null": 0.4915824915824916,
+  "anchor_activation": 0.955,
+  "gap": 0.513080808080808,
+  "verdict": "CLEAN: surface features cap at 0.442 (~chance) while the activation probe reaches 0.955 (gap +0.513) -> the in-space probe reads correctness NOT recoverable from length/format/position. The channel claim is not a surface artifact."
+}

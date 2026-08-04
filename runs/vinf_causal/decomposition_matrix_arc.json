@@ -1,0 +1,3621 @@
+{
+ "n": 400,
+ "n_base_wrong": 198,
+ "n_fixed": 151,
+ "spearman_base_wrong": {
+  "hack_fixed_vs_gen_solvable": 0.6089043896609644,
+  "hack_fixed_vs_gen_len": -0.062021382098927186,
+  "hack_fixed_vs_length_effect": 0.4360403772438566
+ },
+ "gen_solvable_rate": {
+  "fixed": 1.0,
+  "not_fixed": 0.8723404255319149
+ },
+ "hooks_TODO": {
+  "surface_bias": "choices-only correctness from score_mc_premise_pod.py (E2-pod answer-only)",
+  "PMI_residual": "from score_mc_pmi.py --premise-file (E2)",
+  "probe_score": "train logistic on runs/correctness_probe_postgen/postgen_arc_challenge.pt (verify cold-MC provenance first)"
+ },
+ "rows": [
+  {
+   "doc_id": 0,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 1,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 2,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 3,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 4,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 5,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 6,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 7,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 8,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 9,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 10,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 11,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 0,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 12,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 13,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 14,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 15,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 538
+  },
+  {
+   "doc_id": 16,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 17,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 18,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 19,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 20,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 21,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 22,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 23,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 24,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 25,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 26,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 27,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 28,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 29,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 30,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 31,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 463
+  },
+  {
+   "doc_id": 32,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 33,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 34,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 35,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 36,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 37,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 38,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 39,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 40,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 41,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 42,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 43,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 44,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 45,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 46,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 47,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 425
+  },
+  {
+   "doc_id": 48,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 49,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 50,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 51,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 52,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 53,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 54,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 0,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 55,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 56,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 57,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 58,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 59,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 60,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 61,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 62,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 63,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 659
+  },
+  {
+   "doc_id": 64,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 65,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 66,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 67,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 68,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 69,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 70,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 0,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 71,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 72,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 73,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 74,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 75,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 76,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 77,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 78,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 79,
+   "base_correct": 1,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 760
+  },
+  {
+   "doc_id": 80,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 81,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 82,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 83,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 84,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 85,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 86,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 87,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 88,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 89,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 90,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 91,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 92,
+   "base_correct": 1,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 93,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 94,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 95,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 96,
+   "base_correct": 1,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 97,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 98,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 99,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 100,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 101,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 102,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 103,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 104,
+   "base_correct": 1,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 105,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 106,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 107,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 108,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 109,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 110,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 111,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 412
+  },
+  {
+   "doc_id": 112,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 113,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 114,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 115,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 116,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 117,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 118,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 119,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 120,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 121,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 122,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 123,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 124,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 125,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 126,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 127,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 366
+  },
+  {
+   "doc_id": 128,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 129,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 130,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 131,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 132,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 133,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 134,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 135,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 136,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 137,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 138,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 139,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 140,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 141,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 142,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 143,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 377
+  },
+  {
+   "doc_id": 144,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 145,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 146,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 147,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 148,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 149,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 150,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 151,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 152,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 153,
+   "base_correct": 1,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 154,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 155,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 156,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 157,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 158,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 159,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 323
+  },
+  {
+   "doc_id": 160,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 161,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 162,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 163,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 164,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 165,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 166,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 167,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 168,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 169,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 170,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 171,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 172,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 173,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 174,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 175,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 842
+  },
+  {
+   "doc_id": 176,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 177,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 178,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 179,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 180,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 181,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 182,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 183,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 184,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 185,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 186,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 187,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 188,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 189,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 0,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 190,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 0,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 191,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 378
+  },
+  {
+   "doc_id": 192,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 193,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 194,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 195,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 196,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 197,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 198,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 199,
+   "base_correct": 1,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 200,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 201,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 202,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 203,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 204,
+   "base_correct": 1,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 0,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 205,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 206,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 207,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 208,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 209,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 210,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 211,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 212,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 213,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 214,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 215,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 216,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 217,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 218,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 219,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 220,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 221,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 222,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 223,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 335
+  },
+  {
+   "doc_id": 224,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 225,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 226,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 227,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 228,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 229,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 230,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 231,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 232,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 233,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 234,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 235,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 236,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 237,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 238,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 239,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 340
+  },
+  {
+   "doc_id": 240,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 241,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 242,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 243,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 244,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 245,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 246,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 247,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 248,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 249,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 250,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 251,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 252,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 253,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 254,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 255,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 348
+  },
+  {
+   "doc_id": 256,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 257,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 258,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 259,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 260,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 261,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 262,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 263,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 264,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 265,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 266,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 267,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 268,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 269,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 270,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 271,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 356
+  },
+  {
+   "doc_id": 272,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 273,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 274,
+   "base_correct": 1,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 275,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 276,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 277,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 278,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 279,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 280,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 281,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 282,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 283,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 284,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 285,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 286,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 287,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 403
+  },
+  {
+   "doc_id": 288,
+   "base_correct": 1,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 289,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 290,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 291,
+   "base_correct": 1,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 292,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 293,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 294,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 295,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 296,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 297,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 298,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 299,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 300,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 301,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 302,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 303,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 452
+  },
+  {
+   "doc_id": 304,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 305,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 306,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 307,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 308,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 309,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 310,
+   "base_correct": 1,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 311,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 312,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 313,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 314,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 315,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 316,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 317,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 318,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 319,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 0,
+   "gen_len": 537
+  },
+  {
+   "doc_id": 320,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 321,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 322,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 323,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 324,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 325,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 326,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 327,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 328,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 329,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 330,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 0,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 331,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 332,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 333,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 334,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 335,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 443
+  },
+  {
+   "doc_id": 336,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 337,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 338,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 339,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 340,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 341,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 342,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 343,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 344,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 345,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 346,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 347,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 348,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 349,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 350,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 351,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 388
+  },
+  {
+   "doc_id": 352,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 353,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 354,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 355,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 356,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 357,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 358,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 359,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 360,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 361,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 362,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 363,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 364,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 365,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 366,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 367,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 395
+  },
+  {
+   "doc_id": 368,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 369,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 370,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 371,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 372,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 373,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 374,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 375,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 376,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 377,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 378,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 379,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 380,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 381,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 382,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 383,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 397
+  },
+  {
+   "doc_id": 384,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 385,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 386,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 387,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 388,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 389,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 1,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 390,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 391,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 392,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 393,
+   "base_correct": 0,
+   "mc_correct": 0,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 394,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 395,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 396,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 397,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 398,
+   "base_correct": 0,
+   "mc_correct": 1,
+   "hack_fixed": 1,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  },
+  {
+   "doc_id": 399,
+   "base_correct": 1,
+   "mc_correct": 1,
+   "hack_fixed": 0,
+   "base_length_effect": 0,
+   "gen_solvable": 1,
+   "gen_len": 470
+  }
+ ]
+}

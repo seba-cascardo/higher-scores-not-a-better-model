@@ -1,0 +1,20 @@
+{
+  "task": "truthfulqa_mc1",
+  "feature_dim": 12288,
+  "n_items": 400,
+  "n_base_wrong": 197,
+  "auc_all": 0.9770992366412213,
+  "auc_base_wrong": 0.9741935483870968,
+  "auc_base_wrong_ci": [
+    0.9572646804835925,
+    0.9880652351924301
+  ],
+  "null_perm_mean": 0.4808602150537635,
+  "null_perm_max": 0.512258064516129,
+  "null_clean": true,
+  "anchor_adapter": null,
+  "anchor_surface": null,
+  "probe": "L2-logistic + PCA200 (held-out GroupKFold by item, AUC-tuned C)",
+  "cells": 48,
+  "verdict": "INDETERMINATE"
+}

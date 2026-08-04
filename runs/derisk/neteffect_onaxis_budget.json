@@ -1,0 +1,38 @@
+{
+  "head_dim": 256,
+  "k_null": 5000,
+  "results": {
+    "contrastive (LoFiT)": {
+      "n_heads": 48,
+      "on_axis_energy_budget_vinf": 0.014365035259961556,
+      "budget_unweighted": 0.011983214974554577,
+      "vs_random_null": {
+        "null_mean": 0.003922938923919263,
+        "expected_1_over_d": 0.00390625,
+        "null_p95": 0.006269259906918788,
+        "null_p99": 0.007935676022500306,
+        "ratio_to_null_mean": 3.6618044630707582,
+        "z_score": 8.195143473535829,
+        "percentile_in_null": 100.0,
+        "above_null_p95": true
+      },
+      "b6_ratio_mean_abscos": 1.7356730336410033
+    },
+    "align (generic SFT)": {
+      "n_heads": 48,
+      "on_axis_energy_budget_vinf": 0.053601978957168964,
+      "budget_unweighted": 0.05897176598075512,
+      "vs_random_null": {
+        "null_mean": 0.0039158415975356735,
+        "expected_1_over_d": 0.00390625,
+        "null_p95": 0.005883322031130773,
+        "null_p99": 0.006981078504709857,
+        "ratio_to_null_mean": 13.688495211579008,
+        "z_score": 46.10234860252896,
+        "percentile_in_null": 100.0,
+        "above_null_p95": true
+      },
+      "b6_ratio_mean_abscos": 3.9290939069079776
+    }
+  }
+}

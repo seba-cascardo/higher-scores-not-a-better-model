@@ -1,0 +1,16 @@
+{
+  "method": "d_freq = argmin_r ||M r - f||, M = W_U * (1+norm), f = unigram log-freq (wikitext-103 train, +1 smoothed); reuses logit_lens_theta_mc.fetch_tensors and the B12 aggregate-write construction.",
+  "vocab": 262144,
+  "d_model": 5376,
+  "wikitext_tokens_seen": 121611572,
+  "vocab_seen": 112764,
+  "ridge": 0.001,
+  "cos_agg_dfreq": 0.012758614495396614,
+  "cos_agg_dfreq_ranking_only": 0.008618312887847424,
+  "ident_corr_M_dfreq_vs_f": 0.906289035744209,
+  "ident_corr_ranking": 0.9062890358610176,
+  "null_1_over_sqrt_d": 0.013638618139749524,
+  "gate_threshold_3x_null": 0.040915854419248575,
+  "b12_reference_cos_agg_dstar": 0.0231,
+  "gate_verdict": "RE-DERIVED: |cos(agg, d_freq)|=0.0128 <= 3/sqrt(d)=0.0409 -> theta_mc is NOT the token-frequency component of a Stolfo mechanism either; the \u00a75.6 claim is citable."
+}

@@ -1,0 +1,35 @@
+{
+  "task": "arc_challenge",
+  "n_cells": 48,
+  "n_rows": 1598,
+  "head_dim": 256,
+  "C": 0.03,
+  "pca": 200,
+  "seed": 42,
+  "n_null": 1000,
+  "cos_probe_theta_abs_perhead": {
+    "mean": 0.06562420807840694,
+    "median": 0.04546273867057966,
+    "min": 0.0066453399345562415,
+    "max": 0.2094768517968557,
+    "absmean": 0.06562420807840694
+  },
+  "cos_probe_theta_abs_pooled": 0.008276454316742947,
+  "cos_probe_vinf_signed_perhead": {
+    "mean": 0.21931263431373824,
+    "median": 0.20342826241031006,
+    "min": -0.04370563123762581,
+    "max": 0.4818650266087086,
+    "absmean": 0.2213383505026716
+  },
+  "cos_probe_vinf_pooled": 0.2090099802530175,
+  "null_band_theory_1_over_sqrt_d": 0.0625,
+  "null_perhead_mean_ci95": [
+    0.03914200934267571,
+    0.061449948132385336
+  ],
+  "null_pooled_p97.5": 0.020324169614358026,
+  "sanity_cos_probe_vinf_pooled_ok": true,
+  "gate_verdict": "UPGRADE: |pooled cos(theta_mc, probe)|=0.0083 is INSIDE the null band (<= p97.5 0.0203); the adapter writes off-axis even w.r.t. the probe's decision direction. Per-head |cos| mean 0.0656 vs per-head-mean null p97.5 0.0614 (slightly above null). Sanity cos(probe,v_inf) pooled 0.2090 reproduces the paper.",
+  "note": "Independent reproduction of the theta-vs-probe leg of probe_direction_geometry.json; PC-baseline caveat (cos(PC1,v_inf) 0.55 > cos(probe,v_inf) 0.22) lives in that file and concerns the READ leg, not this WRITE-vs-read result."
+}

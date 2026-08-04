@@ -1,0 +1,54 @@
+{
+  "task": "arc_challenge",
+  "metric": "acc_norm",
+  "n": 400,
+  "neutral_premise": "Answer:",
+  "chance": 0.2504166666666666,
+  "thresholds": {
+    "pmi_surface_frac": 0.3,
+    "answer_prior_margin": 0.05
+  },
+  "naive": {
+    "base": 0.49,
+    "mc": 0.8175,
+    "lift": 0.3275,
+    "ci": [
+      0.28,
+      0.37749999999999995
+    ]
+  },
+  "pmi": {
+    "base": 0.5025,
+    "mc": 0.7575,
+    "lift": 0.255,
+    "ci": [
+      0.2024999999999999,
+      0.30750000000000005
+    ],
+    "pmi_frac_of_naive": 0.7786259541984732
+  },
+  "choices_only": {
+    "base": 0.2925,
+    "base_ci": [
+      0.2475,
+      0.34
+    ],
+    "mc": 0.33,
+    "mc_ci": [
+      0.285,
+      0.375
+    ],
+    "lift": 0.03750000000000003,
+    "lift_ci": [
+      -0.0050000000000000044,
+      0.08000000000000002
+    ]
+  },
+  "verdicts": {
+    "surface_form": false,
+    "answer_prior": false,
+    "A": "NOT surface-form  (PMI retains 78% of the naive lift, >= 30% threshold)",
+    "B": "no answer-prior lift  (choices-only lift +0.0375 CI[-0.0050,+0.0800] does not clear >= 0.05 with CI_lo>0)",
+    "overall": "KNOWLEDGE-CONSISTENT: PMI survives and choices-only does not lift -> the +35 is question-conditional under this test (does NOT by itself rule out the off-axis OOD-hack read; complementary to the v_inf causal result)"
+  }
+}

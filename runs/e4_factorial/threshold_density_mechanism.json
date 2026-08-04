@@ -1,0 +1,1498 @@
+{
+  "predictions_fixed_before_running": {
+    "Q1": "near-zero base-gap density orders ARC > HSwag > TQA in Gemma",
+    "Q2": "uniform-push counterfactual reproduces measured d_acc within \u00b13pp in most cells",
+    "Q3": "if Q2 fails, the sign of the residual says whether arms are selective"
+  },
+  "definitions": {
+    "gap": "logp(gold) - logp(best distractor), raw log-probs",
+    "uniform_push": "every item's gap shifted by the arm's MEAN margin",
+    "residual": "measured d_acc - uniform-push d_acc"
+  },
+  "base_gap_density": {
+    "Gemma/arc_challenge": {
+      "n": 400,
+      "median_abs_gap": 9.8125,
+      "acc_base": 0.49,
+      "frac_within": {
+        "1.0": 0.0425,
+        "3.0": 0.125,
+        "10.0": 0.5025
+      }
+    },
+    "Gemma/hellaswag": {
+      "n": 400,
+      "median_abs_gap": 23.25,
+      "acc_base": 0.4875,
+      "frac_within": {
+        "1.0": 0.015,
+        "3.0": 0.07,
+        "10.0": 0.235
+      }
+    },
+    "Gemma/truthfulqa_mc1": {
+      "n": 400,
+      "median_abs_gap": 20.8125,
+      "acc_base": 0.4375,
+      "frac_within": {
+        "1.0": 0.0325,
+        "3.0": 0.0725,
+        "10.0": 0.2525
+      }
+    },
+    "Qwen/arc_challenge": {
+      "n": 400,
+      "median_abs_gap": 8.5,
+      "acc_base": 0.5225,
+      "frac_within": {
+        "1.0": 0.05,
+        "3.0": 0.2225,
+        "10.0": 0.58
+      }
+    },
+    "Qwen/hellaswag": {
+      "n": 400,
+      "median_abs_gap": 20.6875,
+      "acc_base": 0.5775,
+      "frac_within": {
+        "1.0": 0.0225,
+        "3.0": 0.05,
+        "10.0": 0.23
+      }
+    },
+    "Qwen/truthfulqa_mc1": {
+      "n": 400,
+      "median_abs_gap": 17.25,
+      "acc_base": 0.53,
+      "frac_within": {
+        "1.0": 0.02,
+        "3.0": 0.0875,
+        "10.0": 0.27
+      }
+    }
+  },
+  "cells": {
+    "Gemma contrastive canonical": {
+      "family": "Gemma",
+      "objective": "contrastive",
+      "per_task": {
+        "arc_challenge": {
+          "margin_mean": {
+            "mean": 29.409514445066453,
+            "sd": 0.0
+          },
+          "margin_sd_items": {
+            "mean": 28.352511463861227,
+            "sd": 0.0
+          },
+          "gap_base_sd": {
+            "mean": 14.06977841984315,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 2.0953516926235967,
+            "sd": 0.0
+          },
+          "affine_slope": {
+            "mean": 0.6648636023902573,
+            "sd": 0.0
+          },
+          "affine_intercept": {
+            "mean": 28.98717815050564,
+            "sd": 0.0
+          },
+          "effective_threshold_shift": {
+            "mean": -43.59868407037709,
+            "sd": 0.0
+          },
+          "d_acc_measured_pp": {
+            "mean": 35.5,
+            "sd": 0.0
+          },
+          "d_acc_uniform_pp": {
+            "mean": 48.5,
+            "sd": 0.0
+          },
+          "d_acc_affine_pp": {
+            "mean": 50.75000000000001,
+            "sd": 0.0
+          },
+          "affine_frac_of_measured": {
+            "mean": 1.4295774647887327,
+            "sd": 0.0
+          },
+          "d_acc_permuted_pp": {
+            "mean": 32.00000000000001,
+            "sd": 0.0
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": 3.499999999999992,
+            "sd": 0.0
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 2.612669382464051,
+            "sd": 0.0
+          },
+          "d_acc_stratified_pp": {
+            "mean": 35.510000000000005,
+            "sd": 0.0
+          },
+          "residual_vs_stratified_pp": {
+            "mean": -0.010000000000010001,
+            "sd": 0.0
+          },
+          "sigma_vs_stratified": {
+            "mean": 0.02304234883677623,
+            "sd": 0.0
+          },
+          "residual_pp": {
+            "mean": -13.0,
+            "sd": 0.0
+          },
+          "n_seeds": 1,
+          "n": 400
+        },
+        "hellaswag": {
+          "margin_mean": {
+            "mean": 25.31609375,
+            "sd": 0.0
+          },
+          "margin_sd_items": {
+            "mean": 39.863810055059346,
+            "sd": 0.0
+          },
+          "gap_base_sd": {
+            "mean": 36.79817826699284,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 1.495232301276313,
+            "sd": 0.0
+          },
+          "affine_slope": {
+            "mean": 1.0310802589333856,
+            "sd": 0.0
+          },
+          "affine_intercept": {
+            "mean": 25.42340320025798,
+            "sd": 0.0
+          },
+          "effective_threshold_shift": {
+            "mean": -24.65705552985521,
+            "sd": 0.0
+          },
+          "d_acc_measured_pp": {
+            "mean": 22.749999999999996,
+            "sd": 0.0
+          },
+          "d_acc_uniform_pp": {
+            "mean": 26.000000000000007,
+            "sd": 0.0
+          },
+          "d_acc_affine_pp": {
+            "mean": 26.000000000000007,
+            "sd": 0.0
+          },
+          "affine_frac_of_measured": {
+            "mean": 1.1428571428571432,
+            "sd": 0.0
+          },
+          "d_acc_permuted_pp": {
+            "mean": 18.556250000000002,
+            "sd": 0.0
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": 4.193749999999996,
+            "sd": 0.0
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 3.0573414055430876,
+            "sd": 0.0
+          },
+          "d_acc_stratified_pp": {
+            "mean": 21.479999999999993,
+            "sd": 0.0
+          },
+          "residual_vs_stratified_pp": {
+            "mean": 1.2700000000000045,
+            "sd": 0.0
+          },
+          "sigma_vs_stratified": {
+            "mean": 2.8998075695237575,
+            "sd": 0.0
+          },
+          "residual_pp": {
+            "mean": -3.2500000000000084,
+            "sd": 0.0
+          },
+          "n_seeds": 1,
+          "n": 400
+        },
+        "truthfulqa_mc1": {
+          "margin_mean": {
+            "mean": 55.45032846868038,
+            "sd": 0.0
+          },
+          "margin_sd_items": {
+            "mean": 45.21968264211554,
+            "sd": 0.0
+          },
+          "gap_base_sd": {
+            "mean": 29.303595408840277,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 1.946022350533439,
+            "sd": 0.0
+          },
+          "affine_slope": {
+            "mean": 1.2028539911295497,
+            "sd": 0.0
+          },
+          "affine_intercept": {
+            "mean": 56.68117652836253,
+            "sd": 0.0
+          },
+          "effective_threshold_shift": {
+            "mean": -47.12224172373208,
+            "sd": 0.0
+          },
+          "d_acc_measured_pp": {
+            "mean": 36.5,
+            "sd": 0.0
+          },
+          "d_acc_uniform_pp": {
+            "mean": 51.74999999999999,
+            "sd": 0.0
+          },
+          "d_acc_affine_pp": {
+            "mean": 47.25,
+            "sd": 0.0
+          },
+          "affine_frac_of_measured": {
+            "mean": 1.2945205479452055,
+            "sd": 0.0
+          },
+          "d_acc_permuted_pp": {
+            "mean": 38.39875000000001,
+            "sd": 0.0
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": -1.8987500000000046,
+            "sd": 0.0
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 1.6500380985038159,
+            "sd": 0.0
+          },
+          "d_acc_stratified_pp": {
+            "mean": 36.62375,
+            "sd": 0.0
+          },
+          "residual_vs_stratified_pp": {
+            "mean": -0.12375000000000025,
+            "sd": 0.0
+          },
+          "sigma_vs_stratified": {
+            "mean": 0.34402164202373414,
+            "sd": 0.0
+          },
+          "residual_pp": {
+            "mean": -15.249999999999996,
+            "sd": 0.0
+          },
+          "n_seeds": 1,
+          "n": 400
+        }
+      }
+    },
+    "Gemma plain-CE in-domain": {
+      "family": "Gemma",
+      "objective": "plain-CE",
+      "per_task": {
+        "arc_challenge": {
+          "margin_mean": {
+            "mean": 1.9396975708007815,
+            "sd": 0.28913693787648764
+          },
+          "margin_sd_items": {
+            "mean": 11.027863192861231,
+            "sd": 0.11497340088320054
+          },
+          "gap_base_sd": {
+            "mean": 14.069778419843152,
+            "sd": 2.175583928816829e-15
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 0.42606642417536156,
+            "sd": 0.012735245005057216
+          },
+          "affine_slope": {
+            "mean": 0.2836285053204872,
+            "sd": 0.009577778778001873
+          },
+          "affine_intercept": {
+            "mean": 1.0369317573893457,
+            "sd": 0.29493763592654715
+          },
+          "effective_threshold_shift": {
+            "mean": -3.6468002722732855,
+            "sd": 1.002965290439516
+          },
+          "d_acc_measured_pp": {
+            "mean": 9.66666666666667,
+            "sd": 1.233220715579061
+          },
+          "d_acc_uniform_pp": {
+            "mean": 5.250000000000003,
+            "sd": 0.25000000000000044
+          },
+          "d_acc_affine_pp": {
+            "mean": 8.833333333333334,
+            "sd": 2.8431203515386616
+          },
+          "affine_frac_of_measured": {
+            "mean": 0.9037412452046599,
+            "sd": 0.20711341347204895
+          },
+          "d_acc_permuted_pp": {
+            "mean": 3.378333333333335,
+            "sd": 0.6351295799546288
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": 6.288333333333333,
+            "sd": 0.6654055780750021
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 4.49767865382965,
+            "sd": 0.47291494703378445
+          },
+          "d_acc_stratified_pp": {
+            "mean": 9.581666666666665,
+            "sd": 1.777657488334954
+          },
+          "residual_vs_stratified_pp": {
+            "mean": 0.08500000000000174,
+            "sd": 0.9774880114354385
+          },
+          "sigma_vs_stratified": {
+            "mean": 0.8393729421411334,
+            "sd": 0.4510047747382472
+          },
+          "residual_pp": {
+            "mean": 4.416666666666665,
+            "sd": 1.0103629710818458
+          },
+          "n_seeds": 3,
+          "n": 400
+        },
+        "hellaswag": {
+          "margin_mean": {
+            "mean": 2.483268229166667,
+            "sd": 0.32856047259401794
+          },
+          "margin_sd_items": {
+            "mean": 18.64155270926527,
+            "sd": 0.34432703983190394
+          },
+          "gap_base_sd": {
+            "mean": 36.79817826699284,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 0.653024665277741,
+            "sd": 0.018824310311889088
+          },
+          "affine_slope": {
+            "mean": 0.5849933266872672,
+            "sd": 0.016799687291437607
+          },
+          "affine_intercept": {
+            "mean": 1.0503928447617517,
+            "sd": 0.3667763986239607
+          },
+          "effective_threshold_shift": {
+            "mean": -1.7879717759534228,
+            "sd": 0.6019507599884963
+          },
+          "d_acc_measured_pp": {
+            "mean": 2.166666666666663,
+            "sd": 0.7637626158259742
+          },
+          "d_acc_uniform_pp": {
+            "mean": 3.0833333333333357,
+            "sd": 0.28867513459481287
+          },
+          "d_acc_affine_pp": {
+            "mean": 2.0,
+            "sd": 0.9013878188659952
+          },
+          "affine_frac_of_measured": {
+            "mean": 0.9027777777777796,
+            "sd": 0.08673608331108726
+          },
+          "d_acc_permuted_pp": {
+            "mean": 1.8420833333333313,
+            "sd": 0.3543685699005098
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": 0.32458333333333184,
+            "sd": 0.4866488295817983
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 0.23522830846814025,
+            "sd": 0.3524266643895349
+          },
+          "d_acc_stratified_pp": {
+            "mean": 2.859999999999994,
+            "sd": 0.6930108675194099
+          },
+          "residual_vs_stratified_pp": {
+            "mean": -0.693333333333331,
+            "sd": 0.08199021791246176
+          },
+          "sigma_vs_stratified": {
+            "mean": 1.0277413288131745,
+            "sd": 0.1169026364695369
+          },
+          "residual_pp": {
+            "mean": -0.9166666666666731,
+            "sd": 0.5773502691896263
+          },
+          "n_seeds": 3,
+          "n": 400
+        },
+        "truthfulqa_mc1": {
+          "margin_mean": {
+            "mean": 2.4975517759720485,
+            "sd": 0.41617332943105456
+          },
+          "margin_sd_items": {
+            "mean": 20.41456190271796,
+            "sd": 0.1289350369553961
+          },
+          "gap_base_sd": {
+            "mean": 29.303595408840277,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 0.42317207484077546,
+            "sd": 0.005230672814379499
+          },
+          "affine_slope": {
+            "mean": 0.34687431409056724,
+            "sd": 0.0052402677550615895
+          },
+          "affine_intercept": {
+            "mean": -1.4653896419112638,
+            "sd": 0.4322479851922533
+          },
+          "effective_threshold_shift": {
+            "mean": 4.2319229604768696,
+            "sd": 1.2747003085668285
+          },
+          "d_acc_measured_pp": {
+            "mean": 0.833333333333334,
+            "sd": 1.181453906563153
+          },
+          "d_acc_uniform_pp": {
+            "mean": 4.833333333333332,
+            "sd": 0.14433756729740696
+          },
+          "d_acc_affine_pp": {
+            "mean": -4.083333333333333,
+            "sd": 1.5877132402714693
+          },
+          "affine_frac_of_measured": {
+            "mean": 1.5714285714285694,
+            "sd": 7.4244494058207255
+          },
+          "d_acc_permuted_pp": {
+            "mean": 3.670416666666663,
+            "sd": 0.49922804992641406
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": -2.8370833333333287,
+            "sd": 0.998206464531924
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 1.848649866708514,
+            "sd": 0.6376602168683749
+          },
+          "d_acc_stratified_pp": {
+            "mean": -0.1833333333333372,
+            "sd": 0.6784971137251352
+          },
+          "residual_vs_stratified_pp": {
+            "mean": 1.0166666666666713,
+            "sd": 0.8064479731100662
+          },
+          "sigma_vs_stratified": {
+            "mean": 1.1311684202369288,
+            "sd": 0.915721630671108
+          },
+          "residual_pp": {
+            "mean": -3.999999999999998,
+            "sd": 1.0897247358851694
+          },
+          "n_seeds": 3,
+          "n": 400
+        }
+      }
+    },
+    "Gemma plain-CE OOD": {
+      "family": "Gemma",
+      "objective": "plain-CE",
+      "per_task": {
+        "arc_challenge": {
+          "margin_mean": {
+            "mean": 1.845166219075521,
+            "sd": 0.6380309494109273
+          },
+          "margin_sd_items": {
+            "mean": 11.626975336867543,
+            "sd": 0.10001522833877886
+          },
+          "gap_base_sd": {
+            "mean": 14.069778419843152,
+            "sd": 2.175583928816829e-15
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 0.4788801575480823,
+            "sd": 0.0414278154359817
+          },
+          "affine_slope": {
+            "mean": 0.27376687365344415,
+            "sd": 0.02168942200275919
+          },
+          "affine_intercept": {
+            "mean": 0.9299728537589873,
+            "sd": 0.6614222344902311
+          },
+          "effective_threshold_shift": {
+            "mean": -3.29978561593596,
+            "sd": 2.2696802426496343
+          },
+          "d_acc_measured_pp": {
+            "mean": 9.500000000000002,
+            "sd": 3.3634060117684297
+          },
+          "d_acc_uniform_pp": {
+            "mean": 4.666666666666667,
+            "sd": 1.6645820296198515
+          },
+          "d_acc_affine_pp": {
+            "mean": 8.749999999999998,
+            "sd": 5.629165124598853
+          },
+          "affine_frac_of_measured": {
+            "mean": 0.8379177758059742,
+            "sd": 0.3952993240378412
+          },
+          "d_acc_permuted_pp": {
+            "mean": 2.5924999999999976,
+            "sd": 1.383665873684826
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": 6.907500000000003,
+            "sd": 2.0059676592607425
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 4.805757932327203,
+            "sd": 1.1309580787101852
+          },
+          "d_acc_stratified_pp": {
+            "mean": 8.760416666666666,
+            "sd": 4.158816375584925
+          },
+          "residual_vs_stratified_pp": {
+            "mean": 0.7395833333333343,
+            "sd": 1.2213480854503906
+          },
+          "sigma_vs_stratified": {
+            "mean": 1.2888192138467283,
+            "sd": 0.5838657160207043
+          },
+          "residual_pp": {
+            "mean": 4.833333333333333,
+            "sd": 1.7559422921421237
+          },
+          "n_seeds": 3,
+          "n": 400
+        },
+        "hellaswag": {
+          "margin_mean": {
+            "mean": 2.4215104166666666,
+            "sd": 0.8161593538652195
+          },
+          "margin_sd_items": {
+            "mean": 19.55174937058752,
+            "sd": 0.13656368514824724
+          },
+          "gap_base_sd": {
+            "mean": 36.79817826699284,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 0.6292042113360977,
+            "sd": 0.005721321018331007
+          },
+          "affine_slope": {
+            "mean": 0.5568027787524256,
+            "sd": 0.004962087993376564
+          },
+          "affine_intercept": {
+            "mean": 0.8913027607435957,
+            "sd": 0.832456161404091
+          },
+          "effective_threshold_shift": {
+            "mean": -1.5924011515756769,
+            "sd": 1.4798237235594427
+          },
+          "d_acc_measured_pp": {
+            "mean": 2.3333333333333335,
+            "sd": 0.8779711460710649
+          },
+          "d_acc_uniform_pp": {
+            "mean": 2.8333333333333344,
+            "sd": 1.0103629710818456
+          },
+          "d_acc_affine_pp": {
+            "mean": 1.9166666666666685,
+            "sd": 1.7559422921421248
+          },
+          "affine_frac_of_measured": {
+            "mean": 0.6994301994301996,
+            "sd": 0.49823146453399136
+          },
+          "d_acc_permuted_pp": {
+            "mean": 1.6650000000000018,
+            "sd": 0.808891989081366
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": 0.6683333333333318,
+            "sd": 0.08740471001801609
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 0.4806270028487824,
+            "sd": 0.05895248343045325
+          },
+          "d_acc_stratified_pp": {
+            "mean": 2.7400000000000033,
+            "sd": 1.1025276357080604
+          },
+          "residual_vs_stratified_pp": {
+            "mean": -0.40666666666667,
+            "sd": 0.2880330203871291
+          },
+          "sigma_vs_stratified": {
+            "mean": 0.6003445663900316,
+            "sd": 0.43324486817072866
+          },
+          "residual_pp": {
+            "mean": -0.5000000000000004,
+            "sd": 0.24999999999999467
+          },
+          "n_seeds": 3,
+          "n": 400
+        },
+        "truthfulqa_mc1": {
+          "margin_mean": {
+            "mean": -1.3429633607467013,
+            "sd": 0.24289584725500935
+          },
+          "margin_sd_items": {
+            "mean": 18.930354633973753,
+            "sd": 0.37761238255536633
+          },
+          "gap_base_sd": {
+            "mean": 29.303595408840277,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 0.5001002701042679,
+            "sd": 0.029088134956714747
+          },
+          "affine_slope": {
+            "mean": 0.41661371395999663,
+            "sd": 0.022960467994081996
+          },
+          "affine_intercept": {
+            "mean": -4.8827501513302805,
+            "sd": 0.20977229734638578
+          },
+          "effective_threshold_shift": {
+            "mean": 11.745299869702515,
+            "sd": 0.8667902525176189
+          },
+          "d_acc_measured_pp": {
+            "mean": -9.916666666666666,
+            "sd": 1.941863366288506
+          },
+          "d_acc_uniform_pp": {
+            "mean": -1.4166666666666679,
+            "sd": 0.14433756729740657
+          },
+          "d_acc_affine_pp": {
+            "mean": -13.833333333333334,
+            "sd": 1.0103629710818463
+          },
+          "affine_frac_of_measured": {
+            "mean": 1.4253100024488523,
+            "sd": 0.24718206705307455
+          },
+          "d_acc_permuted_pp": {
+            "mean": -0.5562499999999989,
+            "sd": 0.35760487972062355
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": -9.360416666666667,
+            "sd": 1.7144502277212155
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 6.167799568860239,
+            "sd": 1.0685005404000196
+          },
+          "d_acc_stratified_pp": {
+            "mean": -11.258333333333333,
+            "sd": 1.4852300607425573
+          },
+          "residual_vs_stratified_pp": {
+            "mean": 1.341666666666667,
+            "sd": 1.0097813294636317
+          },
+          "sigma_vs_stratified": {
+            "mean": 1.527430666376653,
+            "sd": 1.1080290899636887
+          },
+          "residual_pp": {
+            "mean": -8.499999999999998,
+            "sd": 1.8027756377319935
+          },
+          "n_seeds": 3,
+          "n": 400
+        }
+      }
+    },
+    "Gemma contrastive OOD": {
+      "family": "Gemma",
+      "objective": "contrastive",
+      "per_task": {
+        "arc_challenge": {
+          "margin_mean": {
+            "mean": 5.354191284179687,
+            "sd": 1.8999717294509668
+          },
+          "margin_sd_items": {
+            "mean": 10.68915456386629,
+            "sd": 0.16443943243383907
+          },
+          "gap_base_sd": {
+            "mean": 14.069778419843152,
+            "sd": 2.175583928816829e-15
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 0.6688896967909227,
+            "sd": 0.08992437565091496
+          },
+          "affine_slope": {
+            "mean": 0.43776603159598104,
+            "sd": 0.06416600830031603
+          },
+          "affine_intercept": {
+            "mean": 4.645668388470575,
+            "sd": 1.9715613102559066
+          },
+          "effective_threshold_shift": {
+            "mean": -10.394555324280288,
+            "sd": 3.054432594532262
+          },
+          "d_acc_measured_pp": {
+            "mean": 18.166666666666668,
+            "sd": 4.34693378524832
+          },
+          "d_acc_uniform_pp": {
+            "mean": 13.250000000000002,
+            "sd": 4.630064794363034
+          },
+          "d_acc_affine_pp": {
+            "mean": 25.5,
+            "sd": 7.51248960065836
+          },
+          "affine_frac_of_measured": {
+            "mean": 1.3931113838884845,
+            "sd": 0.11330205799729241
+          },
+          "d_acc_permuted_pp": {
+            "mean": 10.905833333333339,
+            "sd": 4.107563970388453
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": 7.260833333333331,
+            "sd": 2.3533660511771965
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 4.94198061644836,
+            "sd": 1.5562893732541228
+          },
+          "d_acc_stratified_pp": {
+            "mean": 18.70166666666667,
+            "sd": 4.532592100093864
+          },
+          "residual_vs_stratified_pp": {
+            "mean": -0.535000000000004,
+            "sd": 0.6994160510740279
+          },
+          "sigma_vs_stratified": {
+            "mean": 0.9454489561315677,
+            "sd": 0.8567538765981562
+          },
+          "residual_pp": {
+            "mean": 4.916666666666665,
+            "sd": 1.664582029619851
+          },
+          "n_seeds": 3,
+          "n": 400
+        },
+        "hellaswag": {
+          "margin_mean": {
+            "mean": 4.18578125,
+            "sd": 0.9100742016397534
+          },
+          "margin_sd_items": {
+            "mean": 18.29560495216354,
+            "sd": 0.5652818780859938
+          },
+          "gap_base_sd": {
+            "mean": 36.79817826699284,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 0.704647440867697,
+            "sd": 0.026937981498403703
+          },
+          "affine_slope": {
+            "mean": 0.6248293829137626,
+            "sd": 0.02535345465812851
+          },
+          "affine_intercept": {
+            "mean": 2.8904460741008453,
+            "sd": 0.9352344432438606
+          },
+          "effective_threshold_shift": {
+            "mean": -4.617881247132449,
+            "sd": 1.4126566277372268
+          },
+          "d_acc_measured_pp": {
+            "mean": 5.1666666666666705,
+            "sd": 1.5069284433354286
+          },
+          "d_acc_uniform_pp": {
+            "mean": 5.166666666666669,
+            "sd": 1.2829003598617212
+          },
+          "d_acc_affine_pp": {
+            "mean": 5.583333333333335,
+            "sd": 1.6645820296198466
+          },
+          "affine_frac_of_measured": {
+            "mean": 1.0790123456790122,
+            "sd": 0.10640227864896441
+          },
+          "d_acc_permuted_pp": {
+            "mean": 3.5012500000000024,
+            "sd": 0.9132950303707958
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": 1.6654166666666672,
+            "sd": 0.5981251088470866
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 1.2229684015154036,
+            "sd": 0.4407667528985701
+          },
+          "d_acc_stratified_pp": {
+            "mean": 5.876666666666665,
+            "sd": 1.2232777008240312
+          },
+          "residual_vs_stratified_pp": {
+            "mean": -0.7099999999999959,
+            "sd": 0.35961785272703245
+          },
+          "sigma_vs_stratified": {
+            "mean": 1.0826906858013923,
+            "sd": 0.5455521425035422
+          },
+          "residual_pp": {
+            "mean": 0.0,
+            "sd": 0.5000000000000004
+          },
+          "n_seeds": 3,
+          "n": 400
+        },
+        "truthfulqa_mc1": {
+          "margin_mean": {
+            "mean": -0.22748972793420155,
+            "sd": 0.8896309781429537
+          },
+          "margin_sd_items": {
+            "mean": 16.305253206448103,
+            "sd": 0.7552946035936596
+          },
+          "gap_base_sd": {
+            "mean": 29.303595408840277,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 0.6258517986349754,
+            "sd": 0.06109941087591775
+          },
+          "affine_slope": {
+            "mean": 0.5420637765189297,
+            "sd": 0.05325966739867593
+          },
+          "affine_intercept": {
+            "mean": -3.0060888030191957,
+            "sd": 1.1588037266873685
+          },
+          "effective_threshold_shift": {
+            "mean": 5.696002733375546,
+            "sd": 2.50076326757927
+          },
+          "d_acc_measured_pp": {
+            "mean": -3.8333333333333335,
+            "sd": 2.897556441785618
+          },
+          "d_acc_uniform_pp": {
+            "mean": 0.08333333333333341,
+            "sd": 1.701714821388513
+          },
+          "d_acc_affine_pp": {
+            "mean": -5.583333333333335,
+            "sd": 2.8975564417856177
+          },
+          "affine_frac_of_measured": {
+            "mean": 1.933634992458522,
+            "sd": 0.9558584787329785
+          },
+          "d_acc_permuted_pp": {
+            "mean": 0.7124999999999991,
+            "sd": 0.9858086781926791
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": -4.5458333333333325,
+            "sd": 1.912498910675072
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 2.972795577767492,
+            "sd": 1.1784783273606727
+          },
+          "d_acc_stratified_pp": {
+            "mean": -4.196249999999999,
+            "sd": 3.244974720625724
+          },
+          "residual_vs_stratified_pp": {
+            "mean": 0.3629166666666665,
+            "sd": 0.35320924511305324
+          },
+          "sigma_vs_stratified": {
+            "mean": 0.5722336143964575,
+            "sd": 0.4517206158432713
+          },
+          "residual_pp": {
+            "mean": -3.9166666666666665,
+            "sd": 1.25830573921179
+          },
+          "n_seeds": 3,
+          "n": 400
+        }
+      }
+    },
+    "Qwen contrastive": {
+      "family": "Qwen",
+      "objective": "contrastive",
+      "per_task": {
+        "arc_challenge": {
+          "margin_mean": {
+            "mean": 8.1771875,
+            "sd": 0.0
+          },
+          "margin_sd_items": {
+            "mean": 16.762082612386333,
+            "sd": 0.0
+          },
+          "gap_base_sd": {
+            "mean": 13.691840372809137,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 1.4741719447256159,
+            "sd": 0.0
+          },
+          "affine_slope": {
+            "mean": 0.8372111072079719,
+            "sd": 0.0
+          },
+          "affine_intercept": {
+            "mean": 8.254308737960221,
+            "sd": 0.0
+          },
+          "effective_threshold_shift": {
+            "mean": -9.859291959811237,
+            "sd": 0.0
+          },
+          "d_acc_measured_pp": {
+            "mean": 16.250000000000007,
+            "sd": 0.0
+          },
+          "d_acc_uniform_pp": {
+            "mean": 23.5,
+            "sd": 0.0
+          },
+          "d_acc_affine_pp": {
+            "mean": 28.000000000000004,
+            "sd": 0.0
+          },
+          "affine_frac_of_measured": {
+            "mean": 1.7230769230769223,
+            "sd": 0.0
+          },
+          "d_acc_permuted_pp": {
+            "mean": 14.224999999999998,
+            "sd": 0.0
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": 2.02500000000001,
+            "sd": 0.0
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 1.5460933392569287,
+            "sd": 0.0
+          },
+          "d_acc_stratified_pp": {
+            "mean": 15.87249999999999,
+            "sd": 0.0
+          },
+          "residual_vs_stratified_pp": {
+            "mean": 0.3775000000000195,
+            "sd": 0.0
+          },
+          "sigma_vs_stratified": {
+            "mean": 0.738494120946357,
+            "sd": 0.0
+          },
+          "residual_pp": {
+            "mean": -7.249999999999989,
+            "sd": 0.0
+          },
+          "n_seeds": 1,
+          "n": 400
+        },
+        "hellaswag": {
+          "margin_mean": {
+            "mean": 1.9034375,
+            "sd": 0.0
+          },
+          "margin_sd_items": {
+            "mean": 28.720213673665384,
+            "sd": 0.0
+          },
+          "gap_base_sd": {
+            "mean": 31.504539418546983,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 1.6344429328826036,
+            "sd": 0.0
+          },
+          "affine_slope": {
+            "mean": 1.4201750231069716,
+            "sd": 0.0
+          },
+          "affine_intercept": {
+            "mean": 0.2254948061612482,
+            "sd": 0.0
+          },
+          "effective_threshold_shift": {
+            "mean": -0.1587795887776737,
+            "sd": 0.0
+          },
+          "d_acc_measured_pp": {
+            "mean": 0.0,
+            "sd": 0.0
+          },
+          "d_acc_uniform_pp": {
+            "mean": 2.500000000000002,
+            "sd": 0.0
+          },
+          "d_acc_affine_pp": {
+            "mean": 0.5000000000000004,
+            "sd": 0.0
+          },
+          "affine_frac_of_measured": {
+            "mean": null,
+            "sd": null
+          },
+          "d_acc_permuted_pp": {
+            "mean": 0.10624999999999662,
+            "sd": 0.0
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": -0.10624999999999662,
+            "sd": 0.0
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 0.07134872335453582,
+            "sd": 0.0
+          },
+          "d_acc_stratified_pp": {
+            "mean": -0.03750000000000142,
+            "sd": 0.0
+          },
+          "residual_vs_stratified_pp": {
+            "mean": 0.03750000000000142,
+            "sd": 0.0
+          },
+          "sigma_vs_stratified": {
+            "mean": 0.08820539177477378,
+            "sd": 0.0
+          },
+          "residual_pp": {
+            "mean": -2.500000000000002,
+            "sd": 0.0
+          },
+          "n_seeds": 1,
+          "n": 400
+        },
+        "truthfulqa_mc1": {
+          "margin_mean": {
+            "mean": 23.144375,
+            "sd": 0.0
+          },
+          "margin_sd_items": {
+            "mean": 35.947448301588295,
+            "sd": 0.0
+          },
+          "gap_base_sd": {
+            "mean": 26.568959364994363,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 1.8068306382673696,
+            "sd": 0.0
+          },
+          "affine_slope": {
+            "mean": 1.2170319904320503,
+            "sd": 0.0
+          },
+          "affine_intercept": {
+            "mean": 22.835240058628354,
+            "sd": 0.0
+          },
+          "effective_threshold_shift": {
+            "mean": -18.763056549172358,
+            "sd": 0.0
+          },
+          "d_acc_measured_pp": {
+            "mean": 15.249999999999996,
+            "sd": 0.0
+          },
+          "d_acc_uniform_pp": {
+            "mean": 29.75,
+            "sd": 0.0
+          },
+          "d_acc_affine_pp": {
+            "mean": 27.0,
+            "sd": 0.0
+          },
+          "affine_frac_of_measured": {
+            "mean": 1.770491803278689,
+            "sd": 0.0
+          },
+          "d_acc_permuted_pp": {
+            "mean": 17.379999999999995,
+            "sd": 0.0
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": -2.1299999999999986,
+            "sd": 0.0
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 1.611007836739452,
+            "sd": 0.0
+          },
+          "d_acc_stratified_pp": {
+            "mean": 15.578749999999996,
+            "sd": 0.0
+          },
+          "residual_vs_stratified_pp": {
+            "mean": -0.3287499999999999,
+            "sd": 0.0
+          },
+          "sigma_vs_stratified": {
+            "mean": 0.7349025312959127,
+            "sd": 0.0
+          },
+          "residual_pp": {
+            "mean": -14.500000000000002,
+            "sd": 0.0
+          },
+          "n_seeds": 1,
+          "n": 400
+        }
+      }
+    },
+    "Qwen plain-CE": {
+      "family": "Qwen",
+      "objective": "plain-CE",
+      "per_task": {
+        "arc_challenge": {
+          "margin_mean": {
+            "mean": 0.35881184895833335,
+            "sd": 0.11100567180015529
+          },
+          "margin_sd_items": {
+            "mean": 10.728385015996125,
+            "sd": 0.1360218297892463
+          },
+          "gap_base_sd": {
+            "mean": 13.691840372809137,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 0.41493090886785433,
+            "sd": 0.015522083800256117
+          },
+          "affine_slope": {
+            "mean": 0.2791477300597844,
+            "sd": 0.014010317365556961
+          },
+          "affine_intercept": {
+            "mean": 0.7003156118425103,
+            "sd": 0.10443042953930086
+          },
+          "effective_threshold_shift": {
+            "mean": -2.5003293524798615,
+            "sd": 0.2579425862705109
+          },
+          "d_acc_measured_pp": {
+            "mean": 9.166666666666673,
+            "sd": 0.5773502691896268
+          },
+          "d_acc_uniform_pp": {
+            "mean": 1.1666666666666714,
+            "sd": 0.1443375672974098
+          },
+          "d_acc_affine_pp": {
+            "mean": 9.75,
+            "sd": 1.299038105676656
+          },
+          "affine_frac_of_measured": {
+            "mean": 1.060371517027863,
+            "sd": 0.07775460281655919
+          },
+          "d_acc_permuted_pp": {
+            "mean": -0.12374999999999654,
+            "sd": 0.14206072645175205
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": 9.290416666666673,
+            "sd": 0.4511259062981579
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 7.103432176772652,
+            "sd": 0.3668362289407448
+          },
+          "d_acc_stratified_pp": {
+            "mean": 8.540416666666673,
+            "sd": 0.6952993210361599
+          },
+          "residual_vs_stratified_pp": {
+            "mean": 0.6262500000000023,
+            "sd": 0.2917324330615356
+          },
+          "sigma_vs_stratified": {
+            "mean": 0.7207564149006086,
+            "sd": 0.3456679447598264
+          },
+          "residual_pp": {
+            "mean": 8.000000000000004,
+            "sd": 0.43301270189221625
+          },
+          "n_seeds": 3,
+          "n": 400
+        },
+        "hellaswag": {
+          "margin_mean": {
+            "mean": -4.359309895833333,
+            "sd": 0.4649777812503279
+          },
+          "margin_sd_items": {
+            "mean": 13.814035446135891,
+            "sd": 0.2564419235871953
+          },
+          "gap_base_sd": {
+            "mean": 31.504539418546983,
+            "sd": 0.0
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 0.7190192652959242,
+            "sd": 0.015927242277135472
+          },
+          "affine_slope": {
+            "mean": 0.6624255139018863,
+            "sd": 0.014985359127228167
+          },
+          "affine_intercept": {
+            "mean": -3.011227284005898,
+            "sd": 0.4413924440732296
+          },
+          "effective_threshold_shift": {
+            "mean": 4.550835139594287,
+            "sd": 0.7104486162355717
+          },
+          "d_acc_measured_pp": {
+            "mean": -5.000000000000004,
+            "sd": 0.8660254037844397
+          },
+          "d_acc_uniform_pp": {
+            "mean": -4.166666666666667,
+            "sd": 1.0103629710818425
+          },
+          "d_acc_affine_pp": {
+            "mean": -4.583333333333335,
+            "sd": 1.5069284433354282
+          },
+          "affine_frac_of_measured": {
+            "mean": 0.9074074074074069,
+            "sd": 0.21032993873334305
+          },
+          "d_acc_permuted_pp": {
+            "mean": -6.003333333333335,
+            "sd": 0.54227866068409
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": 1.00333333333333,
+            "sd": 0.6429938925319127
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 0.8652695758046337,
+            "sd": 0.5614495317160418
+          },
+          "d_acc_stratified_pp": {
+            "mean": -5.212500000000001,
+            "sd": 0.5414087526998439
+          },
+          "residual_vs_stratified_pp": {
+            "mean": 0.21249999999999694,
+            "sd": 0.5361888076974404
+          },
+          "sigma_vs_stratified": {
+            "mean": 0.609186183327843,
+            "sd": 0.4873504789475426
+          },
+          "residual_pp": {
+            "mean": -0.8333333333333378,
+            "sd": 0.9464847243000446
+          },
+          "n_seeds": 3,
+          "n": 400
+        },
+        "truthfulqa_mc1": {
+          "margin_mean": {
+            "mean": -3.989557291666667,
+            "sd": 0.23358677787114557
+          },
+          "margin_sd_items": {
+            "mean": 20.390607934181062,
+            "sd": 0.2590652153648176
+          },
+          "gap_base_sd": {
+            "mean": 26.568959364994367,
+            "sd": 4.351167857633658e-15
+          },
+          "spread_ratio_arm_over_base": {
+            "mean": 0.4409409780986917,
+            "sd": 0.002906638457054087
+          },
+          "affine_slope": {
+            "mean": 0.3026883339349913,
+            "sd": 0.00835803121288523
+          },
+          "affine_intercept": {
+            "mean": -2.996323987315322,
+            "sd": 0.22196514359730787
+          },
+          "effective_threshold_shift": {
+            "mean": 9.917391169401485,
+            "sd": 1.012487703621056
+          },
+          "d_acc_measured_pp": {
+            "mean": -9.333333333333336,
+            "sd": 1.181453906563153
+          },
+          "d_acc_uniform_pp": {
+            "mean": -4.333333333333337,
+            "sd": 0.14433756729740646
+          },
+          "d_acc_affine_pp": {
+            "mean": -13.333333333333334,
+            "sd": 1.0408329997330674
+          },
+          "affine_frac_of_measured": {
+            "mean": 1.4393240567021053,
+            "sd": 0.15283027522215606
+          },
+          "d_acc_permuted_pp": {
+            "mean": -5.227500000000009,
+            "sd": 0.25664907948402915
+          },
+          "residual_vs_permuted_pp_DO_NOT_READ": {
+            "mean": -4.105833333333327,
+            "sd": 1.0890716612479363
+          },
+          "sigma_vs_permuted_DO_NOT_READ": {
+            "mean": 2.7375958466320447,
+            "sd": 0.7129996432512985
+          },
+          "d_acc_stratified_pp": {
+            "mean": -8.774583333333338,
+            "sd": 1.1094835040834674
+          },
+          "residual_vs_stratified_pp": {
+            "mean": -0.5587499999999986,
+            "sd": 0.81286241917067
+          },
+          "sigma_vs_stratified": {
+            "mean": 0.6636807372900108,
+            "sd": 0.7382057247041489
+          },
+          "residual_pp": {
+            "mean": -4.999999999999999,
+            "sd": 1.145643923738961
+          },
+          "n_seeds": 3,
+          "n": 400
+        }
+      }
+    }
+  },
+  "q1_gemma_density_order": [
+    [
+      "arc_challenge",
+      0.125
+    ],
+    [
+      "truthfulqa_mc1",
+      0.0725
+    ],
+    [
+      "hellaswag",
+      0.07
+    ]
+  ],
+  "q2_cells_within_3pp": [
+    5,
+    18
+  ]
+}
