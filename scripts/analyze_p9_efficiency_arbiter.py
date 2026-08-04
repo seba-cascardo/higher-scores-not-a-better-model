@@ -22,6 +22,11 @@ Output: prints tables; writes runs/p9_onaxis/efficiency_arbiter.json + top-short
 """
 import json, re, sys, os
 
+# The tables print non-ASCII (delta); a Windows console defaults to cp1252 and
+# would die mid-report instead of writing the artifact.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 IN = sys.argv[1] if len(sys.argv) > 1 else "gsm8k_dose_lam0_gens.json"
 OUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "runs", "p9_onaxis")
 

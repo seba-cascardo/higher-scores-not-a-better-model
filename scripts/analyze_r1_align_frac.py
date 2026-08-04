@@ -32,6 +32,11 @@ import json
 import sys
 from pathlib import Path
 
+# The report prints non-ASCII (approx sign); a Windows console defaults to
+# cp1252 and would die mid-report instead of finishing.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 # Ancla -> métrica canónica del headline (ledger B9).
 TASK_METRIC = {
     "arc_challenge": "acc_norm",
