@@ -1,0 +1,66 @@
+{
+  "task": "arc_challenge",
+  "metric": "acc_norm",
+  "n_items_paired": 400,
+  "arms_aggregate": {
+    "null": {
+      "acc": 0.505,
+      "stderr": 0.02503005711936144
+    },
+    "vinf": {
+      "acc": 0.545,
+      "stderr": 0.02492972579211764
+    },
+    "mc": {
+      "acc": 0.855,
+      "stderr": 0.017627089541790094
+    }
+  },
+  "published_z_reproduction": {
+    "value": -6.63154624999233,
+    "formula": "(lift_vinf - lift_mc) / sqrt(se_lift_vinf^2 + se_lift_mc^2), with se_lift_X = sqrt(se_X^2 + se_null^2)",
+    "source_of_formula": "scripts/analyze_vinf_causal.py:98 (printed, never persisted)",
+    "lift_vinf": 0.040000000000000036,
+    "lift_mc": 0.35,
+    "se_lift_vinf": 0.035326972520563826,
+    "se_lift_mc": 0.0306140171345216,
+    "caveat": "unpaired and conservative: the base stderr enters both lifts, so its variance is counted twice, and the arms are treated as independent although they share the base and the items. The paired McNemar below is the sharper test on the same data."
+  },
+  "paired_mcnemar": {
+    "vinf_vs_null": {
+      "b_null_right_arm_wrong": 12,
+      "c_null_wrong_arm_right": 28,
+      "discordant": 40,
+      "p_exact": 0.01658900337497471
+    },
+    "mc_vs_null": {
+      "b_null_right_arm_wrong": 11,
+      "c_null_wrong_arm_right": 151,
+      "discordant": 162,
+      "p_exact": 1.316177885315771e-32
+    },
+    "vinf_vs_mc": {
+      "b_mc_right_vinf_wrong": 135,
+      "c_mc_wrong_vinf_right": 11,
+      "discordant": 146,
+      "p_exact": 2.666922584019218e-28
+    }
+  },
+  "paired_recovery_fraction": {
+    "acc_null": 0.505,
+    "acc_vinf": 0.545,
+    "acc_mc": 0.855,
+    "fraction": 0.1142857142857144,
+    "CI95_paired_bootstrap": [
+      0.02739726027397262,
+      0.19718309859154928
+    ],
+    "bootstrap_reps_kept": 10000,
+    "seed": 0
+  },
+  "supersedes": {
+    "field": "runs/wknow_causal/onaxis_significance.json -> arms.vinf.paired_test_requires",
+    "stale_text": "re-run v_inf arm with --log_samples (add-on to any future pod run)",
+    "why": "d_vinf.json already carries 400 per-doc samples; the paired test is local."
+  }
+}
