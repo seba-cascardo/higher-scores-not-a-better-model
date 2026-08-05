@@ -2,8 +2,8 @@
 % Higher Scores, Not A Better Model -- arXiv v1
 % Build: pdflatex main && bibtex main && pdflatex main && pdflatex main
 %   Verify main.log afterwards, not the exit status: the chain does not fail
-%   when a pass is skipped. Expect zero lines starting with "!" and zero
-%   undefined reference/citation warnings.
+%   when a pass is skipped. Expect zero error lines and zero undefined
+%   reference/citation warnings in the log.
 % =========================================================================
 \documentclass[11pt]{article}
 
@@ -98,14 +98,14 @@ A Large Multiple-Choice Lift That Is Mostly Inducible,\\ Off-Axis, and Does Not 
 \input{sections/conclusion}
 \input{sections/limitations}
 
-\subsection*{Acknowledgments}
+\section*{Acknowledgments}
 This is independent, self-funded research; no external funding was received.
 Large-language-model tools were used for code assistance, literature search, and
 editing of the manuscript; all experiments, numbers, and claims were produced and
 verified by the author, and every reference was resolved and cross-checked against
 its canonical source.
 
-\subsection*{Code and data availability}
+\section*{Code and data availability}
 Code to reproduce every analysis, the evaluation protocols and their pre-registered
 kill-rules, and the result artifacts behind each table are released with this paper;
 the adapter offsets and the heavy activation/evaluation artifacts are hosted as

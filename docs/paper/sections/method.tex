@@ -265,7 +265,7 @@ the canonical R1 baselines and aborts unless they reproduce: in \emph{reproduce}
 mode $|\mathrm{measured} - \mathrm{expected}| \leq 0.05$ for both the base
 (ARC-Challenge acc\_norm 0.505) and the adapter (0.855) (\code{:69,87-\allowbreak -\allowbreak 91}); in
 \emph{null} mode the zero-offset wrapper ($\alpha{=}\theta{=}0$) must be
-behaviourally identical to the base, $|\mathrm{null} - \mathrm{base}| \leq 0.02$
+behaviorally identical to the base, $|\mathrm{null} - \mathrm{base}| \leq 0.02$
 (\code{:16}), certifying the lift is not a wrapper artifact. A FAIL exits non-zero
 and blocks the dependent batch. The Gate-A base values are the exact reference the
 on-axis arms are compared against (e.g.\ $\offpar$ recovering to 0.505 = ``0\%'',
@@ -394,7 +394,7 @@ Two ARC base-wrong counts appear in this paper --- \textbf{198} and \textbf{204}
 not a difference between runs. Both are the vinf\_causal 400. The \textbf{lm-eval
 scaffold} (\code{d\_\allowbreak null.\allowbreak json}, acc\_norm, the scoring that produces the headline
 lift) leaves \textbf{198} items wrong; the \textbf{premise-file scaffold}
-(\code{answer\_\allowbreak only\_\allowbreak arc\_\allowbreak challenge.\allowbreak json}, a length-normalised argmax over option
+(\code{answer\_\allowbreak only\_\allowbreak arc\_\allowbreak challenge.\allowbreak json}, a length-normalized argmax over option
 continuations scored under one shared neutral premise) leaves \textbf{204}. Every
 derived subset therefore belongs to one scaffold or the other, and we label them
 rather than let a reader subtract across the boundary. On the \textbf{lm-eval}
