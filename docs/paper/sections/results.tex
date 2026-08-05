@@ -655,8 +655,12 @@ $+35.0$, TQA $+36.5$ --- differ slightly from the A1 canonical of
 Quantity & Value & Source artifact \\
 \midrule
 ARC lift recovered by on-axis $\vinf$ (mass-mean, norm-matched) & fraction
-$\mathbf{0.11}$ (MC $+35.0$ / VINF $+4.0$; $z = -6.63$; acc\_vinf 0.545, Wilson CI
-$[0.496, 0.593]$ includes chance 0.500) & \code{runs/\allowbreak vinf\_\allowbreak causal/\allowbreak } +
+$\mathbf{0.11}$ (MC $+35.0$ / VINF $+4.0$; $z = -6.63$, unpaired and conservative
+--- the base stderr enters both lifts). \textbf{Paired over the same 400 items the
+small recovery is detectable}: exact McNemar b=12/c=28 $p=0.017$, paired-bootstrap
+frac-CI95 $[+0.027, +0.197]$ excludes 0. So the weaker on-axis reference recovers
+\emph{little}, not \emph{nothing} --- unlike $\Wknow$ below &
+\code{runs/\allowbreak vinf\_\allowbreak causal/\allowbreak vinf\_\allowbreak paired\_\allowbreak significance.\allowbreak json} +
 \code{msap-\allowbreak vinf-\allowbreak causal-\allowbreak 20260623} \\
 ARC lift recovered by $\Wknow$ (strongest on-axis ref) & fraction $\mathbf{0.064}$
 (null 0.500 / mc 0.853 / wknow 0.522; ${\ll}$ 0.30 kill-rule;

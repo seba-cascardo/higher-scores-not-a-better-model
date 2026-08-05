@@ -595,6 +595,12 @@ exact McNemar $p=0.136$, with the paired-bootstrap recovery CI $[-0.009, +0.136]
 and the Wilson accuracy CI $[0.474, 0.571]$ both including chance, which
 \emph{strengthens} the on-axis-fails reading), and essentially nothing on
 TruthfulQA; a raw mass-mean $\vinf$ recovers 11\% ($+4.0$ vs $+35.0$; $z = -6.63$).
+The two on-axis references are not equally null, and the paired test is what
+separates them: over the same 400 items $\vinf$'s small recovery \emph{is} detectable
+(exact McNemar b=12/c=28 $p=0.017$, paired-bootstrap frac-CI95 $[+0.027, +0.197]$,
+excluding 0), while $\Wknow$'s is not. The weaker reference recovers a little; the
+stronger one does not clear its own null --- which is the ordering the off-axis
+reading predicts, and the opposite of what a weak-reference objection would produce.
 
 A non-rejection is not by itself an absence, so we bound what this design could
 have seen. Freezing the backward cell at its observed rate ($10/400$) and

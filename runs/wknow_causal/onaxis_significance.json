@@ -34,7 +34,8 @@
         0.5931422955491075
       ],
       "acc_arm_wilson_includes_null_0.5": true,
-      "paired_test_requires": "re-run v_inf arm with --log_samples (add-on to any future pod run)"
+      "paired_test_requires": "NOTHING FURTHER -- superseded 2026-08-05. This field used to read 're-run v_inf arm with --log_samples (add-on to any future pod run)' and was stale: runs/vinf_causal/d_vinf.json already carries 400 per-doc samples, as do the null and mc arms, so the paired test was always computable locally.",
+      "paired_result": "runs/vinf_causal/vinf_paired_significance.json (scripts/analyze_vinf_paired_significance.py): exact McNemar b=12/c=28 p=0.0166, paired-bootstrap recovery frac-CI95 [+0.027, +0.197] excludes 0. NOTE the unpaired Wilson interval above includes chance while the paired test does not -- on paired data the paired test is the correct instrument, and the paper reports the paired one."
     }
   },
   "gate_verdict": "INDISTINGUISHABLE_FROM_ZERO: W_know recovers 6.4%, statistically indistinguishable from zero (strengthens on-axis-fails)"
