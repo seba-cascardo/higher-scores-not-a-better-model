@@ -418,7 +418,14 @@ LoRA adapter weights --- each 2--6 GB) remain on HF as pointers rather than
 versioned in the repo. The pointer for each is given in \cref{tab:hfmap}. The sync is
 partial, and we mark which is which: rows tagged \emph{HF-only} have no local copy in
 the released checkout and must be fetched from the dataset backup before the
-corresponding analysis will run.
+corresponding analysis will run. Every dataset named in \cref{tab:hfmap} is public, so
+each such fetch is available to a reader. Two families of heavy binary are the
+exception and are \emph{not} in the public backup: the per-head cold-MC activations
+(\code{coldmc\_\allowbreak perhead\_\allowbreak *.\allowbreak pt}, 2.8\,GB) and the
+Align-LoRA adapter weights (\code{adapter\_\allowbreak model.\allowbreak safetensors},
+${\sim}50$\,GB), which stay in a private archive. Nothing in \cref{tab:hfmap} points at
+them, and, as noted below, none of the paper's numbers require re-deriving them; they are
+available from the authors on request.
 
 \begin{table}[tbp]
 \centering
@@ -432,7 +439,7 @@ Number / analysis & Local file (\code{runs/\allowbreak \ldots}) & HF dataset
 (\code{sebacascardo87/\allowbreak \ldots}) \\
 \midrule
 Arbiter 124/124 (post-parser-fix v2) & \code{vinf\_\allowbreak causal/\allowbreak arbiter\_\allowbreak arc\_\allowbreak cot\_\allowbreak v2.\allowbreak json}
-& \code{msap-\allowbreak vinf-\allowbreak causal-\allowbreak 20260623} \\
+& \code{msap-\allowbreak vinf-\allowbreak causal-\allowbreak 20260623-\allowbreak public} \\
 P9 on-axis-penalty lift-matched gate ($\lambda{=}5$ $-9.9\pp$ / $3.8\sigma$) &
 \code{p9\_\allowbreak onaxis/\allowbreak \{mc,gsm8k\}\_\allowbreak lam\{5,15,50\}.\allowbreak json},
 \code{mc\_\allowbreak dose\_\allowbreak lam0\_\allowbreak s*.\allowbreak json}, \code{gsm8k\_\allowbreak dose\_\allowbreak lam0.\allowbreak json} &
@@ -442,10 +449,10 @@ Recall-tail (\cref{disc:negatives} / \cref{app:jlens}) &
 Align-fairness rank sweep (${\sim}62\%$) &
 \code{align\_\allowbreak fairness/\allowbreak R1\_\allowbreak \{v7mc,null\}.\allowbreak json},
 \code{phase1/\allowbreak derisk/\allowbreak align\_\allowbreak direction\_\allowbreak r*.\allowbreak json} &
-\code{msap-\allowbreak align-\allowbreak fairness-\allowbreak 20260702}, \code{msap-\allowbreak phase1-\allowbreak 20260624} \\
+\code{msap-\allowbreak align-\allowbreak fairness-\allowbreak 20260702}, \code{msap-\allowbreak phase1-\allowbreak evals-\allowbreak 20260624} \\
 \cref{tab:spectrum} random norm-matched &
 \code{phase1/\allowbreak derisk/\allowbreak random\_\allowbreak s\{0,1,2\}.\allowbreak json}, \code{offsets\_\allowbreak random\_\allowbreak s*.\allowbreak pt} &
-\code{msap-\allowbreak phase1-\allowbreak 20260624} \\
+\code{msap-\allowbreak phase1-\allowbreak evals-\allowbreak 20260624} \\
 \cref{disc:geometry} $\offpar$ / $\offperp$ / $\Wknow$ spectrum arms &
 \code{eval\_\allowbreak bulletproof/\allowbreak RD\_\allowbreak \{offpar,offperp,wknow\}.\allowbreak json} (+
 \code{rd\_\allowbreak offperp\_\allowbreak frac.\allowbreak csv}) & \code{msap-\allowbreak r5-\allowbreak align-\allowbreak p0-\allowbreak 20260628} \\
@@ -469,7 +476,7 @@ size) and \code{eval\_\allowbreak bulletproof/\allowbreak R4\_\allowbreak base\_
 digest in \code{eval\_\allowbreak bulletproof/\allowbreak R4\_\allowbreak fullsplit\_\allowbreak provenance.\allowbreak json} &
 \code{msap-\allowbreak eval-\allowbreak bulletproof-\allowbreak lean-\allowbreak 20260627} \\
 \cref{disc:locus} layer-band patching sweep & \code{phase1/\allowbreak derisk/\allowbreak patch\_\allowbreak layers/} (HF-only)
-& \code{msap-\allowbreak phase1-\allowbreak 20260624} \\
+& \code{msap-\allowbreak phase1-\allowbreak evals-\allowbreak 20260624} \\
 \bottomrule
 \end{tabular}
 \end{table}

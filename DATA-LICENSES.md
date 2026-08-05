@@ -46,21 +46,53 @@ commercially**. This is a real restriction on downstream users, not a formality.
 - AIME — Mathematical Association of America competition problems, as redistributed by
   the respective HuggingFace dataset cards.
 
-## UNKNOWN — no license declared on the dataset card
+## Permissive — redistributable with attribution
 
-**These are declared unknown, not assumed permissive.** Each has items tracked in this
-repository. Absence of a stated license is not a grant: if you plan to redistribute
-anything derived from these, resolve the license with the upstream source first.
+These carry the benchmark items that appear verbatim inside released evaluation artifacts
+(`samples_*.jsonl` and the `samples` block of lm-eval result JSONs).
 
 | Dataset | License | What it requires | Met? |
 |---|---|---|---|
-| **SocialIQA** | **UNKNOWN** — none on card | Undetermined | **Cannot be determined** |
-| **HellaSwag** | **UNKNOWN** — none on card | Undetermined | **Cannot be determined** |
-| **WinoGrande** | **UNKNOWN** — none on card | Undetermined | **Cannot be determined** |
-| **PIQA** | **UNKNOWN** — none on card | Undetermined | **Cannot be determined** |
-| **TriviaQA** | **UNKNOWN** — none on card | Undetermined | **Cannot be determined** |
-| **PopQA** | **UNKNOWN** — none on card | Undetermined | **Cannot be determined** |
-| **`hails/bigbench`** (mirror) | **UNKNOWN** — none on card | Undetermined | **Cannot be determined** |
+| **HellaSwag** | MIT | Attribution; carry the notice | Yes, by this file |
+| **WinoGrande** | CC-BY (dataset; the codebase is Apache-2.0) | Attribution | Yes, by this file |
+| **TruthfulQA** | Apache-2.0 | Attribution; carry the notice | Yes, by this file |
+| **SocialIQA** | CC-BY-4.0 | Attribution | Yes, by this file |
+| **PIQA** | AFL-3.0 (Academic Free License v3.0) | Attribution; carry the notice | Yes, by this file |
+| **MMLU** | MIT | Attribution | Yes, by this file |
+| **MMLU-Pro** | MIT | Attribution | Yes, by this file |
+| **GSM8K** | MIT | Attribution | Yes, by this file |
+| **`hails/bigbench`** (mirror of `google/BIG-bench`) | Apache-2.0 (upstream) | Attribution | Yes, by this file |
+
+- HellaSwag — Zellers et al., 2019. `github.com/rowanz/hellaswag` (`LICENSE`: MIT, © Rowan Zellers).
+- WinoGrande — Sakaguchi et al., AI2, 2019. `github.com/allenai/winogrande`: *"The dataset is
+  licensed under CC-BY"*, codebase Apache-2.0.
+- TruthfulQA — Lin et al., 2021. HF card `truthfulqa/truthful_qa`, `license: apache-2.0`.
+- SocialIQA — Sap et al., AI2, 2019. HF card `allenai/social_i_qa`, Licensing Information: CC-BY-4.0.
+- PIQA — Bisk et al., 2019. `yonatanbisk.com/piqa`: Academic Free License v3.0.
+- MMLU — Hendrycks et al., 2021 (`cais/mmlu`). MMLU-Pro — Wang et al., 2024 (`TIGER-Lab/MMLU-Pro`).
+- GSM8K — Cobbe et al., 2021 (`openai/gsm8k`).
+- BIG-bench — Srivastava et al., 2022. `github.com/google/BIG-bench` (`LICENSE`: Apache-2.0).
+
+> **Why these were previously recorded as UNKNOWN.** The earlier audit read the **license tag**
+> in each card's YAML frontmatter. Several of these declare the license only in the card
+> **body**, under *Licensing Information* — `allenai/social_i_qa` and `Rowan/hellaswag` both do —
+> and WinoGrande and PIQA declare it upstream rather than on the Hub at all. A tag sweep reports
+> those as unlicensed. Resolved 2026-08-05 by reading the card bodies and the upstream
+> `LICENSE` files, two independent sources per dataset where available.
+
+## UNDETERMINED — still not resolved
+
+**Declared undetermined, not assumed permissive.** Absence of a stated license is not a grant.
+
+| Dataset | License | What it requires | Met? |
+|---|---|---|---|
+| **PopQA** | **UNDETERMINED** — card silent, no upstream dataset licence found | Undetermined | **Cannot be determined** |
+| **TriviaQA** | **UNDETERMINED** — none located | Undetermined | **Cannot be determined** |
+
+PopQA's questions are templated from Wikidata tuples (Wikidata is CC0) and the associated code
+repository (`AlexTMallen/adaptive-retrieval`) is MIT, but neither statement is a licence grant
+for the dataset itself. Both datasets belong to abandoned experimental lines; no number in the
+paper depends on them.
 
 ## GATED — not redistributed, purged from history
 
@@ -94,4 +126,9 @@ Built from the license audit in
 [`docs/superpowers/specs/2026-08-04-release-remediation-report.md`](docs/superpowers/specs/2026-08-04-release-remediation-report.md)
 (§6), which classified artifacts **by content**, not by filename — a distinction that
 mattered: files named `kr_*` hold ARC items, a file named `*_c4rerun` holds WikiText, and
-the worst GPQA file carried no `Pre-Revision *` columns at all.
+the worst GPQA file carried no review-stage columns at all.
+
+Updated 2026-08-05 during the Hugging Face release pass: the seven datasets previously listed
+as UNKNOWN were re-checked against card bodies and upstream `LICENSE` files, and five resolved
+to permissive licences (see the note above). MMLU, MMLU-Pro and GSM8K were added — they appear
+verbatim in released evaluation artifacts and the earlier table omitted them.
