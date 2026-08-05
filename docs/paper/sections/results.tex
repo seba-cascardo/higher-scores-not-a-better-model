@@ -151,7 +151,7 @@ cross-entropy does not. ARC sits between the two. ``Most of the lift is generic'
 therefore true of Winogrande and HellaSwag, and of ARC only at high capacity; it is
 false at matched capacity on ARC and false throughout on TruthfulQA. TruthfulQA is
 in any case excluded from the higher-capacity control as train-on-eval leakage
-(held-out, the highest-rank control collapses $98\%{\rightarrow}30\%$).
+(held-out, the highest-rank control collapses $92\%{\rightarrow}30\%$).
 
 \textbf{This ordering is a metric statement, and we say so here rather than only in
 \cref{lim:metric}.} The inducibility fractions are computed on the same per-task
@@ -468,9 +468,12 @@ Best-effort capacity flank (r512, causal fairness, $n{=}400$) & lr1e-4 frac
 $\mathbf{0.22}$ (converged, acc${>}$base; overfit ep2${\rightarrow}$ep4, robust
 ep2=ep4); lr2e-4 \textbf{below base} (broken, excluded like r256hi) $\rightarrow$
 \textbf{does not raise ${\sim}62\%$ within this grid} & \code{msap-\allowbreak align-\allowbreak fairness-\allowbreak 20260702} \\
-TQA excluded --- leakage (proof) & frac 41/66/72/91 monotone${\uparrow}$; held-out
-20\%: r256 $\mathbf{98\%{\rightarrow}30\%}$; r8=r256=0.524; contrastive generalizes
-held-out (0.83) & same \\
+TQA excluded --- leakage (proof) & frac 41/66/72/92 monotone${\uparrow}$; held-out
+20\%: r256 $\mathbf{92\%{\rightarrow}30\%}$ (CI95 $[0.79, 1.06]$ on $n{=}400$
+$\rightarrow$ $[0.05, 0.55]$ on the $n{=}82$ stratum, paired bootstrap; the
+intervals do not overlap); the rank sweep flattens, r8=r256=0.524 on the full
+$n{=}164$ held-out slice; contrastive generalizes held-out (0.83) &
+\code{runs/\allowbreak align\_\allowbreak fairness/\allowbreak tqa\_\allowbreak heldout\_\allowbreak stratum\_\allowbreak ci.\allowbreak json} \\
 \midrule
 Residual not explained by the tested controls (ARC) & ${\sim}\mathbf{60}$--$\mathbf{64\%}$
 at matched capacity; ${\sim}\mathbf{38\%}$ against the higher-capacity arm & derived \\
