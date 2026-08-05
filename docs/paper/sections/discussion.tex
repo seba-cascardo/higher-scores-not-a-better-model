@@ -360,7 +360,7 @@ option the probe scores highest, with no offset injected and no change to
 generation. On ARC it reaches selector accuracy \textbf{0.943} ($\pm$ 0.002 over
 three PCA/fit seeds; the outer grouped-CV split is deterministic and identical across
 the three, so this dispersion measures algorithmic sensitivity and \emph{not}
-sampling uncertainty --- a repeated-partition estimate is future work),
+sampling uncertainty; a repeated-partition estimate is given below),
 against the base's 0.505 and the adapter's 0.853, and the gain is not
 a correct-for-wrong trade: relative to the base it fixes \textbf{181} of the 198
 base-wrong items and breaks only \textbf{5} of the 202 base-right ones (exact
@@ -386,6 +386,26 @@ signal a linear reader recovers read-only. One caveat bounds the contribution to
 Tier-1: the 48-cell feature set is held out by \emph{item} but selected on the
 training split, not held out by \emph{feature}, so the decisive strengthening is
 cross-benchmark (ARC-Easy / OpenBookQA), which we flag as the immediate follow-up.
+
+\paragraph{How much the 0.943 moves.}
+The $\pm 0.002$ above varies only the algorithmic seed, so we re-estimate the
+selector over $R=20$ genuinely distinct outer partitions --- item-grouped by
+construction, so no option of an item crosses the train/test boundary, with the
+pipeline (scaler, PCA-200, $L_2$ logistic, inner $C$ selection) and the algorithmic
+seed held fixed, leaving the partition as the only varying factor. That gives
+$\mathbf{0.9455 \pm 0.0040}$ (range $0.9400$--$0.9550$; the published configuration
+re-run in the same environment reproduces its $0.9433 \pm 0.0024$ exactly, so the two
+dispersions are comparable). Partition dispersion is thus $\mathbf{1.70\times}$ the
+published one: larger, as the objection anticipates, but below both the
+pre-registered $2\times$ trigger and $0.4\pp$ in absolute terms, and the
+deterministic split proves if anything mildly conservative rather than favourable
+(the mean moves $+0.0022$, within one partition SD). No claim here moves; the
+recovery fraction computed at the partition mean is $1.266$ against the published
+$1.260$. Treating the two sources as independent puts total dispersion near
+$0.005$, and that --- not the $\pm 0.002$ --- is the honest figure for how far
+$0.943$ travels. It remains partition/refit variance and \emph{not} sampling
+uncertainty: repeated cross-validation re-partitions the \emph{same} $n{=}400$ draw,
+so replication outside that slice stays open.
 
 \paragraph{The deployment triangle (\cref{fig:triangle}).}
 The read-only selector is neither the strongest nor the cheapest good way to answer
@@ -575,6 +595,25 @@ exact McNemar $p=0.136$, with the paired-bootstrap recovery CI $[-0.009, +0.136]
 and the Wilson accuracy CI $[0.474, 0.571]$ both including chance, which
 \emph{strengthens} the on-axis-fails reading), and essentially nothing on
 TruthfulQA; a raw mass-mean $\vinf$ recovers 11\% ($+4.0$ vs $+35.0$; $z = -6.63$).
+
+A non-rejection is not by itself an absence, so we bound what this design could
+have seen. Freezing the backward cell at its observed rate ($10/400$) and
+enumerating the exact two-sided McNemar power at $n{=}400$, $\alpha=0.05$, the
+minimum detectable effect at power $0.80$ is $\mathbf{12.6\%}$ of the ARC lift
+($+4.45\pp$ of accuracy, i.e.\ an arm accuracy of ${\approx}0.5445$); conditioning
+instead on the 29 observed discordant pairs gives $9.2\%$, and the MDE moves only
+between $10.2\%$ and $16.2\%$ when that backward rate is halved or doubled. The
+design therefore carries power $\mathbf{1.0000}$ against both reference effects
+this paper calls real elsewhere --- the $36.2\%$ the same-parameterization control
+recovers and the $50\%$ mark --- so the on-axis null does exclude an on-axis effect
+of any magnitude we report as real. It does \emph{not} license reading $\Wknow$ as
+exactly zero: the design is blind below ${\sim}9$--$13\%$ of the lift and the
+$6.4\%$ point estimate sits inside that blind band. What is declarable is an
+\textbf{upper bound}, not a zero --- and the MDE ($12.6\%$) nearly coincides with
+the upper end of the paired-bootstrap recovery interval already reported
+($+13.6\%$), which is the design face and the estimation face of the same
+precision, not a coincidence.
+
 The ordering of the two on-axis references deserves a sentence, because a reader
 may suspect the smaller number was chosen for convenience: the better-constructed
 discriminator ($\Wknow$, the covariance-optimal linear separator,
