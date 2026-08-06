@@ -227,7 +227,11 @@ sweep slope's confidence interval spanning zero ($[-1.4, +3.4]$) and a
 paired-bootstrap fraction interval of $\mathbf{[51\%, 73\%]}$. That interval resamples
 the $400$ items with replacement and carries the base, generic and contrastive arms
 together, so the positive inter-arm correlation the three arms actually have
-(item-level $r{=}0.42$ between base and generic) is retained instead of discarded; it
+(item-level $r{=}0.42$ between base and generic) is retained instead of discarded.
+It is therefore an interval over \emph{item sampling, conditional on the one r256
+Align-LoRA we trained}: the generic arm here is a single training run, so no
+training-run variance enters, and the interval should not be read as covering how
+much a re-trained control would move. It
 is $44\%$ narrower than, and contained in, the delta-method $[45\%, 85\%]$ we report
 as the conservative reading (zone C is binned on the point estimate, $0.62$, and is
 unchanged). One-sided, the fraction exceeds one half in $98.2\%$ of resamples --- one
@@ -375,14 +379,14 @@ base-wrong items and breaks only \textbf{5} of the 202 base-right ones (exact
 McNemar $p = 3.7\times10^{-47}$; an accuracy-space permutation null sits at 0.255).
 Because it never touches the weights or the decoder, it carries none of the
 adapter's costs --- no retrieval spillover, no generation loss (no reasoning
-breakage) --- so on the (cost, MC-accuracy) plane it \textbf{Pareto-dominates the
-adapter}. Whether it also wins on deployment grounds --- against the
+breakage) --- so it \textbf{outscores the adapter at the same measured latency}.
+Whether it also wins on deployment grounds --- against the
 \emph{reasoning} baseline the no-headroom arbiter (\cref{disc:arbiter}, base
 124/124 under CoT) suggests, and against the trivial one-forward baseline --- is
 settled below by the deployment triangle: it does \textbf{not}. A
-reasoning TTC ties the cheapest baseline, and a single-forward letter-emission of
-the base dominates the selector outright, at \emph{half} its measured cost --- which
-is exactly why we hold the selector to its \emph{evidentiary} role
+reasoning TTC ties the most accurate baseline, and a single-forward letter-emission
+of the base beats the selector on accuracy at \emph{half} its measured latency ---
+which is exactly why we hold the selector to its \emph{evidentiary} role
 (read${\neq}$write) rather than a deployment win.
 
 We hold the claim to its read side and guard against an over-reading: 0.943
@@ -416,7 +420,7 @@ uncertainty: repeated cross-validation re-partitions the \emph{same} $n{=}400$ d
 so replication outside that slice stays open.
 
 \paragraph{The deployment triangle (\cref{fig:triangle}).}
-The read-only selector is neither the strongest nor the cheapest good way to answer
+The read-only selector is neither the strongest nor the fastest good way to answer
 these items --- both distinctions belong to the base model asked correctly. On the
 198 base-wrong ARC items we benchmarked four deployment routes on one homogeneous
 cost unit: median (p50) end-to-end latency per item at batch~1 on an RTX PRO 6000
@@ -424,20 +428,25 @@ cost unit: median (p50) end-to-end latency per item at batch~1 on an RTX PRO 600
 (\cref{tab:triangle}). This matters because ``one forward'' is not one unit of work:
 cold-MC scoring and the selector must score \emph{every option continuation}
 separately (${\sim}4$ per ARC item, ${\sim}24.7$ scored continuation tokens), whereas
-letter emission is a single forward plus two generated tokens.
+letter emission is a single forward plus two generated tokens. Everything in this
+paragraph is a statement about the four implementations we timed. In particular our
+harness issues an item's ${\sim}4$ option forwards \emph{serially at batch~1}; an
+implementation that batched them within the item is a fifth route we did not build
+or measure, so the latency gap below should be read as a property of these
+implementations rather than of scoring-vs-emission as such.
 
 Measured, the routes are: the contrastive adapter's cold-MC scoring recovers
-\textbf{0.757} at \textbf{354\,ms}; the read-only selector \textbf{0.911} at
+\textbf{0.758} at \textbf{354\,ms}; the read-only selector \textbf{0.911} at
 \textbf{360\,ms}; prompting the base to emit the answer letter in one greedy forward,
 no chain of thought, recovers \textbf{0.970} (192/198; 2 items unparsed and counted
 wrong, so a floor) at \textbf{181\,ms}; and a reasoning test-time-compute baseline
 (base self-consistency CoT, $k{=}3$) also recovers \textbf{0.970}, at
 \textbf{26.7\,s} and $853.9$ generated tokens summed over its three traces. So letter
-emission is not merely a same-cost tie --- it is the \emph{cheapest and the most
-accurate} route on the plane: it costs about half what the adapter and the selector
-cost, beats the adapter by $21$ points and the selector by $6$, and matches the
-reasoning baseline at ${\sim}150\times$ less latency. The adapter is dominated by
-every other route, including on cost.
+emission is not merely a same-latency tie --- among the four routes as implemented it
+is both the fastest and the most accurate: it runs at about half the measured latency
+of the adapter and the selector, beats the adapter by $21$ points and the selector by
+$6$, and matches the reasoning baseline at ${\sim}150\times$ less latency. The adapter
+scores below every other route, and is slower than the one that scores highest.
 
 One caveat scopes this exactly as it scopes the arbiter (\cref{method:protocol}):
 letter emission puts the base in a lettered-MCQ format, a \emph{different readout}
@@ -445,11 +454,12 @@ from the cold-MC option-continuation scoring the adapter operates on --- not a
 like-for-like scoring comparison. That is the point rather than a confound: it
 compares two readouts of the \emph{same base} --- loglik continuation ranking vs
 letter emission --- which move it from 0.505 to 0.980 over the full set
-($0{\rightarrow}0.970$ on the base-wrong subset the triangle uses), with the cheaper
-readout winning. This is the paper's thesis, that the cold-MC channel is lossy, in
-its sharpest form: the knowledge is present and cheaply reachable by a different
-readout of the base, and the adapter's off-axis write recovers \emph{less} of it
-(0.757) than the most trivial alternative does for less money (0.970).
+($0{\rightarrow}0.970$ on the base-wrong subset the triangle uses), with the
+faster-as-implemented readout winning. This is the paper's thesis, that the cold-MC
+channel is lossy, in its sharpest form: the knowledge is present and reachable by a
+different readout of the base, and the adapter's off-axis write recovers \emph{less}
+of it (0.758) than the most trivial alternative does (0.970) --- at lower measured
+latency in our implementations.
 
 \begin{figure}[t]
 \centering
@@ -457,7 +467,7 @@ readout of the base, and the adapter's off-axis write recovers \emph{less} of it
 on the 198 base-wrong ARC items: x-axis is measured median per-item latency at batch
 one on a log scale, y-axis is ARC accuracy. Base letter-emission is the top-left
 point at 0.970 accuracy and 181 milliseconds; the read-only selector sits at 0.911
-and 360 milliseconds; the contrastive adapter at 0.757 and 354 milliseconds; base
+and 360 milliseconds; the contrastive adapter at 0.758 and 354 milliseconds; base
 self-consistency chain-of-thought far to the right at 0.970 and 26.7
 seconds.}]{figures/fig_deployment_triangle.pdf}
 \caption{\textbf{The deployment triangle on the 198 base-wrong ARC items, on measured
@@ -466,23 +476,28 @@ $y$: ARC accuracy. One homogeneous unit for all four routes, replacing the earli
 mixed forwards/tokens proxy --- ``one forward'' is not one unit of work, since cold-MC
 scoring and the selector score every option continuation separately (${\sim}4$ per
 item) while letter emission is one forward plus two tokens. Four routes: the
-contrastive adapter's cold-MC scoring (0.757, 354\,ms) is dominated by everything, on
-accuracy \emph{and} on cost; the read-only selector (0.911, 360\,ms) improves on it
-read-only; \textbf{the base asked to emit the answer letter in one forward (0.970,
-181\,ms) is both the cheapest and the most accurate route --- it matches the reasoning
-baseline at ${\sim}150\times$ less latency and strictly dominates the adapter and the
-selector at about half their cost}; base self-consistency CoT (0.970, 26.7\,s, 853.9
+contrastive adapter's cold-MC scoring (0.758, 354\,ms) scores below every other route
+and is slower than the most accurate one; the read-only selector (0.911, 360\,ms)
+improves on it read-only; \textbf{the base asked to emit the answer letter in one
+forward (0.970, 181\,ms) is, among these four implementations, both the fastest and
+the most accurate --- it matches the reasoning
+baseline at ${\sim}150\times$ less latency and outscores the adapter and the
+selector at about half their measured latency}; base self-consistency CoT (0.970,
+26.7\,s, 853.9
 generated tokens over three traces) ties letter emission at far higher cost. The whole
-LoFiT/ITI-for-cold-MC family optimizes a readout that the most trivial and cheapest
+LoFiT/ITI-for-cold-MC family optimizes a readout that the most trivial
 alternative --- ask the base for the letter --- already beats. \textbf{The comparison
 is evidentiary, not a like-for-like scoring test:} letter emission is a different
 (lettered-MCQ) readout than the cold-MC channel (\cref{method:protocol}), so the
 triangle contrasts two readouts of the same base --- the lossy-readout thesis in its
 sharpest form --- and the selector's role stays evidentiary (read${\neq}$write), not a
-deployment recommendation, since even it is dominated by letter emission. Cost is
+deployment recommendation, since letter emission outscores it too. Cost is
 latency on this one accelerator at batch~1; we do not normalize FLOPs across readouts,
 and batched throughput (reported in \cref{tab:triangle}) is not comparable between
-prefill-bound scoring and decode-bound generation.}
+prefill-bound scoring and decode-bound generation. \textbf{The latency axis describes
+the implementations we timed:} the scoring routes issue an item's ${\sim}4$ option
+forwards serially at batch~1, and we did not measure a variant that batches an item's
+options, so the ordering on $x$ is not a claim about the routes in principle.}
 \label{fig:triangle}
 \end{figure}
 
@@ -494,7 +509,10 @@ prefill-bound scoring and decode-bound generation.}
 per item at batch~1, bf16, single RTX PRO 6000; tokens are generated tokens for the
 generation routes and scored continuation tokens for the scoring routes. Batched
 throughput is listed for completeness but is \emph{not} comparable across route
-families (prefill-bound scoring vs decode-bound generation).}
+families (prefill-bound scoring vs decode-bound generation). The latency column
+describes these implementations: the scoring routes issue an item's ${\sim}4$ option
+forwards serially at batch~1, and a variant batching an item's options was not
+measured.}
 \label{tab:triangle}
 \footnotesize
 \begin{tabular}{L{3.5cm} L{3.1cm} L{2.5cm} L{1.9cm} L{2.9cm}}
@@ -504,45 +522,46 @@ item & Relation \\
 \midrule
 \textbf{Base letter-emission (1 forward, no CoT)} & \textbf{0.970} (192/198; 2
 unparsed as wrong $\rightarrow$ floor) & \textbf{181 / 253\,ms} & 2.0 generated &
-\textbf{cheapest \emph{and} most accurate: matches SC-CoT, strictly dominates
-selector and adapter} \\
+\textbf{fastest \emph{and} most accurate of the four as implemented: matches SC-CoT,
+outscores selector and adapter at ${\sim}$half their latency} \\
 Base self-consistency CoT ($k{=}3$) & \textbf{0.970} (192/198; $k{=}5$ identical
 $\rightarrow$ saturates at $k{=}3$) & 26.7 / 36.6\,s & 853.9 generated (sum over
 3 traces) & ties letter-emission at ${\sim}150\times$ the latency \\
 Read-only selector (\cref{disc:selector}) & \textbf{0.911} (5 probe seeds) & 360 /
-479\,ms & 24.7 scored (${\sim}4$ options) & dominated by letter-emission (2$\times$
-its cost, $-6$pp); Pareto-dominates only the \emph{adapter} \\
-Contrastive adapter (cold-MC scoring) & \textbf{0.757} & 354 / 471\,ms & 24.7 scored
-(${\sim}4$ options) & dominated by all three, on accuracy \emph{and} cost \\
+479\,ms & 24.7 scored (${\sim}4$ options) & below letter-emission (2$\times$
+its measured latency, $-6$pp); outscores only the \emph{adapter} \\
+Contrastive adapter (cold-MC scoring) & \textbf{0.758} & 354 / 471\,ms & 24.7 scored
+(${\sim}4$ options) & lowest accuracy of the four; slower than the most accurate \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[flushleft]\footnotesize
 \item \textbf{Provenance and one reconciliation.} Measured in a single harness that
 re-derives every route's per-item correctness and validates it against the canonical
 lm-eval artifacts before timing (\code{runs/\allowbreak e3\_\allowbreak cost/}). Within that harness the
-adapter scores $0.757$ (150/198) and the base cold-MC arm $0.5025$, against $0.7626$
+adapter scores $0.758$ (150/198) and the base cold-MC arm $0.5025$, against $0.7626$
 (151/198) and $0.5050$ in lm-eval: a one-item difference in both arms, from the
 context/continuation tokenisation boundary in the re-implemented log-likelihood. The
-canonical accuracies elsewhere in this paper are the lm-eval ones; the $0.757$ here is
+canonical accuracies elsewhere in this paper are the lm-eval ones; the $0.758$ here is
 the number produced by the same code path that produced the latencies, which is why we
 report it in this table rather than silently mixing sources.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-The selector Pareto-dominates only the \emph{adapter}; a reasoning TTC and a
+The selector outscores only the \emph{adapter}; a reasoning TTC and a
 one-forward letter-emission of the base both beat it --- so the whole
 LoFiT/ITI-for-cold-MC family optimizes a readout that even asking the base for the
 letter already beats. We therefore report the selector as \emph{evidentiary} (the
 correctness signal is read-only recoverable, read${\neq}$write) and \textbf{not} as
-a deployment win (dominated by letter emission at half its measured cost).
+a deployment win (letter emission outscores it at half its measured latency, on the
+implementations we timed).
 \emph{Population note (do not conflate):} the four figures here (letter-emission
-0.970, SC-CoT 0.970, selector 0.911, adapter 0.757) are all on the \textbf{198
+0.970, SC-CoT 0.970, selector 0.911, adapter 0.758) are all on the \textbf{198
 base-wrong}
 subset; the selector's all-items accuracy (\textbf{0.943}, three PCA/fit seeds, across all
 $n{=}400$ evaluation items) and the adapter's all-items accuracy
 (\textbf{0.853/0.855}; \cref{tab:headline}) are computed on a \emph{different}
-population and are not directly comparable to the 0.911 / 0.757 here. The 0.943 and
+population and are not directly comparable to the 0.911 / 0.758 here. The 0.943 and
 0.911 are the same selector on two populations, not two systems (and the canonical
 lm-eval value on this subset is 0.914; the 0.911 is the same selector re-fit inside the
 cost harness, see the table note). ``All items'' here

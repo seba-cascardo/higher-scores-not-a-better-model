@@ -16,14 +16,16 @@ The lift does not transfer to generation (gsm8k $-24.2 \pm 7.3\pp$ over three
 independently trained seeds). On the items it fixes, the base model already reaches
 the right answer by reasoning ($124/124$ under chain-of-thought). A read-only linear
 selector on the same activations recovers the lift without touching the weights or the
-decoder. And the most trivial baseline imaginable beats it for \emph{less} money:
+decoder. And the most trivial baseline imaginable beats it, and does so for
+\emph{less} measured latency:
 asked to emit the answer letter in a single forward, no chain of thought, the base
-recovers $0.970$ of the base-wrong items against the adapter's $0.757$, at half the
-adapter's measured cost --- while tying a reasoning baseline that costs some
-$150\times$ more. The score moved; measurable capability did not.
+recovers $0.970$ of the base-wrong items against the adapter's $0.758$, at about half
+the latency of our scoring implementation --- while tying a reasoning baseline that
+costs some $150\times$ more. The score moved; measurable capability did not.
 
 This paper asks what that lift \emph{is}, and answers with a quantified causal
-attribution rather than a new method: most of it is what ordinary fine-tuning
+attribution rather than a new method: most of it is what non-contrastive supervised
+fine-tuning in the same multiple-choice format
 already buys, it lives in a learned direction that is off-axis to the model's own
 correctness geometry, and it re-ranks a lossy readout rather than adding capability.
 
@@ -167,8 +169,8 @@ read-only linear selector on the same per-head activations the adapter writes to
 recovers the ARC lift (selector accuracy \textbf{0.943}, three PCA/fit seeds; fixes 181
 base-wrong, breaks 5 base-right, exact McNemar $p=3.7\times10^{-47}$)
 \emph{without touching generation}, so it carries none of the adapter's deployment
-costs (no generation loss, no retrieval spillover) and Pareto-dominates the
-\emph{adapter} on the (cost, MC-accuracy) plane. Unlike NoVo/CORAL --- which present
+costs (no generation loss, no retrieval spillover) while scoring higher than the
+\emph{adapter} at the same measured latency. Unlike NoVo/CORAL --- which present
 such a selector as a calibration/accuracy \emph{fix} --- we use it as causal
 evidence that the lift the adapter writes off-axis is read-recoverable on-axis
 without the write's damage.
@@ -247,8 +249,10 @@ that explains it, together with the deployment pathologies the recovery introduc
   $\rightarrow$ higher-capacity SFT ${\sim}62\%$ $\rightarrow$ contrastive $100\%$,
   with the on-axis reference ($\Wknow$) at $6.4\%$ indistinguishable from zero
   ($p=0.136$) and therefore counted with the floor --- much of the lift is what
-  ordinary fine-tuning buys back, and how much depends on capacity and task rather
-  than being one constant. To our knowledge no prior work runs matched
+  non-contrastive SFT buys back, and how much depends on capacity and task rather
+  than being one constant. Every control we ran drops the contrastive term while
+  keeping supervision on correct-option continuations in multiple-choice format, so
+  the class the attribution names is that one, not fine-tuning in general. To our knowledge no prior work runs matched
   non-contrastive controls to \emph{attribute} an MC lift this way and report the
   fractions. The interval is
   wide, and we read the claim at its resolution: most, not a specific percentage.
@@ -279,7 +283,7 @@ that explains it, together with the deployment pathologies the recovery introduc
   recovers the ARC lift (accuracy $0.943$; McNemar $p=3.7\times10^{-47}$) without
   touching generation --- improving on the \emph{adapter} read-only at the same
   measured cost, though a reasoning
-  test-time-compute baseline dominates both (\cref{disc:selector}). That a
+  test-time-compute baseline outscores both (\cref{disc:selector}). That a
   read-only probe-selector recovers an MC lift is established
   \citep{NoVo,CORAL}; our contribution is its \emph{use} as the read leg of a
   read${\neq}$write dissociation auditing an off-axis write neither studies.

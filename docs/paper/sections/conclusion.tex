@@ -1,27 +1,36 @@
 \section{Conclusion}\label{sec:conclusion}
 
 We asked what a large cold multiple-choice lift from contrastive-correctness PEFT
-is, on a frontier 31B instruction model, and the answer is that it is not a
-capability gain. Non-contrastive controls attribute much of the lift to ordinary
-fine-tuning rather than to the contrastive objective, and locate what the objective
+is, on a frontier 31B instruction model, and our answer is that it should not be read
+as a capability gain. Non-contrastive controls attribute much of the lift to
+supervised fine-tuning without a contrastive term --- though still on
+correct-option continuations in the same multiple-choice format, which is the class we
+tested and not fine-tuning at large --- and locate what the objective
 does contribute: at the adapter's own capacity --- the identical $12{,}336$
 parameters, only the training objective changed --- a generic objective recovers
-$36.2\% \pm 5.0$ of the ARC gain, rising to ${\sim}62\%$ when the control is given
+$36.2\% \pm 5.0$ of the ARC gain (best-checkpoint; ${\sim}36$--$40\%$ across the
+selection rule), rising to ${\sim}62\%$ when the control is given
 three-to-five orders of magnitude more parameters, and ranging from $79.5\%$ on
 Winogrande to nothing at all on TruthfulQA (headline metric per task; the ordering
 across tasks is metric-dependent, the lifts are not). The recovery lives in a learned direction
 that is off-axis of degree to the model's own correctness geometry --- and with the
 parameterization held fixed, it is the contrastive objective, not the apparatus, that
 goes furthest off-axis --- a geometry that is causal and identifiable on both the
-harness and the write sides. And the lift does not become generation: the items it
+harness and the write sides. That mechanistic chain --- arbiter, calibration,
+PMI-residual, probe, selector and geometry --- is a convergent analysis developed
+post-discovery on one fixed $400$-item slice in native order, not an independent
+confirmatory replication: the full split re-runs the lift and the arbiter, and the
+remaining arms share that sample (\cref{disc:status}). And the lift does not become generation: the items it
 fixes already sit at the base's chain-of-thought ceiling, a read-only selector on the
 same activations recovers it without the deployment costs, and --- most plainly ---
 the base asked to emit the answer letter in a single forward recovers more of the
-base-wrong items ($0.970$) than the adapter ($0.757$) for \emph{half} the measured
-cost --- $0.980$ against $0.855$ across all $400$ items --- while tying a reasoning
+base-wrong items ($0.970$) than the adapter ($0.758$), and in our implementation it
+does so at about half the measured latency
+--- $0.980$ against $0.855$ across all $400$ items --- while tying a reasoning
 baseline some $150\times$ more expensive. That last contrast reads the base in a
 lettered-MCQ format rather than in cold-MC option scoring, so it compares two readouts
-of the same base rather than two models like for like.
+of the same base rather than two models like for like, and the cost comparison is
+between the two implementations we timed, not a property of the readouts as such.
 The effect and its off-axis geometry replicate on a second
 model family --- though only partly: the cross-family lift is same-sign on all four
 tasks but marginal on Winogrande at $n{=}400$, and the causal spine that carries

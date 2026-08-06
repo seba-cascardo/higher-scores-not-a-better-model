@@ -94,7 +94,7 @@ that a protocol can score one while intending the other. Selection bias is moreo
 fine-tuning itself, tracing to weak multiple-choice symbol binding --- the A/B/C/D
 symbol--content association --- which strengthening during SFT both reduces and turns
 into an accuracy gain \citep{SymbolBinding}; this bears directly on our matched-SFT
-control and on the trivial letter-emission baseline we find dominates the adapter
+control and on the trivial letter-emission baseline we find outscores the adapter
 (\cref{disc:selector}). We build directly on this literature --- the
 protocol (cold MC under a chat template) is a lossy readout, which we treat as
 \emph{established setup rather than as our thesis} --- and our contribution is past
@@ -131,10 +131,18 @@ aligns them with a closed-form, inference-time intervention \citep{KAPPA}. We
 position KAPPA as a foil rather than a competitor, and explicitly \emph{not} as a
 head-to-head baseline we beat. KAPPA operates where the correct option is present
 and decodable in the residual (options-present MCQ); our effect lives in cold
-options-absent text-continuation scoring, where that precondition fails --- a
-faithful $k$-class knowledge probe in our channel decodes the gold option at chance
-(best $0.317 \approx$ chance $0.25$) while the same probe for the greedy option
-decodes at $0.542$. KAPPA's mechanism therefore does not instantiate in our channel;
+options-absent text-continuation scoring, where we find no evidence that the
+precondition holds --- a
+faithful $k$-class knowledge probe in our channel decodes the gold option at
+$0.317$ against chance $0.25$, while the same probe for the greedy option
+decodes at $0.542$. We state this as a \emph{limit on power rather than a
+demonstration of absence}, because the design cannot separate the two: the gold
+figure rests on a $120$-item dev split, whose Wilson $95\%$ interval
+$[0.240, 0.404]$ contains chance \emph{and} contains improvements larger than
+$10$\,pp, so an equivalence test at that margin does not pass; and the point itself
+is a maximum over a $40$-cell (layer $\times$ regularization) grid, which biases it
+upward exactly where it is being read as a null. What we can say is that KAPPA's
+mechanism is not \emph{detectably} instantiated in our channel at this resolution;
 the relationship is a channel mismatch, and we make no claim of out-performing it.
 One apparent tension deserves a sentence here, because a reader who reaches
 \cref{disc:selector} will otherwise trip on it: our read-only selector decodes the

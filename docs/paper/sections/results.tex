@@ -526,7 +526,10 @@ we flagged that a paired design would only tighten it. It does: resampling items
 replacement and carrying base, generic and contrastive together (200k reps, seed $0$,
 zero degenerate replicates) gives $\mathbf{[0.51, 0.73]}$, $44\%$ narrower than the
 delta-method interval and contained in it, with the measured item-level correlation
-($r{=}0.42$ base--generic, $0.26$ base--contrastive) as the mechanism. We report the
+($r{=}0.42$ base--generic, $0.26$ base--contrastive) as the mechanism. All three
+intervals resample \emph{items} and are conditional on the single r256 Align-LoRA
+that was trained: they carry no training-run variance, and a second run of the same
+configuration could land outside them. We report the
 paired interval as primary and keep both others as conservative readings that contain
 it (\code{...l1\_\allowbreak paired\_\allowbreak bootstrap.\allowbreak json}, superseding the independent-binomial
 file above). The r512 flank

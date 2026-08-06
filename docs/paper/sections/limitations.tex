@@ -134,11 +134,11 @@ The same-parameterization control does measure TruthfulQA --- and recovers
 $0.9\% \pm 3.3$ of its lift, i.e.\ nothing (\cref{disc:inducibility}).
 
 \paragraph{``Generic'' versus ``domain exposure'': one substitution, and it favors
-``any fine-tuning''.}
+``any domain'' --- within multiple-choice format.}
 The inducibility controls train on the same TruthfulQA+ARC budget the effect is
 measured on (\cref{sec:definitions}), which left the ${\sim}62\%$ consistent with two
-readings: that ordinary fine-tuning of \emph{any} kind recovers most of the lift, or
-that fine-tuning \emph{on this domain} does. We ran the missing arm. Holding
+readings: that non-contrastive SFT recovers most of the lift regardless of \emph{what}
+it is trained on, or that training \emph{on this domain} is what does it. We ran the missing arm. Holding
 parameterization, budget and schedule fixed and swapping only the corpus for MedMCQA
 --- same pair format, medical domain, no overlap with the four anchors --- the
 non-contrastive control recovers $33.8\% \pm 5.5$ of the ARC lift out of domain
@@ -156,7 +156,7 @@ objective does work \emph{outside} its domain: cell C recovers $+17.5$ pp (best)
 $+21.3$ pp (final) more than plain CE at identical parameterization and corpus.
 Second, the off-axis ratio moves with the domain as well as with the objective
 (\cref{fig:spectrum} gains two points, $2.75 \pm 0.26$ and $2.98 \pm 0.10$): the
-domain shift is a real axis at $+0.90 \pm 0.17$ ($5.4\sigma$), but it differs from the
+domain shift is a real axis at $+0.90 \pm 0.17$ ($5.3\sigma$), but it differs from the
 objective shift by only $+0.07 \pm 0.25$ ($0.28\sigma$), so \emph{which} axis weighs
 more is not decided by these data and we do not order them. Both figures are the
 larger of the two estimates the $2\times2$ affords, and we say so: measured under the
@@ -267,12 +267,13 @@ seed 2 & $+35.75$ & $+33.75$ & $+19.00$ & $+19.00$ & $-16.5$ & 2.00 & 100/92/100
 \midrule
 \textbf{mean $\pm$ sd} & $\mathbf{+35.83}$ & $+34.92$ & $+18.92$ & $+19.08$ &
 $\mathbf{-24.2}$ & $\mathbf{1.85}$ & --- \\
- & $\pm 0.63$ & $\pm 1.13$ & $\pm 1.38$ & $\pm 0.88$ & $\pm 7.3$ & $\pm 0.13$ & \\
+ & $\pm 0.63$ & $\pm 1.13$ & $\pm 1.38$ & $\pm 0.88$ & $\pm 7.3$ & $\pm 0.14$ & \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[flushleft]\footnotesize
 \item \textbf{Reading.} The scoring lift and the off-axis geometry are stable
-(ARC sd $0.63$\,pp; ratio sd $0.13$); the generation loss is not (range $-16.5$ to
+(ARC sd $0.63$\,pp; ratio sd $0.14$, computed on the unrounded per-seed ratios rather
+than on the rounded values printed in the column); the generation loss is not (range $-16.5$ to
 $-31$, sd $7.3$), though its sign is invariant --- 3/3 seeds damage multi-step
 reasoning. Termination is preserved in every seed, including the creative prompts
 where the \emph{base} terminates 68\% of the time and the adapters reach 92\% by
@@ -458,23 +459,27 @@ claim, in \cref{app:dose}.
 \paragraph{A cheap test-time-compute baseline, narrowed (PMI is already settled).}
 The arbiter implies the adapter approximates knowledge the base already reaches by
 CoT, which invites the question of whether a cheap test-time-compute baseline
-Pareto-dominates it on the scoring task. One leg is already settled and does
-\textbf{not} dominate: PMI / decision-conditional re-scoring caps at base-wrong AUC
+matches or beats it on the scoring task. One leg is already settled and does
+\textbf{not}: PMI / decision-conditional re-scoring caps at base-wrong AUC
 0.574 against the adapter's 0.830 and actively \emph{hurts} the adapter when
 applied (\cref{disc:channel}), and a same-scaffold DC-PMI head-to-head leaves the
 adapter recovering items PMI does not (TQA, 28 items, CI lower bound $+0.622$). Two
 more legs have now \textbf{run} and are reported as the \textbf{deployment
 triangle} in \cref{disc:selector}. The \emph{reasoning} TTC family ---
 self-consistency over sampled CoT --- recovers 0.970 on the 198 base-wrong ARC
-items, dominating both the read-only selector (0.911) and the adapter's cold-MC
-scoring (0.757). And the cheapest baseline available --- the base emitting the answer
+items, outscoring both the read-only selector (0.911) and the adapter's cold-MC
+scoring (0.758) --- at ${\sim}150\times$ their measured latency. And the cheapest of the four routes we timed --- the base emitting the answer
 letter in a single greedy forward, no CoT --- also recovers \textbf{0.970}
 (192/198), and on measured per-item latency it ties the reasoning baseline at
-${\sim}150\times$ less cost while \emph{strictly dominating} the selector and the
-adapter, at roughly half their cost (181\,ms against 360 and 354\,ms, since cold-MC
-scoring runs one forward per option). So the adapter loses to a reasoning baseline
-\emph{and} to the most trivial alternative on both axes at once, and the selector's
-value is evidentiary, not deployment (it too is dominated by letter emission). The one scope caveat is that letter emission
+${\sim}150\times$ less cost while outscoring the selector and the
+adapter at roughly half their measured latency (181\,ms against 360 and 354\,ms).
+That latency gap is a fact about the implementations we timed, not about the routes
+in principle: our scoring harness runs each of the ${\sim}4$ option continuations as
+its own batch-1 forward, and an implementation that batched an item's options into
+one forward is a comparand we did not measure. So the adapter loses to a reasoning
+baseline \emph{and}, in this comparison, to the most trivial alternative on accuracy
+as well as on measured latency, and the selector's
+value is evidentiary, not deployment (letter emission outscores it too). The one scope caveat is that letter emission
 is a lettered-MCQ readout distinct from the cold-MC continuation channel
 (\cref{method:protocol}), so this contrasts two readouts of the same base --- the
 lossy-readout thesis in its sharpest form --- rather than a like-for-like scoring
