@@ -91,7 +91,7 @@ the 124/124 as an \emph{upper bound} on knowledge-accessibility, not a proof of
 perfect recall: it is a greedy $k{=}1$ arbiter, and for HellaSwag/Winogrande it runs
 in a letter-MCQ format distinct from the cold-MC channel (\cref{method:protocol}).
 Its robustness is corroborated independently: base self-consistency CoT at $k{=}3$
-also reaches 124/124 on this set (\cref{sec:open}), so the result is not an artifact
+also reaches 124/124 on this set (\cref{sec:limitations}), so the result is not an artifact
 of the single greedy chain. This holds out-of-task too: on GPQA the base solves the
 items under chain-of-thought at $0.7071$ (arbiter), well above chance, so there is
 no generative headroom a scoring shortcut could supply, and we therefore did not
@@ -162,6 +162,267 @@ same-parameterization $36.2\%$ becomes $26.9\%$ in Gemma and $27.2\%$ becomes
 $59.7\%$ in Qwen. The four \emph{lifts} are robust to the choice; the cross-task
 \emph{ordering} of inducibility is not, and no mechanistic claim in this paper rests
 on it.
+
+\subsection{The recovery is off-axis to correctness --- of degree, on a measured
+spectrum}\label{disc:geometry}
+
+We now locate the recovery relative to the model's own correctness geometry. Per
+attention head, we estimate a functional correctness direction $\vinf$ and compare
+it both to the adapter's trained offset and, more carefully, to the \emph{net
+effect each method has on activations}. The trained offset alone is a misleading
+proxy: its whitened cosine with $\vinf$ (\cref{sec:definitions}) is $-0.003$
+(within the random-direction null), it places only 6.4\% of its mass in the top
+principal components (a quantity unrelated to --- and only coincidentally equal to
+--- the $\Wknow$ recovery figure below), and its norm is $4.3\times$ the class gap
+--- a near-orthogonal weight-space picture. But the offset is a weight-space proxy,
+and a zero-cost preview of the net-effect comparison from weights alone reported
+``off-axis'' (ratio ${\sim}1.05$); the clean experiment --- comparing the net
+effect on activations --- refutes that simplicity.
+
+The clean comparison yields a \textbf{spectrum}, not a single off-axis fact. A
+norm-matched \textbf{random} direction (three seeds) recovers ${\approx}0\%$ of the
+lift (ARC acc\_norm 0.50--0.52 ${\approx}$ base 0.505): the learned direction is
+specific, not any perturbation of the right size. The strongest \textbf{on-axis}
+reference we can construct locally --- a whitened Fisher-LDA direction $\Wknow$,
+genuinely distinct from the mass-mean (cos with $\vinf$ 0.379) yet orthogonal to
+the offset (cos with $\thetamc$ 0.0014) --- recovers only $\mathbf{6.4\%}$ of the
+ARC lift (null 0.500 / adapter 0.853 / $\Wknow$ 0.522; fraction 0.064, far below
+the pre-registered 0.30 kill-rule and statistically indistinguishable from zero ---
+exact McNemar $p=0.136$, with the paired-bootstrap recovery CI $[-0.009, +0.136]$
+and the Wilson accuracy CI $[0.474, 0.571]$ both including chance, which
+\emph{strengthens} the on-axis-fails reading), and essentially nothing on
+TruthfulQA; a raw mass-mean $\vinf$ recovers 11\% ($+4.0$ vs $+35.0$; $z = -6.63$).
+The two on-axis references are not equally null, and the paired test is what
+separates them: over the same 400 items $\vinf$'s small recovery \emph{is} detectable
+(exact McNemar b=12/c=28 $p=0.017$, paired-bootstrap frac-CI95 $[+0.027, +0.197]$,
+excluding 0), while $\Wknow$'s is not. The weaker reference recovers a little; the
+stronger one does not clear its own null --- which is the ordering the off-axis
+reading predicts, and the opposite of what a weak-reference objection would produce.
+
+A non-rejection is not by itself an absence, so we bound what this design could
+have seen. Freezing the backward cell at its observed rate ($10/400$) and
+enumerating the exact two-sided McNemar power at $n{=}400$, $\alpha=0.05$, the
+minimum detectable effect at power $0.80$ is $\mathbf{12.6\%}$ of the ARC lift
+($+4.45\pp$ of accuracy, i.e.\ an arm accuracy of ${\approx}0.5445$); conditioning
+instead on the 29 observed discordant pairs gives $9.2\%$, and the MDE moves only
+between $10.2\%$ and $16.2\%$ when that backward rate is halved or doubled. The
+design therefore carries power $\mathbf{1.0000}$ against both reference effects
+this paper calls real elsewhere --- the $36.2\%$ the same-parameterization control
+recovers and the $50\%$ mark --- so the on-axis null does exclude an on-axis effect
+of any magnitude we report as real. It does \emph{not} license reading $\Wknow$ as
+exactly zero: the design is blind below ${\sim}9$--$13\%$ of the lift and the
+$6.4\%$ point estimate sits inside that blind band. What is declarable is an
+\textbf{upper bound}, not a zero --- and the MDE ($12.6\%$) nearly coincides with
+the upper end of the paired-bootstrap recovery interval already reported
+($+13.6\%$), which is the design face and the estimation face of the same
+precision, not a coincidence.
+
+The ordering of the two on-axis references deserves a sentence, because a reader
+may suspect the smaller number was chosen for convenience: the better-constructed
+discriminator ($\Wknow$, the covariance-optimal linear separator,
+\cref{method:directions}) recovers no \emph{more} of the lift than the plain
+mass-mean (6.4\% vs 11\%) --- improving the on-axis estimate does not improve
+recovery, which is itself evidence against a knowledge-deficit account. Both
+figures sit far below the 0.30 kill-rule, and the conclusion is unchanged whichever
+is taken as the on-axis ceiling.
+
+This off-axis picture does not hinge on the on-axis references being weak
+estimators of the true correctness axis: the offset is off-axis \textbf{even to the
+probe's own decision direction} --- the empirically optimal correctness reader ---
+the in-space probe of \cref{disc:channel}, whose base-wrong AUC is 0.955 (distinct
+from the \cref{disc:selector} selector's accuracy, 0.943 at $n{=}400$ / 0.914 on
+base-wrong) --- at pooled cosine $|0.008|$, inside the null band (the per-head
+$|0.066|$ sits at the edge of the ${\sim}0.061$ per-head null, so this upgrade
+rests on the pooled statistic).
+
+The two \emph{methods}, measured by net activation effect, are both \textbf{mostly
+off-axis} --- the contrastive adapter at cosine 0.088 (ratio 1.74 vs a random
+direction) and generic SFT at cosine 0.199 (ratio 3.93) --- but generic SFT is
+$\mathbf{2.3\times}$ \textbf{more on-axis} than the contrastive adapter. The
+recovery is thus off the correctness axis \emph{to a degree that depends on the
+method}: random ${\approx}0\%$ (cos${\approx}0.05$, ratio 1.0) $\rightarrow$
+$\Wknow$ 6.4\% (the on-axis reference) $\rightarrow$ generic SFT ${\sim}62\%$ (cos
+0.199, ratio 3.93) $\rightarrow$ contrastive 100\% (cos 0.088, ratio 1.74). Note
+the two orderings are deliberately \textbf{not} monotone in each other: recovery
+fraction and on-axis-ness are different axes of the spectrum (the most off-axis
+direction, random, recovers nothing; the more on-axis method, generic SFT, recovers
+\emph{less} than the contrastive one) --- the spectrum is a two-axis object, not a
+single scale.
+
+This refines the earlier ``purely off-axis'' framing into the central figure of the
+paper, and it is consistent with the earlier finding that the two functional
+correctness faces are themselves co-located (whitened cosine $\vinf{\cdot}\vret$
+$+0.283$, BCa95 $[+0.276, +0.291]$, null ${\pm}0.007$, $n{=}316$ heads): the
+recovery is off the shared correctness substrate by a method-dependent amount, not
+aligned with either face of it.
+
+This co-location appears to sit in tension with work reporting that recall and
+reasoning occupy \emph{causally separable} circuits
+\citep{DisentanglingRecallReasoning}: if the correctness faces share a substrate,
+separately ablating recall and reasoning should not be possible. The tension
+dissolves at the level of description, because the two results measure different
+objects. That work measures task-circuit separability (in Qwen and LLaMA): ablating
+one functional circuit leaves the other intact, ``separable but interacting.'' We
+measure the \emph{direction of a trained offset} relative to the functional
+correctness direction, in Gemma~4 31B IT. A substrate can host circuits that
+partition sufficiently for separate ablation \emph{and} carry functional directions
+that are co-located, with our $+0.283$ measurement living in that work's
+``interacting'' seam rather than denying its separability. Our novel layer is
+neither: the direction the adapter actually moves is off-axis to both functional
+faces, which is why a partition-based account of the spillover --- and the hope of
+re-selecting heads to avoid it --- does not hold.
+
+\paragraph{A direct causal decomposition: the off-axis push is privileged, not any
+perturbation of the right size.}
+The spectrum above is read from each method's net activation effect; a second, more
+direct experiment decomposes the adapter's \emph{own} offset against the
+correctness direction and asks which component carries the lift. We split the
+trained offset, per head, into a component parallel to the functional correctness
+direction ($\offpar$) and a component perpendicular to it ($\offperp$), and inject
+each through the identical recovery harness used for every arm above, at its
+natural norm from the decomposition ($\offpar$ is consequently ${\sim}16\times$
+smaller in norm than the $\Wknow$ arm --- the equal-norm control inside the
+perpendicular complement is the shuffle arm below, norm-matched per head to
+$\offperp$).
+
+The perpendicular component recovers essentially all of the lift (ARC acc\_norm
+0.8525, ${\sim}100\%$; HellaSwag, Winogrande, TruthfulQA 99--104\%), while the
+parallel component recovers none (ARC acc\_norm 0.505 = the Gate-A base exactly,
+0\%; raw acc 0.5025). Given $\cos(\thetamc, \vinf) \approx -0.003$, $\offperp$
+${\approx}$ the full offset by construction; the informative arms are $\offpar$ (an
+on-axis push at the offset's own scale does nothing) and the shuffle (equal-norm,
+same subspace, learnedness as the only variable).
+
+Because the \emph{same} harness that yields 100\% for the perpendicular push yields
+only 6.4\% for the on-axis $\Wknow$ reference, the on-axis failure is a real
+property of the geometry, not an insensitivity of the injection method --- the
+harness is direction-sensitive. This closes the non-identifiability objection
+\citep{NonIdentifiability} on the \emph{harness} side.
+
+We close it on the \emph{write} side as well: a random direction sampled inside the
+\emph{same} perpendicular complement, norm-matched per head to $\offperp$ (sanity
+check: $|\cos|$ to $\vinf$ ${\approx}$ $5\times10^{-17}$, $|\cos|$ to the learned
+$\offperp$ ${\approx}$ $0.047 \approx 1/\sqrt{256}$), recovers ${\sim}0\%$ of the
+lift across three seeds (ARC fraction $-0.04$ / $-0.01$ / $-0.01$; the lone
+non-zero, Winogrande ${\sim}12\%$, is a small lift in noise) against $\offperp$'s
+${\sim}100\%$. Same harness, same norm, same subspace --- the only variable is
+\emph{learnedness} --- so it is the learned structure \emph{inside} the off-axis
+complement that lifts, not orthogonality-plus-norm. This mirrors the control pair
+that work runs on its own steering result, where the learned direction moves
+behavior and neither the norm-matched random nor the orthogonal direction does
+\citep{ConfidenceManifold}: here both orthogonal controls (the on-axis reference and the
+shuffled perpendicular) have an effect on the lift indistinguishable from zero
+while the learned off-axis push does not; and reported specificity failures of
+activation directions are \emph{cross-model}, whereas within-model --- our setting
+--- directions remain specific \citep{SyedActivationDirections}, so that result
+does not subsume this control.
+
+(These two ``off-axis'' readings are not in tension: $\offpar$ 0\% is a
+decomposition of the trained offset in \emph{weight space}, whereas the cosine
+0.088 is the \emph{net effect on activations} --- different objects on different
+metrics, both saying the on-axis component does not carry the lift.)
+
+A norm $4.3\times$ the class gap also invites the question whether a linear
+on/off-axis decomposition is still meaningful at the offset's operating point. The
+dose--response sweep (\cref{disc:pathologies}) is the empirical check: the response
+to scaling the offset over $s \in [0, 1]$ is smooth and monotone --- the scoring
+lift saturates, then the generation damage onsets --- with no discontinuity or
+chaotic regime anywhere on the axis, so the injection operates on a graded response
+surface where the decomposition is interpretable. We nonetheless scope the
+geometric claims to the trained offset at its trained scale rather than asserting
+magnitude-invariance.
+
+A training-time constructive control closes the causal argument from the other side
+(necessity, complementing this sufficiency): an on-axis training penalty toward
+$\vinf$, swept over $\lambda$, does \emph{not} rescue transfer at matched lift
+(fork (b), \cref{sec:limitations}) --- so the $+35$ is the off-axis mass by necessity, not
+only by construction. Together, the $\offperp$/random spectrum (sufficiency) and
+fork (b) (necessity) make the off-axis reading a two-sided causal claim.
+
+\paragraph{The response is not proportional to projection onto the learned
+direction.} A natural model of everything above is that a push buys lift in
+proportion to how much of it lands along $\thetamc$. That model is testable because
+it is \emph{antisymmetric in scale}, and it fails. Crossing sign against axis on ARC
+(acc\_norm, $n{=}1172$, paired) gives: $\thetamc$ at $+1$, $+36.26\pp$ CI
+$[+33.28, +39.25]$ --- this run's own reading of the headline lift, on the full test
+split rather than the canonical $n{=}400$ draw; and for a separately trained
+anti-axis, $-0.5 \rightarrow -1.96$,
+$-1 \rightarrow -3.41$ CI $[-6.23, -0.60]$, $-2 \rightarrow -4.35$, $+1 \rightarrow
+\mathbf{-28.07}$ CI $[-31.23, -25.00]$. The proportional prediction for that last
+cell is $+4.68$: it misses by ${\sim}33\pp$ and gets the sign wrong. At $-2$ the
+observed $-4.35$ against a predicted $-9.36$ saturates sublinearly.
+
+The decisive fact, though, is not any single cell --- it is that \emph{all four}
+scales lose accuracy. An antisymmetric model cannot move both directions to the same
+side of zero, so the dial is unilaterally negative and the response is not
+proportional to its projection onto $\thetamc$. The rank data say the same thing
+qualitatively: of
+the four sign-by-axis combinations, three disperse the correct option below base and
+only one concentrates it.
+
+One category caveat, because the arm invites a misreading: the anti-axis is
+$98.3\%$ perpendicular to $\thetamc$ ($|\cos| = 0.129$), at comparable norm. It is a
+small-known-projection control, \emph{not} an on-axis one --- $\Wknow$ remains the
+on-axis arm and the $6.4\%$ rests on it. This corroborates the family's pattern
+without being a member of it. One run per cell.
+
+\paragraph{The learned direction is reproducible, so it is not seed noise.}
+An off-axis direction invites the reading that it is whatever idiosyncratic
+perturbation this training run happened to land on. It is not. Two independently
+trained runs of the contrastive objective over the same 48 heads agree at a median
+per-head cosine of $\mathbf{+0.9985}$ (5th percentile $0.9958$), against an RMS floor
+of $0.0625$ for random directions in $d{=}256$. The objective picks out an almost
+deterministic direction, roughly three orders of magnitude away from chance
+agreement. This also forecloses averaging as a remedy. Replicate-averaging can only
+cancel a component that \emph{varies} across replicates, and the test separates the
+two cases cleanly. Averaging three norm-matched \emph{random} offsets collapses their
+norm to a ratio of $\mathbf{0.5875}$, right at the $1/\sqrt{3} = 0.5774$ that
+independence predicts --- which is the instrument working, not the finding. Averaging
+three independently \emph{trained} offsets leaves a ratio of $\mathbf{0.9209}$: almost
+nothing cancels, because there is almost nothing that differs. Averaging is a remedy
+for noise, and this direction is not noise.
+
+\paragraph{The contrastive and generic net effects are neither the same nor
+independent.} \Cref{disc:inducibility} establishes by \emph{outcome} that a generic
+fine-tune recovers much of the lift; the geometric counterpart asks how much
+direction the two methods actually share, which no earlier measurement had
+computed --- both net effects had been compared to $\vinf$, never to each other.
+They share $\mathbf{13.5}$--$\mathbf{18.8\%}$ of their energy (the range spans five
+ranks of the estimator; the spread across ranks exceeds the tolerance we fixed
+beforehand, so we quote the range and never a point) against $0.62\%$ for a matched
+null. The overlap concentrates where the adapter pushes hardest: cosine $+0.4825$ on
+the ten heads carrying most energy against $+0.0773$ on the ten carrying least.
+
+The tempting inference from that --- that the shared part \emph{is} the generic,
+on-axis component, and the contrastive residual is the off-axis remainder --- does
+not hold: subtracting the generic direction leaves the residual's on-axis budget
+essentially unchanged at every rank tested. What the two methods share is not the
+part that points along the correctness axis. We report the concentration finding
+because it survived the control it invited rather than because it is clean: the
+obvious artifact is attenuation by measurement noise on weakly-driven heads, so we
+estimated per-head reliability by split-half within a single forward pass and found
+it at $0.9998$, with reliability and push magnitude correlated at $-0.204$ (CI
+$[-0.558, +0.140]$) --- the artifact route is not open. All of this is measured on
+one benchmark's prompts.
+
+\subsection{No single-layer locus: the lift scales with total offset magnitude}
+\label{disc:locus}
+
+The recovery has no causal layer locus (\cref{tab:locus}). Across a layer-band
+patching sweep, the
+recovered fraction correlates with the \emph{total magnitude} of the learned offset
+($\Sigma|r|$) at \textbf{0.985}, far more than with the number of heads patched
+(0.832). (We read this as \emph{no single-layer locus} rather than a strict
+magnitude-over-head-count causal claim: 0.985 and 0.832 are coupled correlations
+from the same band sweep, not a test that isolates magnitude from head-count; what
+the sweep licenses is that no privileged layer repairs the readout, not a proof
+that head-count is causally inert.) The natural temptation --- to read ``layers
+36--40 carry 87\% of the lift'' --- is a head-count artifact: that band simply
+contains 71\% of the adapter's heads (which span L30--55). There is no privileged
+layer at which the lossy readout is repaired; the recovery is a property of the
+aggregate magnitude of an off-axis-of-degree push distributed across heads,
+consistent with the over-scaled offset (\cref{disc:geometry}) and the coherent-sum
+logit signature (\cref{disc:pathologies}).
 
 % ------------------------------------------------------------------ Table 1
 \begin{table}[tbp]
@@ -395,8 +656,9 @@ $n{=}73$; base 0.574 $n{=}204$ intermediate --- \textbf{lossy, not empty}), and 
 interpretable re-scoring of the output scalars recovers the lift (ceiling 0.574
 ${\ll}$ adapter 0.830; PMI \emph{hurts}; $R^2$ 0.024). The 0.830-vs-ceiling gap is
 \textbf{information-set-confounded} (activations vs collapsed scalars) $\rightarrow$
-a \textbf{channel} claim, not a ``magic direction'' (generic SFT recovers
-${\sim}62\%$ the same way) nor ``empty channel''. \textbf{The in-space
+a \textbf{channel} claim, not a ``magic direction'' (the higher-capacity
+non-contrastive SFT arm recovers ${\sim}62\%$ of the ARC lift the same way) nor
+``empty channel''. \textbf{The in-space
 activation-probe has now run and resolves this gate:} a logistic probe on the
 \emph{same} per-head \code{o\_\allowbreak proj}-input activations (held out by item, same
 cold-MC option-continuation distribution, preprocessing fit inside each fold,
@@ -688,7 +950,7 @@ null MMLU $+0.07\pp$) & --- \\
 causally} at eval time (a PRM corpus is not warranted); a \emph{training-time}
 on-axis constraint \textbf{has now run and does not rescue transfer} (no $\lambda$
 passes the lift-matched gate, so the $+35$ is the off-axis mass by
-\emph{necessity}; see \cref{sec:open}).
+\emph{necessity}; see \cref{sec:limitations}).
 \end{tablenotes}
 \end{threeparttable}
 \end{table}

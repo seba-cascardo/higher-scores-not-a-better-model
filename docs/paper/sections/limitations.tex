@@ -387,8 +387,6 @@ test is only \emph{consistent-with}, not clean (mixed across ARC and TruthfulQA,
 \cref{disc:negatives}), so the unifying mechanism is still a signpost, not a named
 channel.
 
-\section{Open questions and future work}\label{sec:open}
-
 \paragraph{The within-format difficulty control and independent base-CoT for
 HSwag/Wino have now run --- ``out-of-task, not difficulty-bound'' is supported.}
 The activation-probe in-space --- the decisive fairness control for the channel
@@ -442,19 +440,12 @@ the lift itself (collapsing toward the $\Wknow$ 6.4\% floor). This is \textbf{fo
 ${\sim}100\%$ / random ${\sim}0\%$ spectrum of \cref{disc:geometry}): the $+35$
 \emph{is} the off-axis mass, not an artifact of injection. It is not under-fitting
 --- $\lambda{=}0$ converges to val\_acc 0.92 while $\lambda{>}0$ plateaus
-flat-and-worse (0.72/0.64), and evaluation used the best-val-acc snapshot, so the
+flat-and-worse (0.72/0.64), on the trainer's own held-out slice of the training
+corpus, scored as the correct continuation outscoring the incorrect one rather than
+on any benchmark; and evaluation used the best-val-acc snapshot, so the
 on-axis arm was shown its most favorable face and still failed. One door remains
 untried: a penalty-warmup schedule ($\Wknow$ predicts it will not rescue). A
 follow-up, not a headline result.
-
-\paragraph{A dose-window efficiency candidate --- gated, exploratory.}
-The single-magnitude activation-scale axis of \cref{disc:pathologies} surfaces an
-unexpected \emph{positive}: at intermediate doses the offset \textbf{shortens}
-generative CoT without breaking the computation. But it is measured on the
-injected, scaled \emph{steering} offset (steering ${\neq}$ baked), on a single
-seed, and whether a trainable adapter inherits the efficient regime is exactly the
-open question fork (b) leaves standing --- so we report it as a candidate, not a
-claim, in \cref{app:dose}.
 
 \paragraph{A cheap test-time-compute baseline, narrowed (PMI is already settled).}
 The arbiter implies the adapter approximates knowledge the base already reaches by
@@ -505,6 +496,17 @@ difference we do not explain. And what stays single-model is the \emph{per-item}
 evidence and the capacity dimension: the arbiter, the higher-capacity inducibility
 arm with its rank sweep, the activation-patching decomposition, and the no-locus
 result. Two families are suggestive of a general property, not evidence for one.
+
+\section{Open questions and future work}\label{sec:open}
+
+\paragraph{A dose-window efficiency candidate --- gated, exploratory.}
+The single-magnitude activation-scale axis of \cref{disc:pathologies} surfaces an
+unexpected \emph{positive}: at intermediate doses the offset \textbf{shortens}
+generative CoT without breaking the computation. But it is measured on the
+injected, scaled \emph{steering} offset (steering ${\neq}$ baked), on a single
+seed, and whether a trainable adapter inherits the efficient regime is exactly the
+open question fork (b) leaves standing --- so we report it as a candidate, not a
+claim, in \cref{app:dose}.
 
 \paragraph{Open questions inherited from the system-level negatives.}
 Two further questions bound the deployment reading rather than the mechanism. The

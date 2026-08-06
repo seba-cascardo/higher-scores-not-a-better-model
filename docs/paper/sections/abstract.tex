@@ -73,9 +73,8 @@ transfer. So what tracks whether the exploit fires is not benchmark difficulty: 
 benchmarks are hard and unsaturated, and they differ in whether the adapter's training
 distribution covers them --- only the covered one lifts. Practically, this
 is a caution for the contrastive-PEFT-for-multiple-choice program: a cold-MC lift of
-this size can be an off-axis, non-transferring readout edit --- matched by a read-only
-selector at the same measured cost, and beaten on accuracy \emph{and} on measured
-latency by the most trivial baseline
+this size can be an off-axis, non-transferring readout edit, beaten on accuracy
+\emph{and} on measured latency by the most trivial baseline
 there is, simply asking the base to emit the answer letter. That last comparison puts
 the base in a lettered-MCQ format, a \emph{different readout} from the cold-MC
 option-continuation scoring the adapter operates on, so it is not a like-for-like
