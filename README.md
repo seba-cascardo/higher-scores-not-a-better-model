@@ -14,22 +14,20 @@ benchmark gain of this kind should not be read as a capability gain.
 
 Paper source: [`docs/paper/`](docs/paper/) (LaTeX; `main.pdf` is the built document).
 
-> The repo and the Python package are named `msap`, and much of the tree carries
-> `RoMuLo`/`RoMuX` labels. Those are **historical names kept to avoid churn**, not the
-> subject of the paper — see [`CLAUDE.md`](CLAUDE.md) for the project's history.
+> The Python package, the artifact directories and the Hugging Face dataset repos are
+> named `msap`, and some paths carry `RoMuLo`/`RoMuX` labels. Those are **historical names
+> from an earlier line of work**, kept because the paper cites these paths and dataset
+> names verbatim. They are not the subject of the paper.
 
 ## Setup
 
 ```bash
-git clone --branch feature/v8 https://github.com/seba-cascardo/msap.git && cd msap
+git clone https://github.com/seba-cascardo/higher-scores-not-a-better-model.git
+cd higher-scores-not-a-better-model
 git lfs pull
 python -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
+pip install -e .
 ```
-
-**The branch matters.** The release lives on `feature/v8`; the repository's default branch
-(`master`) predates it and carries neither the analysis scripts, the versioned result
-artifacts, nor the licence files. A default `git clone` cannot run any row of the table below.
 
 On Windows, clone into a short path (e.g. `C:\src`) or enable
 `git config --global core.longpaths true`: the deepest tracked evaluation paths are 200
@@ -181,15 +179,7 @@ used in every run. Third-party dataset licences are itemised in
 
 ## Pre-registration
 
-The headline kill-rules and matched-control designs are dated protocol documents
-versioned in this repository *before* the corresponding runs (git-timestamped), under
-[`docs/superpowers/specs/`](docs/superpowers/specs/). They are internal and verifiable
-from the release history, not third-party registry entries; the paper states this
-explicitly where the term is used.
-
-## Tests
-
-```bash
-pytest -m "not gpu"       # CPU-only tests
-pytest                    # full suite (requires GPU)
-```
+The headline kill-rules and matched-control designs are dated protocol documents written
+*before* the corresponding runs, collected under
+[`docs/protocols/`](docs/protocols/). They are internal documents, not third-party
+registry entries, and the paper says so explicitly where the term is used.

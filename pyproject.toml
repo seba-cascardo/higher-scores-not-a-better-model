@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "msap"
 version = "0.1.0"
-description = "RoMuLo (Routed Multi-LoFiT): routed-modular adapters for LLM specialization"
+description = "Code and artifacts for 'Higher Scores, Not A Better Model': a large multiple-choice lift that is mostly inducible, off-axis, and does not transfer to generation"
 requires-python = ">=3.11"
 dependencies = [
     "torch>=2.2",

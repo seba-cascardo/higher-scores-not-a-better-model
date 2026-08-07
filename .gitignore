@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# LaTeX intermediates. main.pdf IS tracked; these are not.
+docs/paper/*.aux
+docs/paper/*.bbl
+docs/paper/*.blg
+docs/paper/*.log
+docs/paper/*.out
+docs/paper/*.toc
+
+# Evaluation inputs the README fetches per row from Hugging Face. Named path by path
+# rather than by a runs/**/eval_*.json glob: eight tracked artifacts match that glob
+# (runs/v7_lofit_qwen14b/eval_*.json among them), and a rule that appears to exclude a
+# file the repo actually ships is a rule that will mislead someone later.
+runs/e1_plain_ce/eval_*.json
+runs/e4_factorial/eval_ood_*.json
+runs/e6_qwen_spine/eval_*.json
+runs/gate2/promptfinal_residual_arc.pt
+runs/oq1_functional_axis/functional_directions_qwen.pt
