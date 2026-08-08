@@ -625,9 +625,11 @@ artifact.) A clean control shows the two surviving costs are coupled to \emph{ho
 the offset is injected, not to the lift as such. The generic Align-LoRA that
 recovers most of the lift (\cref{disc:inducibility}) \textbf{preserves generation}:
 gsm8k $0.96{\rightarrow}0.95$ (n.s.), where the folded contrastive offset destroys
-it --- with the caveat that these two differ in the \emph{form} of the update as well as
-in its axis, and low-rank adaptation is separately documented to preserve out-of-domain
-behaviour better than full updates~\citep{LoRAForgetsLess}, an account we do not exclude here (gsm8k ${\rightarrow}0.17$ baked, and $-25\pp$ adapter-applied; below).
+it (gsm8k ${\rightarrow}0.17$ baked, and $-25\pp$ adapter-applied; below). One caveat
+on that control: the two arms differ in the \emph{form} of the update as well as in
+its axis, and low-rank adaptation is separately documented to preserve out-of-domain
+behaviour better than full updates~\citep{LoRAForgetsLess} --- an account of the
+dissociation we do not exclude here.
 
 Weight-space edits are an established way to steer a model along a direction, and the
 paradigm reports \emph{little} change on control tasks~\citep{TaskArithmetic}; the spillover
