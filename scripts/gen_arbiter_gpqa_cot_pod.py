@@ -2,7 +2,7 @@
 """P2 — GPQA cold-MC lift stratified by arbiter: base gen-CoT correctness per item,
 ALIGNED to the cold-MC GPQA doc_ids. POD / GPU.
 
-WHY (handoff 2026-06-26 §UPDATE pendiente #1; ledger B7f)
+WHY
 --------------------------------------------------------
 The user's hypothesis: the adapter is a System-1 readout that rescues answers the
 model already knows, and "does NOT replicate on genuinely hard questions". The EUR0

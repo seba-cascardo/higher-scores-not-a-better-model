@@ -1,4 +1,4 @@
-"""P4 — Power of the present-but-swamped BASE arm (audit R11 / ledger B7b).
+"""P4 — Power of the present-but-swamped BASE arm.
 
 B7b left the honest caveat: the "signal is present-but-swamped" claim clears its
 CI_lo (>0.55) only on the ADAPTER arm (AUC 0.667, n=73); on the BASE arm the
@@ -22,7 +22,7 @@ P4's +24 items are base-RIGHT under premise-scoring, so they bias the AUC upward
 (pro-gate) — reported explicitly, not hidden.
 
 Gate (pre-registered, B7b): CI_lo > 0.55 on the pre-specified pool -> "present" is
-affirmable on the base arm and draft 5.1 rises intermediate -> present (via ledger).
+affirmable on the base arm and the claim rises intermediate -> present.
 CI_lo <= 0.55 -> the current text ("intermediate, claim rests on the adapter arm")
 is already correct — freeze it and close the pending.
 
@@ -228,7 +228,7 @@ def main():
     if all(passes.values()):
         verdict = ("PRESENT (base arm): every spec-relevant pool clears CI_lo>0.55 -> the "
                    "gold-tracking signal is present-but-swamped on the BASE arm too; draft 5.1 "
-                   "rises intermediate->present (via ledger).")
+                   "rises intermediate->present.")
     elif not any(passes.values()):
         verdict = ("INTERMEDIATE FROZEN (base arm): no spec-relevant pool clears CI_lo>0.55 -> "
                    "the current draft text ('intermediate, claim rests on the adapter arm') is "

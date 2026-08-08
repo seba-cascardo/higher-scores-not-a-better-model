@@ -1,6 +1,7 @@
 """Build the W_know (Fisher-LDA / whitened on-axis) offset variant.
 
-Pre-reg: docs/superpowers/specs/2026-06-23-wknow-onaxis-control-design.md.
+Design fixed before the arm was run; the resulting offset is
+runs/vinf_causal/mc_wknow_offset.pt (Qwen: runs/vinf_causal_qwen/).
 
 WHY THIS EXISTS
 ---------------

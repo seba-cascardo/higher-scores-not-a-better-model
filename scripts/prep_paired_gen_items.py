@@ -1,6 +1,6 @@
 """R12 — freeze the item sets for the paired generation evaluation (LOCAL, CPU-only).
 
-Pre-registration: docs/superpowers/specs/2026-07-27-paired-generation-preregistration.md
+Pre-registration: docs/protocols/2026-07-27-paired-generation-preregistration.md
 
 Every arm must see byte-identical items. The project has already paid for slice drift
 (GPQA's enumerate() ids moving under a dataset update), so the items are frozen to

@@ -1,5 +1,5 @@
 {
-  "C:/Users/seba_/AppData/Local/Temp/claude/C--Projects-MSAP/02a2ae44-1e55-4a92-a7c5-063f24bd1ab0/scratchpad/e2dl/runs/v7_lofit_seed1/eval/gsm8k_scale.json": {
+  "runs/v7_lofit_seed1/eval/gsm8k_scale.json": {
     "cap": 512,
     "cells": {
       "0.0": {
@@ -34,7 +34,7 @@
     },
     "reference_cell": "0.0"
   },
-  "C:/Users/seba_/AppData/Local/Temp/claude/C--Projects-MSAP/02a2ae44-1e55-4a92-a7c5-063f24bd1ab0/scratchpad/e2dl/runs/v7_lofit_seed2/eval/gsm8k_scale.json": {
+  "runs/v7_lofit_seed2/eval/gsm8k_scale.json": {
     "cap": 512,
     "cells": {
       "0.0": {

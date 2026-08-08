@@ -10,11 +10,11 @@ WHY (audit-remediation P6, decided 2026-07-07 post-B25):
   which B25 explicitly deferred ("nnsight's generation instrumentation is the killer feature the
   hooks lack").
 
-THE QUESTION P6 DECIDES (ledger B17, the "commitment machine" conjecture — today OUTSIDE the draft):
+THE QUESTION P6 DECIDES (the "commitment machine" conjecture — outside the paper's claims):
   Over a real gsm8k generation, does the offset SUPPRESS format/structure tokens (punct, markdown,
   capitalization, whitespace) COHERENTLY and does that suppression GROW along the generation
   (early tokens ~ untouched, late tokens ~ increasingly de-structured)?
-    coherent AND growing -> the commitment-machine frame earns its number -> B17 enters (via ledger)
+    coherent AND growing -> the commitment-machine frame earns its number
     genuine flattening with NO structure signature -> B17 dies (conjecture refuted)
     mixed -> stays out of the draft (status quo)
   Extra discriminator: loops (non-terminating) vs clean-wrong (terminate with wrong ####). If the
@@ -320,7 +320,7 @@ def main():
             q_frac_cnt[kind][qb] += 1
             q_supp_struct[kind][qb] += float(supp_struct_pos[p])
             q_supp_cont[kind][qb] += float(supp_cont_pos[p])
-        # aggregate top-k suppressed category mix over this item's positions (B25-comparable)
+        # aggregate top-k suppressed category mix over this item's positions
         d_sum = d.sum(0)                             # (vocab,) net delta over positions
         _, supp_toks = _topk(d_sum, tok, args.topk)
         for t_str, _v in supp_toks:
@@ -362,14 +362,14 @@ def main():
     n_struct = int(is_struct.sum()); n_cont = int(is_cont.sum())
     base_rate_struct = round(n_struct / max(n_struct + n_cont, 1), 4)
     enrichment_mass = round(coherence_frac / max(base_rate_struct, 1e-9), 3)      # mass-based
-    enrichment_topk = round(struct_topk_frac / max(base_rate_struct, 1e-9), 3)    # tail (B25)
+    enrichment_topk = round(struct_topk_frac / max(base_rate_struct, 1e-9), 3)    # tail
     COHERENT_TOPK_THR = 0.66     # top-k suppressed structure >= ~2x base-rate = B25-style signature
     GROW_THR = 0.05              # Q_last - Q_first materially positive
     coherent = struct_topk_frac >= COHERENT_TOPK_THR
     growing = slope["all"] >= GROW_THR
     flattening = struct_topk_frac <= base_rate_struct * 1.3   # tail barely above base-rate
     if coherent and growing:
-        verdict = "COMMITMENT_SUPPORTED"           # B17 earns its number -> enters via ledger
+        verdict = "COMMITMENT_SUPPORTED"           # the commitment frame earns its number
     elif flattening and abs(slope["all"]) < GROW_THR:
         verdict = "FLATTENING_NO_STRUCTURE"        # B17 refuted (no structure signature)
     else:
@@ -404,7 +404,7 @@ def main():
         "read": "verdict COMMITMENT_SUPPORTED => structure-suppression is coherent (top-k structure "
                 "enrichment >=~2x the vocab base-rate, i.e. struct_topk_frac>=0.66) AND grows along "
                 "the generation (Q_last-Q_first>=0.05) => B17 commitment frame earns its number "
-                "(enters via ledger). FLATTENING_NO_STRUCTURE => top-k near base-rate (no structure "
+                ". FLATTENING_NO_STRUCTURE => top-k near base-rate (no structure "
                 "signature) => B17 refuted. MIXED => structure signature present in the tail but not "
                 "decisively coherent-AND-growing => stays out of the draft. NOTE: mass_share is "
                 "base-rate dominated (~70% of vocab is content) — do NOT gate on it. "

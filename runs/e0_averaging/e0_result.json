@@ -1,5 +1,5 @@
 {
-  "prereg": "docs/superpowers/plans/2026-08-01-e0-averaging-as-offaxis-filter-prereg.md",
+  "prereg": "kill-rules fixed before any contrast was computed; see scripts/analyze_e0_offset_averaging.py",
   "config": {
     "func": "runs/functional_directions.pt",
     "ridge_frac": 0.01,

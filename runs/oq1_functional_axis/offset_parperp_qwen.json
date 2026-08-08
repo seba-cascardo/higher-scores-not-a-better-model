@@ -93,7 +93,7 @@
         "median": -0.016611181746743548
       },
       "frac_on_axis_whitened_mean": 0.003729612454110089,
-      "note": "reproduces ledger cos_w(theta_mc, v_inf) ~ -0.002 as consistency check"
+      "note": "reproduces the canonical cos_w(theta_mc, v_inf) ~ -0.002 as consistency check"
     }
   },
   "per_head": [

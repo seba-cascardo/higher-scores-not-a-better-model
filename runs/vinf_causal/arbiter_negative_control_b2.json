@@ -1,7 +1,7 @@
 {
   "question": "Does the 124/124 arbiter discriminate, or is base-CoT trivially high on all of ARC?",
   "method": "Re-partition of the EXISTING v2 arbiter run (all 400 items, greedy k=1, fixed letter-parser, n_unparsed=0). No new generation: the control is protocol-identical to the published 124/124 by construction.",
-  "arbiter_run": "runs\\vinf_causal\\arbiter_arc_cot_v2.json",
+  "arbiter_run": "runs/vinf_causal/arbiter_arc_cot_v2.json",
   "primary_lmeval": {
     "residual": {
       "k": 41,

@@ -1,0 +1,23 @@
+# The exact stack the paper's runs were produced under.
+#
+# These versions are read off the environment block that lm-eval stamps into every
+# evaluation artifact -- see `pretty_env_info`, `transformers_version` and `lm_eval_version`
+# in, for example, runs/e1_plain_ce/eval_base.json. They are not reconstructed from memory.
+#
+# Evaluation ran on Python 3.12.13 / Ubuntu 24.04, one RTX PRO 6000 Blackwell (96 GB).
+# Install this only if you intend to re-run the evaluations; the analysis scripts in the
+# README's table need requirements.txt, which is far lighter and CPU-only.
+torch==2.12.0            # 2.12.0+cu130, CUDA 13.0
+transformers==5.8.0
+lm-eval==0.4.12
+huggingface_hub<1.14     # pinned: 1.14+ breaks the download path used by these runs
+
+# Training and generation arms additionally use:
+peft>=0.11
+bitsandbytes>=0.43
+accelerate>=0.33
+datasets>=2.20
+numpy>=1.26
+scipy>=1.11
+scikit-learn>=1.4
+joblib>=1.3

@@ -3,9 +3,9 @@
   "task": "arc_challenge",
   "feature_dim": 12288,
   "n_items": 400,
-  "prereg": "docs/superpowers/specs/2026-08-04-o3-01-onaxis-power-and-o3-06-selector-partitions-results.md#02-o3-06",
+  "prereg": "design fixed before the run (item O3-06)",
   "published": {
-    "source": "runs\\vinf_causal\\probe_as_selector_arc_challenge.json",
+    "source": "runs/vinf_causal/probe_as_selector_arc_challenge.json",
     "acc_mean": 0.9433333333333332,
     "acc_sd": 0.0023570226039551605,
     "seeds": [

@@ -13,7 +13,7 @@ and the lift genuinely does not reduce to interpretable re-scoring. If it climbs
 0.83, the critic is right and the earlier "19% recovery" overstated how broken the
 readout is.
 
-Forward-filter note (CLAUDE.md): this is still OUTPUT-SCALAR space, the fair surface
+Scope note: this is still OUTPUT-SCALAR space, the fair surface
 ceiling. The decisive activation-space probe (per-head o_proj-input, same cold-MC
 distribution) is POD work — the activations are NOT in the local logprob JSONs.
 

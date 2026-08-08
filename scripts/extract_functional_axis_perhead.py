@@ -1,6 +1,6 @@
 """OQ1-funcional (E2) — extract per-head functional directions v_inf / v_ret.
 
-Pre-reg: docs/superpowers/specs/2026-06-22-oq1-vg-execution-prereg.md §2.
+Pre-reg: docs/protocols/2026-06-22-oq1-vg-execution-prereg.md §2.
 
 GOAL
 ----

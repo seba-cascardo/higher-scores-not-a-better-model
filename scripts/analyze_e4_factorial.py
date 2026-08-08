@@ -15,7 +15,7 @@ Two of the four cells already existed and are NOT recomputed:
 Recovery fraction per arm: frac = (arm - base) / (v7mc - base), with the SAME
 apples-to-apples base and contrastive denominator E1 used.
 
-Kill-rules are pre-registered in docs/superpowers/plans/2026-07-25-pod-runbook-E4-E6.md
+Kill-rules are pre-registered in docs/protocols/2026-07-25-e4-e6-preregistration.md
 and applied verbatim here (binning at 1/3 and 2/3, the paper's own thresholds):
   rec(D) >= 2/3 * rec(B)  -> "any fine-tuning": domain is not what matters
   rec(D) <= 1/3 * rec(B)  -> "domain exposure": re-scope "generic" across the paper
@@ -25,7 +25,7 @@ The one kill-rule NOT applied verbatim is the third-axis rule in net_effect(): a
 pre-registered it compared two point estimates with no variances, so noise alone
 could fire it -- and it did (the two shifts differ by 0.07 with a standard error of
 0.25). Corrected 2026-07-25 to require the DIFFERENCE BETWEEN THE SHIFTS to clear
-2 sigma; the deviation and its reason are recorded in the ledger (B50).
+2 sigma; the deviation and its reason are recorded in the paper.
 
   python scripts/analyze_e4_factorial.py
 """
@@ -185,7 +185,7 @@ def main():
     print(f"\n[done] wrote {OUT}")
 
 
-# Published reference points of the off-axis spectrum (ledger B48). ratio =
+# Published reference points of the off-axis spectrum (see the paper). ratio =
 # |cos(diff, v_inf)| / |cos(diff, random)|; 1.0 = indistinguishable from chance =
 # maximally off-axis. These are NOT recomputed here -- they are cited, together
 # with the seed dispersion that produced them, because the third-axis kill-rule

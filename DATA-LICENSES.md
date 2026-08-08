@@ -96,10 +96,12 @@ paper depends on them.
 
 ## GATED — not redistributed, purged from history
 
-These three prohibit redistribution. Their items were **removed from the git history**
-with `filter-repo` before this repository was made public, and `.gitignore` names every
-file so they cannot be re-adopted. Reproducing results that use them requires obtaining
-them from the original source under its own terms.
+These three prohibit redistribution. No file carrying their items is present in this
+repository, in the working tree or in any commit of its history — the release was cut with
+`filter-repo` from a larger private repository, and the cut is verifiable by content:
+scanning every blob that has ever existed here returns no occurrence of the review-stage
+column names, the EWoK template fields, or the benchmark canary strings. Reproducing results
+that use these datasets requires obtaining them from the original source under its own terms.
 
 | Dataset | License | What it requires | Met? |
 |---|---|---|---|
@@ -111,10 +113,10 @@ them from the original source under its own terms.
 
 ## Not verified (declared, not assumed)
 
-- **If WildChat-1M turns out to be gated** rather than ODC-BY, the 11 files under
-  `runs/mixed_class_corpus/` identified by the audit move from "attribution" to
-  **blocking**, and would have to be purged the same way the three gated datasets were.
-  This was not verified.
+- **If WildChat-1M turns out to be gated** rather than ODC-BY, the 11 files the audit
+  identified under `runs/mixed_class_corpus/` would move from "attribution" to **blocking**.
+  This was not verified. Those files are not part of this release — the directory is not in
+  this repository — so the question does not bear on anything shipped here.
 - Large binaries hosted on HuggingFace (activation `.pt`, LoRA `.safetensors`) were not
   opened byte by byte; their license verdict rests on the logs that produced them.
 - The audit covered the 20 HuggingFace repos relevant to the paper, not all 49 in the
@@ -122,11 +124,11 @@ them from the original source under its own terms.
 
 ## Provenance
 
-Built from the license audit in
-[`docs/superpowers/specs/2026-08-04-release-remediation-report.md`](docs/superpowers/specs/2026-08-04-release-remediation-report.md)
-(§6), which classified artifacts **by content**, not by filename — a distinction that
-mattered: files named `kr_*` hold ARC items, a file named `*_c4rerun` holds WikiText, and
-the worst GPQA file carried no review-stage columns at all.
+Built from a licence audit of the project's artifacts that classified them **by content**,
+not by filename. The distinction mattered, and is the reason the table below is trustworthy:
+files named `kr_*` turned out to hold ARC items, a file named `*_c4rerun` held WikiText, and
+the file whose name most suggested GPQA carried no review-stage columns at all. A filename
+sweep would have got all three wrong in both directions.
 
 Updated 2026-08-05 during the Hugging Face release pass: the seven datasets previously listed
 as UNKNOWN were re-checked against card bodies and upstream `LICENSE` files, and five resolved

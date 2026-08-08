@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite the paper."
+title: >-
+  Higher Scores, Not A Better Model: A Large Multiple-Choice Lift That Is
+  Mostly Inducible, Off-Axis, and Does Not Transfer to Generation
+authors:
+  - family-names: Cascardo
+    given-names: Sebastián
+    email: sebacascardo@gmail.com
+    affiliation: Independent Researcher
+abstract: >-
+  Contrastive-correctness parameter-efficient fine-tuning of the LoFiT/ITI family
+  buys a large cold multiple-choice lift on a frontier 31B instruction model
+  (ARC-Challenge +35.0, HellaSwag +17.0, Winogrande +19.0, TruthfulQA-mc1 +37.25).
+  We ask what that lift is and answer with a quantified causal attribution: much of
+  it is inducible without the contrastive objective, the recovery is off the
+  measured one-dimensional correctness direction, and it does not transfer to
+  generation. A benchmark gain of this kind should not be read as a capability gain.
+keywords:
+  - mechanistic interpretability
+  - parameter-efficient fine-tuning
+  - benchmark evaluation
+  - language models
+license: Apache-2.0
+repository-code: "https://github.com/seba-cascardo/higher-scores-not-a-better-model"
+type: software

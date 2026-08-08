@@ -1,0 +1,12 @@
+# Analysis dependencies -- everything the claim -> command -> artifact table in the README
+# needs. These scripts are CPU-only and run anywhere; the floors are loose on purpose.
+#
+# To reproduce the evaluation numbers rather than the analyses, install
+# requirements-paper.txt instead: it pins the exact stack the runs were produced under.
+numpy>=1.26
+scipy>=1.11
+scikit-learn>=1.4
+torch>=2.2
+
+# Needed to fetch the per-item evaluation JSONs and direction tensors the analyses read.
+huggingface_hub<1.14

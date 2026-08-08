@@ -31,7 +31,7 @@ Total walltime: ~20-30 min.
 
 Usage:
     python -m scripts.probe_v7_lofit_head_selection \\
-        --base /home/seba_/models/gemma4-e2b \\
+        --base /path/to/models/gemma4-e2b \\
         --datasets tqa,arc \\
         --n-pairs 600 \\
         --top-k 48 \\

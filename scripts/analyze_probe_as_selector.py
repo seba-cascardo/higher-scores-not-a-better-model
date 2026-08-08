@@ -19,7 +19,7 @@ Fixes from the ClaraVT/Methodologist pass (do NOT regress these):
   - Tier-1 caveat printed: held-out BY ITEM, feature-set (adapter cells) NOT held-out
     (those cells were correctness-selected during V7-mc training on ARC).
 
-Ceiling: the supervised held-out surface SELECTOR accuracy (heldout_stack ~0.57, ledger).
+Ceiling: the supervised held-out surface SELECTOR accuracy (heldout_stack ~0.57).
 We report it as the bar to beat in accuracy space; we do NOT recompute the surface stack here.
 
 Reuses fit_heldout_scores / permuted_null from analyze_activation_probe_inspace (same fold,
@@ -53,10 +53,10 @@ try:
 except Exception:
     pass
 
-# ledger anchors (accuracy space, ARC) — draft ONLY from these, never topic files
+# Published anchors (accuracy space, ARC).
 BASE_ACC = 0.505
 ADAPTER_ACC = 0.853
-SURFACE_CEILING_ACC = 0.57   # heldout_stack supervised surface selector (ledger B7)
+SURFACE_CEILING_ACC = 0.57   # heldout_stack supervised surface selector
 
 
 def selector_correct(proba, items):
@@ -190,7 +190,7 @@ def main():
 
     print(f"\n  === PROBE-AS-SELECTOR (ARC, held-out by item) ===", flush=True)
     print(f"      base cold-MC acc        : {BASE_ACC:.3f}", flush=True)
-    print(f"      surface ceiling (ledger): {SURFACE_CEILING_ACC:.3f}  <- bar to beat", flush=True)
+    print(f"      surface ceiling: {SURFACE_CEILING_ACC:.3f}  <- bar to beat", flush=True)
     print(f"      PROBE-SELECTOR acc      : {acc_mean:.4f} +/- {acc_sd:.4f}  (over {len(seeds)} seeds)", flush=True)
     print(f"      adapter acc             : {ADAPTER_ACC:.3f}", flush=True)
     print(f"      recovery fraction (probe-base)/(adapter-base) = {recovery_frac:.2f}", flush=True)

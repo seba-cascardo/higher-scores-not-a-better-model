@@ -80,7 +80,7 @@ from pathlib import Path
 
 import numpy as np
 
-# Windows cp1252 console: que no rompa con flechas/delta/sub-indices.
+# Windows cp1252 console: do not break on arrows / delta / sub-indices.
 try:
     sys.stdout.reconfigure(encoding="utf-8")
 except Exception:

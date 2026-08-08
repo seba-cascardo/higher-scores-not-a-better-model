@@ -1,6 +1,6 @@
 {
   "canonical": "runs/v7_lofit_gemma4_31b_chat/offsets_mc.pt",
-  "anti": "C:/Users/seba_/AppData/Local/Temp/claude/C--Projects-MSAP/de753021-6a16-4b11-bb14-52d025c28d7e/scratchpad/e7/offsets_anti.final.pt",
+  "anti": "offsets_anti.final.pt",
   "canonical_loss": null,
   "anti_loss": null,
   "n_shared_heads": 48,

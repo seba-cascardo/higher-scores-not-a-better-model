@@ -3,7 +3,7 @@
 The pre-registration listed 8 tests; the executed L10 Holm corrected only the m=4
 headline lifts. This script recomputes Holm over the McNemar-able MC family:
 
-  m=6 = {ARC, TQA, HSwag, Winogrande}  (headline lifts, b/c counts from ledger B9a)
+  m=6 = {ARC, TQA, HSwag, Winogrande}  (headline lifts, b/c counts as published)
       + {MMLU spillover, GPQA-cold spillover}  (recomputed here from local per-item).
 
 gsm8k and lambada are the other two pre-registered tests but are GENERATIVE
@@ -22,7 +22,7 @@ from pathlib import Path
 from scipy.stats import binomtest
 
 
-# Headline discordant counts (ledger B9a / audit 2026-07-02 Bloque 4, verified vs eval_bulletproof).
+# Headline discordant counts, as published; verified against the eval_bulletproof artifacts.
 # b = base-right/adapter-wrong ; c = base-wrong/adapter-right.
 HEADLINE = {
     "arc_challenge":  {"b": 11, "c": 151},
@@ -106,7 +106,7 @@ def main():
     args = ap.parse_args()
 
     pvals, counts = {}, {}
-    print("[headline] recomputing 4 McNemar p from ledger b/c counts ...", flush=True)
+    print("[headline] recomputing 4 McNemar p from the published b/c counts ...", flush=True)
     for task, bc in HEADLINE.items():
         p = mcnemar_p_from_counts(bc["b"], bc["c"])
         pvals[task] = p

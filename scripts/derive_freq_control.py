@@ -1,10 +1,10 @@
-"""L11 — token-frequency control for theta_mc (audit 2026-07-02 §3-B12, ledger B5g).
+"""L11 — token-frequency control for theta_mc.
 
 B12 refuted the *temperature* (uniform-shift) leg of a Stolfo confidence mechanism
 (cos(agg, d*)=0.023, ranking-dominant). The *other* Stolfo leg is token-FREQUENCY: a
 logit shift proportional to token log-frequency. This derives the frequency direction
 d_freq = argmin_r ||M r - f||  (M = W_U * gain, f = unigram log-freq) and reports
-cos(theta_mc_agg, d_freq).  The B5g artifact never existed (ledger confirms exhaustive
+cos(theta_mc_agg, d_freq).  The artifact never existed (an exhaustive search confirms
 2026-06-24 search); the draft forbids citing the ~0.02 number until re-derived — this
 re-derives it.
 

@@ -2,7 +2,7 @@
 """Generic MCQ arbiter (HellaSwag / Winogrande) — base gen-CoT correctness per item,
 ALIGNED to the cold-MC doc_ids. POD / GPU.
 
-WHY (handoff 2026-06-27 §3 item 1; ledger B8c — the 2nd anchor of "out-of-task != hard")
+WHY (the 2nd anchor of "out-of-task != hard")
 ----------------------------------------------------------------------------------------
 The within-format control (B8c, ARC-Easy vs ARC-Challenge) showed the cold-MC lift's
 fix_rate moves little with difficulty INSIDE ARC (0.86 vs 0.76) while GPQA out-of-task

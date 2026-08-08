@@ -81,7 +81,6 @@
       "adapter_acc": 0.8433
     }
   },
-  "caveat": "Neither arm stamps a model SHA (both model_sha='', model_revision='main') \u2014 the reproducibility limitation recorded in the roadmap item O0-09 applies here too.",
-  "not_in_ledger": false,
-  "ledger_note": "Reproduces already-published quantities (+19.2 / +20.1); introduces no new number."
+  "caveat": "Neither arm stamps a model SHA (both model_sha='', model_revision='main') \u2014 the snapshot-provenance limitation stated in the paper applies here too.",
+  "note": "Reproduces already-published quantities (+19.2 / +20.1); introduces no new number."
 }

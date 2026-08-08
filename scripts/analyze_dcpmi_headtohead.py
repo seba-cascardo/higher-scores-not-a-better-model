@@ -587,7 +587,7 @@ def main():
     )
     # Task-derived, never hardcoded: the original default wrote every task to
     # "dcpmi_headtohead_arc.json", so the TQA run landed under an ARC name and its
-    # numbers looked artifact-less for months (see B62-TRAZA).
+    # numbers looked artifact-less for months: the file existed, under another name.
     out = args.out or (args.dir / f"dcpmi_headtohead_{args.task}.json")
     out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print(f"\n  saved: {out}", flush=True)

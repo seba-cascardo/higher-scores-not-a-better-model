@@ -10,8 +10,9 @@ run (gen_arbiter_arc_cot_pod.py) needs no dataset reload.
   vinf_only     : base wrong, v_inf right, mc wrong
   base_right    : base already right (control)
 
-€0 local. On a fresh pod, pull the d_*.json from HF first
-(sebacascardo87/msap-vinf-causal-20260623) — run_arbiter_arc_cot_pod.sh does this.
+€0 local. Pull the d_*.json from the public dataset backup first:
+  hf download sebacascardo87/msap-vinf-causal-20260623-public --include "d_*.json" \
+    --repo-type dataset --local-dir runs/vinf_causal
 """
 import json
 import os

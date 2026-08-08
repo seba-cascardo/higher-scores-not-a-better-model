@@ -3,7 +3,7 @@
 
 WHY THIS EXISTS (replaces the batch=1 path of eval_gpqa_cot_thinking.py for B1):
   The original ran model.generate() one item at a time, greedy, to the full 2048-token
-  cap → ~100 s/item → ~560 min for 198 GPQA items. That is the CLAUDE.md gotcha: batch=1
+  cap → ~100 s/item → ~560 min for 198 GPQA items. batch=1
   autoregressive decode is memory-bandwidth-bound (GPU ~50% util); batching / vLLM
   amortizes the weight reads. AND it relied ONLY on the enable_thinking kwarg, which did
   NOT inject the thinking token (rendered prompt had no thinking scaffold; thinking_tokens

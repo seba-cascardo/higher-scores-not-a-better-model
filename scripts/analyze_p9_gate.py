@@ -1,6 +1,6 @@
 """P9 fork-(b) lift-matched gate — recompute from the raw per-λ artifacts (H17).
 
-Scripts the gate that was hand-computed in runs/p9_onaxis/verdict.md (ledger B35-P9-onaxis).
+Recomputes the on-axis-penalty lift-matched gate from the per-arm artifacts.
 Question: at a MATCHED MC lift, does the on-axis-penalty adapter retain MORE gsm8k than simply
 scaling the off-axis offset DOWN to the same lift? For every λ the answer is NO (gap < 0) → the
 +35 is the off-axis mass by NECESSITY (the second causal leg complementing W_know sufficiency).
@@ -27,9 +27,9 @@ LAMBDAS = [5, 15, 50]          # on-axis penalty strengths (v_inf target)
 # λ=50 is a degenerate run (eos 0.43, mean_len 357 = runaway creative-degen, §5.5): its gsm8k is
 # confounded by generation blow-up, so we report the gap but not a σ (matches verdict.md).
 DEGENERATE = {50}
-# Ledger B35 anchors this script must reproduce on the canonical artifacts.
-_LEDGER_LAM5_GAP_PP = -9.9
-_LEDGER_LAM5_SIGMA = 3.8
+# Published anchors this script must reproduce on the canonical artifacts.
+_PAPER_LAM5_GAP_PP = -9.9
+_PAPER_LAM5_SIGMA = 3.8
 
 
 def arc_accnorm(path):
@@ -134,14 +134,14 @@ def main():
           " -> on-axis is Pareto-dominated by scaling the off-axis offset down (fork (b), B35).",
           flush=True)
 
-    # Self-check vs ledger B35 / verdict.md: λ=5 gap ≈ −9.9pp, σ ≈ 3.8 (the load-bearing anchor).
+    # Self-check vs the published values: λ=5 gap ≈ −9.9pp, σ ≈ 3.8 (the load-bearing anchor).
     r5 = next(r for r in rows if r["lambda"] == 5)
     assert r5["gap"] < 0, "gate must FAIL at lambda=5"
-    assert abs(r5["gap"] * 100 - _LEDGER_LAM5_GAP_PP) < 0.5, \
-        f"lambda=5 gap {r5['gap'] * 100:.2f}pp != ledger {_LEDGER_LAM5_GAP_PP}pp"
-    assert abs(r5["sigma"] - _LEDGER_LAM5_SIGMA) < 0.3, \
-        f"lambda=5 sigma {r5['sigma']:.2f} != ledger {_LEDGER_LAM5_SIGMA}"
-    print(f"[p9-gate] self-check vs ledger B35 OK: lambda=5 gap "
+    assert abs(r5["gap"] * 100 - _PAPER_LAM5_GAP_PP) < 0.5, \
+        f"lambda=5 gap {r5['gap'] * 100:.2f}pp != published {_PAPER_LAM5_GAP_PP}pp"
+    assert abs(r5["sigma"] - _PAPER_LAM5_SIGMA) < 0.3, \
+        f"lambda=5 sigma {r5['sigma']:.2f} != published {_PAPER_LAM5_SIGMA}"
+    print(f"[p9-gate] self-check vs published values OK: lambda=5 gap "
           f"{r5['gap'] * 100:+.1f}pp / sigma {r5['sigma']:.1f}", flush=True)
 
     json.dump({"base_arc": base_arc, "dose_curve": curve, "gsm8k_n": GSM_N,

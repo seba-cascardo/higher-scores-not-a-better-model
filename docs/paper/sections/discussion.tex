@@ -101,7 +101,22 @@ no-transfer out-of-task.
 On \textbf{GPQA}, where the base must genuinely reason, its CoT accuracy is
 $\mathbf{0.7071}$ (arbiter; 140/198, thinking-on, with the generation budget raised
 to 8192 tokens --- at 2048 the base truncated 96\% of its reasoning, producing a
-spurious 0.15). Two things follow. First, 0.7071 is well above chance, so the base
+spurious 0.15). That figure was a point estimate over a set we could not audit: the
+artifact kept no token counts, and the parser ends in a ``lone letter in the last 100
+characters'' fallback, so a trace that stopped mid-sentence could not be told from one
+that answered badly --- a parser cannot measure its own fallback. Re-running the
+arbiter with the counts persisted separates them, and the answer is lopsided:
+$\mathbf{39}$ of the $40$ unparsed items \textbf{ran out of budget}, and exactly one is
+malformed with a complete trace. $62/198$ ($31.3\%$) exhausted the $8192$-token budget
+in all. Counting the unparsed as wrong was therefore the right call --- those traces
+carry no answer --- but it is only half of the bias: $17$ equally truncated traces
+\emph{did} receive a letter from the tail fallback, and $7$ of those entered as
+correct. Bounding it both ways (every truncated item wrong, then every one right)
+gives $[0.6010, 0.9141]$, an interval $31$ points wide whose width is the cost of the
+cap; a second run of the nominally identical protocol reads $0.6616$ against $0.7071$
+under greedy decoding. What survives all of this is the claim the number is used for:
+at chance $0.25$, even the floor of $0.6010$ is far above it. Two things follow.
+First, $0.7071$ is well above chance, so the base
 \emph{does} solve these by reasoning; yet the cold-scoring shortcut still has no
 generative headroom to add, and indeed the measured cold-MC lift on GPQA is
 ${\sim}0$ (base $0.4747 \rightarrow$ adapter $0.4697$, $-0.5\pp$, CI crossing zero)
@@ -1233,10 +1248,12 @@ negative control $1.4\times10^{-4}$ and its premise-file robustness
 $3.6\times10^{-5}$ --- the weakest load-bearing figure, the all-ARC contrast
 $p=0.0015$, still survives a Bonferroni correction across all ${\sim}25$ tests run)
 or is \emph{interpreted as a null} ($\Wknow$ $p=0.136$), where multiplicity cuts
-the other way. These diagnostics also share a sample: the arbiter, calibration,
-probe, selector, and geometry arms are all computed on the vinf\_causal $n{=}400$
-draw and its nested subsets, so their agreement is consistency across facets of one
-sample, not independent replication. What is independently replicated is the
+the other way. These diagnostics were also developed on one sample: the arbiter, calibration,
+probe, selector, and geometry arms were all computed on the vinf\_causal $n{=}400$
+draw and its nested subsets, so their agreement there is consistency across facets of
+one sample, not independent replication. Four of them have since been re-run outside
+it (below); calibration and geometry have not, and for those the caveat stands as
+written. What is independently replicated is the
 headline magnitude (the A1 run; the R4 full-split run, every delta inside the
 $n{=}400$ CI; the Qwen family) --- and, as the corresponding strengthening on the
 mechanism side, \textbf{the arbiter has now been re-run on the full ARC-Challenge
@@ -1253,6 +1270,41 @@ fixed items is not an artifact of the sample it shares with the other diagnostic
 The power caveat is unchanged: ARC remains near its chain-of-thought ceiling, so
 this confirms the benign reading without distinguishing ``recovers knowable'' from
 ``fabricates'' as a harder benchmark would.
+
+\paragraph{The probe and the selector re-run outside the slice.}
+The arbiter's replication leaves the read side untested, so we froze the pipeline and
+re-ran it on the complement: activations extracted for the full split, probe and
+selector \emph{fit} on items $0$--$399$ --- the development slice --- and \emph{scored}
+on the $772$ items outside it. No cross-validation and no refitting: a single held-out
+split, which is out-of-sample in the sense the objection asks about, where
+cross-validation over the pooled split would only be out-of-fold. Both replicate. The
+probe reads base-wrong gold-vs-distractor at $\mathbf{0.9553}$ ($n{=}395$ base-wrong
+items) against $0.9545$ on the slice, a difference of eight ten-thousandths; the
+read-only selector scores $\mathbf{0.9453}$ against $0.9433$, inside the slice's
+binomial interval $[0.917, 0.962]$. Both permutation nulls sit at chance (probe
+$0.501$, max $0.535$; selector $0.244$ against $0.25$), so the instrument measures on
+the new items rather than fitting them. The base is slightly \emph{worse} on the
+complement ($0.4883$ against $0.505$), so the selector's margin over it widens rather
+than narrows. Calibration and geometry have no train/test mode and were re-run on the
+pooled split instead ($n{=}1172$, the slice inside it): the lift reads $0.3626$ against
+$0.3500$, calibration's pre-registered verdict is unchanged, and the geometric contrast
+that carries the off-axis reading strengthens --- the probe's read direction aligns with
+$\vinf$ at $0.283$ and with $\thetamc$ at $0.072$, a factor of $3.9$ against $3.3$ on
+the slice. That is more power, not independence, and we count it as such.
+
+Two of those numbers move against us and we report them as they came. The burial
+statistic --- the fraction of $S_{\mathrm{flip}}$ items whose gold sits at rank $\ge 2$
+--- falls from $0.543$ to $\mathbf{0.502}$: still a majority, by two tenths of a point,
+and the reading survives only because its other half (gold probability $0.239$ against
+the control's $0.464$) is unchanged and wide. And the geometry's own verdict does not
+close on the larger sample either, for the same reason it did not close on the slice:
+$\cos(\mathrm{PC1}, \vinf) = 0.548$ exceeds $\cos(\mathrm{probe}, \vinf) = 0.283$, so
+we cannot exclude that $\vinf$ lies trivially in the leading principal component. The
+replication confirms that this ambiguity was not a property of the sample; it does not
+resolve it. Finally, the split is out-of-sample in \emph{items} and not in
+\emph{features}: the $48$ $(\mathrm{layer}, \mathrm{head})$ cells are still the ones the
+adapter's own training selected by correctness on ARC, which is the Tier-1 caveat of
+\cref{disc:channel} and is untouched by this run.
 
 \paragraph{Where each claim stands.}
 Settled by executed controls: the canonical gsm8k loss magnitude is $\mathbf{-25\pp}$

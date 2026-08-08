@@ -1,6 +1,5 @@
 """E0 — does averaging independent adapters filter the off-axis component?
 
-Pre-registration: docs/superpowers/plans/2026-08-01-e0-averaging-as-offaxis-filter-prereg.md
 The kill-rules below were fixed BEFORE any contrast was computed.
 
 WHAT THIS IS (EUR0, CPU-local, no model load, no forward passes)
@@ -246,7 +245,7 @@ def main():
                 "p5": float(np.percentile(a, 5)), "p95": float(np.percentile(a, 95))}
 
     out = {
-        "prereg": "docs/superpowers/plans/2026-08-01-e0-averaging-as-offaxis-filter-prereg.md",
+        "prereg": "kill-rules fixed before any contrast was computed; see this file's docstring",
         "config": {"func": args.func, "ridge_frac": args.ridge_frac,
                    "n_boot": args.n_boot, "seed": args.seed,
                    "n_heads": len(heads), "head_dim": head_dim,

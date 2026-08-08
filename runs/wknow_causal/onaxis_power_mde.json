@@ -1,8 +1,8 @@
 {
   "item": "O3-01",
   "task": "arc_challenge",
-  "source_artifact": "runs\\wknow_causal\\onaxis_significance.json",
-  "prereg": "docs/superpowers/specs/2026-08-04-o3-01-onaxis-power-and-o3-06-selector-partitions-results.md#01-o3-01",
+  "source_artifact": "runs/wknow_causal/onaxis_significance.json",
+  "prereg": "design fixed before the run (item O3-01)",
   "design": {
     "test": "exact two-sided McNemar (binomial on discordant pairs)",
     "alpha": 0.05,

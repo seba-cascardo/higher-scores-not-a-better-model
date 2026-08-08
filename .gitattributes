@@ -1,0 +1,21 @@
+# Git LFS.
+#
+# Fourteen tracked tensors are stored as LFS objects. Without these rules a clone leaves
+# them as ~133-byte pointer files even when git-lfs is installed, because nothing in the
+# tree tells the smudge filter which paths are LFS -- and the failure then surfaces as a
+# tensor-loading error rather than as an incomplete checkout.
+#
+# The rules name paths rather than using a `*.pt` glob on purpose: seven other tracked .pt
+# files (runs/v7_lofit_gemma4_31b_chat/, runs/v7_lofit_qwen14b/) are ordinary git blobs,
+# and a blanket glob would ask git to convert them.
+runs/e1_plain_ce/offsets_seed*.pt        filter=lfs diff=lfs merge=lfs -text
+runs/vinf_causal/mc_*_offset.pt          filter=lfs diff=lfs merge=lfs -text
+runs/vinf_causal_qwen/mc_*.pt            filter=lfs diff=lfs merge=lfs -text
+
+# The remaining tensors are binary, but not LFS: mark them so git never tries to diff or
+# normalise line endings in them.
+runs/v7_lofit_gemma4_31b_chat/*.pt       -text -diff
+runs/v7_lofit_qwen14b/*.pt               -text -diff
+docs/paper/*.pdf                         -text -diff
+docs/paper/figures/*.pdf                 -text -diff
+docs/paper/*.tar.gz                      -text -diff

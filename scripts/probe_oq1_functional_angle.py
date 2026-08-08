@@ -9,8 +9,7 @@ orthogonal-decomposition loss only makes sense if the directions are separable b
 projection).
 
 Pre-registration that this script serves (DO NOT re-derive the verdict map here):
-  docs/superpowers/specs/2026-06-22-oq1-vg-execution-prereg.md  §2 (E2 functional)
-  docs/superpowers/specs/2026-06-22-oq1-functional-axis-angle-design.md
+  docs/protocols/2026-06-22-oq1-vg-execution-prereg.md  §2 (E2 functional)
 
 VERDICT MAP (pre-registered §2 — crossed on the *whitened* mean cos over eligible heads):
   - whitened mean WITHIN the null (BCa CI overlaps the null band ≈ 0, neither side excluded)

@@ -10,7 +10,7 @@ a number. Over the 198 base-wrong ARC items:
 GATE (pre-registered in the plan, P7-Step2):
   SC(k=3) acc >= selector acc  -> clean deployment negative: "a cheap reasoning TTC dominates;
       the selector's value is evidentiary, not practical" -> Open-questions closes with a number.
-  selector wins in SOME cost regime -> FIRST practical-utility claim -> new section via ledger.
+  selector wins in SOME cost regime -> FIRST practical-utility claim -> new section.
 
 INPUTS (all local): the two pod SC dumps (gen_arbiter_arc_cot_pod.py --subset base_wrong --k {3,5}),
 the selector json (probe_as_selector_arc_challenge.json), and arbiter_arc_sets.json (to define

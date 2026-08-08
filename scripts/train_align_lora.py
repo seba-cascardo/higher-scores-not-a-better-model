@@ -1,10 +1,11 @@
-"""Train a single high-rank Align-LoRA adapter for Sprint 1.5 A.2 falsification.
+"""Train the Align-LoRA control adapter: the inducibility arm of the paper.
 
-This is the **P0 reviewer-threat defensive ablation**: if a single high-rank
-LoRA, trained on the union of RoMuLo's 4 task-training corpora (ARC, MMLU,
-GSM8K, SocialIQA), matches multi-adapter RoMuLo on in-distribution AND has
-comparable spillover, then RoMuLo's multi-adapter premise is killable by a
-reviewer and the paper reframes as a Pareto-frontier story.
+The question this answers is whether the contrastive-correctness objective is
+load-bearing for the cold multiple-choice lift, or whether ordinary supervised
+fine-tuning on the same material induces the same lift. A single high-rank LoRA
+is trained with plain causal-LM cross-entropy on a corpus built by
+scripts/build_align_control_corpus.py; the fraction of the contrastive lift it
+reproduces is the paper's inducibility figure.
 
 Reference: arXiv:2508.05078 (verified verbatim 2026-05-22).
 
@@ -17,8 +18,8 @@ Reference: arXiv:2508.05078 (verified verbatim 2026-05-22).
   splits, formatted as SFT (prompt → target). Sampled to `--n-per-task`
   (default 500) for ~2K total examples.
 - **Loss**: standard causal LM cross-entropy, prefix-masked to count only
-  target tokens (same approach as scripts/train_router_lora.py:RouterDataset).
-- **Base**: Gemma 4 31B IT (canonical RoMuLo deploy target). BF16 by default;
+  target tokens.
+- **Base**: Gemma 4 31B IT, the paper's primary target. BF16 by default;
   use --load-in-4bit on smaller pod GPUs (QLoRA-style).
 
 # Memory budget
@@ -77,19 +78,11 @@ Align-LoRA spillover-help MMLU more than RoMuLo? — Property 2 test).
     # See scripts/run_lm_eval_v7*.py for the canonical wrapper pattern;
     # swap the adapter arg to the Align-LoRA output dir.
 
-# Decision gate (per handoff 2026-05-23-NEXT-SESSION-START-HERE-sprint-1.5-week1.md)
+# Reading the result
 
-- Align-LoRA wins in-dist by >5pp AND comparable spillover → paper reframes
-  as "Pareto frontier" (multi-adapter for Property 2, single for in-dist).
-- Else → A.2 becomes a strong defensive ablation citation, multi-adapter
-  framing stays.
-
-# Cross-refs
-
-- Spec: docs/superpowers/specs/2026-05-23-NEXT-SESSION-START-HERE-sprint-1.5-week1.md §2.1
-- Roadmap: docs/superpowers/plans/2026-05-20-romulo-roadmap-to-publication.md Sprint 1.5 A.2
-- Risk: STATUS.md P0 reviewer risks #4
-- Anti-pattern guard for HF dataset loading: memory feedback_hf_dataset_script_deprecation.md
+The fraction of the contrastive lift that this control reproduces is computed by
+scripts/analyze_r1_align_frac.py, per MC anchor. A fraction near 1 means the lift
+on that anchor is not specific to the contrastive objective.
   (datasets>=3 blocks Python loaders; use parquet revisions)
 """
 from __future__ import annotations
@@ -203,7 +196,7 @@ def _patch_base_model_id(out_dir, base_path, hf_id):
 
 
 def load_tokenizer_compat(model_path):
-    """Mirror train_router_lora.py — handle Mistral regex fix transparently."""
+    """Handle the Mistral regex fix transparently."""
     from transformers import AutoTokenizer
     try:
         return AutoTokenizer.from_pretrained(model_path, fix_mistral_regex=True)
@@ -384,9 +377,9 @@ def load_corpus_jsonl(path: Path) -> List[dict]:
 def format_example_for_training(prompt: str, target: str, tokenizer) -> Tuple[str, str]:
     """Apply chat template + return (input_part, target_part) for loss masking.
 
-    Mirrors scripts/train_router_lora.py:format_example. Critical for matching
-    the IT model's instruction-tuning regime — wrong template = LoRA effectively
-    untrained at eval time (silent failure mode).
+    Critical for matching the IT model's instruction-tuning regime — the wrong
+    template leaves the LoRA effectively untrained at eval time, which is a silent
+    failure mode.
     """
     messages_input = [{"role": "user", "content": prompt}]
     messages_full = messages_input + [{"role": "assistant", "content": target}]
@@ -720,7 +713,7 @@ def main():
         print(f"  ep {ep}: tr_loss={rec['tr_loss']:.4f}  "
               f"val_loss={rec['val_loss']:.4f}  ({rec['elapsed_s']:.1f}s)", flush=True)
 
-        # Save per-epoch checkpoint + latest pointer (mirror train_router_lora pattern)
+        # Save per-epoch checkpoint + latest pointer
         ep_ckpt = args.out / f"ep{ep}"
         model.save_pretrained(ep_ckpt)
         tokenizer.save_pretrained(ep_ckpt)

@@ -5,13 +5,17 @@ __pycache__/
 .venv/
 venv/
 
-# LaTeX intermediates. main.pdf IS tracked; these are not.
+# LaTeX intermediates. main.pdf and main.bbl ARE tracked (the arXiv bundle needs the .bbl);
+# these are not. No *.bbl rule here for that reason: a rule that appears to exclude a file
+# the repo ships is a rule that will mislead someone later.
 docs/paper/*.aux
-docs/paper/*.bbl
 docs/paper/*.blg
 docs/paper/*.log
 docs/paper/*.out
 docs/paper/*.toc
+docs/paper/*.fls
+docs/paper/*.fdb_latexmk
+docs/paper/*.synctex.gz
 
 # Evaluation inputs the README fetches per row from Hugging Face. Named path by path
 # rather than by a runs/**/eval_*.json glob: eight tracked artifacts match that glob
@@ -22,3 +26,5 @@ runs/e4_factorial/eval_ood_*.json
 runs/e6_qwen_spine/eval_*.json
 runs/gate2/promptfinal_residual_arc.pt
 runs/oq1_functional_axis/functional_directions_qwen.pt
+runs/functional_directions.pt
+runs/eval_bulletproof/R1_*

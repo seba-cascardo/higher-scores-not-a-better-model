@@ -1,23 +1,23 @@
-"""Align-LoRA P0 — frac genérico-FT multi-ancla (€0 local, post-pod).
+"""Align-LoRA P0 — generic-FT fraction across MC anchors (local, CPU-only).
 
-Computa, por ancla MC, qué fracción del lift del adapter contrastivo (v7mc) reproduce
-el control SFT genérico matched (Align-LoRA r256):
+Per MC anchor, what fraction of the contrastive adapter's lift (v7mc) does the
+matched generic SFT control (Align-LoRA r256) reproduce:
 
     frac_task = (align_acc - base_acc) / (v7mc_acc - base_acc)
 
-Cierra el hueco del ledger B6b: el ~62% genérico-FT estaba medido SOLO en ARC
-(rank-sweep). El pre-registro R1 (2026-06-22) pide el control align también sobre
-hellaswag + winogrande. Este script lee los 3 runs R1 (base / v7mc / align) que
-produce `run_pod_r5_align_p0.sh` Stage A+B y reporta el frac por ancla.
+The ~62% generic-FT figure was first measured on ARC alone (rank sweep). The R1
+pre-registration (2026-06-22) asks for the align control on hellaswag and
+winogrande as well. This script reads the three R1 runs (base / v7mc / align)
+and reports the fraction per anchor.
 
-Lee tanto lm-eval --output_path DIRS (glob results_*.json) como el v7-runner --out
-JSON (mismo schema top-level) — misma lógica que check_canonical_repro.py.
+Reads both lm-eval --output_path DIRS (glob results_*.json) and the v7-runner --out
+JSON (same top-level schema) — same logic as check_canonical_repro.py.
 
-Métrica por ancla (la del headline / ledger):
+Metric per anchor (the headline metric):
     arc_challenge -> acc_norm   hellaswag -> acc_norm
     winogrande    -> acc        truthfulqa_mc1 -> acc
 
-Usage (local WSL, tras bajar runs/eval_bulletproof/ del pod):
+Usage (after fetching runs/eval_bulletproof/ from the evaluation host):
     python scripts/analyze_r1_align_frac.py \
         --base-dir  runs/eval_bulletproof/R1_base \
         --v7mc-json runs/eval_bulletproof/R1_v7mc.json \
@@ -37,7 +37,7 @@ from pathlib import Path
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-# Ancla -> métrica canónica del headline (ledger B9).
+# Anchor -> the canonical headline metric.
 TASK_METRIC = {
     "arc_challenge": "acc_norm",
     "hellaswag": "acc_norm",
@@ -47,7 +47,7 @@ TASK_METRIC = {
 
 
 def load_results(path: str) -> dict:
-    """Acepta un dir lm-eval (glob results_*.json) o un JSON plano del v7-runner."""
+    """Accept an lm-eval dir (glob results_*.json) or a flat v7-runner JSON."""
     p = Path(path)
     if p.is_dir():
         cands = sorted(p.glob("**/results_*.json"))
@@ -60,7 +60,7 @@ def load_results(path: str) -> dict:
 
 
 def get_metric(results: dict, task: str, metric: str):
-    """Devuelve el valor de la métrica o None (tolerante: reportamos lo que haya)."""
+    """Return the metric value, or None (tolerant: we report whatever is there)."""
     res = results.get("results", {})
     if task not in res:
         return None
@@ -79,7 +79,7 @@ def main():
     ap.add_argument("--base-dir", required=True, help="R1_base (lm-eval dir)")
     ap.add_argument("--v7mc-json", required=True, help="R1_v7mc.json (v7-runner --out)")
     ap.add_argument("--align-dir", required=True, help="R1_align (lm-eval dir)")
-    ap.add_argument("--out", default=None, help="CSV opcional")
+    ap.add_argument("--out", default=None, help="optional CSV")
     args = ap.parse_args()
 
     base = load_results(args.base_dir)
@@ -87,7 +87,7 @@ def main():
     align = load_results(args.align_dir)
 
     rows = []
-    print(f"\n{'ancla':<16} {'metric':<9} {'base':>7} {'v7mc':>7} {'align':>7} "
+    print(f"\n{'anchor':<16} {'metric':<9} {'base':>7} {'v7mc':>7} {'align':>7} "
           f"{'lift_v7':>8} {'lift_al':>8} {'frac':>7}")
     print("-" * 80)
     for task, metric in TASK_METRIC.items():
@@ -110,9 +110,9 @@ def main():
                      "frac": round(frac, 4)})
 
     print("-" * 80)
-    print("LECTURA: frac alto (≈1) en un ancla => ahí el +lift es ~genérico-FT (NO contraste-especial).")
-    print("         frac bajo => ahí el residual contrastivo es real. ARC ya da ~0.62 (ledger B6b).")
-    print("         El gate de mecanismo se lee POR ANCLA, no con un solo número.\n")
+    print("READ: frac near 1 on an anchor => there the lift is ~generic-FT (not contrast-specific).")
+    print("      frac low => there the contrastive residual is real. ARC already gives ~0.62.")
+    print("      The mechanism gate is read PER ANCHOR, not from a single number.\n")
 
     if args.out:
         with open(args.out, "w", newline="", encoding="utf-8") as f:

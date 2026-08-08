@@ -77,7 +77,7 @@
     "growing": false,
     "flattening": false,
     "verdict": "MIXED",
-    "note": "coherent uses top-k structure enrichment over vocab base-rate (B25-comparable), NOT raw mass share (base-rate dominated). enrichment_topk>=~2 = real structure signature; ~1 = flattening."
+    "note": "coherent uses top-k structure enrichment over vocab base-rate , NOT raw mass share (base-rate dominated). enrichment_topk>=~2 = real structure signature; ~1 = flattening."
   },
   "per_item": [
     {
@@ -381,6 +381,6 @@
       "struct_frac_mean": 0.3419
     }
   ],
-  "read": "verdict COMMITMENT_SUPPORTED => structure-suppression is coherent (top-k structure enrichment >=~2x the vocab base-rate, i.e. struct_topk_frac>=0.66) AND grows along the generation (Q_last-Q_first>=0.05) => B17 commitment frame earns its number (enters via ledger). FLATTENING_NO_STRUCTURE => top-k near base-rate (no structure signature) => B17 refuted. MIXED => structure signature present in the tail but not decisively coherent-AND-growing => stays out of the draft. NOTE: mass_share is base-rate dominated (~70% of vocab is content) \u2014 do NOT gate on it. loop_minus_clean_final_quartile>0 => loops de-structure more than clean-wrong at the end (consistent with 'never commits to a close').",
+  "read": "verdict COMMITMENT_SUPPORTED => structure-suppression is coherent (top-k structure enrichment >=~2x the vocab base-rate, i.e. struct_topk_frac>=0.66) AND grows along the generation (Q_last-Q_first>=0.05) => the commitment frame earns its number. FLATTENING_NO_STRUCTURE => top-k near base-rate (no structure signature) => B17 refuted. MIXED => structure signature present in the tail but not decisively coherent-AND-growing => stays out of the draft. NOTE: mass_share is base-rate dominated (~70% of vocab is content) \u2014 do NOT gate on it. loop_minus_clean_final_quartile>0 => loops de-structure more than clean-wrong at the end (consistent with 'never commits to a close').",
   "method": "nnsight real-forward output-patch (r_layer @ o_proj.output == install_lofit_hooks) over REAL adapter generation positions; structure/content via logit_lens categorize."
 }

@@ -44,10 +44,10 @@ TASKS = {
     "hellaswag": "acc_norm,none",
     "winogrande": "acc,none",
 }
-# Gemma reference recovery fractions (ledger; NOT recomputed here, cited)
+# Gemma reference recovery fractions (published in the paper; NOT recomputed here, cited)
 GEMMA_REF = {"mc_wknow_offset": 0.064, "mc_offpar_offset": None,
              "mc_offperp_offset": 1.00, "shuffle": 0.00}
-# Gemma's three shuffle seeds on ARC. The ledger and discussion.tex report them
+# Gemma's three shuffle seeds on ARC. discussion.tex reports them
 # rounded to two decimals (-0.04/-0.01/-0.01); the raw arms are acc_norm
 # 0.49/0.5025/0.50 against base 0.505 and mc 0.855 (RD run, HF
 # msap-r5-align-p0-20260628), which give the unrounded fractions below. Rounding
@@ -247,7 +247,7 @@ def main():
     print(f"\n[done] wrote {OUT}")
 
 
-# Gemma same-param control, best-ckpt (E1 / ledger B48). Cited, not recomputed.
+# Gemma same-param control, best-ckpt (E1). Cited from the paper, not recomputed.
 GEMMA_MATCHED = {"arc_challenge": 0.362, "truthfulqa_mc1": 0.009,
                  "hellaswag": 0.695, "winogrande": 0.795}
 

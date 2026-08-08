@@ -5,7 +5,7 @@ WHAT THIS IS
 ================================================================================
 A reimplementation of **KAPPA** (Park, Pyun, Jo; "Bridging the Knowledge-Prediction
 Gap"; ICML 2026; arXiv:2509.23782) as a baseline arm for GATE 2 of the off-axis
-investigation (docs/superpowers/specs/2026-06-23-offaxis-mechanism-battery-and-harness-spec.md).
+investigation.
 
 KAPPA is the METHODOLOGICAL OPPOSITE of our trained off-axis offset:
   - It is a CLOSED-FORM, inference-time, per-input, minimal-L2 (min-||h'-h||_2)

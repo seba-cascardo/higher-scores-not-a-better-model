@@ -29,7 +29,7 @@ Memory budget (RTX 4070 Ti 12GB):
 
 Usage:
     python -m scripts.train_v7_lofit \\
-        --base /home/seba_/models/gemma4-e2b \\
+        --base /path/to/models/gemma4-e2b \\
         --heads-file runs/probes/v7/p06b_lofit_head_selection.json \\
         --top-k 48 \\
         --datasets tqa,arc \\
@@ -685,9 +685,7 @@ def remove_handles(handles):
 
 # -- P9 on-axis penalty wiring (training-time on-axis constraint) -------------
 # The constructive flip: force the trainable offset alpha*theta to live ON the functional
-# inference axis v_inf by penalizing its off-axis mass. Math + tests in scripts/lofit_onaxis.py
-# and tests/{test_onaxis_penalty,test_p9_onaxis_wiring}.py. Plan:
-# docs/superpowers/plans/2026-07-08-p9-onaxis-constraint-training.md.
+# inference axis v_inf by penalizing its off-axis mass. Math in scripts/lofit_onaxis.py.
 def load_vinf_for_pairs(vinf_path, layer_head_pairs, device="cpu"):
     """Load functional_directions.pt and map v_inf onto the offset's (layer, head) pairs.
 
@@ -1004,8 +1002,7 @@ def main():
     # Off by default (behavior identical to pre-P9). When on, adds a projection penalty
     # that forces the trainable offset alpha*theta ON-axis (toward v_inf) by penalizing its
     # off-axis mass: L = L_margin + onaxis_lambda * L_onaxis. Sweep lambda on a log grid;
-    # lambda=0 = off-axis baseline. Plan:
-    # docs/superpowers/plans/2026-07-08-p9-onaxis-constraint-training.md.
+    # lambda=0 = off-axis baseline. The gate this feeds is scripts/analyze_p9_gate.py.
     ap.add_argument("--onaxis-penalty", action="store_true",
                     help="P9: enable the on-axis projection penalty toward v_inf.")
     ap.add_argument("--onaxis-lambda", type=float, default=0.0,

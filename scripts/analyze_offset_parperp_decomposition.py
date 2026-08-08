@@ -9,11 +9,11 @@ energy-weighted budget  (sum_i proj_i^2) / (sum_i ||off_i||^2)  is the headline:
 "how much of the trained offset's energy a given functional direction captures".
 If even W_know (the strongest buildable on-axis reference, Fisher-LDA) captures a
 tiny fraction, the adapter's push is OFF-AXIS robustly (consistent with W_know
-recovering only 6.4% of the ARC lift, ledger B5i).
+recovering only 6.4% of the ARC lift).
 
   Block A: raw head_dim euclidean decomposition (all adapter heads on the E2 grid).
   Block B: whitened (Mahalanobis under cov_inf, eligible heads) cos(off, v_inf),
-           reproducing the canonical ledger cos_w(theta_mc, v_inf) ~ -0.003.
+           reproducing the canonical cos_w(theta_mc, v_inf) ~ -0.003.
 
 NOTE ON SPACE (forward filter: same-space): all directions live in the per-head
 o_proj-input (head_dim) space, the space where theta_mc/v_inf/W_know were defined.
@@ -171,7 +171,7 @@ def main():
             "cos_whitened": dict(mean=float(np.nanmean(wcos)), mean_abs=float(np.nanmean(np.abs(wcos))),
                                  median=float(np.nanmedian(wcos))),
             "frac_on_axis_whitened_mean": float(np.nanmean(wcos ** 2)),
-            "note": "reproduces ledger cos_w(theta_mc, v_inf) ~ -0.003 as consistency check",
+            "note": "reproduces the canonical cos_w(theta_mc, v_inf) ~ -0.003 as consistency check",
         }
     }
 
@@ -209,7 +209,7 @@ def main():
     b = block_b["v_inf_whitened"]
     print(f"  n_elig={b['n_elig']}  cos_w mean {b['cos_whitened']['mean']:+.4f}  "
           f"mean_abs {b['cos_whitened']['mean_abs']:.4f}  median {b['cos_whitened']['median']:+.4f}")
-    print(f"  (ledger canonical cos_w(theta_mc, v_inf) ~ -0.003 — consistency check)")
+    print(f"  (canonical cos_w(theta_mc, v_inf) ~ -0.003 — consistency check)")
     print(f"\n  wrote {OUT}")
 
 

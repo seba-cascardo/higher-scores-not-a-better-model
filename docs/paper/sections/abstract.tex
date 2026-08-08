@@ -44,8 +44,9 @@ do not lean on it.) The lift is also \emph{undeployable as a generator}: it does
 transfer (gsm8k $-24.2 \pm 7.3\pp$ across three independently trained seeds --- the
 sign is invariant, the magnitude is not --- a mechanistic multi-step-reasoning loss;
 MMLU $-4.2\pp$ spillover; out-of-task, GPQA cold-MC ${\sim}0$ while the base reasons
-GPQA out at CoT $0.70$ --- single-run, directional, and a floor, since $31/198$ traces
-did not parse and are counted wrong). A per-item arbiter bounds it: the base
+GPQA out at CoT $0.70$ --- single-run and directional, with $31/198$ traces unparsed; a
+re-run that persists token counts shows those are traces that ran out of budget rather
+than answers, and bounds the accuracy in $[0.60, 0.91]$). A per-item arbiter bounds it: the base
 already solves $124/124$ of the fixed ARC items under chain-of-thought, against
 $41/47$ on the items the adapter fails to fix ($p=1.4\times10^{-4}$) --- the arbiter
 discriminates rather than restating a ceiling. Re-run on the \emph{entire}
