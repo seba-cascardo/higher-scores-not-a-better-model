@@ -1,6 +1,6 @@
 """Null-space vs row-space decomposition of the V7-mc offset (theta_mc).
 
-WHY (ClaraVT 2026-06-30): the +35 cold-MC lift is off-axis to correctness. The open
+WHY (2026-06-30): the +35 cold-MC lift is off-axis to correctness. The open
 mechanistic question is WHETHER the offset's DIRECT effect on the vocabulary is a
 UNIFORM temperature shift (the Stolfo et al. NeurIPS-2024 "confidence regulation
 neuron" / unembedding-null-space mechanism: scales all logits together, changes

@@ -16,7 +16,7 @@ Does DC-PMI recover the SAME mc_only items the offset recovers?
     PMI -> the EXPLOIT IS DEAD (the offset buys ~nothing PMI doesn't already give).
   * If that set is LARGE  -> the off-axis offset buys recovery PMI cannot -> ALIVE.
 
-This is the cheap decider gate from the off-axis battery (F0.2) and the ClaraVT
+This is the cheap decider gate from the off-axis battery (F0.2) and the design
 action plan (DC-PMI as the free foil that decides "exploit vs espejismo"). It is
 NOT the mechanism test; it only answers "is the recovery free?".
 

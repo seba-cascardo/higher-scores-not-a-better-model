@@ -6,7 +6,7 @@ WHY
 --------------------------------------------------------
 The user's hypothesis: the adapter is a System-1 readout that rescues answers the
 model already knows, and "does NOT replicate on genuinely hard questions". The EUR0
-ClaraVT cut (analyze_lift_difficulty_stratification) found the fix is recoverability-
+An earlier cut (analyze_lift_difficulty_stratification) found the fix is recoverability-
 gated (base-wrong & CoT-right 0.785 vs CoT-wrong 0.143, burial-matched) but ARC has
 only ~7 CoT-wrong items (base CoT ~0.97) -> underpowered. GPQA (base CoT 0.70, ~60
 genuinely-hard items) gives the POWER to confirm "no replication on hard".

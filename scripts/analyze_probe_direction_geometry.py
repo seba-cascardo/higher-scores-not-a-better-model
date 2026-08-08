@@ -1,6 +1,6 @@
 """M1 — READ-axis vs WRITE-axis: cos(probe_direction, theta_mc) and cos(probe_direction, v_inf).
 
-Closes the read/=write synthesis GEOMETRICALLY (ClaraVT 2026-06-29): the probe READS correctness
+Closes the read/=write synthesis GEOMETRICALLY (2026-06-29): the probe READS correctness
 (in-space, AUC 0.955 / selector-acc 0.946); the adapter WRITES the lift along theta_mc (off-axis,
 cos(theta_mc,v_inf)=-0.003 whitened). If the probe's decision direction is ~aligned with v_inf
 (the correctness axis) and ~orthogonal to theta_mc (what the adapter writes), then "read on-axis,

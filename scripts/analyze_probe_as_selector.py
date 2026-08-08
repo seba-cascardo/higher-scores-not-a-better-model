@@ -6,7 +6,7 @@ SELECTOR (argmax over options of held-out P(gold)), what is its ACCURACY — the
 (base acc_norm 0.505 / adapter 0.853) — read-only, on the same base activations, no offset
 injected (so generation is byte-identical to base by construction; the probe never writes).
 
-Fixes from the ClaraVT/Methodologist pass (do NOT regress these):
+Fixes from the adversarial methodology review (do NOT regress these):
   - METRIC = selector ACCURACY over ALL items (not pair_auc on base-wrong). The +35 is acc.
   - PAIRED test = McNemar (probe-selector pick vs BASE cold-MC pick, per item) as PRIMARY —
     CI-separation of two marginals is underpowered at n=400. (McNemar vs the surface-stack

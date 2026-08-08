@@ -1,4 +1,4 @@
-"""Difficulty / burial stratification of the cold-MC lift (ClaraVT, 2026-06-26).
+"""Difficulty / burial stratification of the cold-MC lift (2026-06-26).
 
 The user's hypothesis: the adapter is a fast System-1 readout that rescues answers
 the model already knows easily, and "does NOT replicate on hard questions". We never
@@ -10,7 +10,7 @@ Two questions, both restricted to BASE-WRONG items (b_corr==0), metric = acc_nor
 
   Q1 (BURIAL gradient): does the adapter's fix-rate fall as the gold is more buried
      in the base? Bin by base gold-rank (1/2/3+) and by the chosen-vs-gold z-gap.
-     ClaraVT's prediction: fix-rate falls with burial -> rescues near-surface golds.
+     The prediction under test: fix-rate falls with burial -> rescues near-surface golds.
      CONFOUND (Metodologo): a fixed-magnitude promotion ALSO fixes small gaps and
      misses big ones, so a falling gradient could be trivial gap-closing.
 

@@ -21,7 +21,7 @@ same-space). The adapter touches only ~48 heads (theta_mc nonzero); the decompos
 runs on exactly those.
 
 ================================================================================
-DESIGN  (adversarially math-verified — fixes from the ClaraVT verify pass folded in)
+DESIGN  (adversarially math-verified — fixes from the verification pass folded in)
 ================================================================================
 Headline metric is R2_span (energy of unit theta_mc captured by span{W_know,W_pred}),
 computed via a QR orthonormal basis of the plane — INVARIANT to the (oblique) choice

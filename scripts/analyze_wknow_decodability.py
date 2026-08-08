@@ -1,6 +1,6 @@
 """Is W_know ≈ chance REAL (gold not decodable options-absent) or PROBE-UNDERPOWERED? €0 local.
 
-ClaraVT decision 2026-06-24: the faithful-KAPPA W_know hit ≈chance at the options-ABSENT
+Design decision 2026-06-24: the faithful-KAPPA W_know hit ≈chance at the options-ABSENT
 prompt-final. This script firms WHY, deciding the KAPPA section of the paper (option B —
 KAPPA's precondition structurally fails in the off-axis channel) WITHOUT spending pod money.
 

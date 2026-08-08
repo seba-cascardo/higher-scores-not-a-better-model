@@ -21,6 +21,10 @@ Two conventions a reader will hit:
   are the project's internal bookkeeping. The ledger is a private register that records where
   each published quantity was measured; it is not part of this release, and nothing in the
   paper depends on reading it. The artifacts themselves are in `runs/`.
+- `ClaraVT` is the project's internal label for an adversarial design-review pass — a
+  structured critique run against a proposed experiment before it was executed. It is a
+  working procedure, not a person and not a co-author. Where a protocol credits a decision to
+  it, the decision is the author's; the label records which review it came out of.
 
 ## What each one covers
 

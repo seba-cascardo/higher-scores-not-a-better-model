@@ -1,6 +1,6 @@
 """Cold-MC calibration probe: WHY does the base lose answers it knows?
 
-Mechanistic question (ClaraVT, 2026-06-25): the base model KNOWS the answer
+Mechanistic question (2026-06-25): the base model KNOWS the answer
 (arbiter gen-CoT 123/124, GPQA 0.70) but the cold-MC scoring under chat-template
 MISRANKS it. Is the base, on the items the adapter "fixes" (S_flip), (H1) flat /
 confused (high entropy, the gold is a near-miss rank-2 it barely loses) or
