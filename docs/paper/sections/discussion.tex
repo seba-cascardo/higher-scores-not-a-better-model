@@ -625,8 +625,14 @@ artifact.) A clean control shows the two surviving costs are coupled to \emph{ho
 the offset is injected, not to the lift as such. The generic Align-LoRA that
 recovers most of the lift (\cref{disc:inducibility}) \textbf{preserves generation}:
 gsm8k $0.96{\rightarrow}0.95$ (n.s.), where the folded contrastive offset destroys
-it (gsm8k ${\rightarrow}0.17$ baked, and $-25\pp$ adapter-applied; below).
+it --- with the caveat that these two differ in the \emph{form} of the update as well as
+in its axis, and low-rank adaptation is separately documented to preserve out-of-domain
+behaviour better than full updates~\citep{LoRAForgetsLess}, an account we do not exclude here (gsm8k ${\rightarrow}0.17$ baked, and $-25\pp$ adapter-applied; below).
 
+Weight-space edits are an established way to steer a model along a direction, and the
+paradigm reports \emph{little} change on control tasks~\citep{TaskArithmetic}; the spillover
+here runs the other way, and is closer to the unintended downstream consequences
+documented for knowledge edits~\citep{RippleEffects}.
 The retrieval spillover, in turn, is consistent with the off-axis push landing on
 \textbf{retrieval-load-bearing heads} --- the adapter's heads overlap heads that
 carry retrieval (in the D.1 SocialIQA adapter: MMLU $-19.59\pp$, unrecovered by
@@ -635,10 +641,11 @@ keep this head-level overlap claim distinct from the \cref{disc:geometry} findin
 that the two functional correctness \emph{faces} are co-located (cos
 $\vinf{\cdot}\vret$ $+0.283$): face co-location implies that re-selecting heads
 within the same band cannot dodge the retrieval substrate, but it does \textbf{not}
-assert that the adapter's off-axis direction aligns with $\vret$ --- by
-\cref{disc:geometry} the offset is off-axis to \emph{both} faces, so the spillover
-is an off-axis perturbation disturbing a shared substrate, not the lift being
-projected onto the retrieval face. The pathologies are therefore the downstream
+assert that the adapter's off-axis direction aligns with $\vret$. We do not resolve
+that either way: we measure $\coswh(\thetamc,\vinf)$ and $\coswh(\vinf,\vret)$, but
+never $\coswh(\thetamc,\vret)$, so whether this spillover is an off-axis
+perturbation of a substrate the two faces share, or the lift partly projecting onto
+the retrieval face, is open. The pathologies are the downstream
 shadow of folding an off-axis-of-degree perturbation into the weights, not an
 inevitable price of the lift: a different injection (generic SFT) recovers much of
 the lift without them.

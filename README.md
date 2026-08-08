@@ -176,6 +176,17 @@ python scripts/analyze_arbiter_arc_cot.py --sets runs/vinf_causal/arbiter_arc_se
 per-item `samples` block, not the aggregate `results` block, and they **skip** missing arms
 instead of aborting. A partial download yields a thinner JSON with no error.
 
+### One artifact here is not the paper's protocol
+
+`runs/v7_lofit_gemma4_31b_chat/eval/eval_mc_full.json` is a **superseded in-house harness**,
+kept as provenance for the released `offsets_mc.pt` and cited nowhere in the paper. Its
+baseline differs from the canonical one on every task — gsm8k base `0.36` here against
+`0.9775` under the paper's protocol — so its deltas are not comparable to the reported
+ones, and its `+21.0` on gsm8k is not a counterexample to the reported `-25.0`. The
+sibling [`README.txt`](runs/v7_lofit_gemma4_31b_chat/eval/README.txt) gives the full
+comparison and the two ways to tell the harnesses apart from the file alone. Every number
+in the paper comes from lm-eval result files.
+
 ## Models and provenance
 
 Base models: [`google/gemma-4-31B-it`](https://huggingface.co/google/gemma-4-31B-it) and

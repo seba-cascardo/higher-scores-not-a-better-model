@@ -39,7 +39,7 @@ At \emph{identical} capacity --- the same 48 head-pairs and the same $12{,}336$
 trainable parameters as the adapter, the same corpus and steps, ordinary
 cross-entropy on the correct answer with no term against the incorrect one, three
 seeds --- the control recovers $\mathbf{36.2\% \pm 5.0}$ of the ARC lift. With
-$1{,}800\times$ to $58{,}000\times$ more parameters, a non-contrastive Align-LoRA
+$1{,}800\times$ to $58{,}000\times$ more parameters, a non-contrastive Align-LoRA~\citep{LoRA}
 recovers about \textbf{62\%}, flat across a rank sweep (r8/32/64/256: 59/63/60/65;
 the slope's confidence interval includes zero, so within that grid the residual is
 not a gap more rank closes). A best-effort r512 flank at ${\sim}117{,}000\times$ does
@@ -57,9 +57,12 @@ capacity. The task dependence is sharper still. The same three same-parameteriza
 seeds recover $79.5\%$ of the Winogrande lift and $69.5\%$ of HellaSwag's but
 $0.9\%$ --- nothing --- of TruthfulQA-mc1's, even though TruthfulQA is in the
 control's own training corpus. These are each task's headline metric, and the caveat
-travels with the ordering: the four lifts are robust to the choice of metric, the
-cross-task \emph{ordering} of inducibility is not, and no mechanistic claim in this
-paper rests on it (\cref{lim:metric}). Read as a mechanism, raising the correct
+travels with the fractions themselves, not only with their ordering: the four lifts
+are robust to the choice of metric, the recovered \emph{fractions} are not --- under
+raw accuracy HellaSwag's $69.5\%$ reads $8.9\%$ and the same-parameterization
+control's $36.2\%$ on ARC reads $26.9\%$ --- so every fraction in this paper is an
+acc\_norm statement, and no mechanistic claim rests on one or on their cross-task
+ordering (\cref{lim:metric}). Read as a mechanism, raising the correct
 option's log-probability is enough
 where the task scores the plausibility of a continuation, and not enough where a
 plausible distractor has to be beaten. The strongest on-axis reference we can build
@@ -188,7 +191,7 @@ them. ARC, HellaSwag, and Winogrande carry the question-conditional readout stor
 (the ARC lift retains 78\% under a PMI / decision-conditional control; the
 choices-only lift is only $+0.0375$, CI crossing zero).
 
-TruthfulQA is a second, \emph{answer-prior / surface-form Goodhart} mode: the
+TruthfulQA is a second, \emph{answer-prior / surface-form Goodhart} mode~\citep{ShortcutLearning,RightForWrongReasons,AnnotationArtifacts}: the
 choices-only lift is $+0.2225$ and the adapter selects the correct option $0.5725$
 of the time with no question at all. The TruthfulQA gain does generalize held-out
 ($\Delta_{\mathrm{UNSEEN}}$ mc1 $+37.8 \approx \Delta_{\mathrm{SEEN}}$ $+36.9$, so

@@ -19,8 +19,10 @@ Inducibility is also strongly
 task-dependent: the same-parameterization control recovers $79.5\%$ of Winogrande's
 lift and $69.5\%$ of HellaSwag's but $0.9\%$ of TruthfulQA-mc1's, i.e.\ nothing (on
 each task's headline metric; the four \emph{lifts} are robust to that choice, the
-cross-task \emph{ordering} of inducibility is not, and no mechanistic claim rests on
-it) ---
+recovered \emph{fractions} are not --- under raw accuracy HellaSwag's $69.5\%$ reads
+$8.9\%$ and ARC's $36.2\%$ reads $26.9\%$ --- so we cite every fraction as an
+acc\_norm statement and rest no mechanistic claim on them or on their cross-task
+ordering) ---
 raising the correct option's probability suffices where the task scores continuation
 plausibility, but not where a plausible distractor must be beaten. That places the
 lift on a matched-control spectrum --- random ${\approx}0\%$ $\rightarrow$
@@ -45,8 +47,8 @@ transfer (gsm8k $-24.2 \pm 7.3\pp$ across three independently trained seeds --- 
 sign is invariant, the magnitude is not --- a mechanistic multi-step-reasoning loss;
 MMLU $-4.2\pp$ spillover; out-of-task, GPQA cold-MC ${\sim}0$ while the base reasons
 GPQA out at CoT $0.70$ --- single-run and directional, with $31/198$ traces unparsed; a
-re-run that persists token counts shows those are traces that ran out of budget rather
-than answers, and bounds the accuracy in $[0.60, 0.91]$). A per-item arbiter bounds it: the base
+re-run that persists token counts shows the unparsed traces are ones that ran out of
+budget rather than answers, and bounds the accuracy in $[0.60, 0.91]$). A per-item arbiter bounds it: the base
 already solves $124/124$ of the fixed ARC items under chain-of-thought, against
 $41/47$ on the items the adapter fails to fix ($p=1.4\times10^{-4}$) --- the arbiter
 discriminates rather than restating a ceiling. Re-run on the \emph{entire}

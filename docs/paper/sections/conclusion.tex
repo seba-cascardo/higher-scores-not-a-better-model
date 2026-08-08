@@ -11,8 +11,9 @@ parameters, only the training objective changed --- a generic objective recovers
 $36.2\% \pm 5.0$ of the ARC gain (best-checkpoint; ${\sim}36$--$40\%$ across the
 selection rule), rising to ${\sim}62\%$ when the control is given
 three-to-five orders of magnitude more parameters, and ranging from $79.5\%$ on
-Winogrande to nothing at all on TruthfulQA (headline metric per task; the ordering
-across tasks is metric-dependent, the lifts are not). The recovery lives in a learned direction
+Winogrande to nothing at all on TruthfulQA (headline metric per task; the fractions
+and their cross-task ordering are metric-dependent --- under raw accuracy the $36.2\%$
+reads $26.9\%$ --- the lifts are not). The recovery lives in a learned direction
 that is off-axis of degree to the model's own correctness geometry --- and with the
 parameterization held fixed, it is the contrastive objective, not the apparatus, that
 goes furthest off-axis --- a geometry that is causal and identifiable on both the

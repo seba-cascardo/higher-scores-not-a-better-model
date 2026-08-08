@@ -110,8 +110,9 @@ survives in the generic arm ($0.6214 \rightarrow 0.6099$) but not everywhere: th
 same-parameterization control's $36.2\%$ becomes $26.9\%$ in Gemma and its $27.2\%$
 becomes $59.7\%$ in Qwen, so that figure carries the metric with it too. The four
 lifts themselves are robust. What does not survive is the \emph{cross-task ordering}
-of inducibility, which is an acc\_norm statement and is cited as such throughout, not
-as a property of the models.
+of inducibility --- nor, as the recomputations just given show, the recovered
+\emph{fractions} themselves. Both are acc\_norm statements and are cited as such
+throughout, not as properties of the models.
 
 \paragraph{The contrastive-specific residual is grid-relative, not a bound on generic
 fine-tuning.}
@@ -139,7 +140,7 @@ The inducibility controls train on the same TruthfulQA+ARC budget the effect is
 measured on (\cref{sec:definitions}), which left the ${\sim}62\%$ consistent with two
 readings: that non-contrastive SFT recovers most of the lift regardless of \emph{what}
 it is trained on, or that training \emph{on this domain} is what does it. We ran the missing arm. Holding
-parameterization, budget and schedule fixed and swapping only the corpus for MedMCQA
+parameterization, budget and schedule fixed and swapping only the corpus for MedMCQA~\citep{MedMCQA}
 --- same pair format, medical domain, no overlap with the four anchors --- the
 non-contrastive control recovers $33.8\% \pm 5.5$ of the ARC lift out of domain
 against $36.2\% \pm 5.0$ in domain, a ratio of $\mathbf{0.93}$ at the best

@@ -90,7 +90,7 @@ discriminating on the strength of the contrast, not of the point estimate. We re
 the 124/124 as an \emph{upper bound} on knowledge-accessibility, not a proof of
 perfect recall: it is a greedy $k{=}1$ arbiter, and for HellaSwag/Winogrande it runs
 in a letter-MCQ format distinct from the cold-MC channel (\cref{method:protocol}).
-Its robustness is corroborated independently: base self-consistency CoT at $k{=}3$
+Its robustness is corroborated independently: base self-consistency~\citep{SelfConsistency} CoT at $k{=}3$
 also reaches 124/124 on this set (\cref{sec:limitations}), so the result is not an artifact
 of the single greedy chain. This holds out-of-task too: on GPQA the base solves the
 items under chain-of-thought at $0.7071$ (arbiter), well above chance, so there is
@@ -136,7 +136,9 @@ So the fraction a generic objective recovers is \emph{not} a single constant: it
 from ${\sim}37\%$ at the adapter's own capacity to ${\sim}62\%$ with three-to-five
 orders of magnitude more parameters. We therefore report inducibility as a
 capacity-dependent quantity rather than as one number, and we do not claim a ceiling
-for generic fine-tuning: within the grids we tested, more capacity buys more recovery.
+for generic fine-tuning: across parameterizations, more capacity coincides with more
+recovery, while \emph{within} each rank grid we tested the fraction is flat (the
+r8--r256 slope-CI includes zero; note (ii) of \cref{tab:spectrum}).
 
 \textbf{It is also strongly task-dependent} --- the same three same-parameterization
 seeds recover $\mathbf{79.5\% \pm 1.4}$ of the Winogrande lift and
@@ -253,8 +255,8 @@ This refines the earlier ``purely off-axis'' framing into the central figure of 
 paper, and it is consistent with the earlier finding that the two functional
 correctness faces are themselves co-located (whitened cosine $\vinf{\cdot}\vret$
 $+0.283$, BCa95 $[+0.276, +0.291]$, null ${\pm}0.007$, $n{=}316$ heads): the
-recovery is off the shared correctness substrate by a method-dependent amount, not
-aligned with either face of it.
+recovery is off the $\vinf$ face by a method-dependent amount. Its angle to $\vret$
+we do not measure, so we do not claim it is off both.
 
 This co-location appears to sit in tension with work reporting that recall and
 reasoning occupy \emph{causally separable} circuits
@@ -494,7 +496,7 @@ multi-step-reasoning breakage, not truncation). \textbf{Across three independent
 trained adapters the loss is $-24.2 \pm 7.3\pp$} (range $-16.5$ to $-31$;
 \cref{tab:seeds}): the \emph{sign} replicates in 3/3 seeds, the magnitude varies by
 about a factor of two, so the $-25$ here is this run's value and near the middle of
-the observed range rather than a constant of the method. The retrieval-side \textbf{lambada}
+the observed range rather than a constant of the method. The retrieval-side \textbf{lambada}~\citep{LAMBADA}
 loss ($-32$) is reported here only as an \emph{illustrative} signal: it comes from a
 custom token-norm scorer, and the lm-eval confirmation (R9, \code{lambada\_\allowbreak openai}
 template-off) is not yet run, so the inference/retrieval trade-off in this paper
@@ -589,15 +591,21 @@ no-headroom result, not an independent test). With 2048 generation tokens the ba
 truncated 96\% of generations $\rightarrow$ a spurious 0.15; max\_new=8192 is
 required. The GPQA figures are single-run (greedy) and directional (CI crosses 0),
 not $n{=}400$-replicated like ARC.
-\item \textbf{$0.7071$ is a floor.} $31/198$ traces ($15.7\%$) did not parse and are
-scored as errors. The generations were not persisted --- the artifact stores only
-\code{doc\_id}, correctness and the parsed letter --- so we cannot separate a
-truncated chain from a malformed one without re-generating, and this project's own
-rule is that truncation is decided by a token count and never by the parser. The
-bias runs \emph{towards} the null we are arguing against: the true base CoT accuracy
-is at least $0.7071$, so the ${\sim}23\pp$ of cold-to-CoT headroom quoted below is
-conservative, and the claim that the base genuinely reasons GPQA out is if anything
-understated. Re-generating with persisted traces is listed as future work.
+\item \textbf{$0.7071$ is not a floor.} $31/198$ traces ($15.7\%$) did not parse in
+this run and are scored as errors. This run persisted only \code{doc\_id},
+correctness and the parsed letter, so within it a truncated chain cannot be told
+from a malformed one --- and this project's own rule is that truncation is decided
+by a token count and never by the parser. We therefore \emph{did} re-run the same
+protocol with the token counts persisted, and it settles the question in both
+directions (\cref{disc:arbiter}): of the $40$ unparsed items there, $39$ exhausted
+the budget and exactly one is malformed, so scoring them wrong was right; but $17$
+equally truncated traces received a letter from the tail fallback and $7$ of those
+entered as \emph{correct}, so the error does not run one way. Scoring the truncated
+items both ways bounds base GPQA CoT in $[0.6010, 0.9141]$, and a further execution
+of the nominally identical protocol reads $0.6616$. The number is used here only as
+being far above chance $0.25$, which even $0.6010$ clears; the cold-to-CoT headroom
+quoted below is computed at $0.7071$ and would be smaller, though still substantial,
+at the pessimistic bound.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -1062,7 +1070,7 @@ loops already present @cap512 (the loop precedes the budget, not truncation).
 Retrieval spillover (D.1 SocialIQA adapter --- family evidence) & MMLU
 $\mathbf{-19.59\pp}$ ($0.8306{\rightarrow}0.6347$); K=12 not recovered ($-20.80$,
 Pareto-worse) & D.1 SocialIQA spillover audit \\
-Spillover (KR SciQ K=24) & GPQA Diamond $\mathbf{-12.1\pp}$ (sciq $+2.1\pp$
+Spillover (KR SciQ~\citep{SciQ} K=24) & GPQA Diamond $\mathbf{-12.1\pp}$ (sciq $+2.1\pp$
 overshoot) & KR SciQ K=24 overshoot audit \\
 Spillover (B.2 mc\_discrimination) & MMLU $-6.3\pp$ / GPQA $-6.6\pp$ & B.2 phase-3
 findings \\
@@ -1146,7 +1154,7 @@ ordering does not survive in either family (\cref{lim:metric}).
 
 Every anchor above sits near the base's chain-of-thought ceiling, which invites the
 obvious objection: perhaps the exploit only exists on easy four-option benchmarks the
-model has effectively already solved. We tested it on MMLU-Pro --- ten options,
+model has effectively already solved. We tested it on MMLU-Pro~\citep{MMLUPro} --- ten options,
 chance $0.100$, and a base that scores $\mathbf{0.2610}$ cold, barely $2.6\times$
 chance. It is not saturated by any reading. Four arms, $1{,}000$ items, paired on
 every \code{doc\_id}.

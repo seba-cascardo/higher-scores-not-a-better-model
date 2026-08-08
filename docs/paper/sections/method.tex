@@ -6,7 +6,7 @@ All results are on Gemma~4 31B IT, run in bf16 --- the Hugging Face checkpoint
 \code{google/\allowbreak gemma-\allowbreak 4-\allowbreak 31B-\allowbreak it}, a
 \code{Gemma4ForConditionalGeneration} with 60 decoder layers, $d_{\mathrm{model}}$
 5376, 32 query heads and head dimension 256, evaluated under
-\code{transformers}~5.8.0 and \code{lm-eval}~0.4.12.
+\code{transformers}~5.8.0 and \code{lm-eval}~0.4.12~\citep{LMEvalHarness}.
 
 \paragraph{Which snapshot, and why it is two.} Our harness resolves the model by
 \code{revision=main} and lm-eval leaves \code{model\_sha} empty, so no result file
@@ -89,13 +89,13 @@ every headline delta within the $n{=}400$ confidence interval
 (\cref{results:headline}, \cref{sec:limitations}). This is deliberate --- it yields
 apples-to-apples deltas against the adapter --- and it is why our base absolutes
 (e.g.\ ARC ${\approx}0.50$) are scoring-face floors and must not be compared to a
-third-party-reported ${\sim}91\%$ chain-of-thought figure (the protocol caveat in
+third-party-reported ${\sim}91\%$ chain-of-thought~\citep{ChainOfThought} figure (the protocol caveat in
 the \cref{tab:headline} caption). The same scoring-face protocol --- identical
 log-likelihood option ranking, chat template, and lm-eval canonical flags --- is
-also applied out-of-task to GPQA, where the cold-MC lift is itself ${\sim}0$ (base
+also applied out-of-task to GPQA~\citep{GPQA}, where the cold-MC lift is itself ${\sim}0$ (base
 $0.4747 \rightarrow$ adapter $0.4697$, $-0.5\pp$); this cold-MC GPQA measurement is
 distinct from the generation-face GPQA evaluation described below.
-\textbf{Generation-face} evaluates the produced text: gsm8k under
+\textbf{Generation-face} evaluates the produced text: gsm8k~\citep{GSM8K} under
 \code{generate\_\allowbreak until} with exact-match; a per-item arbiter that runs base
 generative chain-of-thought (thinking-on, greedy, $k{=}1$) aligned to the cold-MC
 \code{doc\_\allowbreak id}s, on the items the adapter fixes; and GPQA under thinking-on greedy
@@ -255,8 +255,9 @@ $\mathrm{frac} = (\mathrm{arm} - \mathrm{base}) / (\mathrm{v7mc} - \mathrm{base}
 the fraction of the contrastive lift the arm reproduces
 (\code{scripts/\allowbreak analyze\_\allowbreak r1\_\allowbreak align\_\allowbreak frac.\allowbreak py:6,99}; returns NaN when
 $|\mathrm{v7mc} - \mathrm{base}| < 10^{-9}$). The per-task headline metric is fixed
-in code (\code{TASK\_\allowbreak METRIC}, \code{:36-\allowbreak -\allowbreak 41}): \textbf{acc\_norm} for ARC-Challenge
-and HellaSwag, plain \textbf{acc} for Winogrande and TruthfulQA-mc1 (the latter two
+in code (\code{TASK\_\allowbreak METRIC}, \code{:36-\allowbreak -\allowbreak 41}): \textbf{acc\_norm} for ARC-Challenge~\citep{ARC}
+and HellaSwag~\citep{HellaSwag}, plain \textbf{acc} for Winogrande~\citep{WinoGrande}
+and TruthfulQA-mc1~\citep{TruthfulQA} (the latter two
 define no length-normalized variant). Every ``fraction of the lift'' in this paper
 is this quantity at these metrics.
 
@@ -288,7 +289,7 @@ ${\sim}62\%$ ARC recovery lands in the middle zone, which is what we report as
 ``zone C'' against these thresholds. The thresholds bin the \emph{point} estimate, so
 the zone assignment does not depend on which interval accompanies it (paired
 bootstrap $[51\%, 73\%]$, delta-method $[45\%, 85\%]$; \cref{disc:inducibility}).
-A separate null-task check (MMLU) guards that a causal arm
+A separate null-task check (MMLU~\citep{MMLU}) guards that a causal arm
 does not damage an unrelated task (null MMLU $+0.07\pp$ at PASS,
 \cref{tab:onaxis}).
 

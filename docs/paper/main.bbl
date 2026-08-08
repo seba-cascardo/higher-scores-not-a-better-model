@@ -1,4 +1,4 @@
-\begin{thebibliography}{47}
+\begin{thebibliography}{68}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -48,6 +48,17 @@ Ikram Belmadani, Oumaima El~Khettari, Carlos Ramisch, Frederic Bechet, Richard
 \newblock Trade-offs in medical {LLM} adaptation: An empirical study in french
   {QA}, 2026.
 \newblock URL \url{https://arxiv.org/abs/2606.19266}.
+
+\bibitem[Biderman et~al.(2024)Biderman, Portes, Gonzalez~Ortiz, Paul,
+  Greengard, Jennings, King, Havens, Chiley, Frankle, Blakeney, and
+  Cunningham]{LoRAForgetsLess}
+Dan Biderman, Jacob Portes, Jose~Javier Gonzalez~Ortiz, Mansheej Paul, Philip
+  Greengard, Connor Jennings, Daniel King, Sam Havens, Vitaliy Chiley, Jonathan
+  Frankle, Cody Blakeney, and John~P. Cunningham.
+\newblock {LoRA} learns less and forgets less.
+\newblock \emph{Transactions on Machine Learning Research (TMLR)}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2405.09673}.
+\newblock Featured Certification.
 
 \bibitem[Bilgin et~al.(2026)Bilgin, Barry, Bifet, Ait~Said, and
   Banerjee]{PALoRA}
@@ -103,6 +114,31 @@ Seonglae Cho, Zekun Wu, Kleyton Da~Costa, and Adriano Koshiyama.
   representations in language models, 2026.
 \newblock URL \url{https://arxiv.org/abs/2602.08159}.
 
+\bibitem[Clark et~al.(2018)Clark, Cowhey, Etzioni, Khot, Sabharwal, Schoenick,
+  and Tafjord]{ARC}
+Peter Clark, Isaac Cowhey, Oren Etzioni, Tushar Khot, Ashish Sabharwal, Carissa
+  Schoenick, and Oyvind Tafjord.
+\newblock Think you have solved question answering? try {ARC}, the {AI2}
+  reasoning challenge, 2018.
+\newblock URL \url{https://arxiv.org/abs/1803.05457}.
+
+\bibitem[Cobbe et~al.(2021)Cobbe, Kosaraju, Bavarian, Chen, Jun, Kaiser,
+  Plappert, Tworek, Hilton, Nakano, Hesse, and Schulman]{GSM8K}
+Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz
+  Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano,
+  Christopher Hesse, and John Schulman.
+\newblock Training verifiers to solve math word problems, 2021.
+\newblock URL \url{https://arxiv.org/abs/2110.14168}.
+
+\bibitem[Cohen et~al.(2024)Cohen, Biran, Yoran, Globerson, and
+  Geva]{RippleEffects}
+Roi Cohen, Eden Biran, Ori Yoran, Amir Globerson, and Mor Geva.
+\newblock Evaluating the ripple effects of knowledge editing in language
+  models.
+\newblock \emph{Transactions of the Association for Computational Linguistics
+  (TACL)}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2307.12976}.
+
 \bibitem[Cox et~al.(2026)Cox, Kianersi, and Garriga-Alonso]{PreCoTAnswer}
 Kyle Cox, Darius Kianersi, and Adri{\`a} Garriga-Alonso.
 \newblock Post-hoc reasoning in chain of thought: Decoding and steering
@@ -123,6 +159,15 @@ Harshwardhan Fartale, Ashish Kattamuri, Rahul Raja, Arpita Vats, Ishita Prasad,
 \newblock Disentangling recall and reasoning in transformer models through
   layer-wise attention and activation analysis, 2025.
 \newblock URL \url{https://arxiv.org/abs/2510.03366}.
+
+\bibitem[Geirhos et~al.(2020)Geirhos, Jacobsen, Michaelis, Zemel, Brendel,
+  Bethge, and Wichmann]{ShortcutLearning}
+Robert Geirhos, J{\"o}rn-Henrik Jacobsen, Claudio Michaelis, Richard Zemel,
+  Wieland Brendel, Matthias Bethge, and Felix~A. Wichmann.
+\newblock Shortcut learning in deep neural networks.
+\newblock \emph{Nature Machine Intelligence}, 2:\penalty0 665--673, 2020.
+\newblock \doi{10.1038/s42256-020-00257-z}.
+\newblock URL \url{https://arxiv.org/abs/2004.07780}.
 
 \bibitem[Gekhman et~al.(2025)Gekhman, Ben~David, Orgad, Ofek, Belinkov,
   Szpektor, Herzig, and Reichart]{InsideOut}
@@ -145,6 +190,15 @@ Wes Gurnee, Nicholas Sofroniew, Adam Pearce, Mateusz Piotrowski, Isaac Kauvar,
 \newblock URL \url{https://transformer-circuits.pub/2026/workspace}.
 \newblock Anthropic; published July 6, 2026.
 
+\bibitem[Gururangan et~al.(2018)Gururangan, Swayamdipta, Levy, Schwartz,
+  Bowman, and Smith]{AnnotationArtifacts}
+Suchin Gururangan, Swabha Swayamdipta, Omer Levy, Roy Schwartz, Samuel~R.
+  Bowman, and Noah~A. Smith.
+\newblock Annotation artifacts in natural language inference data.
+\newblock In \emph{Proceedings of the 2018 Conference of the North American
+  Chapter of the Association for Computational Linguistics (NAACL)}, 2018.
+\newblock URL \url{https://arxiv.org/abs/1803.02324}.
+
 \bibitem[He et~al.(2023)He, Cui, Chen, Hu, and Zhu]{AlignedMCCalibration}
 Guande He, Peng Cui, Jianfei Chen, Wenbo Hu, and Jun Zhu.
 \newblock Investigating uncertainty calibration of aligned language models
@@ -159,6 +213,15 @@ Anna Hedstr{\"o}m, Salim~I. Amoukou, Tom Bewley, Saumitra Mishra, and Manuela
   for language models.
 \newblock In \emph{International Conference on Machine Learning (ICML)}, 2025.
 \newblock URL \url{https://arxiv.org/abs/2510.13290}.
+
+\bibitem[Hendrycks et~al.(2021)Hendrycks, Burns, Basart, Zou, Mazeika, Song,
+  and Steinhardt]{MMLU}
+Dan Hendrycks, Collin Burns, Steven Basart, Andy Zou, Mantas Mazeika, Dawn
+  Song, and Jacob Steinhardt.
+\newblock Measuring massive multitask language understanding.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2021.
+\newblock URL \url{https://arxiv.org/abs/2009.03300}.
 
 \bibitem[Ho et~al.(2025)Ho, Liang, Zhang, Zhan, and Tao]{NoVo}
 Zheng~Yi Ho, Siyuan Liang, Sen Zhang, Yibing Zhan, and Dacheng Tao.
@@ -177,6 +240,22 @@ Ari Holtzman, Peter West, Vered Shwartz, Yejin Choi, and Luke Zettlemoyer.
   Natural Language Processing ({EMNLP})}, pages 7038--7051, 2021.
 \newblock \doi{10.18653/v1/2021.emnlp-main.564}.
 \newblock URL \url{https://arxiv.org/abs/2104.08315}.
+
+\bibitem[Hu et~al.(2021)Hu, Shen, Wallis, Allen-Zhu, Li, Wang, Wang, and
+  Chen]{LoRA}
+Edward~J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean
+  Wang, Lu~Wang, and Weizhu Chen.
+\newblock {LoRA}: Low-rank adaptation of large language models, 2021.
+\newblock URL \url{https://arxiv.org/abs/2106.09685}.
+
+\bibitem[Ilharco et~al.(2023)Ilharco, Ribeiro, Wortsman, Gururangan, Schmidt,
+  Hajishirzi, and Farhadi]{TaskArithmetic}
+Gabriel Ilharco, Marco~Tulio Ribeiro, Mitchell Wortsman, Suchin Gururangan,
+  Ludwig Schmidt, Hannaneh Hajishirzi, and Ali Farhadi.
+\newblock Editing models with task arithmetic.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2212.04089}.
 
 \bibitem[Korznikov et~al.(2025)Korznikov, Galichin, Dontsov, Rogov, Oseledets,
   and Tutubalina]{RogueScalpel}
@@ -203,6 +282,13 @@ Tom Lieberum, Matthew Rahtz, J{\'a}nos Kram{\'a}r, Neel Nanda, Geoffrey Irving,
   choice capabilities in {Chinchilla}, 2023.
 \newblock URL \url{https://arxiv.org/abs/2307.09458}.
 
+\bibitem[Lin et~al.(2022)Lin, Hilton, and Evans]{TruthfulQA}
+Stephanie Lin, Jacob Hilton, and Owain Evans.
+\newblock {TruthfulQA}: Measuring how models mimic human falsehoods.
+\newblock In \emph{Proceedings of the 60th Annual Meeting of the Association
+  for Computational Linguistics (ACL)}, 2022.
+\newblock URL \url{https://arxiv.org/abs/2109.07958}.
+
 \bibitem[Liu(2026)]{LeverageIsNotReach}
 Hongliang Liu.
 \newblock Leverage is not reach: A control-window law for single-neuron
@@ -224,6 +310,14 @@ Samuel Marks and Max Tegmark.
 \newblock In \emph{Conference on Language Modeling (COLM)}, 2024.
 \newblock URL \url{https://arxiv.org/abs/2310.06824}.
 
+\bibitem[McCoy et~al.(2019)McCoy, Pavlick, and Linzen]{RightForWrongReasons}
+R.~Thomas McCoy, Ellie Pavlick, and Tal Linzen.
+\newblock Right for the wrong reasons: Diagnosing syntactic heuristics in
+  natural language inference.
+\newblock In \emph{Proceedings of the 57th Annual Meeting of the Association
+  for Computational Linguistics (ACL)}, 2019.
+\newblock URL \url{https://arxiv.org/abs/1902.01007}.
+
 \bibitem[Miao et~al.(2026)Miao, Cho, and Ungar]{CORAL}
 Miranda~Muqing Miao, Young-Min Cho, and Lyle Ungar.
 \newblock Correctness-optimized residual activation lens ({CORAL}):
@@ -239,6 +333,25 @@ Hadas Orgad, Michael Toker, Zorik Gekhman, Roi Reichart, Idan Szpektor, Hadas
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2025.
 \newblock URL \url{https://arxiv.org/abs/2410.02707}.
+
+\bibitem[Pal et~al.(2022)Pal, Umapathi, and Sankarasubbu]{MedMCQA}
+Ankit Pal, Logesh~Kumar Umapathi, and Malaikannan Sankarasubbu.
+\newblock {MedMCQA}: A large-scale multi-subject multi-choice dataset for
+  medical domain question answering.
+\newblock In \emph{Proceedings of the Conference on Health, Inference, and
+  Learning (CHIL)}, Proceedings of Machine Learning Research, 2022.
+\newblock URL \url{https://arxiv.org/abs/2203.14371}.
+
+\bibitem[Paperno et~al.(2016)Paperno, Kruszewski, Lazaridou, Pham, Bernardi,
+  Pezzelle, Baroni, Boleda, and Fern{\'a}ndez]{LAMBADA}
+Denis Paperno, Germ{\'a}n Kruszewski, Angeliki Lazaridou, Quan~Ngoc Pham,
+  Raffaella Bernardi, Sandro Pezzelle, Marco Baroni, Gemma Boleda, and Raquel
+  Fern{\'a}ndez.
+\newblock The {LAMBADA} dataset: Word prediction requiring a broad discourse
+  context.
+\newblock In \emph{Proceedings of the 54th Annual Meeting of the Association
+  for Computational Linguistics (ACL)}, 2016.
+\newblock URL \url{https://arxiv.org/abs/1606.06031}.
 
 \bibitem[Park et~al.(2026)Park, Pyun, and Jo]{KAPPA}
 Yoonah Park, Haesung Pyun, and Yohan Jo.
@@ -256,6 +369,20 @@ Pouya Pezeshkpour and Estevam Hruschka.
 \newblock \doi{10.18653/v1/2024.findings-naacl.130}.
 \newblock URL \url{https://arxiv.org/abs/2308.11483}.
 
+\bibitem[Rein et~al.(2023)Rein, Hou, Stickland, Petty, Pang, Dirani, Michael,
+  and Bowman]{GPQA}
+David Rein, Betty~Li Hou, Asa~Cooper Stickland, Jackson Petty, Richard~Yuanzhe
+  Pang, Julien Dirani, Julian Michael, and Samuel~R. Bowman.
+\newblock {GPQA}: A graduate-level google-proof {Q\&A} benchmark, 2023.
+\newblock URL \url{https://arxiv.org/abs/2311.12022}.
+
+\bibitem[Sakaguchi et~al.(2019)Sakaguchi, Le~Bras, Bhagavatula, and
+  Choi]{WinoGrande}
+Keisuke Sakaguchi, Ronan Le~Bras, Chandra Bhagavatula, and Yejin Choi.
+\newblock {WinoGrande}: An adversarial winograd schema challenge at scale,
+  2019.
+\newblock URL \url{https://arxiv.org/abs/1907.10641}.
+
 \bibitem[Sanz-Guerrero et~al.(2026)Sanz-Guerrero, Mager, and von~der
   Wense]{OwnershipBias}
 Mario Sanz-Guerrero, Manuel Mager, and Katharina von~der Wense.
@@ -272,6 +399,13 @@ Alessandro Stolfo, Ben Wu, Wes Gurnee, Yonatan Belinkov, Xingyi Song, Mrinmaya
 \newblock In \emph{Advances in Neural Information Processing Systems
   (NeurIPS)}, 2024.
 \newblock URL \url{https://arxiv.org/abs/2406.16254}.
+
+\bibitem[Sutawika et~al.(2026)Sutawika, Schoelkopf, Gao, Abbasi, Biderman, Tow,
+  et~al.]{LMEvalHarness}
+Lintang Sutawika, Hailey Schoelkopf, Leo Gao, Baber Abbasi, Stella Biderman,
+  Jonathan Tow, et~al.
+\newblock {EleutherAI/lm-evaluation-harness}: v0.4.12, 2026.
+\newblock URL \url{https://doi.org/10.5281/zenodo.20122284}.
 
 \bibitem[Syed(2026)]{SyedActivationDirections}
 Abdul~Rafay Syed.
@@ -302,6 +436,42 @@ Xinpeng Wang, Bolei Ma, Chengzhi Hu, Leon Weber-Genzel, Paul R{\"o}ttger,
 \newblock In \emph{Findings of the Association for Computational Linguistics:
   ACL 2024}, 2024{\natexlab{b}}.
 \newblock URL \url{https://arxiv.org/abs/2402.14499}.
+
+\bibitem[Wang et~al.(2023)Wang, Wei, Schuurmans, Le, Chi, Narang, Chowdhery,
+  and Zhou]{SelfConsistency}
+Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc Le, Ed~Chi, Sharan Narang,
+  Aakanksha Chowdhery, and Denny Zhou.
+\newblock Self-consistency improves chain of thought reasoning in language
+  models.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2203.11171}.
+
+\bibitem[Wang et~al.(2024{\natexlab{c}})Wang, Ma, Zhang, Ni, Chandra, Guo, Ren,
+  Arulraj, He, Jiang, Li, Ku, Wang, Zhuang, Fan, Yue, and Chen]{MMLUPro}
+Yubo Wang, Xueguang Ma, Ge~Zhang, Yuansheng Ni, Abhranil Chandra, Shiguang Guo,
+  Weiming Ren, Aaran Arulraj, Xuan He, Ziyan Jiang, Tianle Li, Max Ku, Kai
+  Wang, Alex Zhuang, Rongqi Fan, Xiang Yue, and Wenhu Chen.
+\newblock {MMLU-Pro}: A more robust and challenging multi-task language
+  understanding benchmark.
+\newblock In \emph{Advances in Neural Information Processing Systems (NeurIPS),
+  Datasets and Benchmarks Track, spotlight}, 2024{\natexlab{c}}.
+\newblock URL \url{https://arxiv.org/abs/2406.01574}.
+
+\bibitem[Wei et~al.(2022)Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le,
+  and Zhou]{ChainOfThought}
+Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei Xia,
+  Ed~Chi, Quoc Le, and Denny Zhou.
+\newblock Chain-of-thought prompting elicits reasoning in large language
+  models, 2022.
+\newblock URL \url{https://arxiv.org/abs/2201.11903}.
+
+\bibitem[Welbl et~al.(2017)Welbl, Liu, and Gardner]{SciQ}
+Johannes Welbl, Nelson~F. Liu, and Matt Gardner.
+\newblock Crowdsourcing multiple choice science questions.
+\newblock In \emph{Proceedings of the 3rd Workshop on Noisy User-generated Text
+  (W-NUT)}, 2017.
+\newblock URL \url{https://arxiv.org/abs/1707.06209}.
 
 \bibitem[Wen et~al.(2026)Wen, Sun, Liu, Xu, Cong, and Li]{BenchmarkIllusion}
 Rui Wen, Lu~Sun, Jiayang Liu, Zesheng Xu, Tianshuo Cong, and Zheng Li.
@@ -362,6 +532,14 @@ Fangcong Yin, Xi~Ye, and Greg Durrett.
 \newblock In \emph{Advances in Neural Information Processing Systems
   (NeurIPS)}, 2024.
 \newblock URL \url{https://arxiv.org/abs/2406.01563}.
+
+\bibitem[Zellers et~al.(2019)Zellers, Holtzman, Bisk, Farhadi, and
+  Choi]{HellaSwag}
+Rowan Zellers, Ari Holtzman, Yonatan Bisk, Ali Farhadi, and Yejin Choi.
+\newblock {HellaSwag}: Can a machine really finish your sentence?
+\newblock In \emph{Proceedings of the 57th Annual Meeting of the Association
+  for Computational Linguistics (ACL)}, 2019.
+\newblock URL \url{https://arxiv.org/abs/1905.07830}.
 
 \bibitem[Zhao et~al.(2021)Zhao, Wallace, Feng, Klein, and
   Singh]{CalibrateBeforeUse}

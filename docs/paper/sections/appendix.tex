@@ -266,11 +266,14 @@ conflated.}
 \toprule
 Run (artifact) & Date & Scoring $n$ & Base-wrong subset(s) & Feeds \\
 \midrule
-A1 canonical trio (\code{msap-\allowbreak a1-\allowbreak trio-\allowbreak b2-\allowbreak planner-\allowbreak 2026-\allowbreak 06-\allowbreak 10}) & 2026-06-10 & 400 & ARC
+A1 canonical trio (\code{msap-\allowbreak a1-\allowbreak trio-\allowbreak b2-\allowbreak planner-\allowbreak 2026-\allowbreak 06-\allowbreak 10}; private, available
+from the authors on request --- the same four lifts are reproduced at full split, with
+more power, in the public \code{msap-\allowbreak eval-\allowbreak bulletproof-\allowbreak lean-\allowbreak 20260627}, \cref{tab:hfmap})
+& 2026-06-10 & 400 & ARC
 198 base-wrong@0-shot & T1 headline ($+35.0$ / $+37.25$ / $+17.0$ / $+19.0$); T2
 gsm8k $-25$ \\
 \addlinespace
-vinf\_causal (\code{msap-\allowbreak vinf-\allowbreak causal-\allowbreak 20260623}) & 2026-06-23 & 400 (own within-run
+vinf\_causal (\code{msap-\allowbreak vinf-\allowbreak causal-\allowbreak 20260623-\allowbreak public}) & 2026-06-23 & 400 (own within-run
 baselines; ARC lift $+35.0$) & \emph{lm-eval scaffold:} 198 base-wrong; 124
 mc\_only; 151 $S_{\mathrm{flip}}$; 192 $S_{\mathrm{cot\_coldwrong}}$; 47
 adapter-residual. \emph{premise-file scaffold:} 204 base-wrong; 73 adapter-residual
@@ -354,20 +357,24 @@ Arbiter 124/124 (post-parser-fix v2) & \code{vinf\_\allowbreak causal/\allowbrea
 & \code{msap-\allowbreak vinf-\allowbreak causal-\allowbreak 20260623-\allowbreak public} \\
 P9 on-axis-penalty lift-matched gate ($\lambda{=}5$ $-9.9\pp$ / $3.8\sigma$) &
 \code{p9\_\allowbreak onaxis/\allowbreak \{mc,gsm8k\}\_\allowbreak lam\{5,15,50\}.\allowbreak json},
-\code{mc\_\allowbreak dose\_\allowbreak lam0\_\allowbreak s*.\allowbreak json}, \code{gsm8k\_\allowbreak dose\_\allowbreak lam0.\allowbreak json} &
+\code{mc\_\allowbreak dose\_\allowbreak lam0\_\allowbreak s*.\allowbreak json}, \code{gsm8k\_\allowbreak dose\_\allowbreak lam0.\allowbreak json} (HF-only) &
 \code{msap-\allowbreak p9-\allowbreak onaxis-\allowbreak 20260709} \\
 Recall-tail (\cref{disc:negatives} / \cref{app:jlens}) &
-\code{jspace/\allowbreak stage\_\allowbreak e2\_\allowbreak recall\_\allowbreak tail.\allowbreak json} & \code{msap-\allowbreak jspace-\allowbreak gemma-\allowbreak 20260709} \\
+\code{jspace/\allowbreak stage\_\allowbreak e2\_\allowbreak recall\_\allowbreak tail.\allowbreak json} (insertion rate, inserted-token
+categories) and \code{jspace/\allowbreak stage\_\allowbreak e2.\allowbreak json} (the
+\code{recall\_\allowbreak at\_\allowbreak 25} decay) (HF-only) & \code{msap-\allowbreak jspace-\allowbreak gemma-\allowbreak 20260709} \\
 Align-fairness rank sweep (${\sim}62\%$) &
-\code{align\_\allowbreak fairness/\allowbreak R1\_\allowbreak \{v7mc,null\}.\allowbreak json},
-\code{phase1/\allowbreak derisk/\allowbreak align\_\allowbreak direction\_\allowbreak r*.\allowbreak json} &
+\code{align\_\allowbreak fairness/\allowbreak align\_\allowbreak fairness/\allowbreak R1\_\allowbreak \{v7mc,null\}.\allowbreak json},
+\code{align\_\allowbreak direction\_\allowbreak r*.\allowbreak json} (HF-only; the same-named files under
+\code{runs/\allowbreak derisk/\allowbreak } are the geometry sweep, not these accuracies) &
 \code{msap-\allowbreak align-\allowbreak fairness-\allowbreak 20260702}, \code{msap-\allowbreak phase1-\allowbreak evals-\allowbreak 20260624} \\
 \cref{tab:spectrum} random norm-matched &
-\code{phase1/\allowbreak derisk/\allowbreak random\_\allowbreak s\{0,1,2\}.\allowbreak json}, \code{offsets\_\allowbreak random\_\allowbreak s*.\allowbreak pt} &
+\code{phase1/\allowbreak derisk/\allowbreak random\_\allowbreak s\{0,1,2\}.\allowbreak json}; \code{offsets\_\allowbreak random\_\allowbreak s*.\allowbreak pt} (HF-only) &
 \code{msap-\allowbreak phase1-\allowbreak evals-\allowbreak 20260624} \\
 \cref{disc:geometry} $\offpar$ / $\offperp$ / $\Wknow$ spectrum arms &
-\code{eval\_\allowbreak bulletproof/\allowbreak RD\_\allowbreak \{offpar,offperp,wknow\}.\allowbreak json} (+
-\code{rd\_\allowbreak offperp\_\allowbreak frac.\allowbreak csv}) & \code{msap-\allowbreak r5-\allowbreak align-\allowbreak p0-\allowbreak 20260628} \\
+\code{eval\_\allowbreak bulletproof/\allowbreak RD\_\allowbreak \{offpar,offperp\}.\allowbreak json} (HF-only);
+the $\Wknow$ arm is \code{wknow\_\allowbreak causal/\allowbreak onaxis\_\allowbreak significance.\allowbreak json}
+& \code{msap-\allowbreak r5-\allowbreak align-\allowbreak p0-\allowbreak 20260628} \\
 \cref{disc:geometry} perpendicular-shuffle write-side control (3 seeds) &
 \code{RD\_\allowbreak offperp\_\allowbreak shuffle\_\allowbreak seed\{0,1,2\}.\allowbreak json} (HF-only) & same \\
 \cref{tab:seeds} adapter replicates (ARC/TQA/HSwag/Wino, gsm8k, net-effect ratio) &
