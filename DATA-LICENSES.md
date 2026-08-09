@@ -118,9 +118,35 @@ that use these datasets requires obtaining them from the original source under i
   This was not verified. Those files are not part of this release — the directory is not in
   this repository — so the question does not bear on anything shipped here.
 - Large binaries hosted on HuggingFace (activation `.pt`, LoRA `.safetensors`) were not
-  opened byte by byte; their license verdict rests on the logs that produced them.
-- The audit covered the 20 HuggingFace repos relevant to the paper, not all 49 in the
-  account.
+  opened byte by byte; their license verdict rests on the logs that produced them. Across the
+  account that is **248 binary paths not opened**. Six of them carry a *name* that points at
+  gated material — `acts_ewok.pt` (`msap-kr-h5-2026-06-03`), `gpqa_physics_residual.pt`,
+  `gpqa_physics_vectors.pt`, `postgen_leaderboard_gpqa_diamond.pt`, `gpqa_extract_L36_L55.pt`,
+  `gpqa_extract_L40_L45_L50.pt` — all in **private** repos. A name is not content, but for a
+  binary the auditor cannot open it is the only signal there is. EWoK's terms cover the
+  materials **and their derivatives**, so `msap-kr-h5-2026-06-03` stays unpublishable
+  regardless of its text scanning clean.
+- **The account is now audited in full: 57 of 57 repos** (54 datasets + 3 models), history
+  **and** content, one verdict JSON per repo. None is left unaudited. This supersedes the
+  earlier caveat, which read "the 20 HuggingFace repos relevant to the paper, not all 49 in
+  the account" — both of those numbers were stale.
+  - Every **public** repo (33) is **clean**: no gated item text, no gated schema column, and
+    no path that exists only in an earlier revision.
+  - **Seven private repos carry GPQA items** and are therefore not publishable as they stand:
+    `msap-item13-item14-completion-2026-05-25`, `msap-o3-02-20260807`, `msap-phase1-20260624`,
+    `msap-postgen-cross-task-2026-05-28`, `msap-postgen-item17i-item14-2026-05-24`,
+    `msap-step-a4-deploy-eval-2026-05-23`, `msap-vinf-causal-20260623`. Four of those files
+    carry the `Pre-Revision *` review columns, i.e. the full gated schema.
+  - Scope of the scan: 370 commits walked, 1279 distinct blobs identified, 1012 text blobs
+    scanned **over every revision**, not only over HEAD — a file deleted in a later commit is
+    still published when the repo is. The fingerprints include the two canary UUIDs EWoK
+    publishes for exactly this purpose.
+  - The verdicts record **which** fingerprint matched, never the item: a matched GPQA stem is
+    stored as `[GATED-ITEM-REDACTED ds=.. idx=.. len=.. sha256=..]`, re-derivable by anyone
+    holding the licensed source. A document that catalogues a redistribution problem must not
+    become one.
+  - Report and verdict JSONs: `docs/superpowers/specs/2026-08-09-hf-account-full-audit.md`
+    and `runs/release_audit/` in the project's working repository.
 
 ## Provenance
 
