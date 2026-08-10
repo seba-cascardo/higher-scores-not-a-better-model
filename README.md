@@ -26,8 +26,8 @@ Paper: [`docs/paper/main.pdf`](docs/paper/main.pdf); source and the arXiv bundle
 |---|---|
 | [`docs/paper/`](docs/paper/) | LaTeX source, the built PDF, and the arXiv submission bundle |
 | [`docs/protocols/`](docs/protocols/) | The seven pre-registration protocols, with an [index](docs/protocols/README.md) |
-| `scripts/` | 69 scripts: the analyses below, plus the training, generation and probing code behind the paper's arms |
-| `runs/` | 200 result artifacts — the outputs of those scripts, versioned |
+| `scripts/` | 77 scripts: the analyses below, plus the training, generation and probing code behind the paper's arms |
+| `runs/` | 206 result artifacts — the outputs of those scripts, versioned |
 | `outputs/` | 10 further analysis outputs: the generation-degeneration, truncation and loop-control audits behind the paper's generative chapter, and the evaluation lockfile |
 
 ## Setup

@@ -1,0 +1,56 @@
+{
+  "out": "runs/vinf_causal/mc_probe_offset.pt",
+  "acts": "runs/vinf_causal/coldmc_perhead_arc_challenge_full.pt",
+  "train_until": 400,
+  "C": 0.03,
+  "pca": 200,
+  "seed": 42,
+  "n_cells": 48,
+  "geometry_per_head": {
+    "raw_cos_probe_theta": {
+      "n": 48,
+      "mean": 0.003683182333262404,
+      "median": 0.01849805983068712,
+      "absmean": 0.065624208079066
+    },
+    "raw_cos_probe_vinf": {
+      "n": 48,
+      "mean": 0.21931263431163395,
+      "median": 0.2034282624234136,
+      "absmean": 0.2213383505018949
+    },
+    "raw_cos_probe_wknow": {
+      "n": 48,
+      "mean": 0.19764771109585025,
+      "median": 0.1945855649841755,
+      "absmean": 0.19764771109585025
+    },
+    "whit_cos_probe_theta": {
+      "n": 48,
+      "mean": -0.005149457914068793,
+      "median": -0.0004501285188308146,
+      "absmean": 0.05481798061971368
+    },
+    "whit_cos_probe_vinf": {
+      "n": 48,
+      "mean": 0.10931096887968883,
+      "median": 0.11059204812770607,
+      "absmean": 0.10931096887968883
+    },
+    "whit_cos_probe_wknow": {
+      "n": 48,
+      "mean": 0.10117126473846039,
+      "median": 0.10203535515408688,
+      "absmean": 0.10895520825043224
+    }
+  },
+  "oos_reader": {
+    "n_base_wrong": 395,
+    "pair_auc": 0.948566610455312,
+    "ci95": [
+      0.931759302931846,
+      0.9637130801687763
+    ]
+  },
+  "eval_constraint": "MUST be scored on ARC items >= 400 (probe fit on the rest)"
+}

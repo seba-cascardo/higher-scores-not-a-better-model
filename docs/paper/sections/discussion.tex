@@ -643,11 +643,17 @@ keep this head-level overlap claim distinct from the \cref{disc:geometry} findin
 that the two functional correctness \emph{faces} are co-located (cos
 $\vinf{\cdot}\vret$ $+0.283$): face co-location implies that re-selecting heads
 within the same band cannot dodge the retrieval substrate, but it does \textbf{not}
-assert that the adapter's off-axis direction aligns with $\vret$. We do not resolve
-that either way: we measure $\coswh(\thetamc,\vinf)$ and $\coswh(\vinf,\vret)$, but
-never $\coswh(\thetamc,\vret)$, so whether this spillover is an off-axis
-perturbation of a substrate the two faces share, or the lift partly projecting onto
-the retrieval face, is open. The pathologies are the downstream
+assert that the adapter's off-axis direction aligns with $\vret$. That disjunction
+--- off-axis perturbation of a shared substrate, or the lift partly projecting onto
+the retrieval face --- is settled by measurement in \cref{disc:geometry}, and it
+settles toward the first: $\coswh(\thetamc,\vret) = +0.0076$ (BCa95
+$[-0.0033, +0.0187]$) sits inside its isotropic null, while the same estimator on the
+same $48$ heads puts the two faces at $+0.2586$. One caveat runs \emph{against} the
+result and we state it: the mean $|\coswh|$ of $\thetamc$ against either face
+($0.0333$ and $0.0314$) falls \emph{below} the isotropic band for that statistic
+($[0.0397, 0.0610]$), so these whitened cosines are smaller in magnitude than random
+ones and the band is a conservative floor test, not a generous one. The pathologies
+are the downstream
 shadow of folding an off-axis-of-degree perturbation into the weights, not an
 inevitable price of the lift: a different injection (generic SFT) recovers much of
 the lift without them.
@@ -1210,7 +1216,16 @@ identifiable}: a perpendicular push recovers ${\sim}100\%$ of the lift, a parall
 push 0\%, the strongest on-axis reference ($\Wknow$) 6.4\%, and a norm-matched
 random perpendicular direction ${\sim}0\%$ (three seeds) --- closing the
 non-identifiability objection on both the harness side and the write side
-(\cref{disc:geometry}). The \textbf{same-space probe} recovers ARC base-wrong
+(\cref{disc:geometry}). Two quantities that this section previously argued rather
+than measured are now measured, and both came back the way the off-axis reading
+predicts. The on-axis references are \textbf{not} weak readers --- $\Wknow$ separates
+gold from distractors at $0.9613$ (CI95 $[0.9428, 0.9781]$) and $\vinf$ at $0.9646$,
+against $0.9545$ for a probe \emph{fitted} on the same space and population --- so
+their causal failure is not an artifact of estimating them badly; and the offset's
+angle to the \emph{retrieval} face, which we previously declined to claim, reads
+$\coswh(\thetamc,\vret) = +0.0076$ (BCa95 $[-0.0033, +0.0187]$) inside its isotropic
+null, against $+0.2586$ for the two faces against each other on those same $48$
+heads. The \textbf{same-space probe} recovers ARC base-wrong
 gold-vs-distractor at AUC 0.955 (CI $[0.934, 0.973]$, null 0.494) against the
 0.502 collapsed-output ceiling, with a surface-form control at 0.442 --- a
 \emph{channel} claim (the output-scalar channel is lossy relative to the

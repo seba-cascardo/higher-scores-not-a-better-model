@@ -300,6 +300,18 @@ point (\cref{disc:selector}) \\
 mechanism\_v8 (\code{msap-\allowbreak mechanism-\allowbreak v8-\allowbreak 20260701}) & 2026-07-01/02 & 400 & --- & T2 R6
 gsm8k $-25$ (cap sweep); \cref{disc:pathologies} EOS retract + Stage-E blend;
 \cref{disc:negatives} patching; \cref{disc:status} Qwen 4/4-sign \\
+\addlinespace
+Three later analyses, all re-derivations over artifacts already listed above; no new
+generation and no GPU. Local files, versioned in the repo & 2026-08-09 & --- &
+$48$ heads (U-01); MMLU-Pro $1{,}000$ paired \code{doc\_\allowbreak id} (U-16); ARC 198
+base-wrong, lm-eval scaffold (U-08a) & \code{runs/\allowbreak oq1\_\allowbreak functional\_\allowbreak axis/\allowbreak u01\_\allowbreak thetamc\_\allowbreak vret.\allowbreak json}
+$\rightarrow$ $\coswh(\thetamc,\vret)$ and its positive control (\cref{disc:geometry});
+\code{runs/\allowbreak paired\_\allowbreak gen\_\allowbreak dl/\allowbreak arbiter\_\allowbreak mmlu\_\allowbreak pro\_\allowbreak cot.\allowbreak json}
+$\rightarrow$ the MMLU-Pro rows of \cref{tab:arbiter};
+\code{runs/\allowbreak vinf\_\allowbreak causal/\allowbreak u08\_\allowbreak onaxis\_\allowbreak reader\_\allowbreak auc.\allowbreak json}
+$\rightarrow$ the on-axis reader AUCs. The blob of the un-run arm and its build
+report are \code{runs/\allowbreak vinf\_\allowbreak causal/\allowbreak mc\_\allowbreak probe\_\allowbreak offset.\allowbreak pt}
+and \code{\ldots\_\allowbreak report.\allowbreak json} (\cref{sec:limitations}) \\
 \bottomrule
 \end{tabular}
 \end{table}

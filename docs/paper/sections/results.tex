@@ -86,9 +86,17 @@ the magnitude caveat rather than oversell it: ARC sits near its CoT ceiling in e
 population, so the contrast is statistically clear but absolutely modest, and the
 residual figure landed between the two thresholds we pre-registered for this control
 (${\leq}0.85$ ``discriminates'' / ${\approx}0.97$ ``saturated'') --- we read it as
-discriminating on the strength of the contrast, not of the point estimate. We read
+discriminating on the strength of the contrast, not of the point estimate. That
+caveat is a statement about ARC, and we have since run the same partition where it
+does not apply: on MMLU-Pro, which leaves the base $44.50\pp$ between cold and CoT,
+the fixed cell reads $0.8462$ against $0.5919$ on the residual --- $+25.42\pp$,
+Newcombe95 $[+18.41, +31.49]$, twice the ARC contrast with the control cell $41\pp$
+from the ceiling instead of $13$ (\cref{tab:arbiter}, \cref{results:mmlupro}). We read
 the 124/124 as an \emph{upper bound} on knowledge-accessibility, not a proof of
-perfect recall: it is a greedy $k{=}1$ arbiter, and for HellaSwag/Winogrande it runs
+perfect recall, and the MMLU-Pro figure is what that upper bound costs when the
+ceiling is removed: $0.8462$, not $1.000$, so roughly a sixth of the items the
+adapter fixes there are \emph{not} reachable by the base under greedy CoT. It is a
+greedy $k{=}1$ arbiter, and for HellaSwag/Winogrande it runs
 in a letter-MCQ format distinct from the cold-MC channel (\cref{method:protocol}).
 Its robustness is corroborated independently: base self-consistency~\citep{SelfConsistency} CoT at $k{=}3$
 also reaches 124/124 on this set (\cref{sec:limitations}), so the result is not an artifact
@@ -228,6 +236,35 @@ recovery, which is itself evidence against a knowledge-deficit account. Both
 figures sit far below the 0.30 kill-rule, and the conclusion is unchanged whichever
 is taken as the on-axis ceiling.
 
+\paragraph{The on-axis references are not bad readers, so the on-axis null is not an
+estimation artifact.}
+A null arm invites the objection that the direction, not the axis, is what failed:
+$\Wknow$ inverts a covariance estimated at $N{=}2400$ against $d{=}256$, and whitening
+amplifies exactly the worst-estimated eigendirections, so ``the on-axis direction
+fails causally'' and ``the estimated on-axis direction is a poor reader'' would look
+alike from the causal arm alone. They are separable, because a direction can be
+scored as a reader without touching a GPU: the weight vector of the linear functional
+\emph{is} the injected blob, so we score gold against distractors with it on the same
+$12{,}288$-dimensional activations and the same base-wrong population ($n{=}198$)
+where the fitted probe reaches $0.9545$. $\Wknow$ reads $\mathbf{0.9613}$ (CI95
+$[0.9428, 0.9781]$) and $\vinf$ $0.9646$ ($[0.9461, 0.9815]$) --- at or above the
+best linear reader \emph{fitted} on that space, whose own interval is
+$[0.9343, 0.9731]$. The reference distribution re-randomises the \emph{weights},
+not the labels: a random unit direction per head at the same per-head norms
+($1{,}000$ draws) reads $0.5018$ on average, band $[0.2391, 0.7694]$. So the on-axis
+directions are excellent discriminants that, injected norm-matched, still buy
+$6.4\%$ and $11\%$ of the lift. The null is causal.
+
+The same measurement bounds the word ``strongest'' (\cref{method:directions}):
+paired over the same items, $\Wknow - \vinf = -0.0034$ (CI95 $[-0.0135, +0.0067]$,
+$P(\Wknow\ \text{worse}) = 0.682$) --- nominally behind, interval including zero, so
+as readers the two are indistinguishable and neither ordering is declarable. And the
+trained offset read the same way is a \emph{poor} correctness reader: $\thetamc$
+scores $0.7525$ ($[0.7020, 0.7997]$), with $3.5\%$ of norm-matched random directions
+doing at least as well. The direction the adapter writes is not the direction that
+reads correctness --- the read${\neq}$write dissociation, measured from the read
+side.
+
 This off-axis picture does not hinge on the on-axis references being weak
 estimators of the true correctness axis: the offset is off-axis \textbf{even to the
 probe's own decision direction} --- the empirically optimal correctness reader ---
@@ -255,8 +292,30 @@ This refines the earlier ``purely off-axis'' framing into the central figure of 
 paper, and it is consistent with the earlier finding that the two functional
 correctness faces are themselves co-located (whitened cosine $\vinf{\cdot}\vret$
 $+0.283$, BCa95 $[+0.276, +0.291]$, null ${\pm}0.007$, $n{=}316$ heads): the
-recovery is off the $\vinf$ face by a method-dependent amount. Its angle to $\vret$
-we do not measure, so we do not claim it is off both.
+recovery is off the $\vinf$ face by a method-dependent amount. It is off the $\vret$
+face as well, and this we now measure rather than assume. Over the $48$ heads the
+recipe intervenes on, $\coswh(\thetamc,\vret) = \mathbf{+0.0076}$ (BCa95
+$[-0.0033, +0.0187]$), inside an \emph{isotropic} null band of ${\pm}0.0178$ on the
+mean of $n{=}48$ --- iid unit directions in $\mathbb{R}^{256}$, which states what
+chance direction gives at this $n$ and deliberately preserves no law of the data, so
+it is not a permutation control. The component of $\vret$ perpendicular to $\vinf$,
+which is where an alignment invisible to the $\vinf$ cosine would have to hide, is
+equally null ($+0.0090$, BCa95 $[-0.0027, +0.0209]$).
+
+A floor is only informative if the estimator can see a ceiling in the same
+population, so we report the internal positive control: restricted to those same $48$
+heads and computed with the same whitening, $\coswh(\vinf,\vret)$ reads
+$\mathbf{+0.2586}$ (BCa95 $[+0.2449, +0.2712]$) --- the $n{=}316$ co-location above,
+seen through the $48$-head window. The instrument registers co-location where there
+is co-location; against $\thetamc$ it registers none, with a CI ceiling $14\times$
+below. The two distances are also statistically the same distance: paired within
+head, $\coswh(\thetamc,\vret) - \coswh(\thetamc,\vinf) = +0.0109$ (sd $0.0558$,
+paired $t$ $1.35$, $p=0.183$; Wilcoxon $p=0.260$), so the offset is not nearer one
+face than the other. This closes a deflationary account the earlier framing left
+open --- that the lift is the adapter pushing on the \emph{retrieval} face, which
+would explain the knowledge-benchmark lift, the MMLU spillover and the
+non-transfer at once. That account needs a cosine of the order of $+0.2586$; it gets
+$+0.0076$.
 
 This co-location appears to sit in tension with work reporting that recall and
 reasoning occupy \emph{causally separable} circuits
@@ -271,8 +330,9 @@ partition sufficiently for separate ablation \emph{and} carry functional directi
 that are co-located, with our $+0.283$ measurement living in that work's
 ``interacting'' seam rather than denying its separability. Our novel layer is
 neither: the direction the adapter actually moves is off-axis to both functional
-faces, which is why a partition-based account of the spillover --- and the hope of
-re-selecting heads to avoid it --- does not hold.
+faces --- measured against each, with the positive control above --- which is why a
+partition-based account of the spillover, and the hope of re-selecting heads to
+avoid it, does not hold.
 
 \paragraph{A direct causal decomposition: the off-axis push is privileged, not any
 perturbation of the right size.}
@@ -578,11 +638,38 @@ GPQA cold-MC scoring lift (adapter, out-of-task) & $\mathbf{-0.5\pp}$ (base 0.47
 $\rightarrow$ adapter 0.4697; CI crosses 0); arbiter base GPQA CoT 0.7071; fix-rate
 0.202 over 104 base-wrong & \code{msap-\allowbreak phase1-\allowbreak 20260624} \\
 \addlinespace
+\textbf{The same contrast where it can fail --- MMLU-Pro} (base cold $0.2610$, base
+CoT $0.7060$: $44.50\pp$ of headroom, against ARC's ${\sim}13$) & Base CoT on the
+items the adapter fixes, $\mathbf{165/195 = 0.8462}$ (Wilson $[0.7889, 0.8901]$),
+against $\mathbf{322/544 = 0.5919}$ (Wilson $[0.5501, 0.6324]$) on the base-wrong
+items it does \emph{not}: $\mathbf{+25.42\pp}$, Newcombe95
+$\mathbf{[+18.41, +31.49]}$, Fisher $\mathbf{p=2.43\times10^{-11}}$, OR $3.79$.
+Bounding the $41$ unparsed base traces both ways gives $[+19.73, +27.99]\pp$ &
+\code{runs/\allowbreak paired\_\allowbreak gen\_\allowbreak dl/\allowbreak arbiter\_\allowbreak mmlu\_\allowbreak pro\_\allowbreak cot.\allowbreak json} \\
+\addlinespace
+\emph{Same partition, remaining two cells} & Items both arms score right,
+$169/188 = 0.8989$ (Wilson $[0.8476, 0.9343]$); items the adapter breaks,
+$50/73 = 0.6849$ (Wilson $[0.5714, 0.7800]$). The fixed cell sits with the
+already-right cell, not with the residual & \emph{ibid.} \\
+\addlinespace
 Reading & fixed items CoT-accessible; cold-MC misranks; no scoring headroom
-out-of-task (GPQA lift ${\sim}0$) & --- \\
+out-of-task (GPQA lift ${\sim}0$); and the fixed-vs-residual contrast survives at
+twice the size on a benchmark with $44.50\pp$ of headroom & --- \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[flushleft]\footnotesize
+\item \textbf{MMLU-Pro note --- what the null is, and what differs from the ARC
+row.} The reference distribution permutes the label ``the adapter fixed this item''
+\emph{within} the base-cold-wrong stratum ($n{=}739$), which preserves the
+conditional law $P(\text{base CoT correct} \mid \text{base cold wrong})$ and both
+cell sizes; it does not preserve the marginal base-CoT rate over all $1{,}000$
+items, which is not the quantity at issue. Realised exactly as the Fisher exact
+test on the $2{\times}2$. The scaffold differs from the ARC row and we say so: ARC
+partitions an lm-eval scoring run, MMLU-Pro partitions the cold scoring of the same
+paired-generation run that produced the traces --- same items, same \code{doc\_\allowbreak id},
+same prompt. Unparsed traces are bounded, not adjudicated: all $41$ reached the
+$640$-token cap, so they are truncations rather than malformations, and this project
+decides truncation by a token count and never by the parser.
 \item \textbf{GPQA note.} Base CoT $0.70 >$ chance $\rightarrow$ the base
 \emph{does} reason these out, yet a scoring shortcut still cannot transfer
 $\rightarrow$ the no-transfer is not an artifact of ARC being near its CoT ceiling.
@@ -1183,6 +1270,40 @@ after we found that the harness's \code{unparsed} field does not count truncated
 traces; the real denominator was ${\sim}5\times$ larger (base 41 against 221). The
 conclusion did not change and now holds a fortiori, since widening the unknown set
 can only widen both brackets.}
+
+\textbf{And the per-item arbiter runs here, where it can fail.} On ARC the arbiter is
+a contrast near a ceiling, and we say so. This benchmark is the falsifying case: the
+base is at $0.2610$ cold and $0.7060$ under CoT, so ``the base already reached these
+items by reasoning'' is a claim with $44.50\pp$ of room to be wrong. Partitioning the
+same paired traces by what the adapter's cold scoring did to each item, and reading
+base CoT accuracy inside each cell:
+
+\begin{center}\footnotesize
+\begin{tabular}{lrrl}
+\toprule
+Cell (by the adapter's cold scoring) & $n$ & base CoT & Wilson95 \\
+\midrule
+\textbf{fixed} (base wrong $\rightarrow$ adapter right) & 195 & $\mathbf{0.8462}$ & $[0.7889, 0.8901]$ \\
+kept right (right $\rightarrow$ right) & 188 & $0.8989$ & $[0.8476, 0.9343]$ \\
+broken (right $\rightarrow$ wrong) & 73 & $0.6849$ & $[0.5714, 0.7800]$ \\
+\textbf{not fixed} (wrong $\rightarrow$ wrong) & 544 & $\mathbf{0.5919}$ & $[0.5501, 0.6324]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Within the base-cold-wrong stratum ($n{=}739$) the fixed cell beats the residual by
+$\mathbf{+25.42\pp}$ (Newcombe95 $[+18.41, +31.49]$, Fisher $p=2.43\times10^{-11}$,
+OR $3.79$); bounding the $41$ unparsed base traces both ways leaves
+$[+19.73, +27.99]\pp$, so neither the sign nor the order of magnitude turns on how
+they are scored. A capacity account predicts the fixed cell at or below the residual
+--- these are items the base got wrong cold, on a benchmark it is far from
+saturating. Instead the fixed cell sits beside the \emph{kept-right} cell
+($0.8462$ against $0.8989$): the items the adapter ``fixes'' behave almost like the
+ones the base already scored right in the first place. What the arbiter also shows,
+now that the ceiling is gone, is its own limit --- $0.8462$ is not $1.000$, so on a
+benchmark like this one roughly a sixth of the fixed items are outside the base's
+greedy-CoT reach, which is why \cref{results:arbiter} reads the ARC $124/124$ as an
+upper bound rather than as perfect recall.
 
 What this widens, and what it bounds, are different things. It widens the
 \emph{scope}: the phenomenon is not a property of saturated four-option benchmarks.
