@@ -677,7 +677,9 @@ the blend coefficient $\varepsilon$ on gsm8k ($n{=}100$,
 $\varepsilon \in \{0, 0.2, 0.5, 1.0\}$), no interior $\varepsilon$ beats the base
 by more than noise (base 0.97; $\varepsilon{=}0.2 \rightarrow 0.98$,
 $\varepsilon{=}0.5 \rightarrow 0.99$, both within 1--2 items of base at $n{=}100$
-and under the pre-registered 2pp window), while full-strength decode-time injection
+and under the $2\pp$ equivalence tolerance the pre-registration fixes for its
+reproduction and budget-flatness checks, which we reuse as a noise band on sweeps it
+does not itself cover), while full-strength decode-time injection
 ($\varepsilon{=}1$) reproduces the loss (0.87, $-10\pp$) --- there is no transfer
 window, so the off-axis lift is not deployable to generation even as a decode-time
 steering vector. (Its $\varepsilon{=}1$ $-10\pp$ is milder than the $-25\pp$ of the
@@ -809,8 +811,8 @@ $0.505{\rightarrow}0.855$, $+35.0\pp$ ${\approx}$ the baked $+35$, raw acc 0.502
 On this common axis the two faces cross their thresholds at \emph{different} doses:
 the scoring benefit \textbf{saturates early}, reaching its full value already at
 $s{=}0.75$ (ARC 0.855, identical to $s{=}1.0$), while the gsm8k reasoning score
-holds at base through $s{=}0.75$ ($0.970{\rightarrow}0.950$, at the edge of the
-pre-registered 2pp window) and drops only in the $0.75{\rightarrow}1.0$ band
+holds at base through $s{=}0.75$ ($0.970{\rightarrow}0.950$, at the edge of that same
+$2\pp$ tolerance) and drops only in the $0.75{\rightarrow}1.0$ band
 ($\rightarrow 0.815$). The scoring-benefit threshold thus lies \emph{below} the
 reasoning-harm threshold, so the $0.75{\rightarrow}1.0$ magnitude is collateral
 damage with no accompanying scoring gain (the lift is already at ceiling).
@@ -865,7 +867,7 @@ This does \textbf{not} reopen a transfer window. We are careful with the wording
 because two interior points of the $\varepsilon$-sweep above do print
 \emph{numerically} over base ($\varepsilon{=}0.2 \rightarrow 0.98$ and
 $\varepsilon{=}0.5 \rightarrow 0.99$ against base 0.97): at $n{=}100$ those are
-one- and two-item differences, inside the pre-registered 2pp window, so we read
+one- and two-item differences, inside that $2\pp$ tolerance, so we read
 them as noise and not as a gain --- no dose produces a reasoning improvement we
 would defend, but the honest statement is ``no dose rises above base beyond
 noise,'' not ``no dose rises above base.'' What is dose-separable is the
@@ -1288,7 +1290,7 @@ or is \emph{interpreted as a null} ($\Wknow$ $p=0.136$), where multiplicity cuts
 the other way. These diagnostics were also developed on one sample: the arbiter, calibration,
 probe, selector, and geometry arms were all computed on the vinf\_causal $n{=}400$
 draw and its nested subsets, so their agreement there is consistency across facets of
-one sample, not independent replication. Four of them have since been re-run outside
+one sample, not independent replication. Three of them have since been re-run outside
 it (below); calibration and geometry have not, and for those the caveat stands as
 written. What is independently replicated is the
 headline magnitude (the A1 run; the R4 full-split run, every delta inside the
