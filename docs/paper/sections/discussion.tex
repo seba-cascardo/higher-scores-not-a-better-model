@@ -21,10 +21,11 @@ section. The cold readout does not fail for lack of knowledge; it fails by
 gold beneath more fluent distractors (\cref{disc:arbiter}). Plausibly, though we do
 not measure this, suppressing surface form need not align with signalling
 correctness. The two causal arms make the point in opposite directions: injecting
-correctness \emph{on-axis} (the strongest on-axis reference we can build, $\Wknow$)
-recovers only $\mathbf{6.4\%}$ of the lift, bounding an on-axis contribution at
-${\leq}12.6\%$ --- the design's minimum detectable effect --- which is the size a
-knowledge-deficit account would have to fit inside; pushing \emph{off-axis}
+correctness along the best 1-D correctness discriminant we can build ($\Wknow$)
+recovers only $\mathbf{6.4\%}$ of the lift, and a second, near-orthogonal
+correctness direction --- a probe fitted on the scoring activations --- recovers
+$\mathbf{20.35\%}$ (\cref{disc:geometry}), so a knowledge-deficit account has at
+most a fifth of the effect to work with, not the whole of it; pushing \emph{off-axis}
 (perpendicular to correctness, $\offperp$) recovers
 ${\sim}$\textbf{100\%}, which is consistent with the surface-swamping account. The
 off-axis direction is therefore \emph{consistent with} a natural form for a
@@ -600,7 +601,8 @@ acc\_norm $+36.2$).
 \paragraph{read ${\neq}$ write, geometrically.}
 The selector and the off-axis write together make a four-way dissociation the paper
 rests on. A reader \emph{reads} correctness from the activations (selector 0.943);
-an \emph{on-axis} write fails to recover the lift ($\Wknow$ 6.4\%); an
+the best 1-D correctness discriminant, written back, recovers little of the lift
+($\Wknow$ 6.4\%; a second, near-orthogonal correctness direction $20.35\%$); an
 \emph{off-axis} write succeeds ($\offperp$ ${\sim}100\%$, shuffle ${\sim}0\%$,
 \cref{disc:geometry}); and --- closing the loop --- the probe's decision direction
 is geometrically aligned with the correctness axis it reads, \emph{not} with the
@@ -1228,7 +1230,8 @@ closed (a matched Align-LoRA recovers ${\sim}62\%$ of the ARC lift, flat across
 rank --- a lower bound). The \textbf{off-axis-of-degree geometry is causal, and
 identified against random and on-axis alternatives}: a perpendicular push recovers
 ${\sim}100\%$ of the lift, a parallel
-push 0\%, the strongest on-axis reference ($\Wknow$) 6.4\%, and a norm-matched
+push 0\%, the best 1-D correctness discriminant ($\Wknow$) 6.4\% --- a second,
+near-orthogonal correctness direction reaches $20.35\%$ --- and a norm-matched
 random perpendicular direction ${\sim}0\%$ (three seeds) --- closing the
 non-identifiability objection on both the harness side and the write side
 (\cref{disc:geometry}). Two quantities that this section previously argued rather
@@ -1252,7 +1255,8 @@ at 0.949) is a read-test decoupled from the adapter's write-specificity
 the lift undamaged (selector 0.943; \cref{disc:selector}) --- a read-only-selector
 capability prior work establishes \citep{NoVo,CORAL}, used here as the read leg,
 not claimed as new --- and the \textbf{read ${\neq}$ write} dissociation is
-four-way: read (selector 0.943), on-axis write fails ($\Wknow$ 6.4\%), off-axis
+four-way: read (selector 0.943), the best 1-D correctness discriminant written back
+recovers little ($\Wknow$ 6.4\%; a second such direction $20.35\%$), off-axis
 write succeeds ($\offperp$ ${\sim}100\%$, shuffle ${\sim}0\%$), and the probe's
 read direction is geometrically aligned with $\vinf$, not with $\thetamc$
 (moderate, \cref{disc:selector}). The no-transfer is corroborated

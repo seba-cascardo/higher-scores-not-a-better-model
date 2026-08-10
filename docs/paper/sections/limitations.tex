@@ -41,10 +41,13 @@ items gives ARC $p=1.32\times10^{-32}$, TruthfulQA $p=1.57\times10^{-38}$,
 Winogrande $p=1.99\times10^{-12}$, HellaSwag $p=1.63\times10^{-8}$, and all four
 survive Holm--Bonferroni correction ($p_{\mathrm{corr}} \leq 1.63\times10^{-8}$);
 none is dropped. This certifies the effect exists and is paired-significant, not
-that it is on-axis --- the on-axis recovery ceiling is 6.4\% ($\Wknow$,
-\cref{disc:geometry}), a \emph{bounded} null rather than a zero: the design detects
-$12.6\%$ of the ARC lift at power $0.80$ and $36.2\%$ at power $1.0000$, so it is
-blind only below ${\sim}9$--$13\%$ (\cref{disc:geometry}). The full-set $\Delta$ is now confirmed (the v7mc full-set
+that it is on-axis --- the best 1-D correctness discriminant recovers 6.4\%
+($\Wknow$, \cref{disc:geometry}), a \emph{bounded} null rather than a zero: the
+design detects $12.6\%$ of the ARC lift at power $0.80$ and $36.2\%$ at power
+$1.0000$, so it is blind only below ${\sim}9$--$13\%$ (\cref{disc:geometry}). That
+figure is not a ceiling over the correctness subspace: a second, near-orthogonal
+correctness direction recovers $20.35\%$, clearing the bound
+(\cref{disc:geometry}). The full-set $\Delta$ is now confirmed (the v7mc full-set
 run R4 closed 2026-06-27: ARC acc\_norm $+36.2$, HellaSwag acc\_norm $+19.2$,
 Winogrande acc $+20.1$, TruthfulQA acc $+37.1$, every delta within the $n{=}400$ CI
 --- so the $n{=}400$ headline values are conservative, not inflated). All four

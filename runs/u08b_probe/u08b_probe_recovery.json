@@ -1,0 +1,114 @@
+{
+  "task": "arc_challenge",
+  "min_doc_id": 400,
+  "n_held_out": 772,
+  "n_contaminated_slice": 400,
+  "model_snapshot": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+  "arm_snapshots": {
+    "null": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+    "mc": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+    "wknow": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+    "probe": "842da3794eaa0b77d5f08bae87a17459d91ff475"
+  },
+  "arms_missing": [],
+  "n_boot": 10000,
+  "seed": 0,
+  "eval_constraint": "MUST be scored on ARC items >= 400 (probe fit on the rest)",
+  "reading_fixed_in_advance": "The wknow arm here is a NEW measurement under a declared protocol, not a re-test of the published 6.4%. If it differs, three causes are confounded (chat template, n 400->772, real effect) and this design cannot attribute it: the finding is 'the quantity is protocol-sensitive', never 'the 6.4% was wrong'.",
+  "held_out": {
+    "wknow": {
+      "n": 772,
+      "acc_null": 0.4883419689119171,
+      "acc_arm": 0.5194300518134715,
+      "acc_mc": 0.8575129533678757,
+      "mc_lift_pp": 36.91709844559586,
+      "recovery_frac": 0.08421052631578932,
+      "recovery_pct": 8.421052631578933,
+      "recovery_ci95": [
+        3.3456938245203767,
+        13.240533493319795
+      ],
+      "acc_wilson_ci95": [
+        0.4841767464152164,
+        0.5544909403909565
+      ],
+      "mcnemar": {
+        "arm_right_null_wrong": 41,
+        "arm_wrong_null_right": 17,
+        "discordant": 58,
+        "p_two_sided": 0.0022325516199429235
+      }
+    },
+    "probe": {
+      "n": 772,
+      "acc_null": 0.4883419689119171,
+      "acc_arm": 0.5634715025906736,
+      "acc_mc": 0.8575129533678757,
+      "mc_lift_pp": 36.91709844559586,
+      "recovery_frac": 0.2035087719298245,
+      "recovery_pct": 20.35087719298245,
+      "recovery_ci95": [
+        14.526304882949859,
+        26.415431266846355
+      ],
+      "acc_wilson_ci95": [
+        0.5282569002331965,
+        0.5980575433336346
+      ],
+      "mcnemar": {
+        "arm_right_null_wrong": 73,
+        "arm_wrong_null_right": 15,
+        "discordant": 88,
+        "p_two_sided": 2.559492715287498e-10
+      }
+    }
+  },
+  "contaminated_slice_DIAGNOSTIC_ONLY": {
+    "wknow": {
+      "n": 400,
+      "acc_null": 0.5025,
+      "acc_arm": 0.525,
+      "acc_mc": 0.8525,
+      "mc_lift_pp": 35.00000000000001,
+      "recovery_frac": 0.06428571428571449,
+      "recovery_pct": 6.428571428571448,
+      "recovery_ci95": [
+        -0.854885057471284,
+        13.709677419354835
+      ],
+      "acc_wilson_ci95": [
+        0.4760562161165593,
+        0.5734681518534566
+      ],
+      "mcnemar": {
+        "arm_right_null_wrong": 19,
+        "arm_wrong_null_right": 10,
+        "discordant": 29,
+        "p_two_sided": 0.13604594767093658
+      }
+    },
+    "probe": {
+      "n": 400,
+      "acc_null": 0.5025,
+      "acc_arm": 0.5475,
+      "acc_mc": 0.8525,
+      "mc_lift_pp": 35.00000000000001,
+      "recovery_frac": 0.12857142857142864,
+      "recovery_pct": 12.857142857142865,
+      "recovery_ci95": [
+        5.072463768115931,
+        20.43837093563372
+      ],
+      "acc_wilson_ci95": [
+        0.4985002204356925,
+        0.5955960787073378
+      ],
+      "mcnemar": {
+        "arm_right_null_wrong": 26,
+        "arm_wrong_null_right": 8,
+        "discordant": 34,
+        "p_two_sided": 0.0029350556433200836
+      }
+    }
+  }
+}

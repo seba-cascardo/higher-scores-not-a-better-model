@@ -148,9 +148,14 @@ low-dimensional subspace of two to eight directions rather than one, with a caus
 rank bounded at five under distributed alignment search
 \citep{ConfidenceManifold}. Our negative arms show that the learned offset is not
 carried by the best 1-D discriminant; they do not show that it lies outside every
-correctness-bearing subspace. Testing $k$-dimensional subspaces with norm-matched
-parallel and residual re-injection is the natural follow-up and we do not claim its
-result here. The on-axis
+correctness-bearing subspace. We take one step into that gap rather than none: a
+\emph{second} correctness direction --- a probe fitted on the scoring activations,
+whitened cosine $0.101$ with $\Wknow$ --- injected the same way recovers $20.35\%$
+of the lift where $\Wknow$ recovers $8.42\%$ on the same items
+(\cref{disc:geometry}). The full $k$-dimensional test with norm-matched parallel and
+residual re-injection remains the natural follow-up, and we do not claim its result
+here; what we can say is that the increment from the first correctness direction to
+the second is not zero. The on-axis
 causal control substitutes an offset built along $\vinf$ (and along $\Wknow$), unit
 direction scaled to the per-head norm of the trained offset across all 48 heads, so
 that \emph{direction} is the only variable, gated by a sign-safe three-zone control

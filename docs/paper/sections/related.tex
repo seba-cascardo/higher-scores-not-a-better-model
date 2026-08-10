@@ -56,8 +56,8 @@ flips the produced answer in over 50\% of cases, exceeding orthogonal baselines
 \citep{PreCoTAnswer}. This sharpens rather than blurs our claim: in that
 decision/generation face an answer direction is genuinely writable, whereas in our
 cold-MC scoring channel the correctness direction is decodable ($0.955$,
-\cref{disc:selector}) yet the on-axis write fails ($\Wknow$ $6.4\%$,
-\cref{disc:geometry}) and the off-axis write that does lift never transfers back to
+\cref{disc:selector}) yet writing it back recovers little of the lift ($\Wknow$
+$6.4\%$, a second correctness direction $20.35\%$, \cref{disc:geometry}) and the off-axis write that does lift never transfers back to
 generation (\cref{disc:arbiter}) --- so our read${\neq}$write dissociation is
 \emph{channel-specific}, not a claim that answer directions are never writable. Its
 two steering failure modes when a wrong answer is induced --- non-entailment and
@@ -197,7 +197,8 @@ result --- the learned direction against a norm-matched random one and against a
 orthogonal one, neither of which reaches significance there
 \citep{ConfidenceManifold}: a norm-matched random offset
 recovers ${\approx}0\%$ of our lift (so the direction is learned, not arbitrary),
-the strongest on-axis reference recovers $6.4\%$, and the trained offset has an
+the best 1-D correctness discriminant recovers $6.4\%$ and a second, near-orthogonal
+one $20.35\%$, and the trained offset has an
 optimal magnitude (an inverted-U strength sweep), which a generic perturbation would
 not. We also note that reported specificity failures of activation directions are
 cross-model; within-model --- our setting --- directions remain specific
@@ -211,8 +212,9 @@ activations are not separately writable through them \citep{DualStanceSycophancy
 That is the writability gap our read${\neq}$write dissociation
 (\cref{disc:selector,disc:geometry}) makes explicit from the opposite side: there a
 writable direction fails to \emph{separate} two readable targets, whereas here the
-on-axis correctness direction is readable yet fails to \emph{drive} the lift
-($\Wknow$ $6.4\%$) while an off-axis one does. A distinct mechanistic hypothesis for
+on-axis correctness direction is readable yet drives little of the lift
+($\Wknow$ $6.4\%$, a second such direction $20.35\%$) while an off-axis one drives
+all of it. A distinct mechanistic hypothesis for
 any logit-level intervention is temperature regulation --- confidence-regulation /
 entropy neurons write into the unembedding null space to rescale the logit
 temperature without re-ordering the argmax \citep{ConfidenceRegulationNeurons} ---

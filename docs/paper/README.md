@@ -13,7 +13,7 @@ for m in $(tar tzf docs/paper/arxiv-v1.tar.gz); do
 done
 ```
 
-SHA-256 of the bundle: `849b832e3bbf17f50037708e5800f52de4d3ffeca5f72208edd37d01db897634`
+SHA-256 of the bundle: `4feae1b9f42df73e488839469d7100a1706977590a068d3acc777ff68711e821`
 
 ## Building
 

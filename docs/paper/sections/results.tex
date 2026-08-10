@@ -230,7 +230,8 @@ $6.4\%$ point estimate sits inside that blind band. What is declarable is an
 \textbf{upper bound}, not a zero --- and the MDE ($12.6\%$) nearly coincides with
 the upper end of the paired-bootstrap recovery interval already reported
 ($+13.6\%$), which is the design face and the estimation face of the same
-precision, not a coincidence.
+precision, not a coincidence. This bound is on $\Wknow$: a second, near-orthogonal
+correctness direction clears it, at $20.35\%$ (below).
 
 The ordering of the two on-axis references deserves a sentence, because a reader
 may suspect the smaller number was chosen for convenience: the better-constructed
@@ -269,6 +270,44 @@ scores $0.7525$ ($[0.7020, 0.7997]$), with $3.5\%$ of norm-matched random direct
 doing at least as well. The direction the adapter writes is not the direction that
 reads correctness --- the read${\neq}$write dissociation, measured from the read
 side.
+
+\paragraph{A second correctness direction does write, and it bounds what the
+on-axis null covers.}
+The reader test leaves the \emph{write} side of the same objection open: $\Wknow$ is
+the best 1-D discriminant we construct, and correctness has been reported to occupy a
+subspace of two to eight directions rather than one (\cref{method:directions}). So we
+injected a second on-axis direction --- the probe \emph{fitted} on the cold-MC
+activations, norm-matched per head to the trained offset (max deviation
+$4.73\times10^{-7}$) --- through the identical harness. Because that probe was fit on
+ARC items $0$--$399$ and the harness's \code{--limit} argument takes the \emph{first}
+$N$ items, all four arms ran the full split and recovery is scored on the $772$
+held-out items (there: null $0.4883$, adapter $0.8575$, lift $+36.92\pp$). The fitted
+direction recovers $\mathbf{20.35\%}$ of the lift (arm accuracy $0.5635$;
+paired-bootstrap CI95 $[+14.53\%, +26.42\%]$; exact McNemar $73/15$,
+$p = 2.6\times10^{-10}$), against $\Wknow$'s $8.42\%$ on the same items ($0.5194$;
+$[+3.35\%, +13.24\%]$; McNemar $41/17$, $p = 0.0022$). The intervals do not overlap.
+This is not a sharpened $\Wknow$: whitened, the probe direction sits at cosine
+$0.101$ with $\Wknow$, $0.109$ with $\vinf$ and $-0.005$ with $\thetamc$ --- a
+\emph{second}, near-orthogonal correctness direction, which writes $2.4\times$ what
+the first one writes. On the $400$ items it was fitted on it recovers $12.86\%$,
+\emph{less} than on the held-out set, so contamination does not inflate the figure.
+
+Two things follow, and a third does not. First, the $\leq12.6\%$ bound above is a
+bound on $\Wknow$, not on ``on-axis'' as such: the fitted direction clears it, its
+interval floor ($14.53\%$) lying above the MDE. Where this paper says an on-axis
+write fails, the claim that survives is about the best 1-D correctness discriminant,
+which is the arm we ran. Second, the same run reproduces the published $6.4\%$
+\emph{across} the change of chat template separating the two model snapshots
+(\cref{method:model}): on the same $400$ items, under the later snapshot, $\Wknow$
+recovers $6.43\%$ at the same $p = 0.136$, with base $0.5025$ and lift $+35.00\pp$ ---
+so the $6.4\%{\rightarrow}8.42\%$ difference is sample size, not protocol. Third, and
+this is what does \emph{not} follow: a fifth is not a half. The perpendicular push
+recovers $100\%$, the best 1-D discriminant $8.42\%$, and a second correctness
+direction $20.35\%$. The lift is not carried on-axis; neither does it lie wholly
+outside the correctness subspace --- which is the follow-up \cref{method:directions}
+declines to claim, now answered for one further direction rather than none. Testing
+$k$-dimensional subspaces remains open, and this result is the reason it is worth
+running: the increment from one direction to two is not zero.
 
 This off-axis picture does not hinge on the on-axis references being weak
 estimators of the true correctness axis: the offset is off-axis \textbf{even to the

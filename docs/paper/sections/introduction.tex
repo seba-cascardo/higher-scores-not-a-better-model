@@ -69,10 +69,12 @@ acc\_norm statement, and no mechanistic claim rests on one or on their cross-tas
 ordering (\cref{lim:metric}). Read as a mechanism, raising the correct
 option's log-probability is enough
 where the task scores the plausibility of a continuation, and not enough where a
-plausible distractor has to be beaten. The strongest on-axis reference we can build
-(a Fisher-LDA direction $\Wknow$) sits at $6.4\%$,
+plausible distractor has to be beaten. The best 1-D correctness discriminant we can
+build (a Fisher-LDA direction $\Wknow$) sits at $6.4\%$,
 but its interval includes zero (exact McNemar $p=0.136$), so we count it with the
-floor rather than as a distinct rung. We report these as the best recovery observed
+floor rather than as a distinct rung; a second, near-orthogonal correctness
+direction does write, recovering $20.35\%$, which bounds the floor to one direction
+rather than to correctness as a whole. We report these as the best recovery observed
 under the generic-SFT family we tested rather than as a bound on generic fine-tuning:
 within each rank/LR/epoch grid the fraction is flat (the r512 flank recovers
 \emph{less}, $0.22$, or breaks below base, so it does not raise the ${\sim}62\%$), yet
@@ -111,8 +113,8 @@ privileged, since an equal-norm random perpendicular direction does not reproduc
 it. This closes the standard objection that an off-axis direction is unidentifiable
 because \emph{any} norm-matched perturbation would work: it is closed on the harness
 side (the same machinery that yields 100\% for the perpendicular push yields only
-$6.4\%$ for the on-axis reference, so the on-axis failure is real, not an injection
-artifact) and on the write side (the learned perpendicular push vs the shuffle
+$6.4\%$ for the best 1-D correctness discriminant and $20.35\%$ for a second,
+near-orthogonal one, so neither on-axis figure is an injection artifact) and on the write side (the learned perpendicular push vs the shuffle
 control).
 
 Comparing the net activation effect of each method, the geometry is a
@@ -256,8 +258,9 @@ that explains it, together with the deployment pathologies the recovery introduc
   $\mathbf{0.9\%}$ at matched capacity). Read as an \emph{attribution spectrum} ---
   random ${\approx}0\%$ $\rightarrow$ same-parameterization ${\sim}37\%$
   $\rightarrow$ higher-capacity SFT ${\sim}62\%$ $\rightarrow$ contrastive $100\%$,
-  with the on-axis reference ($\Wknow$) at $6.4\%$ indistinguishable from zero
-  ($p=0.136$) and therefore counted with the floor --- much of the lift is what
+  with the best 1-D correctness discriminant ($\Wknow$) at $6.4\%$ indistinguishable
+  from zero ($p=0.136$) and therefore counted with the floor, while a second,
+  near-orthogonal correctness direction reaches $20.35\%$ --- much of the lift is what
   non-contrastive SFT buys back, and how much depends on capacity and task rather
   than being one constant. Every control we ran drops the contrastive term while
   keeping supervision on correct-option continuations in multiple-choice format, so
