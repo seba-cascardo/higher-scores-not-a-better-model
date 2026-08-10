@@ -99,8 +99,16 @@ paper depends on them.
 These three prohibit redistribution. No file carrying their items is present in this
 repository, in the working tree or in any commit of its history — the release was cut with
 `filter-repo` from a larger private repository, and the cut is verifiable by content:
-scanning every blob that has ever existed here returns no occurrence of the review-stage
-column names, the EWoK template fields, or the benchmark canary strings. Reproducing results
+scanning every blob that has ever existed here returns **no dataset item and no benchmark
+canary string**.
+
+One clarification, because the earlier wording claimed more than the scan supports and an
+external audit caught it. The scan does return the review-stage column names and the EWoK
+field names — in exactly one file, [`scripts/audit_hf_repo_content.py`](scripts/audit_hf_repo_content.py),
+which is the detector itself and carries them as its search patterns. A tool that looks for
+a string contains that string. What the scan establishes is the claim that matters, that no
+restricted **content** is here; it does not establish the stronger literal claim that the
+names never appear, and this file no longer makes it. Reproducing results
 that use these datasets requires obtaining them from the original source under its own terms.
 
 | Dataset | License | What it requires | Met? |

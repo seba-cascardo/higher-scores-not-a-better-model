@@ -676,11 +676,11 @@ $\mathbf{0.70}$ (139/198; thinking-ON greedy, max\_new=8192; thinking\_rate 1.00
 $140/198 = 0.7071$, differing by one item. The two share \code{build\_prompt},
 \code{parse\_answer} and \code{build\_messages}, so this is the same apparatus
 re-run, not independent corroboration &
-\code{msap-\allowbreak phase1-\allowbreak 20260624} \code{b1\_\allowbreak gpqa\_\allowbreak base\_\allowbreak cot\_\allowbreak 8k.\allowbreak json} \\
+\code{msap-\allowbreak phase1-\allowbreak 20260624} (private: GPQA items; on request) \code{b1\_\allowbreak gpqa\_\allowbreak base\_\allowbreak cot\_\allowbreak 8k.\allowbreak json} \\
 \addlinespace
 GPQA cold-MC scoring lift (adapter, out-of-task) & $\mathbf{-0.5\pp}$ (base 0.4747
 $\rightarrow$ adapter 0.4697; CI crosses 0); arbiter base GPQA CoT 0.7071; fix-rate
-0.202 over 104 base-wrong & \code{msap-\allowbreak phase1-\allowbreak 20260624} \\
+0.202 over 104 base-wrong & \code{msap-\allowbreak phase1-\allowbreak 20260624} (private: GPQA items; on request) \\
 \addlinespace
 \textbf{The same contrast where it can fail --- MMLU-Pro} (base cold $0.2610$, base
 CoT $0.7060$: $44.50\pp$ of headroom, against ARC's ${\sim}13$) & Base CoT on the
@@ -860,7 +860,7 @@ training corpus) & same \\
 \multicolumn{3}{l}{\emph{At $1{,}800\times$--$58{,}000\times$ capacity ---
 higher-capacity Align-LoRA}} \\
 ARC lift recovered (rank sweep r8/32/64/256) & fraction
-$\mathbf{59/63/60/65 = {\sim}62\%}$, flat & \code{msap-\allowbreak phase1-\allowbreak 20260624} (rank
+$\mathbf{59/63/60/65 = {\sim}62\%}$, flat & \code{msap-\allowbreak phase1-\allowbreak evals-\allowbreak 20260624} (rank
 sweep) \\
 Within-sweep capacity slope & slope-CI $\mathbf{[-1.4, +3.4]}$ (includes
 0); paired-bootstrap frac-CI $\mathbf{[51\%, 73\%]}$, delta-method
@@ -996,7 +996,7 @@ Direction & Recovery of the lift & cos with $\vinf$ (ratio vs chance) & Source
 artifact \\
 \midrule
 random norm-matched (3 seeds) & $\mathbf{{\approx}0\%}$ (acc\_norm 0.50--0.52
-${\approx}$ base 0.505) & 0.05 (1.0) & \code{msap-\allowbreak phase1-\allowbreak 20260624}
+${\approx}$ base 0.505) & 0.05 (1.0) & \code{msap-\allowbreak phase1-\allowbreak evals-\allowbreak 20260624}
 \code{derisk/\allowbreak offsets\_\allowbreak random\_\allowbreak s*} \\
 on-axis maximum ($\Wknow$, Fisher-LDA) & $\mathbf{6.4\%}$ (ARC null 0.500 / mc
 0.853 / wknow 0.522; \textbf{statistically indistinguishable from zero}: exact
@@ -1006,14 +1006,14 @@ cos with $\thetamc$ 0.0014) & \code{runs/\allowbreak wknow\_\allowbreak causal/\
 \code{msap-\allowbreak wknow-\allowbreak onaxis-\allowbreak 20260623} \\
 contrastive adapter (net effect) & 100\% (by construction) & $\mathbf{0.088}$
 \textbf{(1.74)}; across three seeds $0.094 \pm 0.008$ \textbf{($1.85 \pm 0.14$)};
-direct $\thetamc$ offset cos 0.0014 & \code{msap-\allowbreak phase1-\allowbreak 20260624}
+direct $\thetamc$ offset cos 0.0014 & \code{msap-\allowbreak phase1-\allowbreak evals-\allowbreak 20260624}
 \code{derisk/\allowbreak contrastive\_\allowbreak direction}; \code{runs/\allowbreak v7\_\allowbreak lofit\_\allowbreak seed\{1,2\}/} \\
 \textbf{same-parameterization control} (net effect, 3 seeds) --- \emph{same
 intervention space, objective changed} & ${\sim}\mathbf{37\%}$ (ARC) &
 $\mathbf{0.136 \pm 0.017}$ \textbf{($2.68 \pm 0.34$)} &
 \code{runs/\allowbreak e1\_\allowbreak plain\_\allowbreak ce/\allowbreak neteffect\_\allowbreak seed*} \\
 higher-capacity generic SFT (net effect) & ${\sim}\mathbf{62\%}$ & $\mathbf{0.199}$
-\textbf{(3.93)} & \code{msap-\allowbreak phase1-\allowbreak 20260624} \code{derisk/\allowbreak align\_\allowbreak direction} \\
+\textbf{(3.93)} & \code{msap-\allowbreak phase1-\allowbreak evals-\allowbreak 20260624} \code{derisk/\allowbreak align\_\allowbreak direction} \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[flushleft]\footnotesize
@@ -1071,7 +1071,7 @@ the Bonferroni over the ${\sim}25$ tests of the campaign, so we read the orderin
 suggestive. On that reading the weaker on-axis reference recovers
 \emph{little}, not \emph{nothing} --- unlike $\Wknow$ below &
 \code{runs/\allowbreak vinf\_\allowbreak causal/\allowbreak vinf\_\allowbreak paired\_\allowbreak significance.\allowbreak json} +
-\code{msap-\allowbreak vinf-\allowbreak causal-\allowbreak 20260623} \\
+\code{msap-\allowbreak vinf-\allowbreak causal-\allowbreak 20260623-\allowbreak public} \\
 ARC lift recovered by $\Wknow$ (strongest on-axis ref) & fraction $\mathbf{0.064}$
 (null 0.500 / mc 0.853 / wknow 0.522; ${\ll}$ 0.30 kill-rule;
 \textbf{indistinguishable from zero}: exact McNemar b=10/c=19 $p=0.136$,
@@ -1110,7 +1110,7 @@ layer.}}
 Quantity & Value & Source artifact \\
 \midrule
 corr(recovered lift, total offset magnitude $\Sigma|r|$) & $\mathbf{0.985}$ &
-\code{msap-\allowbreak phase1-\allowbreak 20260624} \code{patch\_\allowbreak layers/\allowbreak *.\allowbreak json} \\
+\code{msap-\allowbreak phase1-\allowbreak evals-\allowbreak 20260624} \code{patch\_\allowbreak layers/\allowbreak *.\allowbreak json} \\
 corr(recovered lift, head count) & 0.832 & same \\
 ``Layers 36--40 carry 87\%'' & head-count artifact (that band holds 71\% of adapter
 heads); adapter spans L30--55 --- \textbf{not a causal locus} & same \\

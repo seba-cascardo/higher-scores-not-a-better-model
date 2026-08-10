@@ -21,3 +21,10 @@ numpy>=1.26
 scipy>=1.11
 scikit-learn>=1.4
 joblib>=1.3
+
+# Imported by published scripts but optional at runtime, so they are listed
+# separately: the two NNsight patching scripts abort with an install hint if
+# absent, and the vLLM paths fall back to plain transformers. An external audit
+# found them imported and undeclared.
+nnsight>=0.3
+vllm>=0.6

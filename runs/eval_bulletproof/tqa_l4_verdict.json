@@ -1,0 +1,104 @@
+{
+  "split": {
+    "n_eval": 817,
+    "n_seen": 653,
+    "n_unseen": 164,
+    "frac_seen": 0.7993,
+    "train_frac": 0.8,
+    "seed": 0
+  },
+  "deltas": {
+    "v7mc": {
+      "mc1": {
+        "ALL": {
+          "n": 817,
+          "treat_acc": 0.8433,
+          "base_acc": 0.4725,
+          "delta": 0.3709
+        },
+        "SEEN": {
+          "n": 653,
+          "treat_acc": 0.8499,
+          "base_acc": 0.4809,
+          "delta": 0.3691
+        },
+        "UNSEEN": {
+          "n": 164,
+          "treat_acc": 0.8171,
+          "base_acc": 0.439,
+          "delta": 0.378
+        }
+      },
+      "mc2": {
+        "ALL": {
+          "n": 817,
+          "treat_acc": 0.9061,
+          "base_acc": 0.6487,
+          "delta": 0.2574
+        },
+        "SEEN": {
+          "n": 653,
+          "treat_acc": 0.9126,
+          "base_acc": 0.6562,
+          "delta": 0.2564
+        },
+        "UNSEEN": {
+          "n": 164,
+          "treat_acc": 0.88,
+          "base_acc": 0.6188,
+          "delta": 0.2612
+        }
+      }
+    },
+    "align": {
+      "mc1": {
+        "ALL": {
+          "n": 817,
+          "treat_acc": 0.7968,
+          "base_acc": 0.4725,
+          "delta": 0.3244
+        },
+        "SEEN": {
+          "n": 653,
+          "treat_acc": 0.8668,
+          "base_acc": 0.4809,
+          "delta": 0.3859
+        },
+        "UNSEEN": {
+          "n": 164,
+          "treat_acc": 0.5183,
+          "base_acc": 0.439,
+          "delta": 0.0793
+        }
+      },
+      "mc2": {
+        "ALL": {
+          "n": 817,
+          "treat_acc": 0.8568,
+          "base_acc": 0.6487,
+          "delta": 0.208
+        },
+        "SEEN": {
+          "n": 653,
+          "treat_acc": 0.8974,
+          "base_acc": 0.6562,
+          "delta": 0.2411
+        },
+        "UNSEEN": {
+          "n": 164,
+          "treat_acc": 0.695,
+          "base_acc": 0.6188,
+          "delta": 0.0762
+        }
+      }
+    }
+  },
+  "gate": {
+    "rule": "Delta_UNSEEN(mc1) >= +15% AND Delta(mc2) > +10%",
+    "delta_unseen_mc1": 0.378,
+    "pass_mc1": true,
+    "delta_mc2_judge": 0.2612,
+    "pass_mc2": true,
+    "verdict": "HEDGE_REMOVED -> TQA bulletproof (held-out)"
+  }
+}

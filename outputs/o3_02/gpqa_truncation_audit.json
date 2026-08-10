@@ -1,0 +1,48 @@
+{
+  "n": 198,
+  "cap": 8192,
+  "acc": 0.6616161616161617,
+  "acc_wilson95": [
+    0.5931909680892282,
+    0.7238893562839437
+  ],
+  "n_truncated": 62,
+  "n_unparsed": 40,
+  "cells": {
+    "truncated_unparsed": 39,
+    "truncated_parsed": 23,
+    "complete_unparsed": 1,
+    "complete_parsed": 135
+  },
+  "n_rescued_by_fallback": 17,
+  "n_rescued_by_fallback_correct": 7,
+  "rescued_doc_ids": [
+    7,
+    24,
+    32,
+    42,
+    48,
+    56,
+    69,
+    76,
+    85,
+    86,
+    90,
+    97,
+    98,
+    99,
+    108,
+    142,
+    185
+  ],
+  "acc_bounds": [
+    0.601010101010101,
+    0.9141414141414141
+  ],
+  "reference": {
+    "acc": 0.7070707070707071,
+    "n_unparsed": 31,
+    "max_new_tokens": 8192,
+    "n": 198
+  }
+}

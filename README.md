@@ -26,9 +26,9 @@ Paper: [`docs/paper/main.pdf`](docs/paper/main.pdf); source and the arXiv bundle
 |---|---|
 | [`docs/paper/`](docs/paper/) | LaTeX source, the built PDF, and the arXiv submission bundle |
 | [`docs/protocols/`](docs/protocols/) | The seven pre-registration protocols, with an [index](docs/protocols/README.md) |
-| `scripts/` | 77 scripts: the analyses below, plus the training, generation and probing code behind the paper's arms |
-| `runs/` | 206 result artifacts — the outputs of those scripts, versioned |
-| `outputs/` | 10 further analysis outputs: the generation-degeneration, truncation and loop-control audits behind the paper's generative chapter, and the evaluation lockfile |
+| `scripts/` | 80 scripts: the analyses below, plus the training, generation and probing code behind the paper's arms |
+| `runs/` | 209 result artifacts — the outputs of those scripts, versioned |
+| `outputs/` | 11 further analysis outputs: the generation-degeneration, truncation and loop-control audits behind the paper's generative chapter, and the evaluation lockfile |
 
 ## Setup
 
@@ -38,7 +38,7 @@ cd higher-scores-not-a-better-model
 pip install -r requirements.txt
 ```
 
-Fourteen tracked tensors are stored as Git LFS objects, including the two
+15 tracked tensors are stored as Git LFS objects, including the two
 `mc_wknow_offset.pt` files that the off-axis decomposition reads. `.gitattributes` declares
 them, so a clone made with git-lfs installed fetches them automatically. If you cloned
 without it, install git-lfs and run `git lfs pull` — otherwise those paths are 133-byte
