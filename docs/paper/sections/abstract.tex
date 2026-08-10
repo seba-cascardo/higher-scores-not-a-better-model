@@ -11,10 +11,13 @@ Much of the lift is \emph{inducible without the contrastive objective}, and how 
 depends on capacity and on the task. A \emph{same-parameterization} control --- the
 identical 48 head-pairs and $12{,}336$ trainable parameters, same corpus and steps,
 ordinary cross-entropy with no term against the incorrect option, three seeds ---
-recovers $36.2\% \pm 5.0$ of the ARC lift, while a non-contrastive LoRA with
+recovers $36.2\%$ of the ARC lift (sd $5.0$ over three training seeds;
+item-sampling uncertainty not included), while a non-contrastive LoRA with
 $1{,}800\times$--$58{,}000\times$ more parameters recovers ${\sim}62\%$
 (paired-bootstrap fraction-CI $[51\%, 73\%]$, flat across rank r8--256; a larger
-r512 flank at ${\sim}117{,}000\times$ does not improve on it and can fall below base).
+r512 flank at ${\sim}117{,}000\times$ does not improve on it and can fall below
+base). The two bars quantify disjoint uncertainties --- training runs and item
+sampling --- and we do not test the difference between the two fractions.
 Inducibility is also strongly
 task-dependent: the same-parameterization control recovers $79.5\%$ of Winogrande's
 lift and $69.5\%$ of HellaSwag's but $0.9\%$ of TruthfulQA-mc1's, i.e.\ nothing (on
@@ -33,7 +36,8 @@ with the floor rather than as a rung. To our knowledge no prior work runs matche
 controls and reports these \emph{fractions}; that attribution is the load-bearing
 novelty.
 
-The recovery is \emph{causally off-axis of degree} --- off the measured linear
+The contrastive adapter's write is \emph{causally off-axis of degree} --- off the
+measured linear
 correctness axis at each intervened head, the strongest such 1-D discriminant we can
 build, not the whole correctness manifold --- and the identifying evidence is
 the negative arms: a push \emph{parallel} to the correctness direction recovers
@@ -74,8 +78,11 @@ of saturated four-option benchmarks: on MMLU-Pro --- ten options, base cold
 $0.2610$ --- the same adapter lifts scoring $+12.20\pp$ and again fails to
 transfer. So what tracks whether the exploit fires is not benchmark difficulty: both
 benchmarks are hard and unsaturated, and they differ in whether the adapter's training
-distribution covers them --- only the covered one lifts. Practically, this
-is a caution for the contrastive-PEFT-for-multiple-choice program: a cold-MC lift of
+distribution covers them --- only the covered one lifts, a protocol-bound inference:
+benchmark identity carries format, domain and option count with it
+(\cref{results:mmlupro}). Practically, this
+is a caution for the contrastive-PEFT-for-multiple-choice program, drawn from one
+adapter of that family rather than from its published recipes: a cold-MC lift of
 this size can be an off-axis, non-transferring readout edit, beaten on accuracy
 \emph{and} on measured latency by the most trivial baseline
 there is, simply asking the base to emit the answer letter. That last comparison puts

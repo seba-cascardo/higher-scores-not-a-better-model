@@ -13,11 +13,13 @@ selection rule), rising to ${\sim}62\%$ when the control is given
 three-to-five orders of magnitude more parameters, and ranging from $79.5\%$ on
 Winogrande to nothing at all on TruthfulQA (headline metric per task; the fractions
 and their cross-task ordering are metric-dependent --- under raw accuracy the $36.2\%$
-reads $26.9\%$ --- the lifts are not). The recovery lives in a learned direction
-that is off-axis of degree to the model's own correctness geometry --- and with the
+reads $26.9\%$ --- the lifts are not). The contrastive adapter's write lives in a
+learned direction that is off-axis of degree to the correctness geometry measured at
+the $48$ heads this recipe intervenes on --- and with the
 parameterization held fixed, it is the contrastive objective, not the apparatus, that
-goes furthest off-axis --- a geometry that is causal and identifiable on both the
-harness and the write sides. That mechanistic chain --- arbiter, calibration,
+goes furthest off-axis --- a geometry that is causal, and identified against random
+and on-axis alternatives on both the harness and the write sides. That mechanistic
+chain --- arbiter, calibration,
 PMI-residual, probe, selector and geometry --- is a convergent analysis developed
 post-discovery on one fixed $400$-item slice in native order, not an independent
 confirmatory replication --- though it is no longer confined to that slice: the full
@@ -27,7 +29,8 @@ sample (\cref{disc:status}). And the lift does not become generation: the items 
 fixes already sit at the base's chain-of-thought ceiling, a read-only selector on the
 same activations recovers it without the deployment costs, and --- most plainly ---
 the base asked to emit the answer letter in a single forward recovers more of the
-base-wrong items ($0.970$) than the adapter ($0.758$), and in our implementation it
+base-wrong items ($0.970$) than either the adapter ($0.758$) or that selector
+($0.911$), and in our implementation it
 does so at about half the measured latency
 --- $0.980$ against $0.855$ across all $400$ items --- while tying a reasoning
 baseline some $150\times$ more expensive. That last contrast reads the base in a
@@ -36,24 +39,32 @@ of the same base rather than two models like for like, and the cost comparison i
 between the two implementations we timed, not a property of the readouts as such.
 The effect and its off-axis geometry replicate on a second
 model family --- though only partly: the cross-family lift is same-sign on all four
-tasks but marginal on Winogrande at $n{=}400$, and the causal spine that carries
-the attribution (the arbiter, the inducibility control, the recovery spectrum)
-remains single-model.
+tasks but marginal on Winogrande at $n{=}400$, and what remains single-model is the
+\emph{per-item} evidence (the arbiter), the capacity dimension of the spectrum (the
+higher-capacity inducibility arm and its rank sweep), the activation-patching
+decomposition and the no-locus result; the matched-capacity inducibility control and
+the perpendicular/parallel re-injection decomposition \emph{do} replicate on the
+second family.
 
 One finding points the other way, and we state it as a candidate rather than a
 claim. The scoring lift and the generative damage are separable by \emph{dose}: at
 three quarters of the activation scale ARC is already at $0.855$, identical to full
 scale, and on MMLU-Pro the lift is complete at half dose while the repetition loops
 that mark the degeneration fall $146 \rightarrow 10 \rightarrow 0$. There is, on
-these two benchmarks, an operating point with the whole benefit and none of the
-pathology. It is a steering result and the arms this paper leads on are baked, so it
+\emph{each of these two benchmarks separately}, a dose at which the scoring benefit
+is complete before the collateral cost arrives --- $s{=}0.75$ on ARC (where gsm8k is
+nonetheless already $2\pp$ down, at the edge of the pre-registered window) and
+$s{=}0.50$ on MMLU-Pro (where the loops reach zero). No single dose is shown to be
+full-benefit and zero-pathology on both. It is a steering result and the arms this
+paper leads on are baked, so it
 bounds what an operating point could look like rather than telling us what the
 adapter is --- but it is the first thing a practitioner would want to know, and the
 lift being cheaply separable from its collateral is itself evidence about what kind
 of thing the lift is.
 
 The practical consequence is a caution for the contrastive-PEFT-for-multiple-choice
-program. A cold multiple-choice gain of this size can be an off-axis,
+program, drawn from one adapter of that family rather than from its published
+recipes. A cold multiple-choice gain of this size can be an off-axis,
 non-transferring edit to a lossy readout --- obtainable read-only, without touching
 weights or generation, and beaten by a reasoning baseline --- so a benchmark improvement of this
 kind is not, on its own, evidence of a better model.

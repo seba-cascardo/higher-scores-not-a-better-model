@@ -203,11 +203,16 @@ and the Wilson accuracy CI $[0.474, 0.571]$ both including chance, which
 \emph{strengthens} the on-axis-fails reading), and essentially nothing on
 TruthfulQA; a raw mass-mean $\vinf$ recovers 11\% ($+4.0$ vs $+35.0$; $z = -6.63$).
 The two on-axis references are not equally null, and the paired test is what
-separates them: over the same 400 items $\vinf$'s small recovery \emph{is} detectable
+separates them: over the same 400 items $\vinf$'s small recovery is \emph{nominally}
+detectable
 (exact McNemar b=12/c=28 $p=0.017$, paired-bootstrap frac-CI95 $[+0.027, +0.197]$,
-excluding 0), while $\Wknow$'s is not. The weaker reference recovers a little; the
-stronger one does not clear its own null --- which is the ordering the off-axis
-reading predicts, and the opposite of what a weak-reference objection would produce.
+excluding 0), while $\Wknow$'s is not --- though this $p$ is uncorrected and would
+not survive the Bonferroni over the ${\sim}25$ tests of the campaign
+(\cref{disc:status}), and each arm rests on a single injection run. The weaker
+reference recovers a little; the stronger one does not clear its own null --- which
+is the ordering the off-axis reading predicts, and the opposite of what a
+weak-reference objection would produce. We therefore read that ordering as
+suggestive and rest nothing on it.
 
 A non-rejection is not by itself an absence, so we bound what this design could
 have seen. Freezing the backward cell at its observed rate ($10/400$) and
@@ -1020,8 +1025,11 @@ Quantity & Value & Source artifact \\
 ARC lift recovered by on-axis $\vinf$ (mass-mean, norm-matched) & fraction
 $\mathbf{0.11}$ (MC $+35.0$ / VINF $+4.0$; $z = -6.63$, unpaired and conservative
 --- the base stderr enters both lifts). \textbf{Paired over the same 400 items the
-small recovery is detectable}: exact McNemar b=12/c=28 $p=0.017$, paired-bootstrap
-frac-CI95 $[+0.027, +0.197]$ excludes 0. So the weaker on-axis reference recovers
+small recovery is \emph{nominally} detectable}: exact McNemar b=12/c=28 $p=0.017$,
+paired-bootstrap
+frac-CI95 $[+0.027, +0.197]$ excludes 0 --- uncorrected, and it would not survive
+the Bonferroni over the ${\sim}25$ tests of the campaign, so we read the ordering as
+suggestive. On that reading the weaker on-axis reference recovers
 \emph{little}, not \emph{nothing} --- unlike $\Wknow$ below &
 \code{runs/\allowbreak vinf\_\allowbreak causal/\allowbreak vinf\_\allowbreak paired\_\allowbreak significance.\allowbreak json} +
 \code{msap-\allowbreak vinf-\allowbreak causal-\allowbreak 20260623} \\

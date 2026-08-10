@@ -189,7 +189,9 @@ adapter still lifts scoring by $+12.20\pp$ and still fails to transfer
 four-option benchmarks, and the GPQA null is not a difficulty result: both
 benchmarks are hard, both leave the base large cold-to-CoT headroom, and the exploit
 fires on one and not the other. What separates them is distance from the adapter's
-training distribution, not how hard they are.
+training distribution, not how hard they are --- a protocol-bound inference, since we
+vary benchmark identity rather than manipulating distance directly, and benchmark
+identity carries format, domain and option count with it (\cref{results:mmlupro}).
 
 What remains unrun is the narrower converse arm: an adapter trained
 \emph{in-distribution} on a hard, non-saturated benchmark, rather than one trained
@@ -402,7 +404,10 @@ base-wrong fix-rate only $\mathbf{-0.10}$ (Easy 0.861 $\rightarrow$ Challenge
 0.763) as difficulty rises within ARC, whereas going out-of-task to GPQA collapses
 it $\mathbf{-0.56}$ (to 0.202): distribution, not within-format difficulty, drives
 the collapse. (b) Independent base-CoT for HSwag (0.83) and Winogrande (0.9425)
-confirms both are high --- like ARC's 0.97, well above GPQA's 0.70 --- and the
+confirms both are high --- like ARC's 0.97, well above GPQA's 0.70, though the
+arbiter is run in a lettered-MCQ format distinct from the cold-MC channel on every
+anchor (\cref{method:protocol}), so it is a knowledge-accessibility probe rather than
+a channel-faithful readout --- and the
 recovery is recoverability-gated (the adapter fixes CoT-right items more than
 CoT-wrong ones: HSwag 0.64 vs 0.31, Winogrande 0.76 vs 0.42), so the $+17$/$+19$
 lifts also rescue CoT-accessible knowledge rather than exploiting a format

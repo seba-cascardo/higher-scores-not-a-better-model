@@ -22,14 +22,22 @@ gold beneath more fluent distractors (\cref{disc:arbiter}). Plausibly, though we
 not measure this, suppressing surface form need not align with signalling
 correctness. The two causal arms make the point in opposite directions: injecting
 correctness \emph{on-axis} (the strongest on-axis reference we can build, $\Wknow$)
-recovers only $\mathbf{6.4\%}$ of the lift, which refutes a knowledge-deficit
-account; pushing \emph{off-axis} (perpendicular to correctness, $\offperp$) recovers
+recovers only $\mathbf{6.4\%}$ of the lift, bounding an on-axis contribution at
+${\leq}12.6\%$ --- the design's minimum detectable effect --- which is the size a
+knowledge-deficit account would have to fit inside; pushing \emph{off-axis}
+(perpendicular to correctness, $\offperp$) recovers
 ${\sim}$\textbf{100\%}, which is consistent with the surface-swamping account. The
-off-axis direction is therefore not a spurious accident but a natural form for a
-fix to take when the pathology is one of format rather than of knowledge --- which
-is why a single off-axis push unifies the readout result (\cref{disc:arbiter}), the
-inducibility attribution (\cref{disc:inducibility}), the on-axis null
-(\cref{disc:geometry}), and the deployment pathologies (\cref{disc:pathologies}).
+off-axis direction is therefore \emph{consistent with} a natural form for a
+fix to take when the pathology is one of format rather than of knowledge --- an
+account under which a single off-axis push organizes the readout result
+(\cref{disc:arbiter}), the inducibility attribution (\cref{disc:inducibility}), the
+on-axis null (\cref{disc:geometry}), and the deployment pathologies
+(\cref{disc:pathologies}). It organizes them without being shown to be their
+mechanism: the offset is \emph{not} the retrieval direction
+($\coswh(\thetamc,\vret) = +0.0076$, \cref{disc:geometry}), the mean-direction
+format control is null (cosine $-0.0099$ with the aggregate write, at the null
+floor), and the suppression signature appears in the \emph{tail} of the offset's
+logit image rather than in its mean (\cref{disc:negatives}).
 
 \subsection{The fixed items are chain-of-thought-accessible, the no-transfer is
 out-of-task (not difficulty-bound), and the readout misranks by confident burial}
@@ -137,7 +145,10 @@ burial-matched by gold-rank), whereas it collapses $\mathbf{-0.56}$ going
 out-of-task to GPQA (0.202) --- so \emph{distribution}, not within-format
 difficulty, drives the collapse. \emph{A second pair of anchors:} on HellaSwag and
 Winogrande, where the lift also holds ($+17$ / $+19$), the base's CoT accuracy is
-high (0.83 / 0.9425) --- like ARC's 0.97 and well above GPQA's 0.70 --- and the
+high (0.83 / 0.9425) --- like ARC's 0.97 and well above GPQA's 0.70, though the
+arbiter is run in a lettered-MCQ format distinct from the cold-MC channel on every
+anchor (\cref{method:protocol}), so it is a knowledge-accessibility probe rather
+than a channel-faithful readout --- and the
 recovery is recoverability-gated (the adapter fixes CoT-right items more than
 CoT-wrong ones: HellaSwag 0.64 vs 0.31, Winogrande 0.76 vs 0.42), i.e.\ the lift
 rescues knowledge the base can already reason out. The no-transfer is therefore
@@ -500,8 +511,9 @@ the most accurate --- it matches the reasoning
 baseline at ${\sim}150\times$ less latency and outscores the adapter and the
 selector at about half their measured latency}; base self-consistency CoT (0.970,
 26.7\,s, 853.9
-generated tokens over three traces) ties letter emission at far higher cost. The whole
-LoFiT/ITI-for-cold-MC family optimizes a readout that the most trivial
+generated tokens over three traces) ties letter emission at far higher cost. The
+LoFiT/ITI-for-cold-MC recipe, as we instantiate it --- one adapter of that family,
+not LoFiT's or ITI's published recipe --- optimizes a readout that the most trivial
 alternative --- ask the base for the letter --- already beats. \textbf{The comparison
 is evidentiary, not a like-for-like scoring test:} letter emission is a different
 (lettered-MCQ) readout than the cold-MC channel (\cref{method:protocol}), so the
@@ -565,9 +577,9 @@ report it in this table rather than silently mixing sources.
 \end{table}
 
 The selector outscores only the \emph{adapter}; a reasoning TTC and a
-one-forward letter-emission of the base both beat it --- so the whole
-LoFiT/ITI-for-cold-MC family optimizes a readout that even asking the base for the
-letter already beats. We therefore report the selector as \emph{evidentiary} (the
+one-forward letter-emission of the base both beat it --- so the
+LoFiT/ITI-for-cold-MC objective, as instantiated here, optimizes a readout that even
+asking the base for the letter already beats. We therefore report the selector as \emph{evidentiary} (the
 correctness signal is read-only recoverable, read${\neq}$write) and \textbf{not} as
 a deployment win (letter emission outscores it at half its measured latency, on the
 implementations we timed).
@@ -1211,8 +1223,9 @@ injection-coupling control (\cref{disc:pathologies}).
 
 The load-bearing experiments have run. The \textbf{inducibility attribution} is
 closed (a matched Align-LoRA recovers ${\sim}62\%$ of the ARC lift, flat across
-rank --- a lower bound). The \textbf{off-axis-of-degree geometry is causal and
-identifiable}: a perpendicular push recovers ${\sim}100\%$ of the lift, a parallel
+rank --- a lower bound). The \textbf{off-axis-of-degree geometry is causal, and
+identified against random and on-axis alternatives}: a perpendicular push recovers
+${\sim}100\%$ of the lift, a parallel
 push 0\%, the strongest on-axis reference ($\Wknow$) 6.4\%, and a norm-matched
 random perpendicular direction ${\sim}0\%$ (three seeds) --- closing the
 non-identifiability objection on both the harness side and the write side

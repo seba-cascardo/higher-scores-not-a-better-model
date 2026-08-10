@@ -21,13 +21,16 @@ decoder. And the most trivial baseline imaginable beats it, and does so for
 asked to emit the answer letter in a single forward, no chain of thought, the base
 recovers $0.970$ of the base-wrong items against the adapter's $0.758$, at about half
 the latency of our scoring implementation --- while tying a reasoning baseline that
-costs some $150\times$ more. The score moved; measurable capability did not.
+costs some $150\times$ more. The score moved; measurable capability did not. The
+comparison behind that last contrast is between two readouts of the same base, not
+a like-for-like scoring test (\cref{disc:selector}).
 
 This paper asks what that lift \emph{is}, and answers with a quantified causal
 attribution rather than a new method: most of it is what non-contrastive supervised
 fine-tuning in the same multiple-choice format
-already buys, it lives in a learned direction that is off-axis to the model's own
-correctness geometry, and it re-ranks a lossy readout rather than adding capability.
+already buys, and it re-ranks a lossy readout rather than adding capability. The
+contrastive adapter's own write lives in a learned direction that is off-axis to the
+correctness geometry measured at the 48 heads it intervenes on.
 
 \paragraph{Much of the lift is inducible without the contrastive objective.}
 If the lift were a specific property of \emph{contrastive-correctness} training, an
@@ -38,7 +41,8 @@ task, which is why we run the control at both ends of the capacity range.
 At \emph{identical} capacity --- the same 48 head-pairs and the same $12{,}336$
 trainable parameters as the adapter, the same corpus and steps, ordinary
 cross-entropy on the correct answer with no term against the incorrect one, three
-seeds --- the control recovers $\mathbf{36.2\% \pm 5.0}$ of the ARC lift. With
+seeds --- the control recovers $\mathbf{36.2\%}$ of the ARC lift (the $5.0$ we
+quote alongside it is an sd over those seeds, not an item-sampling interval). With
 $1{,}800\times$ to $58{,}000\times$ more parameters, a non-contrastive Align-LoRA~\citep{LoRA}
 recovers about \textbf{62\%}, flat across a rank sweep (r8/32/64/256: 59/63/60/65;
 the slope's confidence interval includes zero, so within that grid the residual is
@@ -215,7 +219,8 @@ cross-family and cross-scale where artifacts exist. We hold ourselves to a
 verify-before-claim discipline: every number traces to its source run or is marked,
 and we freeze no prose on un-executed evaluations.
 
-Concretely, the headline scoring/gen magnitudes are pre-registered with kill-rules.
+Concretely, the headline scoring/gen magnitudes are pre-registered with kill-rules
+(in the sense made precise in \cref{sec:limitations}).
 The anti-floor 5-shot rule has executed and the lift survived. The gen-face
 canonical gsm8k sweep (R6) has now run: $-25\pp$, flat across the generation budget,
 so the loss is mechanistic, not a clipped chain of thought; two further independently
@@ -242,7 +247,8 @@ that explains it, together with the deployment pathologies the recovery introduc
 \item \textbf{Inducibility-as-attribution.} Two non-contrastive controls bracket
   the objective's contribution. A \emph{same-parameterization} control (identical
   48 head-pairs and $12{,}336$ parameters, CE-plain, three seeds) recovers
-  $\mathbf{36.2\% \pm 5.0}$ of the ARC lift; a \emph{higher-capacity} Align-LoRA
+  $\mathbf{36.2\%}$ of the ARC lift (sd $5.0$ over the three seeds, not an
+  item-sampling interval); a \emph{higher-capacity} Align-LoRA
   ($1{,}800\times$--$58{,}000\times$ more parameters) recovers ${\sim}62\%$ ---
   paired-bootstrap fraction-CI $\boldsymbol{[51\%, 73\%]}$, flat across rank r8--256, and a
   larger r512 flank (${\sim}117{,}000\times$) does not raise it. Recovery is also strongly task-dependent
@@ -285,8 +291,10 @@ that explains it, together with the deployment pathologies the recovery introduc
   new method).} A read-only linear selector on the same per-head activations
   recovers the ARC lift (accuracy $0.943$; McNemar $p=3.7\times10^{-47}$) without
   touching generation --- improving on the \emph{adapter} read-only at the same
-  measured cost, though a reasoning
-  test-time-compute baseline outscores both (\cref{disc:selector}). That a
+  measured cost, though both a reasoning test-time-compute baseline and a
+  single-forward letter emission of the base outscore it, the latter at half its
+  measured latency --- which is why we hold the selector to an evidentiary role
+  (\cref{disc:selector}). That a
   read-only probe-selector recovers an MC lift is established
   \citep{NoVo,CORAL}; our contribution is its \emph{use} as the read leg of a
   read${\neq}$write dissociation auditing an off-axis write neither studies.
@@ -305,7 +313,12 @@ piecewise: everything is single-model (Gemma~4 31B IT), and the re-train replica
 is partial rather than absent --- the fine-grained causal arms (arbiter, inducibility
 control, recovery spectrum) are computed on the canonical adapter, while the headline
 lift, the net-effect geometry and the gsm8k loss are replicated across three
-independently trained adapters (\cref{tab:seeds}). The \emph{effect} and its off-axis
+independently trained adapters (\cref{tab:seeds}). That mechanistic chain ---
+arbiter, calibration, PMI-residual, probe, selector, geometry --- is convergent
+analysis developed \emph{after} the effect was discovered, on one fixed $400$-item
+slice, not an independent confirmatory replication (the arbiter, the probe and the
+selector have since been re-run outside that slice, \cref{disc:status}). The
+\emph{effect} and its off-axis
 \emph{geometry} are further replicated on
 Qwen 14B; the mechanism claims are anchored on ARC (TruthfulQA is a separate
 answer-prior mode; HellaSwag/Winogrande corroborate); every claim is protocol-bound
