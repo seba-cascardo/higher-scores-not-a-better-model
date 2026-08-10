@@ -20,8 +20,10 @@ SHA-256 of the bundle: `4feae1b9f42df73e488839469d7100a1706977590a068d3acc777ff6
 The document is plain pdfLaTeX with a pre-built bibliography, so no `bibtex` pass is needed:
 
 ```bash
-cd docs/paper && pdflatex main.tex && pdflatex main.tex
+cd docs/paper && pdflatex main.tex && pdflatex main.tex && pdflatex main.tex
 ```
 
-The second pass resolves cross-references. `main.bbl` is tracked deliberately — arXiv builds
-from the `.bbl`, not from `references.bib`.
+Three passes: after the second the document already has 76 pages with no undefined
+references and no errors, but the log still asks for a rerun to settle cross-references,
+and the third clears it. `main.bbl` is tracked deliberately — arXiv builds from the
+`.bbl`, not from `references.bib`.
