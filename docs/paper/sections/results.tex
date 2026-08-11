@@ -227,10 +227,11 @@ recovers and the $50\%$ mark --- so the on-axis null does exclude an on-axis eff
 of any magnitude we report as real. It does \emph{not} license reading $\Wknow$ as
 exactly zero: the design is blind below ${\sim}9$--$13\%$ of the lift and the
 $6.4\%$ point estimate sits inside that blind band. What is declarable is an
-\textbf{upper bound}, not a zero --- and the MDE ($12.6\%$) nearly coincides with
-the upper end of the paired-bootstrap recovery interval already reported
-($+13.6\%$), which is the design face and the estimation face of the same
-precision, not a coincidence. This bound is on $\Wknow$: a second, near-orthogonal
+\textbf{upper bound}, not a zero. The estimation-side bound is the paired-bootstrap
+ceiling already reported ($+13.6\%$); the MDE ($12.6\%$) is the design-side
+statement --- the smallest effect this design would have caught at power $0.80$, not
+a confidence limit --- and we cite it as that throughout. The two nearly coinciding
+is the same precision seen twice, not a coincidence. This bound is on $\Wknow$: a second, near-orthogonal
 correctness direction clears it, at $20.35\%$ (below).
 
 The ordering of the two on-axis references deserves a sentence, because a reader
@@ -240,7 +241,7 @@ discriminator ($\Wknow$, the covariance-optimal linear separator,
 mass-mean (6.4\% vs 11\%) --- improving the on-axis estimate does not improve
 recovery, which is itself evidence against a knowledge-deficit account. Both
 figures sit far below the 0.30 kill-rule, and the conclusion is unchanged whichever
-is taken as the on-axis ceiling.
+is taken as the best 1-D on-axis reference.
 
 \paragraph{The on-axis references are not bad readers, so the on-axis null is not an
 estimation artifact.}
@@ -293,21 +294,27 @@ the first one writes. On the $400$ items it was fitted on it recovers $12.86\%$,
 \emph{less} than on the held-out set, so contamination does not inflate the figure.
 
 Two things follow, and a third does not. First, the $\leq12.6\%$ bound above is a
-bound on $\Wknow$, not on ``on-axis'' as such: the fitted direction clears it, its
-interval floor ($14.53\%$) lying above the MDE. Where this paper says an on-axis
+bound on $\Wknow$, not on ``on-axis'' as such. The clean form of that is the
+head-to-head on the same $772$ items --- $20.35\%$ against $8.42\%$, intervals
+disjoint --- rather than a comparison of the fitted direction's interval floor
+($14.53\%$) against the MDE, which was computed for the $n{=}400$ design and so
+describes a different item population. Where this paper says an on-axis
 write fails, the claim that survives is about the best 1-D correctness discriminant,
 which is the arm we ran. Second, the same run reproduces the published $6.4\%$
 \emph{across} the change of chat template separating the two model snapshots
 (\cref{method:model}): on the same $400$ items, under the later snapshot, $\Wknow$
 recovers $6.43\%$ at the same $p = 0.136$, with base $0.5025$ and lift $+35.00\pp$ ---
-so the $6.4\%{\rightarrow}8.42\%$ difference is sample size, not protocol. Third, and
+so the $6.4\%{\rightarrow}8.42\%$ difference is not protocol; what separates the two
+figures is the item population they are scored on, the $400$ the probe was fitted on
+against the $772$ held out from it. Third, and
 this is what does \emph{not} follow: a fifth is not a half. The perpendicular push
 recovers $100\%$, the best 1-D discriminant $8.42\%$, and a second correctness
 direction $20.35\%$. The lift is not carried on-axis; neither does it lie wholly
 outside the correctness subspace --- which is the follow-up \cref{method:directions}
 declines to claim, now answered for one further direction rather than none. Testing
-$k$-dimensional subspaces remains open, and this result is the reason it is worth
-running: the increment from one direction to two is not zero.
+$k$-dimensional subspaces remains open --- we injected the two directions one at a
+time and never their span --- and this result is the reason it is worth running: the
+increment from the first correctness direction to the second is not zero.
 
 This off-axis picture does not hinge on the on-axis references being weak
 estimators of the true correctness axis: the offset is off-axis \textbf{even to the
@@ -400,7 +407,7 @@ on-axis push at the offset's own scale does nothing) and the shuffle (equal-norm
 same subspace, learnedness as the only variable).
 
 Because the \emph{same} harness that yields 100\% for the perpendicular push yields
-only 6.4\% for the on-axis $\Wknow$ reference, the on-axis failure is a real
+only 6.4\% for the on-axis $\Wknow$ reference, that reference's failure is a real
 property of the geometry, not an insensitivity of the injection method --- the
 harness is direction-sensitive. This closes the non-identifiability objection
 \citep{NonIdentifiability} on the \emph{harness} side.
@@ -577,8 +584,9 @@ survive \textbf{Holm--Bonferroni} correction across the four anchors ($m{=}4$):
 $p_{\mathrm{corr}}$ ARC $3.95\times10^{-32}$, TQA $6.26\times10^{-38}$, Wino
 $3.98\times10^{-12}$, HSwag $1.63\times10^{-8}$ --- every anchor at or below
 $1.63\times10^{-8}$, \textbf{none dropped}. \emph{Scope caveat:} this certifies the
-effect \textbf{exists and is paired-significant}, not that it is on-axis --- the
-on-axis ceiling is $\Wknow$ 6.4\% (\cref{disc:geometry}). \emph{Metric note:} the
+effect \textbf{exists and is paired-significant}, not that it is on-axis --- the best
+1-D correctness discriminant recovers 6.4\% ($\Wknow$; a second correctness direction
+reaches 20.35\%, \cref{disc:geometry}). \emph{Metric note:} the
 headline mixes acc\_norm (ARC/HSwag) with acc (TQA/Wino, which define no acc\_norm);
 on HSwag acc\_norm ${\leq}$ acc ($+17.0$ vs $+22.25$), so the length-normalized
 headline is the conservative figure, not a length artifact.

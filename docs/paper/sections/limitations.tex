@@ -456,29 +456,31 @@ on-axis arm was shown its most favorable face and still failed. One door remains
 untried: a penalty-warmup schedule ($\Wknow$ predicts it will not rescue). A
 follow-up, not a headline result.
 
-\paragraph{The strongest possible on-axis arm is built and not run: it needs a GPU we
-do not have.}
-The on-axis references we inject are constructed, and \cref{disc:geometry} now shows
+\paragraph{The strongest 1-D on-axis arm has now run; the $k$-dimensional test has
+not.}
+The on-axis references we inject are constructed, and \cref{disc:geometry} shows
 they are also excellent \emph{readers} --- which removes the estimation-quality
 account of their causal failure but not the last version of the objection, that some
-better on-axis direction exists. There is a principled candidate: the decision
-direction of the probe \emph{fitted} on these activations, the empirically optimal
-linear correctness reader in this space. Injecting it norm-matched through the
-identical harness would put the on-axis arm at its ceiling by construction. We built
-that arm and did not run it, and we say which half is missing. Built and verifiable:
-the offset blob is norm-matched to the trained offset per head (maximum deviation
-below $10^{-6}$), and out of sample --- on the $395$ base-wrong items of the
-complement, disjoint from the items the probe was fitted on --- it still reads
-gold-vs-distractor at $0.9486$ (CI95 $[0.9318, 0.9637]$), so the direction that would
-be injected remains a strong reader where it would be judged. Not done: what it
-\emph{does}, which requires generative and scoring forward passes through a 31B model
-in BF16 and therefore a GPU class we do not have locally. One design constraint is
-load-bearing and is recorded in the blob's own configuration rather than left to the
-person who runs it: unlike $\vinf$ and $\Wknow$, which are estimated on a separate
-corpus, the probe is fitted \emph{on ARC}, so it is fitted on items $0$--$399$ and any
-evaluation of it must score the complement, $400$--$1171$. We report no estimate of
-the outcome. Until it runs, the on-axis null rests on two constructed references that
-read as well as a fitted probe, and not on the fitted probe itself.
+better on-axis direction exists. There is a principled candidate, and it has now been
+run: the decision direction of the probe \emph{fitted} on these activations, the
+empirically optimal linear correctness reader in this space, injected norm-matched
+through the identical harness (maximum per-head deviation $4.73\times10^{-7}$). It
+recovers $20.35\%$ of the lift on the $772$ items held out from its own fit, against
+$\Wknow$'s $8.42\%$ on the same items, intervals disjoint (\cref{disc:geometry}) --- so
+the on-axis floor this paper reports belongs to the best 1-D discriminant and not to
+correctness as such, and every on-axis figure we quote carries that qualifier. One
+design constraint was load-bearing and is recorded in the blob's own configuration
+rather than left to the person who runs it: unlike $\vinf$ and $\Wknow$, which are
+estimated on a separate corpus, the probe is fitted \emph{on ARC}, on items
+$0$--$399$, so its evaluation scores the complement, $400$--$1171$; out of sample it
+still reads gold-vs-distractor at $0.9486$ (CI95 $[0.9318, 0.9637]$).
+What is \emph{not} done is the $k$-dimensional test. We injected a second direction on
+its own, never the two together, and never a norm-matched projection onto their span
+with the residual re-injected against it. So what we can say is that the increment
+from the first correctness direction to the second is not zero; we cannot say what a
+correctness \emph{subspace} of rank two to eight recovers, and nothing we report
+bounds it. That test needs the GPU class this arm needed, and it is the natural
+follow-up.
 
 \paragraph{A cheap test-time-compute baseline, narrowed (PMI is already settled).}
 The arbiter implies the adapter approximates knowledge the base already reaches by
