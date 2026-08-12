@@ -223,7 +223,7 @@ terms — including ARC's share-alike condition — are itemised in
 @misc{cascardo2026higherscores,
   title  = {Higher Scores, Not A Better Model: A Large Multiple-Choice Lift That Is
             Mostly Inducible, Off-Axis, and Does Not Transfer to Generation},
-  author = {Sebasti\'an Cascardo},
+  author = {Sebasti\'an Cascardo-Andr\'es},
   year   = {2026}
 }
 ```

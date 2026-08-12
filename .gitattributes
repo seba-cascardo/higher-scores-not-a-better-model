@@ -19,3 +19,20 @@ runs/v7_lofit_qwen14b/*.pt               -text -diff
 docs/paper/*.pdf                         -text -diff
 docs/paper/figures/*.pdf                 -text -diff
 docs/paper/*.tar.gz                      -text -diff
+
+# Line endings for the paper sources.
+#
+# docs/paper/README.md tells the reader the bundle members are byte-identical to the
+# tracked files, and publishes a cmp loop to prove it. That check compares the tarball --
+# which upstream builds with `tar` from its WORKING TREE -- against whatever this clone
+# checked out. If the two disagree on line endings the check fails on files whose content
+# is identical, which reads as a corrupt bundle and is not one. It failed exactly that way
+# on Linux checkouts before 2026-08-12: DIFFERS on all 12 text members of the 2026-08-11
+# bundle. Pinning eol=lf makes a fresh clone match the bundle on every platform.
+#
+# The .pt rules above are deliberately left untouched by these globs.
+*.tex text eol=lf
+*.bbl text eol=lf
+*.bib text eol=lf
+*.cls text eol=lf
+*.sty text eol=lf
